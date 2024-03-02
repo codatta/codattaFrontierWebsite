@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>b18a official website</title>
+    <script type="text/javascript">
+      // 引入调试日志脚本
+      if (/\?debug=1/.test(location.href)) {
+        const script = document.createElement('script')
+        script.onload = function () {
+          window.eruda.init()
+        }
+        script.setAttribute('async', '')
+        script.src = 'https://cdn.jsdelivr.net/npm/eruda'
+        document.head.appendChild(script)
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
