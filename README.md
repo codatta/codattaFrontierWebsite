@@ -1,46 +1,30 @@
-## Omnitags Platform Website
+# React + TypeScript + Vite
 
-This is a highly professional web front-end scaffolding solution that integrates advanced technologies, including:
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-- [TypeScript](https://www.typescriptlang.org/): TypeScript provides type safety, reducing potential errors through static type checking. This contributes to improved code quality and maintainability.
+Currently, two official plugins are available:
 
-- [React](https://react.dev/): React is a top-tier JavaScript library known for its component-based development model and outstanding maintainability. It offers the ability to build modular, highly interactive, and dynamic web applications.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- [Vite](https://vitejs.dev/): 快速构建工具
+## Expanding the ESLint configuration
 
-- [Unocss](https://unocss.dev/): 原子样式方案，集成了tailwindcss，文档参考[tailwindcss](https://www.tailwindcss.cn/)即可
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- [Ant Design 5.0](https://ant-design.antgroup.com/index-cn): React ui组件库
+- Configure the top-level `parserOptions` property like this:
 
-- [Meteors](https://ui.aceternity.com/components/meteors): 动效参考
-
-- [Valtio](https://valtio.pmnd.rs/): 简单好用的状态管理库
-
-- [lodash](https://www.lodashjs.com/): 一个一致性、模块化、高性能的 JavaScript 实用工具库
-
-- [postcss-px-viewport](https://evrone.com/blog/postcss-px-viewport): 页面适配方案
-
-## 视觉
-# 标准设计稿尺寸：1440 x 750
-# tailwindcss实现了大多数常用的css基础样式，比如flex
-
-## Usage
-
-```bash
-# 1. Install
-yarn
-
-# 2. Development
-yarn dev
-
-# 3. Production
-yarn build
-yarn preview
-
-# 4. Lint
-yarn lint --check
-yarn lint:fix --fix
-
-# 5. Testing with Eruda
-baseUrl + '?debug=1'
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
 ```
+
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

@@ -1,24 +1,18 @@
 {
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 设置保存时自动格式化
   "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "modifications",
-  "prettier.requireConfig": true,
-  "prettier.configPath": ".prettierrc",
-  "prettier.prettierPath": "",
-  "prettier.printWidth": 120,
+
+  // 使用 Prettier 进行格式化
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  // 针对特定文件类型指定格式化器
   "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[css]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[less]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
 }
