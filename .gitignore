@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.local
+
+package-lock.json
+# yarn.lock
+
+# Editor directories and files
+.idea
+.DS_Store

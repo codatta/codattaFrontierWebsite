@@ -1,6 +1,6 @@
 import { defineConfig, splitVendorChunkPlugin } from 'vite'
 import react from '@vitejs/plugin-react'
-import basicSsl from '@vitejs/plugin-basic-ssl'
+// import basicSsl from '@vitejs/plugin-basic-ssl'
 import { presetUno, presetAttributify } from 'unocss'
 import Unocss from 'unocss/vite'
 import postcssImport from 'postcss-import'
