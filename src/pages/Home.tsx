@@ -1,15 +1,16 @@
 import Header from '../components/Header'
 import Banner from '../components/Banner'
 import Signup from '../components/Signup'
-import VotingCurve from '../components/VotingCurve'
+// import VotingCurve from '../components/VotingCurve'
 import partnershipSVG from '../assets/images/partnership.svg'
+import Privacy from '../components/Privacy'
 import Footer from '../components/Footer'
 
 import './Home.scss'
 
 export default function HomePage() {
   return (
-    <div className="pl-120px pr-126px pb-46px home-page min-h-screen">
+    <div className="pl-120px pr-120px pb-46px home-page min-h-screen">
       <Header />
       <Banner />
       <Signup />
@@ -17,6 +18,7 @@ export default function HomePage() {
         <img src={partnershipSVG} className="w-340px" />
       </div>
       {/* <VotingCurve /> */}
+      <Privacy />
       <Footer />
     </div>
   )
