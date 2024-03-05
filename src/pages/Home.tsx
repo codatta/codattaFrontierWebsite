@@ -4,6 +4,9 @@ import Signup from '../components/Signup'
 // import VotingCurve from '../components/VotingCurve'
 import partnershipSVG from '../assets/images/partnership.svg'
 import Usage from '../components/Usage'
+import Infra from '../components/Infra'
+import Diversity from '../components/Diversity'
+import Trust from '../components/Trust'
 import Privacy from '../components/Privacy'
 import Footer from '../components/Footer'
 
@@ -20,6 +23,9 @@ export default function HomePage() {
       </div>
       {/* <VotingCurve /> */}
       <Usage />
+      <Infra />
+      <Diversity />
+      <Trust />
       <Privacy />
       <Footer />
     </div>
