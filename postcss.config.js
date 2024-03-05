@@ -2,14 +2,16 @@ export default {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
-    // 'postcss-pxtorem': {
-    //   rootValue: 16, // 基准字体大小
-    //   unitPrecision: 5, // 小数点位数
-    //   propList: ['*'], // 要转换的属性
-    //   selectorBlackList: [], // 选择器黑名单，防止某些选择器被转换
-    //   replace: true,
-    //   mediaQuery: false,
-    //   minPixelValue: 0,
-    // },
+    'postcss-px-to-viewport-8-plugin': {
+      exclude: [/node_modules/],
+      unitToConvert: 'px',
+      viewportWidth: (file) => {
+        // let num = 1920
+        // if (file.indexOf('m_') !== -1) {
+        //   num = 375
+        // }
+        return 1440
+      },
+    },
   },
 }

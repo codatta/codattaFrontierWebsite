@@ -1,8 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// import { presetUno, presetAttributify } from 'unocss'
-// import Unocss from 'unocss/vite'
+import Unocss from 'unocss/vite'
 
 import path from 'path'
 
@@ -10,10 +9,9 @@ import path from 'path'
 export default defineConfig({
   plugins: [
     react(),
-    // Unocss({
-    //   presets: [presetUno(), presetAttributify()],
-    //   include: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
-    // }),
+    Unocss({
+      configFile: './unocss.config.ts',
+    }),
   ],
   base: './',
   resolve: {
