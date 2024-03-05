@@ -3,6 +3,7 @@ import Banner from '../components/Banner'
 import Signup from '../components/Signup'
 // import VotingCurve from '../components/VotingCurve'
 import partnershipSVG from '../assets/images/partnership.svg'
+import Usage from '../components/Usage'
 import Privacy from '../components/Privacy'
 import Footer from '../components/Footer'
 
@@ -18,6 +19,7 @@ export default function HomePage() {
         <img src={partnershipSVG} className="w-340px" />
       </div>
       {/* <VotingCurve /> */}
+      <Usage />
       <Privacy />
       <Footer />
     </div>
