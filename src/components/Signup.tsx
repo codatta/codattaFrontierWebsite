@@ -13,7 +13,7 @@ export default function Signup() {
         enterButton="Sign up for Ominitags"
         size="large"
         className="w-485px h-full mr-24px"
-        addonBg="rgba(255, 0, 0, 0.7)"
+        // addonBg="rgba(255, 0, 0, 0.7)"
         // onSearch={onSearch}
       />
       <div className="w-1px h-full bg-#fff opacity-10 mr-24px"></div>

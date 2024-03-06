@@ -48,9 +48,9 @@ export const TracingBeam = ({
     }
   )
 
-  useMotionValueEvent(y1, 'change', (latest) => {
-    console.log('Page scroll: ', latest, y1, y2)
-  })
+  //   useMotionValueEvent(y1, 'change', (latest) => {
+  //     console.log('Page scroll: ', latest, y1, y2)
+  //   })
 
   return (
     <motion.div

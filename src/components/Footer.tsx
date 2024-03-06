@@ -1,39 +1,75 @@
-import './Footer.scss'
+import twitterIcon from '../assets/images/twitter-icon.svg'
+import telegramIcon from '../assets/images/telegram-icon.svg'
+import discordIcon from '../assets/images/discord-icon.svg'
+import linkedinIcon from '../assets/images/linkedin-icon.svg'
+
+import styled from 'styled-components'
+
+const Icon = styled.div`
+  margin-top: 12px;
+  height: 24px;
+  line-height: 24px;
+  padding-left: 33px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: 24px auto;
+`
+
+const TwitterIcon = styled(Icon)`
+  margin-top: 16px;
+  background-image: url(${twitterIcon});
+`
+const TelegramIcon = styled(Icon)`
+  background-image: url(${telegramIcon});
+`
+const DiscordIcon = styled(Icon)`
+  background-image: url(${discordIcon});
+`
+const LinkedinIcon = styled(Icon)`
+  background-image: url(${linkedinIcon});
+`
+
+const Divider = styled.div`
+  width: 100%;
+  height: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  margin-bottom: 32px;
+`
 
 export default function Footer() {
   return (
-    <div className="mt-100px text-2xl">
-      <span className="font-semibold">* </span>
-      <p className="opacity-45">
+    <>
+      <span className="title-1">* </span>
+      <div>
         1. We utilize the Microscope protocol for storing and managing our data.
         The collected data will be contributed to the Microscope protocol.
-      </p>
+      </div>
       <div className="flex justify-between mt-64px">
         <section>
-          <div className="font-semibold">b18a Protocol</div>
-          <p className="opacity-45 mt-16px text-base">
+          <div className="title-1">b18a Protocol</div>
+          <div>
             The world's leading AI-powered collaboration protocol for blockchain
             metadata.
-          </p>
-          <p className="mt-43px opacity-60  text-base">
+          </div>
+          <div className="mt-43px text-base">
             Have questions? Email us at{' '}
             <a href="" target="blank" className="color-inherit">
               h
             </a>
-          </p>
+          </div>
         </section>
-        <aside className="social-group text-sm w-256px">
+        <aside className="text-sm w-256px mt-13px">
           <div>Social</div>
-          <div className="icon twitter-icon mt-16px">Twitter</div>
-          <div className="icon telegram-icon mt-12px">Telegram</div>
-          <div className="icon discord-icon mt-12px">Discord</div>
-          <div className="icon linkedin-icon mt-12px">Linkedin</div>
+          <TwitterIcon>Twitter</TwitterIcon>
+          <TelegramIcon>Telegram</TelegramIcon>
+          <DiscordIcon>Discord</DiscordIcon>
+          <LinkedinIcon>Linkedin</LinkedinIcon>
         </aside>
       </div>
-      <p className="opacity-45 mt-48px pt-32px text-base">
-        <div className="divider"></div>
-        <p>© 2024 Blockchain Metadata Labs Inc. All rights reserved.</p>
-      </p>
-    </div>
+      <div className="mt-48px pt-32px text-base">
+        <Divider />
+        <div>© 2024 Blockchain Metadata Labs Inc. All rights reserved.</div>
+      </div>
+    </>
   )
 }

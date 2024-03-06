@@ -1,11 +1,12 @@
 import microImg from '../assets/images/micoroscope.svg'
-import tracingImg from '../assets/images/tracing-1.svg'
+import tracingIcon from '../assets/images/tracing-icon-0.svg'
 
 import Signup from './Signup'
+import styled from 'styled-components'
 
 const Title = () => {
   return (
-    <div className="mt-94px text-left h-224px flex flex-col justify-between">
+    <div className="text-left h-224px flex flex-col justify-between">
       <h1 className="font-semibold leading-88px text-80px color-white">
         Let's annotate crypto <br />
         addresses from here
@@ -18,19 +19,53 @@ const Title = () => {
   )
 }
 
+const Circle = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+`
+
+const Line1 = styled.div`
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 63, 198, 0.01),
+    rgba(90, 36, 133, 1)
+  );
+`
+
+const Line2 = styled.div`
+  background: linear-gradient(
+    to bottom,
+    rgba(108, 41, 160, 1),
+    rgba(0, 170, 81, 1)
+  );
+`
+
+const GuideLine = () => {
+  return (
+    <div className="flex flex-col justify-between items-center guide-line">
+      <Circle className="w-10px h-10px" />
+      <Line1 className="w-4px h-310px" />
+      <img src={tracingIcon} className="w-24px h-24px" />
+      <Line2 className="w-4px h-234px" />
+    </div>
+  )
+}
+
 const Part = () => {
   return (
-    <div className="h-584px relative">
-      <Title />
-      <Signup />
-      <p className="mt-64px">
-        Parallel products within a shared technological framework of↘︎
-      </p>
-      <img src={microImg} className="h-32px mt-32px" />
-      <img
-        src={tracingImg}
-        className="absolute left--68px top-0 h-full w-48px object-contain"
-      />
+    <div className="relative flex mt-94px">
+      <GuideLine />
+      <div className="main">
+        <Title />
+        <Signup />
+        <a
+          href="https://microscopeprotocol.xyz"
+          target="_blank"
+          className="mt-67px block"
+        >
+          <img src={microImg} className="h-94px" />
+        </a>
+      </div>
     </div>
   )
 }
