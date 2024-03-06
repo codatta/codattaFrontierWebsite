@@ -10,12 +10,15 @@ import Trust from '../components/Trust'
 import Privacy from '../components/Privacy'
 import Footer from '../components/Footer'
 
+import { TracingBeamDemo } from '../components/TracingBeam'
+
 import './Home.scss'
 
 export default function HomePage() {
   return (
     <div className="pl-120px pr-120px pb-46px home-page min-h-screen">
       <Header />
+      {/* <TracingBeamDemo /> */}
       <Banner />
       <Signup />
       <div className="mt-64px">

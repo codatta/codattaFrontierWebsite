@@ -29,4 +29,10 @@ export default {
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
-## https://www.npmjs.com/package/postcss-px-to-viewport-8-plugin
+## https://www.npmjs.com/package/postcss-px-to-viewport-8-
+## https://www.framer.com/motion/animation/
+## https://github.com/veltman/flubber#readme
+  example
+  - https://codesandbox.io/p/sandbox/framer-motion-morphsvg-example-dp7to?file=%2Fsrc%2Fuse-flubber.ts%3A11%2C1&from-embed=
+  - https://codesandbox.io/p/sandbox/framer-motion-310-usevelocity-nw1dn?file=%2Fsrc%2Findex.tsx&from-embed=
+  

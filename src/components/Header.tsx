@@ -1,13 +1,21 @@
-import './Header.scss'
+import styled from 'styled-components'
+import { Button } from 'antd'
 
-export default function HeaderComp() {
-    return (
-      <header className="header flex justify-between  font-medium">
-        <div className="flex items-center">
-          <div className="logo-icon"></div>
-          <div>Ominitags</div>
-        </div>
-        <button className="color-#fff border-none bg-inherit">Sign in</button>
-      </header>
-    )
+/**
+ * 缺Logo图标
+ */
+
+const Logo = styled.div`
+  height: 24px;
+  line-height: 24px;
+`
+export default function Header() {
+  return (
+    <header className="header flex justify-between items-center font-medium mt-14px color-white">
+      <Logo className="pl-32px ">Ominitags</Logo>
+      <Button ghost size="middle" className="">
+        Sign in
+      </Button>
+    </header>
+  )
 }
