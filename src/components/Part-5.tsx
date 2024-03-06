@@ -1,20 +1,14 @@
-// import tracingImg from '../assets/images/tracing-5.svg'
 import img1 from '../assets/images/privacy-1.svg'
 import img2 from '../assets/images/privacy-2.svg'
 import img3 from '../assets/images/privacy-3.svg'
 
 import tracingIcon from '../assets/images/tracing-icon-3.svg'
+import styled from 'styled-components'
 
 const Head = () => {
   return (
     <>
-      <div className="title-1 mt-12px relative">
-        <img
-          src={tracingIcon}
-          className="w-48px absolute top--10px left--68px"
-        />
-        Privacy-preservation
-      </div>
+      <div className="title-1 mt-12px">Privacy-preservation</div>
       <div className="title-2 color-#3857F8">PII-Free Privacy</div>
       <div>
         Our conviction is firm that personal privacy is a fundamental human
@@ -76,21 +70,29 @@ const Section3 = () => {
   )
 }
 
+const Line = styled.div`
+  background: linear-gradient(to bottom, #3857f8, rgba(56, 87, 248, 0));
+`
+
+const GuideLine = () => {
+  return (
+    <div className="flex flex-col justify-between items-center guide-line mt-6px">
+      <img src={tracingIcon} className="w-24px h-24px" />
+      <Line className="w-4px h-1210px" />
+    </div>
+  )
+}
+
 const Part = () => {
   return (
-    <div className="h-1345px relative">
-      <Head />
-      <Section1 />
-      <Section2 />
-      <Section3 />
-      {/* <div className="absolute left--68px top--12px w-48px flex flex-col">
-        <img src={tracingIcon} className="w-48px" />
-        <img src={tracingLine} className="w-48px h-1200px" />
-      </div> */}
-      {/* <img
-        src={tracingImg}
-        className="absolute left--68px top--12px h-full w-48px object-contain"
-      /> */}
+    <div className="flex">
+      <GuideLine />
+      <div className="main">
+        <Head />
+        <Section1 />
+        <Section2 />
+        <Section3 />
+      </div>
     </div>
   )
 }

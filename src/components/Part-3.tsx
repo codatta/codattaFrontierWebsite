@@ -3,21 +3,15 @@ import img1 from '../assets/images/diversity-1.svg'
 import img2 from '../assets/images/diversity-2.svg'
 import img3 from '../assets/images/diversity-3.svg'
 
-// import tracingImg from '../assets/images/tracing-3.svg'
+import styled from 'styled-components'
 import tracingIcon from '../assets/images/tracing-icon-2.svg'
-// import tracingLine from '../assets/images/tracing-line.svg'
+import asideLine from '../assets/images/tracing-aside-1.svg'
 
 const Head = () => {
   return (
     <div className="flex justify-between text-2xl">
       <div className="w-440px">
-        <div className="title-1 mt-12px relative">
-          <img
-            src={tracingIcon}
-            className="w-48px absolute top--10px left--68px"
-          />
-          Public Infrastructure
-        </div>
+        <div className="title-1 mt-12px">Public Infrastructure</div>
         <div className="title-2 color-cyan mt-24px">
           Decentralized Intelligence Data Layer
         </div>
@@ -84,7 +78,7 @@ const Section3 = () => {
   )
 }
 
-const Section5 = () => {
+const Section4 = () => {
   return (
     <div className="mt-40px flex justify-between">
       <img src={img3} className="w-600px" />
@@ -101,22 +95,34 @@ const Section5 = () => {
   )
 }
 
+const Line = styled.div`
+  background: linear-gradient(to bottom, #33b3ae, #33b3ae 38%, #f838ab);
+`
+
+const GuideLine = () => {
+  return (
+    <div className="flex flex-col justify-between items-center guide-line mt-6px relative">
+      <img src={tracingIcon} className="w-24px h-24px" />
+      <img
+        src={asideLine}
+        className="w-84px h-364px absolute top-425px left-21px"
+      />
+      <Line className="w-4px h-2290px" />
+    </div>
+  )
+}
+
 const Part = () => {
   return (
-    <div className="h-2332px relative mt-12px">
-      <Head />
-      <Section1 />
-      <Section2 />
-      <Section3 />
-      <Section5 />
-      {/* <div className="absolute left--68px top--12px w-48px flex flex-col">
-        <img src={tracingIcon} className="w-48px" />
-        <img src={tracingLine} className="w-48px h-2200px" />
-      </div> */}
-      {/* <img
-        src={tracingImg}
-        className="absolute left--90px top--12px h-full w-152px object-contain"
-      /> */}
+    <div className="h-2332px relative mt-12px flex">
+      <GuideLine />
+      <div className="main">
+        <Head />
+        <Section1 />
+        <Section2 />
+        <Section3 />
+        <Section4 />
+      </div>
     </div>
   )
 }

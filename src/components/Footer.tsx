@@ -38,7 +38,7 @@ const Divider = styled.div`
 
 export default function Footer() {
   return (
-    <>
+    <div className="mt-64px">
       <span className="title-1">* </span>
       <div>
         1. We utilize the Microscope protocol for storing and managing our data.
@@ -70,6 +70,6 @@ export default function Footer() {
         <Divider />
         <div>© 2024 Blockchain Metadata Labs Inc. All rights reserved.</div>
       </div>
-    </>
+    </div>
   )
 }

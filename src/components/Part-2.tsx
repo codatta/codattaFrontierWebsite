@@ -1,11 +1,7 @@
 import img1 from '../assets/images/usage-1.svg'
 import img2 from '../assets/images/usage-2.svg'
 import img3 from '../assets/images/usage-3.svg'
-// import tracingImg from '../assets/images/tracing-2.svg'
-import tracingIcon from '../assets/images/tracing-icon-1.svg'
-// import tracingLine from '../assets/images/tracing-line.svg'
-
-import Tracing from './Tracing'
+import tracingIcon from '../assets/images/tracing-icon-2.svg'
 
 import styled from 'styled-components'
 
@@ -37,6 +33,15 @@ const Card2 = styled.div`
   background-size: contain;
 `
 
+const Line = styled.div`
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 170, 81, 1),
+    rgba(40, 177, 154, 1) 77%,
+    rgba(51, 179, 174, 1)
+  );
+`
+
 const Section2 = () => {
   return (
     <div className="mt-58px flex justify-between">
@@ -63,9 +68,27 @@ const Section2 = () => {
   )
 }
 
+const GuideLine = () => {
+  return (
+    <div className="flex flex-col justify-between items-center guide-line mt-6px">
+      <img src={tracingIcon} className="w-24px h-24px" />
+      <Line className="w-4px h-1050px" />
+    </div>
+  )
+}
+
 const Part = () => {
   return (
-    <div className="h-1084px relative text-xl ">
+    <div className="h-1084px relative text-xl flex">
+      <GuideLine />
+      <div className="main">
+        <div className="title-1 mt-12px">Usage Examples</div>
+        <div className="title-2 color-green">
+          Countless data and AI applications for blockchain industry
+        </div>
+        <Section1 />
+        <Section2 />
+      </div>
       <div className="title-1 mt-12px relative">
         <img
           src={tracingIcon}
@@ -73,13 +96,6 @@ const Part = () => {
         />
         Usage Examples
       </div>
-      <Tracing>
-        <div className="title-2 color-green">
-          Countless data and AI applications for blockchain industry
-        </div>
-        <Section1 />
-        <Section2 />
-      </Tracing>
     </div>
   )
 }
