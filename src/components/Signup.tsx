@@ -6,7 +6,7 @@ import './Signup.scss'
 
 export default function Signup() {
   return (
-    <div className="signup mt-88px h-48px flex">
+    <div className="signup mt-88px h-58px flex">
       <Search
         placeholder="Email address"
         allowClear

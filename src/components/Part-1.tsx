@@ -3,6 +3,8 @@ import tracingIcon from '../assets/images/tracing-icon-0.svg'
 
 import Signup from './Signup'
 import styled from 'styled-components'
+// import { SparklesCore } from './aceternity-ui/Sparkles'
+import {BackgroundBeams} from './aceternity-ui/BgBeam'
 
 const Title = () => {
   return (
@@ -65,6 +67,9 @@ const Part = () => {
         >
           <img src={microImg} className="h-94px" />
         </a>
+        <div className="w-full absolute inset-0 top-0 left-0 pointer-events-none">
+          <BackgroundBeams />
+        </div>
       </div>
     </div>
   )

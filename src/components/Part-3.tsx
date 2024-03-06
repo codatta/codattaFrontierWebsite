@@ -7,6 +7,8 @@ import styled from 'styled-components'
 import tracingIcon from '../assets/images/tracing-icon-2.svg'
 import asideLine from '../assets/images/tracing-aside-1.svg'
 
+import EffectCard from './effects/EffectCard'
+
 const Head = () => {
   return (
     <div className="flex justify-between text-2xl">
@@ -22,7 +24,9 @@ const Head = () => {
           sourcing superior metadata.
         </div>
       </div>
-      <img src={img} className="w-700px" />
+      <EffectCard color="#33B3AE">
+        <img src={img} className="w-700px" />
+      </EffectCard>
     </div>
   )
 }
@@ -47,7 +51,9 @@ const Section1 = () => {
 const Section2 = () => {
   return (
     <div className="mt-125px flex justify-around">
-      <img src={img1} className="w-396px" />
+      <EffectCard color="#33B3AE">
+        <img src={img1} className="w-396px" />
+      </EffectCard>
       <div className="mt-60px w-630px">
         <div className="font-semibold color-white">Permissionless</div>
         <div className="mt-16px ">
@@ -73,7 +79,9 @@ const Section3 = () => {
           scenarios.、
         </div>
       </div>
-      <img src={img2} className="w-400px" />
+      <EffectCard color="#33B3AE">
+        <img src={img2} className="w-400px" />
+      </EffectCard>
     </div>
   )
 }
@@ -81,7 +89,9 @@ const Section3 = () => {
 const Section4 = () => {
   return (
     <div className="mt-40px flex justify-between">
-      <img src={img3} className="w-600px" />
+      <EffectCard color="#33B3AE">
+        <img src={img3} className="w-600px" />
+      </EffectCard>
       <div className="w-500px mt-23px">
         <div className="title-1">Open-source</div>
         <div>

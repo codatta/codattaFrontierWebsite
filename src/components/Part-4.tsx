@@ -5,6 +5,8 @@ import img3 from '../assets/images/trust-3.svg'
 import tracingIcon from '../assets/images/tracing-icon-3.svg'
 import asideLine from '../assets/images/tracing-aside-2.svg'
 
+import EffectCard from './effects/EffectCard'
+
 import styled from 'styled-components'
 
 const Head = () => {
@@ -28,13 +30,7 @@ const Section1 = () => {
       <div className="mt-48px flex justify-between">
         <img src={img2} className="w-700px mr-60px" />
         <div>
-          <div className="title-1 mt-12px relative">
-            <img
-              src={tracingIcon}
-              className="w-48px absolute top--10px left--68px"
-            />
-            Transparency
-          </div>
+          <div className="title-1 mt-12px">Transparency</div>
           <div className="pr-23px">
             We clearly communicate the data derived from ground-truth, heuristic
             methods, machine learning, and external sources to convey the
@@ -51,14 +47,16 @@ const Section1 = () => {
             a peer-review, and continually informed by community feedback.
           </div>
         </div>
-        <img src={img3} className="w-600px" />
+        <EffectCard color="#f838ab">
+          <img src={img3} className="w-600px" />
+        </EffectCard>
       </div>
     </>
   )
 }
 
 const SplitLine = styled.div`
-  height: 105px;
+  //   height: 105px;
   width: 1px;
   background: linear-gradient(
     to bottom,
@@ -70,35 +68,37 @@ const SplitLine = styled.div`
 const Section2 = () => {
   return (
     <div className="flex justify-end mt-120px">
-      <div className="card w-1140x h-192px flex-1 ml-60px box-content flex justify-around p-0 items-center">
-        <div>
-          <div className="title-1">Ground Truth</div>
-          <div className="color-#F838AB bold leading-56px">
-            <span className="text-48px">10</span>
-            <span>%</span>
-          </div>
-        </div>
-        <div className="flex">
-          <SplitLine className="mr-64px" />
+      <EffectCard className="ml-60px w-full" color="#f838ab">
+        <div className="card w-1140x h-192px flex-1 box-content flex justify-around p-0 items-center">
           <div>
-            <div className="title-1">Inference (Heuristics + AI)</div>
+            <div className="title-1">Ground Truth</div>
             <div className="color-#F838AB bold leading-56px">
               <span className="text-48px">10</span>
               <span>%</span>
             </div>
           </div>
-        </div>
-        <div className="flex">
-          <SplitLine className="mr-64px" />
-          <div>
-            <div className="title-1">External</div>
-            <div className="color-#F838AB bold leading-56px">
-              <span className="text-48px">10</span>
-              <span className="">%</span>
+          <div className="flex">
+            <SplitLine className="mr-64px" />
+            <div>
+              <div className="title-1">Inference (Heuristics + AI)</div>
+              <div className="color-#F838AB bold leading-56px">
+                <span className="text-48px">10</span>
+                <span>%</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex">
+            <SplitLine className="mr-64px" />
+            <div>
+              <div className="title-1">External</div>
+              <div className="color-#F838AB bold leading-56px">
+                <span className="text-48px">10</span>
+                <span className="">%</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </EffectCard>
     </div>
   )
 }

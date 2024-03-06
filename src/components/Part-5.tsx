@@ -3,7 +3,9 @@ import img2 from '../assets/images/privacy-2.svg'
 import img3 from '../assets/images/privacy-3.svg'
 
 import tracingIcon from '../assets/images/tracing-icon-3.svg'
+
 import styled from 'styled-components'
+import EffectCard from './effects/EffectCard'
 
 const Head = () => {
   return (
