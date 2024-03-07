@@ -30,8 +30,8 @@ const Line = styled(motion.div)`
 
 const GuideLine = ({ progress }: { progress: any }) => {
   return (
-    <motion.div className="flex flex-col justify-between items-center guide-line mt-6px">
-      <img src={tracingIcon} className="w-24px h-24px" />
+    <motion.div className="flex flex-col justify-between items-center guide-line mt-3px">
+      <img src={tracingIcon} className="w-48px h-48px" />
       <Line
         className="w-4px h-1050px"
         style={{ scaleY: progress, transformOrigin: 'top left' }}

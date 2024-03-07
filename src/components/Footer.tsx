@@ -52,10 +52,7 @@ export default function Footer() {
             metadata.
           </div>
           <div className="mt-43px text-base">
-            Have questions? Email us at{' '}
-            <a href="" target="blank" className="color-inherit">
-              h
-            </a>
+            Have questions? Email us at hello@b18a.io
           </div>
         </section>
         <aside className="text-sm w-256px mt-13px">

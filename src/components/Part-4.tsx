@@ -146,7 +146,6 @@ const Part = () => {
         <img src={img1} className="w-full mt-32px" />
         <Section1 />
         <Section2 />
-        <StatisticalTable />
       </div>
     </motion.div>
   )

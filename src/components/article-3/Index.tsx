@@ -4,7 +4,9 @@ import img2 from '@/assets/images/article-3/2.svg'
 import img3 from '@/assets/images/article-3/3.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
+
 import useScrollWithProgress from '@/hooks/useScrollWithProgress'
+import StatisticalTable from '../effects/StatisticalTable'
 
 import EffectCard from '../effects/EffectCard'
 
@@ -12,7 +14,6 @@ import styled from 'styled-components'
 
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
-import StatisticalTable from '../effects/StatisticalTable'
 
 const Head = () => {
   return (
@@ -106,8 +107,8 @@ const Article = () => {
   return (
     <motion.div className="h-2532px relative mt-12px flex" ref={ref}>
       {/* Guide line */}
-      <motion.div className="flex flex-col justify-between items-center guide-line mt-6px relative">
-        <img src={tracingIcon} className="w-24px h-24px" />
+      <motion.div className="flex flex-col justify-between items-center guide-line relative">
+        <img src={tracingIcon} className="w-48px h-48px" />
         <Line
           className="w-4px h-2490px"
           style={{ scaleY: progress, transformOrigin: 'top left' }}
