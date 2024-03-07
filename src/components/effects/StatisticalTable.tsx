@@ -26,9 +26,8 @@ const StatisticalTable = ({ label, list }: TProps) => {
         src={list.length > 1 ? asideLine : asideLine2}
         className="w-64px h-362px ml--40px mr-12px"
       />
-      {/* <EffectCard className="flex-1"> */}
-      <div className="relative h-192px flex-1">
-        {list.length > 1 ? (
+      {list.length > 1 ? (
+        <div className="relative h-192px flex-1">
           <div className="card h-full box-content flex p-0 items-center">
             {list.map((item, index) => (
               <div className="flex flex-1">
@@ -43,15 +42,20 @@ const StatisticalTable = ({ label, list }: TProps) => {
               </div>
             ))}
           </div>
-        ) : (
-          <div className="text-5xl font-bold color-#3857F8 mt-16px">
+          <div className="rounded-3xl p-8px border border-white border-solid block absolute top--74px color-#fff">
+            {label}
+          </div>
+        </div>
+      ) : (
+        <div className="relative flex-1">
+          <div className="text-5xl font-bold color-#3857F8 h-56px">
             {list[0].t1}
           </div>
-        )}
-      </div>
-      <div className="rounded-3xl p-8px border border-white border-solid block absolute top--74px color-#fff">
-        {label}
-      </div>
+          <div className="rounded-3xl p-8px border border-white border-solid block absolute top--74px color-#fff">
+            {label}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
