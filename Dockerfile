@@ -7,13 +7,14 @@ WORKDIR /opt/
 COPY ./ /opt/
 
 #非打包机打包的话注释下面这句话
-RUN yarn config set registry http://192.168.31.52:11180/repository/group-npm/
+# RUN yarn config set registry http://192.168.31.52:11180/repository/group-npm/
 # Install dependencies only if lock file changes
 
 # Stage 2: Build the application
 
 # Copy the rest of the application code
 RUN yarn install
+RUN yarn add antd
 
 # Build the application
 RUN yarn build
