@@ -3,8 +3,7 @@ FROM node:20-alpine as dependencies
 
 WORKDIR /opt/
 
-#这两个文件要提交到git仓库
-COPY package.json yarn.lock /opt/
+COPY ./ /opt/
 
 #非打包机打包的话注释下面这句话
 RUN yarn config set registry http://192.168.31.52:11180/repository/group-npm/
@@ -15,8 +14,6 @@ RUN yarn install
 FROM dependencies as build
 
 # Copy the rest of the application code
-COPY ./ /opt/
-
 # Build the application
 RUN yarn build
 
