@@ -14,7 +14,7 @@ const Line = styled(motion.div)`
   background: linear-gradient(
     to bottom,
     rgba(56, 87, 248, 1),
-    rgba(56, 87, 248, 1) 95%,
+    rgba(56, 87, 248, 1) 92%,
     rgba(56, 87, 248, 0) 100%
   );
 `
@@ -24,7 +24,7 @@ const GuideLine = ({ progress }: { progress: any }) => {
     <motion.div className="flex flex-col justify-between items-center guide-line">
       <img src={tracingIcon} className="w-48px h-48px" />
       <Line
-        className="w-4px h-1600px"
+        className="w-4px h-1700px"
         style={{ scaleY: progress, transformOrigin: 'top left' }}
       />
     </motion.div>
