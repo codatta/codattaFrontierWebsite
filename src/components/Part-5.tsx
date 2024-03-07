@@ -6,6 +6,8 @@ import tracingIcon from '../assets/images/tracing-icon-3.svg'
 
 import styled from 'styled-components'
 import EffectCard from './effects/EffectCard'
+import useScrollWithProgress from '../hooks/useScrollWithProgress'
+import { motion } from 'framer-motion'
 
 const Head = () => {
   return (
@@ -72,30 +74,38 @@ const Section3 = () => {
   )
 }
 
-const Line = styled.div`
+const Line = styled(motion.div)`
   background: linear-gradient(to bottom, #3857f8, rgba(56, 87, 248, 0));
 `
 
-const GuideLine = () => {
+const GuideLine = ({ progress }: { progress: any }) => {
   return (
-    <div className="flex flex-col justify-between items-center guide-line mt-6px">
+    <motion.div className="flex flex-col justify-between items-center guide-line mt-6px">
       <img src={tracingIcon} className="w-24px h-24px" />
-      <Line className="w-4px h-1210px" />
-    </div>
+      <Line
+        className="w-4px h-1210px"
+        style={{ scaleY: progress, transformOrigin: 'top left' }}
+      />
+    </motion.div>
   )
 }
 
 const Part = () => {
+  const { ref, progress } = useScrollWithProgress([0, 1], {
+    stiffness: 300,
+    damping: 80,
+  })
+
   return (
-    <div className="flex">
-      <GuideLine />
+    <motion.div className="flex" ref={ref}>
+      <GuideLine progress={progress} />
       <div className="main">
         <Head />
         <Section1 />
         <Section2 />
         <Section3 />
       </div>
-    </div>
+    </motion.div>
   )
 }
 

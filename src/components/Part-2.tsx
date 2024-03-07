@@ -3,15 +3,12 @@ import img2 from '../assets/images/usage-2.svg'
 import img3 from '../assets/images/usage-3.svg'
 import tracingIcon from '../assets/images/tracing-icon-2.svg'
 import EffectCard from './effects/EffectCard'
+import UsageCard from './effects/UsageCard'
 
 import styled from 'styled-components'
-import {
-  motion,
-  useMotionValueEvent,
-  useScroll,
-  useInView,
-} from 'framer-motion'
-import { useRef, useEffect } from 'react'
+import { motion } from 'framer-motion'
+
+import useScrollWithProgress from '../hooks/useScrollWithProgress'
 
 const Section1 = () => {
   return (
@@ -43,7 +40,7 @@ const Card2 = styled.div`
   background-size: contain;
 `
 
-const Line = styled.div`
+const Line = styled(motion.div)`
   background: linear-gradient(
     to bottom,
     rgba(0, 170, 81, 1),
@@ -83,34 +80,27 @@ const Section2 = () => {
   )
 }
 
-const GuideLine = () => {
+const GuideLine = ({ progress }: { progress: any }) => {
   return (
-    <div className="flex flex-col justify-between items-center guide-line mt-6px">
+    <motion.div className="flex flex-col justify-between items-center guide-line mt-6px">
       <img src={tracingIcon} className="w-24px h-24px" />
-      {/* <motion.div style={{ scaleY: scrollYProgress }}> */}
-      <Line className="w-4px h-1050px" />
-      {/* </motion.div> */}
-    </div>
+      <Line
+        className="w-4px h-1050px"
+        style={{ scaleY: progress, transformOrigin: 'top left' }}
+      />
+    </motion.div>
   )
 }
 
 const Part = () => {
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll()
-
-  const isInView = useInView(ref)
-
-  useMotionValueEvent(scrollYProgress, 'change', (latest) => {
-    console.log('Page scroll: ', latest)
+  const { ref, progress } = useScrollWithProgress([0, 1], {
+    stiffness: 300,
+    damping: 80,
   })
-
-  useEffect(() => {
-    console.log('is in view', isInView)
-  }, [isInView])
 
   return (
     <motion.div className="h-1084px relative text-xl flex" ref={ref}>
-      <GuideLine />
+      <GuideLine progress={progress} />
       <div className="main">
         <div className="title-1 mt-12px">Usage Examples</div>
         <div className="title-2 color-green">
@@ -118,6 +108,7 @@ const Part = () => {
         </div>
         <Section1 />
         <Section2 />
+        <UsageCard />
       </div>
     </motion.div>
   )

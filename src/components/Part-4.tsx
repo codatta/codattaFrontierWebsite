@@ -8,6 +8,11 @@ import asideLine from '../assets/images/tracing-aside-2.svg'
 import EffectCard from './effects/EffectCard'
 
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
+
+import { useEffect } from 'react'
+
+import useScrollWithProgress from '../hooks/useScrollWithProgress'
 
 const Head = () => {
   return (
@@ -103,33 +108,45 @@ const Section2 = () => {
   )
 }
 
-const Line = styled.div`
+const Line = styled(motion.div)`
   background: linear-gradient(to bottom, #f838ab, #3857f8 94%, #3857f8);
 `
-const GuideLine = () => {
+const GuideLine = ({ progress }: { progress: any }) => {
   return (
-    <div className="flex flex-col justify-between items-center guide-line mt-6px relative">
+    <motion.div className="flex flex-col justify-between items-center guide-line mt-6px relative">
       <img src={tracingIcon} className="w-24px h-24px" />
       <img
         src={asideLine}
         className="w-84px h-364px absolute top-1480px left-21px"
       />
-      <Line className="w-4px h-1850px" />
-    </div>
+      <Line
+        className="w-4px h-1850px"
+        style={{ scaleY: progress, transformOrigin: 'top left' }}
+      />
+    </motion.div>
   )
 }
 
 const Part = () => {
+  const { ref, progress } = useScrollWithProgress([0, 1], {
+    stiffness: 300,
+    damping: 80,
+  })
+
+  useEffect(() => {
+    console.log('progress: ', progress)
+  }, [progress])
+
   return (
-    <div className="flex">
-      <GuideLine />
+    <motion.div className="flex" ref={ref}>
+      <GuideLine progress={progress} />
       <div className="main pb-128px">
         <Head />
         <img src={img1} className="w-full mt-32px" />
         <Section1 />
         <Section2 />
       </div>
-    </div>
+    </motion.div>
   )
 }
 
