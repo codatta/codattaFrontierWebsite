@@ -35,4 +35,5 @@ export default {
   example
   - https://codesandbox.io/p/sandbox/framer-motion-morphsvg-example-dp7to?file=%2Fsrc%2Fuse-flubber.ts%3A11%2C1&from-embed=
   - https://codesandbox.io/p/sandbox/framer-motion-310-usevelocity-nw1dn?file=%2Fsrc%2Findex.tsx&from-embed=
+  - https://app.svgator.com/#/
   

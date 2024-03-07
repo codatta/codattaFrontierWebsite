@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import { motion } from 'framer-motion'
-import { cn } from './utils/cn'
+import { cn } from '../aceternity-ui/utils/cn'
 
 export const BackgroundBeams = React.memo(
   ({ className }: { className?: string }) => {
@@ -137,3 +137,5 @@ export const BackgroundBeams = React.memo(
 )
 
 BackgroundBeams.displayName = 'BackgroundBeams'
+
+export default BackgroundBeams
