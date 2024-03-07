@@ -1,7 +1,7 @@
-import twitterIcon from '../assets/images/twitter-icon.svg'
-import telegramIcon from '../assets/images/telegram-icon.svg'
-import discordIcon from '../assets/images/discord-icon.svg'
-import linkedinIcon from '../assets/images/linkedin-icon.svg'
+import twitterIcon from '@/assets/images/icons/twitter-icon.svg'
+import telegramIcon from '@/assets/images/icons/telegram-icon.svg'
+import discordIcon from '@/assets/images/icons/discord-icon.svg'
+import linkedinIcon from '@/assets/images/icons/linkedin-icon.svg'
 
 import styled from 'styled-components'
 

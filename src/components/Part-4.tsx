@@ -6,6 +6,7 @@ import tracingIcon from '../assets/images/tracing-icon-3.svg'
 import asideLine from '../assets/images/tracing-aside-2.svg'
 
 import EffectCard from './effects/EffectCard'
+import StatisticalTable from './effects/StatisticalTable'
 
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
@@ -145,6 +146,7 @@ const Part = () => {
         <img src={img1} className="w-full mt-32px" />
         <Section1 />
         <Section2 />
+        <StatisticalTable />
       </div>
     </motion.div>
   )

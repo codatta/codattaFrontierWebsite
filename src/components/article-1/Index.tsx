@@ -1,4 +1,4 @@
-import microImg from '@/assets/images/section-1/micro.svg'
+import microImg from '@/assets/images/article-1/micro.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 
 import { Button } from 'antd'
@@ -69,7 +69,7 @@ const GuideLine = () => {
   )
 }
 
-const Section = () => {
+const Article = () => {
   return (
     <>
       <Head />
@@ -94,4 +94,4 @@ const Section = () => {
   )
 }
 
-export default Section
+export default Article
