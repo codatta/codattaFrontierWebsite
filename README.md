@@ -38,4 +38,5 @@ export default {
   - https://app.svgator.com/#/
 
 
-test auto build
+test auto deploy
+
