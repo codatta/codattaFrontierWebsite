@@ -91,6 +91,25 @@ const Article = () => {
           </div>
         </div>
       </div>
+      {/* <div className="w-300px h-300px">
+        <svg width="400" height="180">
+          <rect
+            x="50"
+            y="20"
+            width="150"
+            height="150"
+            style="fill:none; stroke:red; stroke-width:2"
+          >
+            <animate
+              attributeName="x"
+              from="50"
+              to="200"
+              dur="2s"
+              repeatCount="indefinite"
+            />
+          </rect>
+        </svg>
+      </div> */}
       <Bg />
     </div>
   )
