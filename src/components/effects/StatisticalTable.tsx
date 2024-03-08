@@ -30,7 +30,7 @@ const StatisticalTable = ({ label, list }: TProps) => {
         <div className="relative h-192px flex-1">
           <div className="card h-full box-content flex p-0 items-center">
             {list.map((item, index) => (
-              <div className="flex flex-1">
+              <div className="flex flex-1" key={item.t1}>
                 {index > 0 && <SplitLine />}
                 <div className="ml-56px">
                   <div className="title-1">{item.t1}</div>

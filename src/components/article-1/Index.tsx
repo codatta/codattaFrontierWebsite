@@ -6,10 +6,11 @@ import styled from 'styled-components'
 
 import Signup from './Signup'
 import BackgroundBeams from '../effects/BgBeam'
+import Bg from './Bg'
 
 function Head() {
   return (
-    <header className="header flex justify-between items-center font-medium mt-14px color-white">
+    <header className="header flex justify-between items-center font-medium pt-14px color-white">
       <div className="pl-32px w-68px text-xs">
         <div className="bold text-center text-base">b18a</div>
         <div className="text-left">{'{'}blockchain:</div>
@@ -71,7 +72,7 @@ const GuideLine = () => {
 
 const Article = () => {
   return (
-    <>
+    <div className="relative">
       <Head />
       <div className="relative flex mt-94px">
         <GuideLine />
@@ -90,7 +91,8 @@ const Article = () => {
           </div>
         </div>
       </div>
-    </>
+      <Bg />
+    </div>
   )
 }
 
