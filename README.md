@@ -39,3 +39,5 @@ export default {
 
 
 color txt
+color txt
+color txt
