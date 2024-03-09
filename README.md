@@ -37,3 +37,5 @@ export default {
   - https://codesandbox.io/p/sandbox/framer-motion-310-usevelocity-nw1dn?file=%2Fsrc%2Findex.tsx&from-embed=
   - https://app.svgator.com/#/
 
+
+color txt
