@@ -1,9 +1,10 @@
-import img1 from '@/assets/images/article-2/1.svg'
+// import img1 from '@/assets/images/article-2/1.svg'
 import img2 from '@/assets/images/article-2/2.svg'
 import img3 from '@/assets/images/article-2/3.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
 
 import EffectCard from '../effects/EffectCard'
+import Chart from './Chart'
 
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
@@ -57,7 +58,8 @@ const Article = () => {
         {/* Section 1 */}
         <EffectCard className="mt-32px">
           <div className="card w-full h-490px flex justify-evenly content-center items-center bg-blur">
-            <img src={img1} className="h-full hover:opacity-75" />
+            {/* <img src={img1} className="h-full hover:opacity-75" /> */}
+            <Chart progress={progress} />
             <div className="w-362px">
               <div className="title-1">
                 For Compliance, Risk Management, Trend Analysis and More.

@@ -1,33 +1,5 @@
-import twitterIcon from '@/assets/images/icons/twitter-icon.svg'
-import telegramIcon from '@/assets/images/icons/telegram-icon.svg'
-import discordIcon from '@/assets/images/icons/discord-icon.svg'
-import linkedinIcon from '@/assets/images/icons/linkedin-icon.svg'
-
 import styled from 'styled-components'
-
-const Icon = styled.div`
-  margin-top: 12px;
-  height: 24px;
-  line-height: 24px;
-  padding-left: 33px;
-  background-position: left center;
-  background-repeat: no-repeat;
-  background-size: 24px auto;
-`
-
-const TwitterIcon = styled(Icon)`
-  margin-top: 16px;
-  background-image: url(${twitterIcon});
-`
-const TelegramIcon = styled(Icon)`
-  background-image: url(${telegramIcon});
-`
-const DiscordIcon = styled(Icon)`
-  background-image: url(${discordIcon});
-`
-const LinkedinIcon = styled(Icon)`
-  background-image: url(${linkedinIcon});
-`
+import './Footer.scss'
 
 const Divider = styled.div`
   width: 100%;
@@ -38,10 +10,10 @@ const Divider = styled.div`
 
 export default function Footer() {
   return (
-    <div className="mt-64px">
-      <span className="title-1">* </span>
+    <div className="mt-64px footer">
+      {/* <span className="title-1">* </span> */}
       <div>
-        1. We utilize the Microscope protocol for storing and managing our data.
+        We utilize the Microscope protocol for storing and managing our data.
         The collected data will be contributed to the Microscope protocol.
       </div>
       <div className="flex justify-between mt-64px">
@@ -56,11 +28,11 @@ export default function Footer() {
           </div>
         </section>
         <aside className="text-sm w-256px mt-13px">
-          <div>Social</div>
-          <TwitterIcon>Twitter</TwitterIcon>
-          <TelegramIcon>Telegram</TelegramIcon>
-          <DiscordIcon>Discord</DiscordIcon>
-          <LinkedinIcon>Linkedin</LinkedinIcon>
+          Social
+          <div className="icon twitter-icon">Twitter</div>
+          <div className="icon telegram-icon">Telegram</div>
+          <div className="icon discord-icon">Discord</div>
+          <div className="icon linkedin-icon">Linkedin</div>
         </aside>
       </div>
       <div className="mt-48px pt-32px text-base">

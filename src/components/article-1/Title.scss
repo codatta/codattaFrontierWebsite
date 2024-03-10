@@ -1,6 +1,6 @@
 svg .text-1, svg .text-2, .path {
-    line-height: 88px;
-    font-size: 80px;
+    line-height: 176px;
+    font-size: 160px;
     color: #fff;
     font-weight: 500;
     animation: textAnimate 4s infinite alternate;
@@ -12,7 +12,7 @@ svg .text-1, svg .text-2, .path {
 }
 
 svg {
-  height: 200%;
+  height: 100%;
 }
 
 @keyframes textAnimate {

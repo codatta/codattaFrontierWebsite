@@ -1,4 +1,3 @@
-import img1 from '@/assets/images/article-4/1.svg'
 import img2 from '@/assets/images/article-4/2.svg'
 import img3 from '@/assets/images/article-4/3.svg'
 import img4 from '@/assets/images/article-4/4.svg'
@@ -47,9 +46,9 @@ const Article = () => {
   })
 
   useMotionValueEvent(progress, 'change', (latest) => {
-    if (latest > 0.4 && !chartOpen) {
+    if (latest > 0.1 && !chartOpen) {
       setChartOpen(true)
-    } else if (latest <= 0.4 && chartOpen) {
+    } else if (latest <= 0.1 && chartOpen) {
       setChartOpen(false)
     }
   })

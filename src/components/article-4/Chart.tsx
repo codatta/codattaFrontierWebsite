@@ -30,7 +30,7 @@ const Chart = ({ open }: { open: boolean }) => {
               <div className="flex justify-end">
                 <div className="num-1 w-136px mt-40px">
                   <span className="text-40px leading-48px font-bold">
-                    {(90 * progress).toFixed(2)}
+                    {(90 * progress).toFixed(1)}
                   </span>
                   <span className="text-24px">%</span>
                 </div>
@@ -44,7 +44,7 @@ const Chart = ({ open }: { open: boolean }) => {
         <div className="flex justify-between h-56px">
           <div>
             <span className="num-2 text-40px leading-48px font-bold w-350px">
-              {(20 * progress).toFixed(0)}
+              {(20 * progress).toFixed(1)}
             </span>
             <span>
               %{'('}a single contributor{')'}

@@ -1,5 +1,4 @@
 import microImg from '@/assets/images/article-1/micro.svg'
-import logoIcon from '@/assets/images/icons/logo.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 
 import { Button } from 'antd'
@@ -8,22 +7,19 @@ import styled from 'styled-components'
 import Signup from './Signup'
 import BackgroundBeams from '../effects/BgBeam'
 import Bg from './Bg'
-// import Title from './Title'
+import Title from './Title'
 
-const Logo = styled.div`
-  background: url(${logoIcon}) left center no-repeat;
-  background-size: 24px auto;
-`
+import './Index.scss'
 
 function Head() {
   return (
     <header className="header flex justify-between items-center font-medium pt-14px color-white">
-      <Logo className="pl-48px w-68px text-xs">
+      <div className="pl-48px w-68px text-xs logo">
         <div className="bold text-base">b18a</div>
         <div className="text-8px">
           {'{'}blockchain:metadata{'}'}
         </div>
-      </Logo>
+      </div>
       <Button ghost size="middle" className="mr-126px">
         Sign in
       </Button>
@@ -69,14 +65,15 @@ const Article = () => {
       <div className="relative flex mt-94px">
         <GuideLine />
         <div className="main">
-          <div className="text-80px leading-88px color-#fff font-semibold">
+          <Title />
+          {/* <div className="text-80px leading-88px color-#fff font-semibold">
             Let's annotate crypto
             <br /> addresses from here
           </div>
           <p className="text-2xl mt-16px">
             The world's leading AI-powered collaboration protocol for blockchain
             metadata.
-          </p>
+          </p> */}
           <Signup />
           <a
             href="https://microscopeprotocol.xyz"
