@@ -1,4 +1,5 @@
 import microImg from '@/assets/images/article-1/micro.svg'
+import logoIcon from '@/assets/images/icons/logo.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 
 import { Button } from 'antd'
@@ -8,14 +9,22 @@ import Signup from './Signup'
 import BackgroundBeams from '../effects/BgBeam'
 import Bg from './Bg'
 
+import './index.scss'
+
+const Logo = styled.div`
+  background: url(${logoIcon}) left center no-repeat;
+  background-size: 24px auto;
+`
+
 function Head() {
   return (
     <header className="header flex justify-between items-center font-medium pt-14px color-white">
-      <div className="pl-32px w-68px text-xs">
-        <div className="bold text-center text-base">b18a</div>
-        <div className="text-left">{'{'}blockchain:</div>
-        <div className="text-right">metadata{'}'}</div>
-      </div>
+      <Logo className="pl-48px w-68px text-xs">
+        <div className="bold text-base">b18a</div>
+        <div className="text-8px">
+          {'{'}blockchain:metadata{'}'}
+        </div>
+      </Logo>
       <Button ghost size="middle" className="mr-126px">
         Sign in
       </Button>
@@ -26,9 +35,21 @@ function Head() {
 const Title = () => {
   return (
     <div className="text-left h-224px flex flex-col justify-between">
-      <h1 className="font-semibold leading-88px text-80px color-white">
-        Let's annotate crypto <br />
-        addresses from here
+      <h1 className="h-176px">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1184"
+          height="224"
+          fill="none"
+          viewBox="0 0 1184 224"
+        >
+          <text x="0%" y="25%" text-anchor="left" className="text-1">
+            Let's annotate crypto
+          </text>
+          <text x="0%" y="50%" text-anchor="left" className="text-2">
+            addresses from here
+          </text>
+        </svg>
       </h1>
       <p>
         The world's leading AI-powered collaboration protocol for blockchain

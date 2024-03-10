@@ -1,0 +1,27 @@
+svg .text-1, svg .text-2 {
+    line-height: 88px;
+    font-size: 80px;
+    color: #fff;
+    font-weight: 500;
+    animation: textAnimate 4s infinite alternate;
+    stroke-width: 1;
+    letter-spacing: 2px;
+    stroke: hsl(0, 0%, 99%);
+
+    text-align: left;
+}
+
+@keyframes textAnimate {
+  0% {
+    stroke-dasharray: 0 50%;
+    stroke-dashoffset:  20%;
+    fill:hsl(0, 0%, 99%);
+
+  }
+  
+  100% {
+    stroke-dasharray: 50% 0;
+    stroke-dashoffstet: -20%;
+    fill: hsla(189, 68%, 75%,0%)
+  }
+}

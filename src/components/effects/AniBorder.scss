@@ -1,0 +1,160 @@
+// Variables
+$btn-border-duration: 0.3s;
+$btn-border-size: 2.1px;
+$btn-font: Lato, "Open Sans", sans-serif;
+$btn-font-size: 0.8em;
+$btn-letter-spacing: 2.5px;
+$btn-line-height: 1.8em;
+$green: #48e68b;
+$light-gray: #9baec8;
+$btn-border-color: #48e68b;
+$btn-border-width: 200px;
+$btn-border-height: 45px;
+$btn-border-size-radius: 0;
+
+// Mixins
+@mixin border-radius($btn-border-size-radius, $sideH) {
+  @if $sideH != "all" {
+    -webkit-border-top-#{$sideH}-radius: $btn-border-size-radius;
+    -moz-border-top-#{$sideH}-radius: $btn-border-size-radius;
+    border-top-#{$sideH}-radius: $btn-border-size-radius;
+    -webkit-border-bottom-#{$sideH}-radius: $btn-border-size-radius;
+    -moz-border-bottom-#{$sideH}-radius: $btn-border-size-radius;
+    border-bottom-#{$sideH}-radius: $btn-border-size-radius;
+  } @else if $sideH == "all" {
+    -webkit-border-radius: $btn-border-size-radius;
+    -moz-border-radius: $btn-border-size-radius;
+    border-radius: $btn-border-size-radius;
+  }
+}
+
+@mixin sub-button {
+  position: absolute;
+  content: "";
+  height: 0;
+  width: 0;
+  display: block;
+  opacity: 0;
+}
+
+// Button Border Animate (on Hover)
+.btn-border-animate {
+  width: $btn-border-width;
+  margin: 50px auto;
+  position: relative;
+  border: 1px solid $light-gray;
+  height: $btn-border-height;
+  @include border-radius($btn-border-size-radius, "all");
+
+  &:hover .hoverBtn:before,
+  &:hover .hoverBtn:after {
+    opacity: 1;
+    -webkit-animation: btnBorderX $btn-border-duration;
+    /* Chrome, Safari, Opera */
+    animation: btnBorderX $btn-border-duration;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+    animation-direction: normal;
+  }
+  &:hover .hoverBtn-bottom:before,
+  &:hover .hoverBtn-bottom:after {
+    opacity: 1;
+    -webkit-animation: btnBorderZ $btn-border-duration;
+    /* Chrome, Safari, Opera */
+    animation: btnBorderZ $btn-border-duration;
+    animation-delay: $btn-border-duration;
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.39, 0.575, 0.565, 1);
+    animation-direction: normal;
+  }
+
+  a {
+    p {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      text-align: center;
+      color: $light-gray;
+      font-family: $btn-font;
+      text-transform: uppercase;
+      letter-spacing: $btn-letter-spacing;
+      font-size: $btn-font-size;
+      line-height: $btn-border-height;
+    }
+
+    &:hover {
+      p {
+        color: $green;
+      }
+    }
+  }
+}
+
+.hoverBtn {
+  width: 100%;
+  height: $btn-border-height;
+  position: absolute;
+  top: -1px;
+
+  &:before {
+    @include sub-button;
+    border-top: solid $btn-border-size $btn-border-color;
+    border-left: solid $btn-border-size $btn-border-color;
+    @include border-radius($btn-border-size-radius, "left");
+    right: $btn-border-width/2;
+  }
+  &:after {
+    @include sub-button;
+    border-top: solid $btn-border-size $btn-border-color;
+    border-right: solid $btn-border-size $btn-border-color;
+    @include border-radius($btn-border-size-radius, "right");
+    left: $btn-border-width/2;
+  }
+}
+
+.hoverBtn-bottom {
+  width: 100%;
+  height: $btn-border-height;
+  position: absolute;
+
+  &:before {
+    @include sub-button;
+    height: $btn-border-height;
+    border-bottom: solid $btn-border-size $btn-border-color;
+    @include border-radius($btn-border-size-radius, "right");
+    right: 0;
+  }
+  &:after {
+    @include sub-button;
+    height: $btn-border-height;
+    border-bottom: solid $btn-border-size $btn-border-color;
+    @include border-radius($btn-border-size-radius, "left");
+    left: 0;
+  }
+}
+
+@keyframes btnBorderX {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  50% {
+    width: $btn-border-width/2;
+    height: 0;
+  }
+  100% {
+    width: $btn-border-width/2;
+    height: $btn-border-height;
+  }
+}
+
+@keyframes btnBorderZ {
+  0% {
+    width: 0px;
+  }
+  100% {
+    width: $btn-border-width/2;
+  }
+}
