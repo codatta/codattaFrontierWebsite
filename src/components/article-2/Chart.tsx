@@ -1,4 +1,4 @@
-import { MotionValue, motion, useTransform } from 'framer-motion'
+import { motion, useTransform } from 'framer-motion'
 import './Chart.scss'
 
 const Chart = ({ progress }: { progress: any }) => {
