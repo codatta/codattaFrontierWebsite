@@ -2,7 +2,7 @@ import { Button } from 'antd'
 import Search from 'antd/es/input/Search'
 import { RightOutlined } from '@ant-design/icons'
 
-import AniBorder from '@/components/effects/AniBorder'
+// import AniBorder from '@/components/effects/AniBorder'
 
 import './Signup.scss'
 
@@ -25,7 +25,7 @@ export default function Signup() {
           <RightOutlined size={3} />
         </span>
       </Button>
-      <AniBorder>Start with your wallet</AniBorder>
+      {/* <AniBorder>Start with your wallet</AniBorder> */}
     </div>
   )
 }

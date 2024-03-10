@@ -3,7 +3,7 @@ export default {
     tailwindcss: {},
     autoprefixer: {},
     'postcss-px-to-viewport-8-plugin': {
-      exclude: [/node_modules/],
+      // exclude: [/node_modules/],
       unitToConvert: 'px',
       viewportWidth: (file) => {
         // let num = 1920
@@ -12,6 +12,7 @@ export default {
         // }
         return 1440
       },
+      minPixelValue: 1,
     },
   },
 }

@@ -4,7 +4,6 @@ import img3 from '@/assets/images/article-2/3.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
 
 import EffectCard from '../effects/EffectCard'
-import AniBorder from '../effects/AniBorder'
 
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
@@ -57,21 +56,19 @@ const Article = () => {
         </div>
         {/* Section 1 */}
         <EffectCard className="mt-32px">
-          <AniBorder>
-            <div className="card w-full h-490px flex justify-evenly content-center items-center bg-blur">
-              <img src={img1} className="h-full hover:opacity-75" />
-              <div className="w-362px">
-                <div className="title-1">
-                  For Compliance, Risk Management, Trend Analysis and More.
-                </div>
-                <div>
-                  Decode anonymized addresses with semantics-enabling metadata
-                  to distill complex transactions into actionable insights for
-                  many mission-critical analytics use-cases.
-                </div>
+          <div className="card w-full h-490px flex justify-evenly content-center items-center bg-blur">
+            <img src={img1} className="h-full hover:opacity-75" />
+            <div className="w-362px">
+              <div className="title-1">
+                For Compliance, Risk Management, Trend Analysis and More.
+              </div>
+              <div>
+                Decode anonymized addresses with semantics-enabling metadata to
+                distill complex transactions into actionable insights for many
+                mission-critical analytics use-cases.
               </div>
             </div>
-          </AniBorder>
+          </div>
         </EffectCard>
         {/* Section 2 */}
         <div className="mt-58px flex justify-between">

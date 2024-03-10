@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="573" fill="none" viewBox="0 0 1200 573">
+  <g filter="url(#a)">
+    <rect width="1200" height="573" fill="url(#b)" rx="16"/>
+    <rect width="1199" height="572" x=".5" y=".5" stroke="url(#c)" rx="15.5"/>
+  </g>
+  <defs>
+    <linearGradient id="b" x1="565.716" x2="560.112" y1="0" y2="573.185" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity=".01"/>
+      <stop offset="1" stop-color="#fff" stop-opacity=".04"/>
+    </linearGradient>
+    <linearGradient id="c" x1="600" x2="600" y1="0" y2="573" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EFF6FF" stop-opacity=".11"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="a" width="1256" height="629" x="-28" y="-28" color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feGaussianBlur in="BackgroundImageFix" stdDeviation="14"/>
+      <feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_842_911"/>
+      <feBlend in="SourceGraphic" in2="effect1_backgroundBlur_842_911" result="shape"/>
+    </filter>
+  </defs>
+</svg>

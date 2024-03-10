@@ -100,8 +100,17 @@ h1, h2, h3, h4, h5 {
   }
 }
 
-.small-card {
+.card-border-1 {
+  border-radius: 16px;
+  border-color: #70767c;
+  border-width: 1px;
+  border-style: solid;
+}
 
+.card-border-2 {
+  border-radius: 16px;
+  border-style: solid;
+  @apply rounded-2xl border border-blue-50/[.11] bg-white/[.1];
 }
 
 

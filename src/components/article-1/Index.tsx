@@ -8,8 +8,7 @@ import styled from 'styled-components'
 import Signup from './Signup'
 import BackgroundBeams from '../effects/BgBeam'
 import Bg from './Bg'
-
-import './index.scss'
+// import Title from './Title'
 
 const Logo = styled.div`
   background: url(${logoIcon}) left center no-repeat;
@@ -32,55 +31,27 @@ function Head() {
   )
 }
 
-const Title = () => {
-  return (
-    <div className="text-left h-224px flex flex-col justify-between">
-      <h1 className="h-176px">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="1184"
-          height="224"
-          fill="none"
-          viewBox="0 0 1184 224"
-        >
-          <text x="0%" y="25%" text-anchor="left" className="text-1">
-            Let's annotate crypto
-          </text>
-          <text x="0%" y="50%" text-anchor="left" className="text-2">
-            addresses from here
-          </text>
-        </svg>
-      </h1>
-      <p>
-        The world's leading AI-powered collaboration protocol for blockchain
-        metadata.
-      </p>
-    </div>
-  )
-}
+const Circle = styled.div`
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+`
 
+const Line1 = styled.div`
+  background: linear-gradient(
+    to bottom,
+    rgba(139, 63, 198, 0.01),
+    rgba(90, 36, 133, 1)
+  );
+`
+
+const Line2 = styled.div`
+  background: linear-gradient(
+    to bottom,
+    rgba(108, 41, 160, 1),
+    rgba(0, 170, 81, 1)
+  );
+`
 const GuideLine = () => {
-  const Circle = styled.div`
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-  `
-
-  const Line1 = styled.div`
-    background: linear-gradient(
-      to bottom,
-      rgba(139, 63, 198, 0.01),
-      rgba(90, 36, 133, 1)
-    );
-  `
-
-  const Line2 = styled.div`
-    background: linear-gradient(
-      to bottom,
-      rgba(108, 41, 160, 1),
-      rgba(0, 170, 81, 1)
-    );
-  `
-
   return (
     <div className="flex flex-col justify-between items-center guide-line">
       <Circle className="w-10px h-10px" />
@@ -98,7 +69,14 @@ const Article = () => {
       <div className="relative flex mt-94px">
         <GuideLine />
         <div className="main">
-          <Title />
+          <div className="text-80px leading-88px color-#fff font-semibold">
+            Let's annotate crypto
+            <br /> addresses from here
+          </div>
+          <p className="text-2xl mt-16px">
+            The world's leading AI-powered collaboration protocol for blockchain
+            metadata.
+          </p>
           <Signup />
           <a
             href="https://microscopeprotocol.xyz"

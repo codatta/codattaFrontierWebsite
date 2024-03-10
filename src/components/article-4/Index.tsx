@@ -9,11 +9,13 @@ import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 
 import EffectCard from '../effects/EffectCard'
 import StatisticalTable from '../effects/StatisticalTable'
+import Chart from './Chart'
 
 import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 
 import styled from 'styled-components'
-import { motion } from 'framer-motion'
+import { motion, useMotionValueEvent } from 'framer-motion'
+import { useState } from 'react'
 
 const Line = styled(motion.div)`
   background: linear-gradient(
@@ -37,9 +39,19 @@ const GuideLine = ({ progress }: { progress: any }) => {
 }
 
 const Article = () => {
+  const [chartOpen, setChartOpen] = useState(false)
+
   const { ref, progress } = useScrollWithProgress([0, 1], {
     stiffness: 300,
     damping: 80,
+  })
+
+  useMotionValueEvent(progress, 'change', (latest) => {
+    if (latest > 0.4 && !chartOpen) {
+      setChartOpen(true)
+    } else if (latest <= 0.4 && chartOpen) {
+      setChartOpen(false)
+    }
   })
 
   return (
@@ -52,7 +64,8 @@ const Article = () => {
         </div>
         {/* Section 1 */}
         <EffectCard className="mt-32px">
-          <img src={img1} className="w-1200px h-574px" />
+          {/* <img src={img1} className="w-1200px h-574px" /> */}
+          <Chart open={chartOpen} />
         </EffectCard>
         <div className="mt-32px flex justify-between">
           <img src={img2} className="w-705px h-300px mr-68px" />
