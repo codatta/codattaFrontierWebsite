@@ -28,7 +28,7 @@ const Chart = ({ open }: { open: boolean }) => {
                 Voting{')'} Algorithm
               </div>
               <div className="flex justify-end">
-                <div className="num-1 w-136px mt-40px">
+                <div className="num-1 w-136px mt-75px">
                   <span className="text-40px leading-48px font-bold">
                     {(90 * progress).toFixed(1)}
                   </span>
@@ -37,7 +37,7 @@ const Chart = ({ open }: { open: boolean }) => {
               </div>
             </div>
           </div>
-          <div className="text-xl color-#fff  mt-44px pl-163px font-bold pt-12px line">
+          <div className="text-xl color-#fff  mt-10px pl-163px font-bold pt-12px line">
             8 Independent Contributors
           </div>
         </div>

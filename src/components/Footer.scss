@@ -8,6 +8,10 @@
         background-repeat: no-repeat;
         background-size: 24px auto;
 
+        a {
+            color: inherit;
+        }
+
         &.twitter-icon {
             margin-top: 16px;
             background-image: url(../assets/images/icons/twitter-icon.svg);

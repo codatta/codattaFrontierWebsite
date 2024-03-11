@@ -29,8 +29,12 @@ export default function Footer() {
         </section>
         <aside className="text-sm w-256px mt-13px">
           Social
-          <div className="icon twitter-icon">Twitter</div>
-          <div className="icon telegram-icon">Telegram</div>
+          <div className="icon twitter-icon">
+            <a href="https://twitter.com/b18a_io">Twitter</a>
+          </div>
+          <div className="icon telegram-icon">
+            <a href="https://t.me/b18a_io">Telegram</a>
+          </div>
           <div className="icon discord-icon">Discord</div>
           <div className="icon linkedin-icon">Linkedin</div>
         </aside>

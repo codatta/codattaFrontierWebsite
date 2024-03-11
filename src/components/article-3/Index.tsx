@@ -14,8 +14,8 @@ import AniImage from '../effects/AniImage'
 
 import styled from 'styled-components'
 
-import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { animate, motion, useMotionValueEvent } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import AniContent from '../effects/AniContent'
 
 const Head = () => {
@@ -98,10 +98,29 @@ const Article = () => {
     stiffness: 300,
     damping: 80,
   })
+  const [runNum, setRunNum] = useState(false)
+  const [runNumProgress, setRunNumProgress] = useState(0)
 
   useEffect(() => {
     console.log('progress: ', progress)
   }, [progress])
+
+  useMotionValueEvent(progress, 'change', (latest) => {
+    if (latest > 0.6 && !runNum) {
+      setRunNum(true)
+    } else if (latest <= 0.6 && runNum) {
+      setRunNum(false)
+    }
+  })
+
+  useEffect(() => {
+    console.log('num: ', runNum)
+
+    animate(runNumProgress, runNum ? 1 : 0, {
+      duration: 2,
+      onUpdate: (latest) => setRunNumProgress(latest),
+    })
+  }, [runNum])
 
   return (
     <motion.div className="h-2532px relative mt-12px flex" ref={ref}>
@@ -121,10 +140,14 @@ const Article = () => {
         <StatisticalTable
           label="Coverage"
           list={[
-            { t1: 'Labeled Addresses', t2: '>530', t3: 'Millions' },
+            {
+              t1: 'Labeled Addresses',
+              t2: `>${Math.round(runNumProgress * 530)}`,
+              t3: 'Millions',
+            },
             {
               t1: 'Supported Networks',
-              t2: '35',
+              t2: `${Math.round(runNumProgress * 35)}`,
               t3: 'Blockchains',
             },
           ]}

@@ -13,8 +13,8 @@ import Chart from './Chart'
 import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 
 import styled from 'styled-components'
-import { motion, useMotionValueEvent } from 'framer-motion'
-import { useState } from 'react'
+import { animate, motion, useMotionValueEvent } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import AniTitle from '../effects/AniTitle'
 
 const Line = styled(motion.div)`
@@ -52,7 +52,25 @@ const Article = () => {
     } else if (latest <= 0.1 && chartOpen) {
       setChartOpen(false)
     }
+
+    if (latest > 0.6 && !runNum) {
+      setRunNum(true)
+    } else if (latest <= 0.6 && runNum) {
+      setRunNum(false)
+    }
   })
+
+  const [runNum, setRunNum] = useState(false)
+  const [runNumProgress, setRunNumProgress] = useState(0)
+
+  useEffect(() => {
+    console.log('num: ', runNum)
+
+    animate(runNumProgress, runNum ? 1 : 0, {
+      duration: 2,
+      onUpdate: (latest) => setRunNumProgress(latest),
+    })
+  }, [runNum])
 
   return (
     <motion.div className="relative text-xl flex" ref={ref}>
@@ -87,15 +105,19 @@ const Article = () => {
         <StatisticalTable
           label="Quality"
           list={[
-            { t1: 'Ground Truth', t2: '5', t3: '%' },
+            {
+              t1: 'Ground Truth',
+              t2: (runNumProgress * 5).toFixed(0),
+              t3: '%',
+            },
             {
               t1: 'Inference (Heuristics + AI)',
-              t2: '43',
+              t2: (runNumProgress * 43).toFixed(0),
               t3: '%',
             },
             {
               t1: 'External',
-              t2: '52',
+              t2: (runNumProgress * 52).toFixed(0),
               t3: '%',
             },
           ]}
