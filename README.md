@@ -1,25 +1,3 @@
-.waviy span {
-  position: relative;
-  display: inline-block;
-  font-size: 40px;
-  color: #fff;
-  text-transform: uppercase;
-  animation: flip 2s infinite;
-  animation-delay: calc(.2s * var(--i))
-}
-<<<<<<< HEAD
-@keyframes flip {
-  0%,80% {
-    transform: rotateY(360deg) 
-  }
-}
-=======
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-
 ## https://www.npmjs.com/package/postcss-px-to-viewport-8-
 ## https://www.framer.com/motion/animation/
 ## https://github.com/veltman/flubber#readme
@@ -28,8 +6,25 @@
   - https://codesandbox.io/p/sandbox/framer-motion-310-usevelocity-nw1dn?file=%2Fsrc%2Findex.tsx&from-embed=
   - https://app.svgator.com/#/
 
+  ## border ani
+    - https://codepen.io/jessedean/pen/MeKwdp
+    - https://codesandbox.io/p/sandbox/card-pf74x?file=%2Fsrc%2Findex.tsx
+    - https://codesandbox.io/p/sandbox/flip-card-cju2d?file=%2Fsrc%2Findex.tsx
+    - https://codesandbox.io/p/sandbox/masonry-grid-mdovb?file=%2Fsrc%2Findex.tsx
+    - https://codesandbox.io/p/sandbox/viewpager-8s3kf?file=%2Fsrc%2Findex.tsx
+    - image card hover 效果
+      https://codepen.io/search/pens?q=svg+border++animate
+    - https://www.proglobalbusinesssolutions.com/css-hover-effects/
+    - https://alvarotrigo.com/blog/css-text-animations/#
+    - https://codepen.io/alvarotrigo/pen/rNbxNWg
+    - https://codepen.io/alvarotrigo/pen/rNbxNWg
+    - https://alvarotrigo.com/blog/css-text-animations/#
+    - https://cssanimation.io/
+    - https://cssfx.netlify.app/
+    - https://alvarotrigo.com/blog/10-cool-css-animations-to-add-to-your-website/#1)-wiggling-buttons-to-catch-people's-attention
 
-color txt
-color txt
-color txt
->>>>>>> e27bd695aa3422ba201256e864c6805f80cd4075
+  ## button
+  - https://alvarotrigo.com/blog/10-cool-css-animations-to-add-to-your-website/#10)-animated-css-forms
+  - https://ianlunn.github.io/Hover/#effects
+  - https://www.minimamente.com/project/magic/ (border effect)
+  - https://www.hongkiat.com/blog/creative-css-animations/

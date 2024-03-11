@@ -1,6 +1,6 @@
 import img from '@/assets/images/article-3/0.svg'
 import img1 from '@/assets/images/article-3/1.svg'
-import img2 from '@/assets/images/article-3/2.svg'
+import img2 from '@/assets/images/article-3/2.png'
 import img3 from '@/assets/images/article-3/3.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
@@ -9,6 +9,7 @@ import useScrollWithProgress from '@/hooks/useScrollWithProgress'
 import StatisticalTable from '../effects/StatisticalTable'
 
 import EffectCard from '../effects/EffectCard'
+import AniTitle from '../effects/AniTitle'
 
 import styled from 'styled-components'
 
@@ -19,15 +20,14 @@ const Head = () => {
   return (
     <div className="flex justify-between text-2xl">
       <div className="w-440px">
-        <div className="title-1 mt-12px">Public Infrastructure</div>
-        <div className="title-2 color-cyan mt-24px">
-          Decentralized Intelligence Data Layer for All
-        </div>
-        <div className="mt-24px">
-          We aim to develop a foundational metadata infrastructure characterized
+        <AniTitle
+          t1="Public Infrastructure"
+          t2="Decentralized Intelligence Data Layer for All"
+          des="We aim to develop a foundational metadata infrastructure characterized
           by high coverage, quality, and diversity, empowering builders to focus
-          on crafting data-driven AI applications.
-        </div>
+          on crafting data-driven AI applications."
+          color="cyan"
+        ></AniTitle>
       </div>
       <EffectCard color="#33B3AE">
         <img src={img} className="w-700px" />

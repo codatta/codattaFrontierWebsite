@@ -1,9 +1,10 @@
 // import img1 from '@/assets/images/article-2/1.svg'
-import img2 from '@/assets/images/article-2/2.svg'
-import img3 from '@/assets/images/article-2/3.svg'
+import img2 from '@/assets/images/article-2/2.png'
+import img3 from '@/assets/images/article-2/3.png'
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
 
 import EffectCard from '../effects/EffectCard'
+import AniTitle from '../effects/AniTitle'
 import Chart from './Chart'
 
 import styled from 'styled-components'
@@ -51,11 +52,11 @@ const Article = () => {
     <motion.div className="h-1084px relative text-xl flex" ref={ref}>
       <GuideLine progress={progress} />
       <div className="main">
-        <div className="title-1 mt-12px">Usage Examples</div>
-        <div className="title-2 color-green">
-          Countless data and AI applications for blockchain industry
-        </div>
-        {/* Section 1 */}
+        <AniTitle
+          t1="Usage Examples"
+          t2="Countless data and AI applications for blockchain industry"
+          color="green"
+        ></AniTitle>
         <EffectCard className="mt-32px">
           <div className="card w-full h-490px flex justify-evenly content-center items-center bg-blur">
             {/* <img src={img1} className="h-full hover:opacity-75" /> */}

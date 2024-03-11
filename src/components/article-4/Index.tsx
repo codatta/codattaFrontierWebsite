@@ -15,6 +15,7 @@ import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 import styled from 'styled-components'
 import { motion, useMotionValueEvent } from 'framer-motion'
 import { useState } from 'react'
+import AniTitle from '../effects/AniTitle'
 
 const Line = styled(motion.div)`
   background: linear-gradient(
@@ -57,13 +58,12 @@ const Article = () => {
     <motion.div className="relative text-xl flex" ref={ref}>
       <GuideLine progress={progress} />
       <div className="main">
-        <div className="title-1 mt-12px">Trustworthy</div>
-        <div className="title-2 color-#F55AB7">
-          Community-Driven High-Quality
-        </div>
-        {/* Section 1 */}
+        <AniTitle
+          t1="Trustworthy"
+          t2="Community-Driven High-Quality"
+          color="#F55AB7"
+        ></AniTitle>
         <EffectCard className="mt-32px">
-          {/* <img src={img1} className="w-1200px h-574px" /> */}
           <Chart open={chartOpen} />
         </EffectCard>
         <div className="mt-32px flex justify-between">

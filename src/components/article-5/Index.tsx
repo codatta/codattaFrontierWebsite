@@ -9,6 +9,7 @@ import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
+import AniTitle from '../effects/AniTitle'
 
 const Line = styled(motion.div)`
   background: linear-gradient(
@@ -41,14 +42,15 @@ const Article = () => {
     <motion.div className="relative text-xl flex" ref={ref}>
       <GuideLine progress={progress} />
       <div className="main">
-        <div className="title-1 mt-12px">Privacy-preservation</div>
-        <div className="title-2 color-#3857F8">PII-Free Privacy</div>
-        <div>
-          Our conviction is firm that personal privacy is a fundamental human
+        <AniTitle
+          t1="Privacy-preservation"
+          t2="PII-Free Privacy"
+          des="Our conviction is firm that personal privacy is a fundamental human
           right. We strive to strike a balance between transparency and privacy,
           optimizing the massive value that can be unlocked by marrying on-chain
-          and off-chain data, while ensuring personal privacy is uncompromised.
-        </div>
+          and off-chain data, while ensuring personal privacy is uncompromised."
+          color="#3857F8"
+        ></AniTitle>
         <div className="mt-32px flex justify-between">
           <img src={img1} className="w-635px h-300px mr-55px" />
           <div>
