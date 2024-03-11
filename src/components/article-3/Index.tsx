@@ -10,11 +10,13 @@ import StatisticalTable from '../effects/StatisticalTable'
 
 import EffectCard from '../effects/EffectCard'
 import AniTitle from '../effects/AniTitle'
+import AniImage from '../effects/AniImage'
 
 import styled from 'styled-components'
 
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
+import AniContent from '../effects/AniContent'
 
 const Head = () => {
   return (
@@ -30,7 +32,7 @@ const Head = () => {
         ></AniTitle>
       </div>
       <EffectCard color="#33B3AE">
-        <img src={img} className="w-700px" />
+        <AniImage src={img} className="w-700px" />
       </EffectCard>
     </div>
   )
@@ -40,16 +42,15 @@ const Section1 = () => {
   return (
     <div className="mt--140px flex">
       <EffectCard color="#33B3AE">
-        <img src={img1} className="w-396px" />
+        <AniImage src={img1} className="w-396px" />
       </EffectCard>
-      <div className="mt-208px ml-70px w-630px">
-        <div className="title-1">Permissionless</div>
-        <div className="mt-16px ">
-          Web3 users and businesses of all sizes can contribute label data
+      <AniContent
+        className="mt-208px ml-70px w-630px"
+        t="Permissionless"
+        des="Web3 users and businesses of all sizes can contribute label data
           carrying no privacy. Rewards are granted based on contribution
-          significance and in exchange of access to the entire metadata space.
-        </div>
-      </div>
+          significance and in exchange of access to the entire metadata space."
+      />
     </div>
   )
 }
@@ -57,16 +58,15 @@ const Section1 = () => {
 const Section2 = () => {
   return (
     <div className="mt-100px flex justify-around items-center">
-      <div className="w-643px">
-        <div className="title-1">Ubiquitous Access</div>
-        <div>
-          We offer both on-chain and off-chain access, as well as batch or
+      <AniContent
+        className="643px"
+        t="Ubiquitous Access"
+        des="We offer both on-chain and off-chain access, as well as batch or
           single-item-query options via fully decentralized infrastructure in
-          the long run.
-        </div>
-      </div>
+          the long run."
+      />
       <EffectCard color="#33B3AE">
-        <img src={img2} className="w-400px" />
+        <AniImage src={img2} className="w-400px" />
       </EffectCard>
     </div>
   )
@@ -76,16 +76,15 @@ const Section3 = () => {
   return (
     <div className="mt-40px flex justify-between">
       <EffectCard color="#33B3AE">
-        <img src={img3} className="w-600px" />
+        <AniImage src={img3} className="w-600px" />
       </EffectCard>
-      <div className="w-500px mt-23px">
-        <div className="title-1">Open Source</div>
-        <div>
-          Our protocol and software pipeline have been made entirely
+      <AniContent
+        className="w-500px mt-23px"
+        t="Open Source"
+        des="  Our protocol and software pipeline have been made entirely
           open-sourced in order to foster further community-driven development
-          and step up the trust-less game.
-        </div>
-      </div>
+          and step up the trust-less game."
+      />
     </div>
   )
 }

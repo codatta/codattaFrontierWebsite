@@ -1,0 +1,30 @@
+    .ani-content {
+        opacity: 0.1;
+        transform: scale3d(0.8, 0.8, 1);
+        transform-origin: center top;
+        transition: all 1s ease-in-out;
+
+
+        &.ani {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+.fade-in-right {
+  opacity: 0;
+  transform: translateX(100px);
+  animation: fadeInRight 1s ease-out forwards;
+}
+
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+    

@@ -5,21 +5,14 @@ import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
 
 import EffectCard from '../effects/EffectCard'
 import AniTitle from '../effects/AniTitle'
+import AniContent from '../effects/AniContent'
 import Chart from './Chart'
 
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 
 import useScrollWithProgress from '../../hooks/useScrollWithProgress'
-
-const Card1 = styled.div`
-  background: url(${img2}) no-repeat right center;
-  background-size: contain;
-`
-const Card2 = styled.div`
-  background: url(${img3}) no-repeat right center;
-  background-size: contain;
-`
+import AniImage from '../effects/AniImage'
 
 const Line = styled(motion.div)`
   background: linear-gradient(
@@ -62,14 +55,12 @@ const Article = () => {
             {/* <img src={img1} className="h-full hover:opacity-75" /> */}
             <Chart progress={progress} />
             <div className="w-362px">
-              <div className="title-1">
-                For Compliance, Risk Management, Trend Analysis and More.
-              </div>
-              <div>
-                Decode anonymized addresses with semantics-enabling metadata to
+              <AniContent
+                t="For Compliance, Risk Management, Trend Analysis and More."
+                des="Decode anonymized addresses with semantics-enabling metadata to
                 distill complex transactions into actionable insights for many
-                mission-critical analytics use-cases.
-              </div>
+                mission-critical analytics use-cases."
+              />
             </div>
           </div>
         </EffectCard>
@@ -77,23 +68,31 @@ const Article = () => {
         <div className="mt-58px flex justify-between">
           {/* color="#9B3FC6" */}
           <EffectCard>
-            <Card1 className="card small-card w-584px h-316px">
-              <div className="title-1">For On-Chain Profile</div>
-              <div className="w-290px mt-16px">
-                Transform on-chain activities and credential metadata into a
-                portable on-chain profile, empowering users to unlock monetary
-                value with complete control
+            <div className="card small-card w-584px h-316px flex">
+              <div className="flex-1">
+                <AniContent
+                  t="For On-Chain Profile"
+                  des="Transform on-chain activities and credential metadata into a
+                  portable on-chain profile, empowering users to unlock monetary
+                  value with complete control."
+                  className="w-290px"
+                />
               </div>
-            </Card1>
+              <AniImage src={img2} className="w-700px ml--50px" />
+            </div>
           </EffectCard>
           <EffectCard>
-            <Card2 className="card small-card w-584px h-316px">
-              <div className="title-1">For Global Reputation Socre</div>
-              <div className="w-344px mt-16px">
-                Provide the data foundation for building a global FICO score via
-                privacy-preserving technologies (e.g., zkML)
+            <div className="card small-card w-584px h-316px flex">
+              <div className="flex-1">
+                <AniContent
+                  t="For Global Reputation Socre"
+                  des="Provide the data foundation for building a global FICO score
+                  via privacy-preserving technologies (e.g., zkML)"
+                  className="w-344px"
+                />
               </div>
-            </Card2>
+              <AniImage src={img3} className="w-700px ml--50px" />
+            </div>
           </EffectCard>
         </div>
       </div>

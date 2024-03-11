@@ -47,7 +47,7 @@ const EffectCard = ({
 
   return (
     <motion.div
-      className={`skew-card overflow-hidden relative ${className}`}
+      className={`skew-card relative ${className}`}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}

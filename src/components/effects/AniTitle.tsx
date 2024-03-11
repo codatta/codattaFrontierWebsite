@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
-import './AniTitle.scss'
 import { useInView } from 'framer-motion'
+import './AniTitle.scss'
 
 const AniTitle: React.FC<{
   t1: string
@@ -9,7 +9,7 @@ const AniTitle: React.FC<{
   color?: string
 }> = ({ t1, t2, des, color = '#fff' }) => {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true })
+  const isInView = useInView(ref, { once: false })
 
   return (
     <div className={`ani-title ${isInView && 'ani'}`} ref={ref}>
