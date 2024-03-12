@@ -25,7 +25,7 @@ const Line = styled(motion.div)`
 
 const GuideLine = ({ progress }: { progress: any }) => {
   return (
-    <motion.div className="flex flex-col justify-between items-center guide-line mt-3px">
+    <motion.div className="flex flex-col justify-between items-center guide-line mr-7px">
       <img src={tracingIcon} className="w-48px h-48px" />
       <Line
         className="w-4px h-1050px"
@@ -44,56 +44,43 @@ const Article = () => {
   return (
     <motion.div className="h-1084px relative text-xl flex" ref={ref}>
       <GuideLine progress={progress} />
-      <div className="main">
+      <div className="main ">
         <AniTitle
           t1="Usage Examples"
           t2="Countless data and AI applications for blockchain industry"
           color="green"
         ></AniTitle>
-        <EffectCard className="mt-32px">
-          <div className="card w-full h-490px flex justify-evenly content-center items-center bg-blur">
-            {/* <img src={img1} className="h-full hover:opacity-75" /> */}
-            <Chart progress={progress} />
-            <div className="w-362px">
-              <AniContent
-                t="For Compliance, Risk Management, Trend Analysis and More."
-                des="Decode anonymized addresses with semantics-enabling metadata to
+        <div className="card mt-24px card-border-1">
+          <Chart progress={progress} />
+          <AniContent
+            t="For Compliance, Risk Management, Trend Analysis and More."
+            des="Decode anonymized addresses with semantics-enabling metadata to
                 distill complex transactions into actionable insights for many
                 mission-critical analytics use-cases."
-              />
-            </div>
-          </div>
-        </EffectCard>
-        {/* Section 2 */}
-        <div className="mt-58px flex justify-between">
-          {/* color="#9B3FC6" */}
-          <EffectCard>
-            <div className="card small-card w-584px h-316px flex">
-              <div className="flex-1">
-                <AniContent
-                  t="For On-Chain Profile"
-                  des="Transform on-chain activities and credential metadata into a
+          />
+        </div>
+        <div className="card mt-16px card-border-1">
+          <AniContent
+            t="For On-Chain Profile"
+            des="Transform on-chain activities and credential metadata into a
                   portable on-chain profile, empowering users to unlock monetary
                   value with complete control."
-                  className="w-290px"
-                />
-              </div>
-              <AniImage src={img2} className="w-700px ml--50px" />
-            </div>
-          </EffectCard>
-          <EffectCard>
-            <div className="card small-card w-584px h-316px flex">
-              <div className="flex-1">
-                <AniContent
-                  t="For Global Reputation Socre"
-                  des="Provide the data foundation for building a global FICO score
+            className="w-290px"
+          />
+          <div className="flex justify-end">
+            <AniImage src={img2} className="w-129px" />
+          </div>
+        </div>
+        <div className="card mt-16px card-border-1">
+          <AniContent
+            t="For Global Reputation Socre"
+            des="Provide the data foundation for building a global FICO score
                   via privacy-preserving technologies (e.g., zkML)"
-                  className="w-344px"
-                />
-              </div>
-              <AniImage src={img3} className="w-700px ml--50px" />
-            </div>
-          </EffectCard>
+            className="w-290px"
+          />
+          <div className="flex justify-end">
+            <AniImage src={img3} className="w-129px" />
+          </div>
         </div>
       </div>
     </motion.div>

@@ -18,7 +18,7 @@ const AniTitle: React.FC<{
           <span key={text + index}>{text}&nbsp;</span>
         ))}
       </div>
-      <div className={`title-2 color-${color} mt-24px`}>
+      <div className={`title-2 color-${color}`}>
         {t2.split(' ').map((text, index) => (
           <span key={text + index + 100}>{text}&nbsp;</span>
         ))}

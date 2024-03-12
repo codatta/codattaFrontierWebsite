@@ -12,8 +12,8 @@ const AniContent: React.FC<{
 
   return (
     <div className={`ani-content ${isInView && 'ani'} ${className}`} ref={ref}>
-      <div className="title-1">{t}</div>
-      <div className="mt-16px">{des}</div>
+      <div className="text-sm color-#fff font-bold">{t}</div>
+      <div className="mt-8px text-xs">{des}</div>
     </div>
   )
 }

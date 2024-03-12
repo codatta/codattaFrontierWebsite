@@ -23,8 +23,14 @@ h1, h2, h3, h4, h5 {
   padding: 0;
 }
 
+body {
+  overflow-x: hidden;
+  width: 100vw;
+}
+
 .main {
   // width: 1200px;
+  width: 297px;
 }
 
 .guide-line {
@@ -34,20 +40,18 @@ h1, h2, h3, h4, h5 {
 
 .title-1 {
   /* height: 32px; */
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
   color: #fff;
-  margin-bottom: 16px;
 }
 
 .title-2 {
-  /* height: 40px; */
-  margin-top: 24px;
+  margin-top: 8px;
   margin-bottom: 16px;
-  font-size: 32px;
-  line-height: 40px;
-  font-weight: 600;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 500;
 }
 
 .color-cyan {
@@ -69,7 +73,7 @@ h1, h2, h3, h4, h5 {
 .card {
   position: relative;
   border-radius: 16px;
-  padding: 32px;
+  padding: 16px;
   box-sizing: border-box;
 
   &::after {
@@ -81,7 +85,7 @@ h1, h2, h3, h4, h5 {
     height: 100%;
     width: 100%;
     border-radius: 16px;
-    background: url(./assets/images/card-bg.svg) no-repeat center center;
+    // background: url(./assets/images/card-bg.svg) no-repeat center center;
     z-index: 1;
   }
 }

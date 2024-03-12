@@ -2,10 +2,8 @@ import { motion, useTransform } from 'framer-motion'
 import './Chart.scss'
 
 const Chart = ({ progress }: { progress: any }) => {
-  const path1 = useTransform(progress, [0, 0.2], [0, 1])
-
   return (
-    <motion.div className="chart w-663px h-471px relative">
+    <motion.div className="chart w-218px h-218px relative m-auto">
       <motion.svg
         xmlns="http://www.w3.org/2000/svg"
         width="663"
@@ -578,8 +576,8 @@ const Chart = ({ progress }: { progress: any }) => {
           </clipPath>
         </defs>
       </motion.svg>
-      <div className="icon-1 absolute left-22px top-80px" />
-      <div className="icon-2 absolute left-69px top-360px" />
+      <div className="icon-1 absolute left-8px top-57px" />
+      <div className="icon-2 absolute left-22px top-150px" />
     </motion.div>
   )
 }
