@@ -10,6 +10,8 @@ import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import AniTitle from '../effects/AniTitle'
+import AniContent from '../effects/AniContent'
+import AniImage from '../effects/AniImage'
 
 const Line = styled(motion.div)`
   background: linear-gradient(
@@ -22,10 +24,10 @@ const Line = styled(motion.div)`
 
 const GuideLine = ({ progress }: { progress: any }) => {
   return (
-    <motion.div className="flex flex-col justify-between items-center guide-line">
+    <motion.div className="flex flex-col justify-between items-center guide-line ml-14px mr-7px">
       <img src={tracingIcon} className="w-48px h-48px" />
       <Line
-        className="w-4px h-1700px"
+        className="w-4px h-1330px"
         style={{ scaleY: progress, transformOrigin: 'top left' }}
       />
     </motion.div>
@@ -51,39 +53,33 @@ const Article = () => {
           and off-chain data, while ensuring personal privacy is uncompromised."
           color="#3857F8"
         ></AniTitle>
-        <div className="mt-32px flex justify-between">
-          <img src={img1} className="w-635px h-300px mr-55px" />
-          <div>
-            <div className="title-1">No PII Allowed</div>
-            <div>
-              Our system is meticulously designed to omit any collection of
-              personal information.
-            </div>
-          </div>
+        <div className="mt-32px">
+          <AniContent
+            t="No PII Allowed"
+            des="   Our system is meticulously designed to omit any collection of
+              personal information."
+          />
+          <AniImage src={img1} className="w-287px mt-32px" />
         </div>
-        <div className="mt-64px flex justify-between">
-          <div>
-            <div className="title-1">Anonymous Participation</div>
-            <div>
-              Contributors can utilize a web3-native method to create an
+        <div className="mt-32px">
+          <AniContent
+            t="Anonymous Participation"
+            des="Contributors can utilize a web3-native method to create an
               account, thereby allowing them to remain anonymous and avoid
-              disclosing personal information.
-            </div>
-          </div>
-          <img src={img2} className="w-635px h-300px ml-90px" />
+              disclosing personal information."
+          />
+          <AniImage src={img2} className="w-287px mt-32px" />
         </div>
-        <div className="mt-64px flex justify-between">
-          <img src={img3} className="w-635px h-300px mr-52px" />
-          <div>
-            <div className="title-1">Credential extracts</div>
-            <div>
-              Verifiable credentials (such as KYC or diplomas) constitute a
+        <div className="mt-32px">
+          <AniContent
+            t="Credential extracts"
+            des="Verifiable credentials (such as KYC or diplomas) constitute a
               treasure trove of high-value data. Extracted information from
               these credentials (such as gender or age group) provides anonymous
               but valuable demographic data that helps to empower the Web3
-              economy in numerous ways, including on-chain advertising.
-            </div>
-          </div>
+              economy in numerous ways, including on-chain advertising."
+          />
+          <AniImage src={img3} className="w-287px mt-32px" />
         </div>
         <StatisticalTable
           label="Diversity"

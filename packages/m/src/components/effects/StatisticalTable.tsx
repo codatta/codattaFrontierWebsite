@@ -4,11 +4,12 @@ import asideLine2 from '@/assets/images/aside-line-2.svg'
 type TProps = {
   label: string
   list: { t1: string; t2?: string; t3?: string }[]
+  className?: string
 }
 
-const StatisticalTable = ({ label, list }: TProps) => {
+const StatisticalTable = ({ label, list, className }: TProps) => {
   return (
-    <div className="flex justify-between items-center mt-100px ml--12px">
+    <div className={`flex justify-between items-center ml--12px ${className}`}>
       <img
         src={list.length > 1 ? asideLine : asideLine2}
         className="w-33px h-269px mr-12px"
@@ -36,10 +37,10 @@ const StatisticalTable = ({ label, list }: TProps) => {
         </div>
       ) : (
         <div className="relative flex-1">
-          <div className="text-5xl font-bold color-#3857F8 h-56px">
+          <div className="text-20px leading-28px font-bold color-#3857F8">
             {list[0].t1}
           </div>
-          <div className="rounded-3xl p-8px border border-white border-solid block absolute top--74px color-#fff">
+          <div className="rounded-24px p-6px border border-white border-solid block absolute top--54px color-#fff text-sm">
             {label}
           </div>
         </div>

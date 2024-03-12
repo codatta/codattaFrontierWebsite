@@ -124,6 +124,7 @@ const Article = () => {
         <Section2 />
         <Section3 />
         <StatisticalTable
+          className="mt-100px"
           label="Coverage"
           list={[
             {
