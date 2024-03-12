@@ -5,33 +5,6 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>b18a</title>
-    <script>
-      function redirectToCorrectPage() {
-        // 获取当前窗口宽度
-        var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
-        // 设置跳转的目标页面链接
-        var mobilePageURL = '/m/index.html';
-        var pcPageURL = '/';
-
-        // 判断宽度并跳转
-        if (windowWidth < 750) {
-          // window.location.href = mobilePageURL;
-        } else {
-          window.location.href = pcPageURL;
-        }
-      }
-
-      // 在页面加载时调用函数
-      window.onload = function () {
-        redirectToCorrectPage();
-      };
-
-      // 在窗口大小改变时调用函数（可选，根据需要添加）
-      // window.onresize = function () {
-      //   redirectToCorrectPage();
-      // };
-    </script>
     <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -40,6 +13,33 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','G-197QVZDX2B');</script>
 <!-- End Google Tag Manager -->
   </head>
+  <script>
+    function redirectToCorrectPage() {
+      // 获取当前窗口宽度
+      var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+      // 设置跳转的目标页面链接
+      var mobilePageURL = '/m/index.html';
+      var pcPageURL = '/';
+
+      // 判断宽度并跳转
+      if (windowWidth < 750) {
+        // window.location.href = mobilePageURL;
+      } else {
+        window.location.href = pcPageURL;
+      }
+    }
+
+    // 在页面加载时调用函数
+    window.onload = function () {
+      redirectToCorrectPage();
+    };
+
+    // 在窗口大小改变时调用函数（可选，根据需要添加）
+    // window.onresize = function () {
+    //   redirectToCorrectPage();
+    // };
+  </script>
   <body>
     <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=G-197QVZDX2B"

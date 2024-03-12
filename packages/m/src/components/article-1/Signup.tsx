@@ -1,31 +1,19 @@
-import { Button } from 'antd'
-import Search from 'antd/es/input/Search'
-import { RightOutlined } from '@ant-design/icons'
-
-// import AniBorder from '@/components/effects/AniBorder'
-
 import './Signup.scss'
 
 export default function Signup() {
   return (
-    <div className="signup mt-88px h-58px flex">
-      <Search
+    <div className="signup text-sm color-#fff">
+      <input
         placeholder="Email address"
-        allowClear
-        enterButton="Sign up for Ominitags"
-        size="large"
-        className="w-485px h-full mr-24px"
-        // addonBg="rgba(255, 0, 0, 0.7)"
-        // onSearch={onSearch}
+        className="email-input rounded-lg bg-white w-299px h-38px"
       />
-      <div className="w-1px h-full bg-#fff opacity-10 mr-24px"></div>
-      <Button size="large" ghost>
+      <button className="signup-btn rounded-lg color-#fff bold w-299px h-38px mt-16px">
+        Sign up for THE Great Mission
+      </button>
+      <div className="w-299px h-1px bg-#fff opacity-10 mt-16px"></div>
+      <button className="wallet-btn rounded-lg color-#fff bold w-299px h-38px mt-16px">
         Start with your wallet
-        <span className="ml-12px">
-          <RightOutlined size={3} />
-        </span>
-      </Button>
-      {/* <AniBorder>Start with your wallet</AniBorder> */}
+      </button>
     </div>
   )
 }

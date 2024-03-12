@@ -5,7 +5,7 @@ export default {
     'postcss-px-to-viewport-8-plugin': {
       // exclude: [/node_modules/],
       unitToConvert: 'px',
-      viewportWidth: 1440,
+      viewportWidth: 375,
       minPixelValue: 1,
     },
   },

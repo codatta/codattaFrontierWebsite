@@ -10,12 +10,12 @@ import './App.scss'
 
 function App() {
   return (
-    <div className="ml-64px pb-46px min-h-screen m-auto">
+    <div className="min-h-screen m-auto">
       <Article1 />
-      <Article2 />
+      {/* <Article2 />
       <Article3 />
       <Article4 />
-      <Article5 />
+      <Article5 /> */}
       <Footer />
     </div>
   )

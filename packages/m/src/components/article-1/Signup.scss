@@ -1,9 +1,21 @@
 .signup {
-    .ant-input-search-button {
-         background: linear-gradient(to bottom, #8B3FC6, #652ECC );
+    line-height: 38px;
 
-         &:hover {
-            background: linear-gradient(to bottom, #9a5bca, #7a4fcb ) !important;
-         }
+    .email-input {
+        box-shadow: none;
+        border: none;
+        padding-left: 18px;
+        box-sizing: border-box;
+    }
+
+    .signup-btn {
+        background: linear-gradient(to bottom, #9B3FC6, #652ECC );
+        border: none;
+    }
+
+    .wallet-btn {
+        border: none;
+        border: 1px solid #B67FE0;
+        background-color: transparent;
     }
 }

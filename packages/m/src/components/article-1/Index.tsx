@@ -13,14 +13,14 @@ import './Index.scss'
 
 function Head() {
   return (
-    <header className="header flex justify-between items-center font-medium pt-14px color-white">
-      <div className="pl-48px w-68px text-xs logo">
+    <header className="header flex justify-between items-center font-medium pt-12px pl-24px color-white">
+      <div className="pl-32px w-109px text-xs logo">
         <div className="bold text-base">b18a</div>
-        <div className="text-8px">
+        <div className="text-8px leading-8px">
           {'{'}blockchain:metadata{'}'}
         </div>
       </div>
-      <Button ghost size="middle" className="mr-126px">
+      <Button ghost size="middle" className="mr-25px">
         Sign in
       </Button>
     </header>
@@ -49,11 +49,11 @@ const Line2 = styled.div`
 `
 const GuideLine = () => {
   return (
-    <div className="flex flex-col justify-between items-center guide-line">
-      <Circle className="w-10px h-10px" />
-      <Line1 className="w-4px h-300px" />
+    <div className="flex flex-col justify-between items-center guide-line mr-7px">
+      {/* <Circle className="w-10px h-10px" /> */}
+      <Line1 className="w-4px h-343px" />
       <img src={tracingIcon} className="w-48px h-48px" />
-      <Line2 className="w-4px h-274px" />
+      <Line2 className="w-4px h-172px" />
     </div>
   )
 }
@@ -62,51 +62,24 @@ const Article = () => {
   return (
     <div className="relative">
       <Head />
-      <div className="relative flex mt-94px">
+      <Bg />
+      <div className="w-full absolute inset-0 top-0 left-0 pointer-events-none">
+        <BackgroundBeams />
+      </div>
+      <div className="flex mt-243px ">
         <GuideLine />
         <div className="main">
           <Title />
-          {/* <div className="text-80px leading-88px color-#fff font-semibold">
-            Let's annotate crypto
-            <br /> addresses from here
-          </div>
-          <p className="text-2xl mt-16px">
-            The world's leading AI-powered collaboration protocol for blockchain
-            metadata.
-          </p> */}
           <Signup />
           <a
             href="https://microscopeprotocol.xyz"
             target="_blank"
-            className="mt-67px block"
+            className="mt-40px block"
           >
-            <img src={microImg} className="h-124px" />
+            <img src={microImg} className="h-94px" />
           </a>
-          <div className="w-full absolute inset-0 top-0 left-0 pointer-events-none">
-            <BackgroundBeams />
-          </div>
         </div>
       </div>
-      {/* <div className="w-300px h-300px">
-        <svg width="400" height="180">
-          <rect
-            x="50"
-            y="20"
-            width="150"
-            height="150"
-            style="fill:none; stroke:red; stroke-width:2"
-          >
-            <animate
-              attributeName="x"
-              from="50"
-              to="200"
-              dur="2s"
-              repeatCount="indefinite"
-            />
-          </rect>
-        </svg>
-      </div> */}
-      <Bg />
     </div>
   )
 }
