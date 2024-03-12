@@ -63,7 +63,7 @@ const Article = () => {
     <div className="relative">
       <Head />
       <Bg />
-      <div className="w-full absolute inset-0 top-0 left-0 pointer-events-none">
+      <div className="w-full h-580px absolute inset-0 top-0 left-0 pointer-events-none">
         <BackgroundBeams />
       </div>
       <div className="flex mt-243px ">
