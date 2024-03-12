@@ -1,0 +1,36 @@
+.footer {
+    .icon {
+        margin-top: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding-left: 33px;
+        background-position: left center;
+        background-repeat: no-repeat;
+        background-size: 24px auto;
+
+        a {
+            color: inherit;
+        }
+
+        &.twitter-icon {
+            margin-top: 16px;
+            background-image: url(../assets/images/icons/twitter-icon.svg);
+        }
+        &.telegram-icon {    
+            margin-top: 16px;
+            background-image: url(../assets/images/icons/telegram-icon.svg);
+        }
+
+        &.discord-icon {
+            margin-top: 16px;
+            background-image: url(../assets/images/icons/discord-icon.svg);
+        }
+
+        &.linkedin-icon {
+            margin-top: 16px;
+            background-image: url(../assets/images/icons/linkedin-icon.svg);
+        }
+    }
+
+
+}

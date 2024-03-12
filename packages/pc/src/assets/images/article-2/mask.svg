@@ -1,0 +1,15 @@
+<svg width="500" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 定义一个圆形路径 -->
+  <path d="M100,100 L400,100" fill="blue" stroke="red" stroke-width="20" />
+  <!-- 定义蒙版，使用一个矩形来隐藏路径的一部分 -->
+  <mask id="maskExample" x="0" y="0" width="200" height="200">
+    <rect x="200" y="0" width="100" height="200" fill="white" />
+    <circle cx="250" cy="100" r="20" fill="black" />
+  </mask>
+
+    <!-- <rect x="200" y="0" width="100" height="200" fill="white" />
+    <circle cx="250" cy="100" r="20" fill="black" /> -->
+
+  <!-- 应用蒙版到路径上 -->
+  <path d="M100,100 L400,100"  stroke="blue" stroke-width="10" mask="url(#maskExample)"/>
+</svg>

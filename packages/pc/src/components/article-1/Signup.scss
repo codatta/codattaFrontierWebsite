@@ -1,0 +1,9 @@
+.signup {
+    .ant-input-search-button {
+         background: linear-gradient(to bottom, #8B3FC6, #652ECC );
+
+         &:hover {
+            background: linear-gradient(to bottom, #9a5bca, #7a4fcb ) !important;
+         }
+    }
+}

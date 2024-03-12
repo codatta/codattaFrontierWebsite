@@ -3,14 +3,19 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "resolutions": {
-    "styled-components": "^5"
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite --host",
-    "build": "vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "dev:pc": "yarn workspace pc dev",
+    "dev:m": "yarn workspace m dev",
+    "build:pc": "rm -rf dist && yarn workspace pc build && yarn copy:pc",
+    "build:m": "rm -rf dist && yarn workspace m build && yarn copy:m",
+    "build": "rm -rf dist && yarn workspace pc build && yarn workspace m build && yarn copy:pc && yarn copy:m",
+    "copy:pc": "cp -r packages/pc/dist dist",
+    "copy:m": "cp -r packages/m/dist dist/m",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.1",

@@ -1,0 +1,125 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+p, html, body {
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  padding: 0;
+}
+
+.main {
+  width: 1200px;
+}
+
+.guide-line {
+  width: 24px;
+  margin-right: 32px;
+}
+
+.title-1 {
+  /* height: 32px; */
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+.title-2 {
+  /* height: 40px; */
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 600;
+}
+
+.color-cyan {
+   color: #33B3AE;
+}
+
+.color-green {
+  color: #00AA51;
+}
+
+.color-blue {
+   color: #3857F8;
+}
+
+.color-purple {
+  color: #F838AB;
+}
+
+.card {
+  position: relative;
+  border-radius: 16px;
+  padding: 32px;
+  box-sizing: border-box;
+
+  &::after {
+    position: absolute;
+    display: block;
+    content: '';
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 16px;
+    background: url(./assets/images/card-bg.svg) no-repeat center center;
+    z-index: 1;
+  }
+}
+
+.bg-blur {
+  &::before {
+    position: absolute;
+    display: block;
+    content: '';
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    border-radius: 16px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.04));
+  }
+}
+
+.card-border-1 {
+  border-radius: 16px;
+  border-color: #70767c;
+  border-width: 1px;
+  border-style: solid;
+}
+
+.card-border-2 {
+  border-radius: 16px;
+  border-style: solid;
+  @apply rounded-2xl border border-blue-50/[.11] bg-white/[.1];
+}
+
+.card-border-3 {
+  border-style: solid;
+  @apply flex-shrink-0 w-72 rounded-2xl border border-[#70767c]
+}
+
+
+
+
+
+

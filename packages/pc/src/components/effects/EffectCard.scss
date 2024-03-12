@@ -1,0 +1,21 @@
+.skew-card {
+    transform: perspective(700px) rotateX(0deg) rotateY(0deg);
+
+    .shine {
+        position: absolute;
+        left: -325px;
+        top: -325px;
+
+        width: 650px;
+        height: 650px;
+        background-color: rgb(63, 185, 80);
+        filter: blur(180px);
+        border-radius: 300px;
+        // opacity: 0;
+        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        mix-blend-mode: soft-light;
+        will-change: transform;
+        border-radius: 16px;
+        pointer-events: none;
+    }
+}
