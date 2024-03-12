@@ -143,7 +143,7 @@ const Article = () => {
             {
               t1: 'Labeled Addresses',
               t2: `>${Math.round(runNumProgress * 530)}`,
-              t3: 'Millions',
+              t3: 'Million',
             },
             {
               t1: 'Supported Networks',

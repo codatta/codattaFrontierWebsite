@@ -1,0 +1,19 @@
+.card {
+    // .linear {
+    //     background: linear-gradient(to right,  rgba(248, 56, 171, 1) 0%, rgba(255, 255, 255, 1) 100% );
+    //     color: transparent; /* 隐藏实际文本颜色，只显示背景 */
+    //     background-clip: text;
+    // }
+
+    .des2 {
+        padding-left: 25px;
+        background: url(../../assets/images/article-4/polygon.svg) left center no-repeat;
+        background-size: 16px 16px;
+    }
+
+    .progress-wapper {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        background: linear-gradient(to right,  rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 100% );
+    }
+}

@@ -9,6 +9,7 @@ import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 import EffectCard from '../effects/EffectCard'
 import StatisticalTable from '../effects/StatisticalTable'
 import Chart from './Chart'
+import Card from './Card'
 
 import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 
@@ -97,6 +98,16 @@ const Article = () => {
         </div>
         <div className="mt-48px title-1">Multi-staged validation</div>
         <div className="flex justify-between">
+          {/* <Card
+            t1="Stage  1 :Validation"
+            t2="AI-powered"
+            des="Conditional accessibility with quality 
+warning"
+            num1={5}
+            num2={5}
+            progress={0.3}
+          /> */}
+          {/* <img src={img2} className="w-288px h-220px" /> */}
           <img src={img3} className="w-288px h-220px" />
           <img src={img4} className="w-288px h-220px" />
           <img src={img5} className="w-288px h-220px" />
