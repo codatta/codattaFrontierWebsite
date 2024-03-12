@@ -26,11 +26,11 @@ h1, h2, h3, h4, h5 {
 body {
   overflow-x: hidden;
   width: 100vw;
+  box-sizing: content-box;
 }
 
 .main {
-  // width: 1200px;
-  width: 297px;
+  width: 300px;
 }
 
 .guide-line {
@@ -106,7 +106,7 @@ body {
 
 .card-border-1 {
   border-radius: 16px;
-  border-color: #70767c;
+  border-color: rgba($color: #eff6ff, $alpha: 0.11);
   border-width: 1px;
   border-style: solid;
 }

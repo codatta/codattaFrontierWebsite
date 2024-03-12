@@ -23,7 +23,7 @@ const AniTitle: React.FC<{
           <span key={text + index + 100}>{text}&nbsp;</span>
         ))}
       </div>
-      {des && <div className="mt-24px des">{des}</div>}
+      {des && <div className="mt-24px des text-xs">{des}</div>}
     </div>
   )
 }

@@ -13,9 +13,9 @@ function App() {
     <div className="min-h-screen m-auto">
       <Article1 />
       <Article2 />
-      {/* <Article3 />
-      <Article4 /> */}
-      {/* <Article5 /> */}
+      <Article3 />
+      {/* <Article4 />
+      <Article5 /> */}
       <Footer />
     </div>
   )
