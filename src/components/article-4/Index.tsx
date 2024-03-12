@@ -98,20 +98,38 @@ const Article = () => {
         </div>
         <div className="mt-48px title-1">Multi-staged validation</div>
         <div className="flex justify-between">
-          {/* <Card
+          <Card
             t1="Stage  1 :Validation"
             t2="AI-powered"
             des="Conditional accessibility with quality 
 warning"
             num1={5}
             num2={5}
-            progress={0.3}
-          /> */}
-          {/* <img src={img2} className="w-288px h-220px" /> */}
-          <img src={img3} className="w-288px h-220px" />
-          <img src={img4} className="w-288px h-220px" />
-          <img src={img5} className="w-288px h-220px" />
-          <img src={img6} className="w-288px h-220px" />
+            progressType={1}
+          />
+          <Card
+            t1="Stage 2: Validation"
+            t2="AI+ Human Intelligence"
+            des="Accessibility with quality warning"
+            num1={20}
+            num2={15}
+            progressType={2}
+          />
+          <Card
+            t1="Stage 3: Validation"
+            t2="Public Exposure"
+            des="Accessibility with trust"
+            num1={100}
+            num2={80}
+            progressType={3}
+          />
+          <Card
+            t1="Stage 4: Lifetime Community Correction"
+            t2=""
+            des="Continuous Improvement"
+            progressType={3}
+            des2="Reputation"
+          />
         </div>
         <StatisticalTable
           label="Quality"
