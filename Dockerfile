@@ -14,7 +14,6 @@ COPY ./ /opt/
 
 # Copy the rest of the application code
 RUN yarn install
-RUN yarn add antd
 
 # Build the application
 RUN yarn build

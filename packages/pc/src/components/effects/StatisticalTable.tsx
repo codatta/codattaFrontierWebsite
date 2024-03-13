@@ -27,8 +27,8 @@ const StatisticalTable = ({ label, list }: TProps) => {
         className="w-64px h-362px ml--40px mr-12px"
       />
       {list.length > 1 ? (
-        <div className="relative h-192px flex-1">
-          <div className="card h-full box-content flex p-0 items-center">
+        <div className="relative h-192px flex-1 rounded-16px border-1px border-[rgba(239,246,255,0.11)]" style={{ background: 'linear-gradient(181deg, rgba(255, 255, 255, 0.01) 1.06%, rgba(255, 255, 255, 0.04) 99.1%)' }}>
+          <div className="h-full box-content flex p-0 items-center">
             {list.map((item, index) => (
               <div className="flex flex-1" key={item.t1}>
                 {index > 0 && <SplitLine />}

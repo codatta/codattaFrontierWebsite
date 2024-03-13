@@ -51,7 +51,7 @@ const Article = () => {
           color="green"
         ></AniTitle>
         <EffectCard className="mt-32px">
-          <div className="card w-full h-490px flex justify-evenly content-center items-center bg-blur">
+          <div className="w-full h-490px flex justify-evenly content-center items-center bg-blur">
             {/* <img src={img1} className="h-full hover:opacity-75" /> */}
             <Chart progress={progress} />
             <div className="w-362px">

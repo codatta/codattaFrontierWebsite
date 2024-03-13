@@ -1,7 +1,7 @@
 import microImg from '@/assets/images/article-1/micro.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 
-import { Button } from 'antd'
+
 import styled from 'styled-components'
 
 import Signup from './Signup'
@@ -13,16 +13,16 @@ import './Index.scss'
 
 function Head() {
   return (
-    <header className="header flex justify-between items-center font-medium pt-14px color-white">
+    <header className="header flex justify-between items-center font-medium pt-14px color-white pr-64px">
       <div className="pl-48px w-68px text-xs logo">
         <div className="bold text-base">b18a</div>
         <div className="text-8px">
           {'{'}blockchain:metadata{'}'}
         </div>
       </div>
-      <Button ghost size="middle" className="mr-126px">
+      <button className="ml-auto border-1px border-white bg-transparent text-white rounded-8px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
         Sign in
-      </Button>
+      </button>
     </header>
   )
 }
@@ -60,9 +60,9 @@ const GuideLine = () => {
 
 const Article = () => {
   return (
-    <div className="relative">
+    <div className="relative overflow-hidden">
       <Head />
-      <div className="relative flex mt-94px">
+      <div className="relative flex mt-94px overflow-hidden">
         <GuideLine />
         <div className="main">
           <Title />
