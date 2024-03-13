@@ -66,7 +66,7 @@ const Chart = ({ open }: { open: boolean }) => {
           <motion.path
             stroke="url(#a)"
             strokeWidth="8"
-            animate={{ pathLength: 1 }}
+            animate={{ pathLength: 1 * progress }}
             d="M4 310.572c4.85-51.234 19.75-143.015 60.808-143.015 66.006-30.537 53.533-87.03 117.979-87.03 36.381-2.036 28.066-26.466 51.454-26.466 23.387 0 58.729-18.831 85.755-26.465 27.026-7.634 78.999-20.868 88.874-15.269 9.875 5.6 41.579 5.6 41.579 5.6s51.453-19.851 91.992-9.163c40.539 10.69 58.729 8.652 113.301 0 54.572-8.65 424.618-3.562 428.258 0"
           />
           <motion.circle
@@ -76,7 +76,7 @@ const Chart = ({ open }: { open: boolean }) => {
             fill="#F838AB"
             stroke="#fff"
             strokeWidth="4"
-            animate={{ opacity: 1, strokeWidth: 1 }}
+            animate={{ opacity: progress, strokeWidth: 4 * progress }}
           />
           <defs>
             <linearGradient

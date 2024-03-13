@@ -30,13 +30,22 @@ export default function Footer() {
         <aside className="text-sm w-256px mt-13px">
           Social
           <div className="icon twitter-icon">
-            <a href="https://twitter.com/b18a_io">Twitter</a>
+            <a href="https://twitter.com/b18a_io" className="no-underline">
+              Twitter
+            </a>
           </div>
           <div className="icon telegram-icon">
-            <a href="https://t.me/b18a_io">Telegram</a>
+            <a href="https://t.me/b18a_io" className="no-underline">
+              Telegram
+            </a>
           </div>
-          <div className="icon discord-icon">Discord</div>
-          <div className="icon linkedin-icon">Linkedin</div>
+          <div className="icon medium-icon">
+            <a href="https://medium.com/@b18a" className="no-underline">
+              Medium
+            </a>
+          </div>
+          {/* <div className="icon discord-icon">Discord</div>
+          <div className="icon linkedin-icon">Linkedin</div> */}
         </aside>
       </div>
       <div className="mt-48px pt-32px text-base">

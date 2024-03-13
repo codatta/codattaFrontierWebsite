@@ -1,6 +1,5 @@
-import img1 from '../../assets/images/article-4/progress-1.svg'
-import img2 from '../../assets/images/article-4/progress-2.svg'
-import img3 from '../../assets/images/article-4/progress-3.svg'
+import { motion } from 'framer-motion'
+import { mapToRange } from '@/utils/util'
 
 import './Card.scss'
 
@@ -8,13 +7,24 @@ type TProps = {
   t1: string
   t2: string
   des: string
-  progressType: number
+  progress: number
   num1?: number
   num2?: number
   des2?: string
 }
 
-const Card = ({ t1, t2, des, progressType, num1, num2, des2 }: TProps) => {
+const Bar = ({ progress }: { progress: number }) => {
+  return (
+    <div className="bar">
+      <motion.div
+        className="w-full h-full rounded-8px inner"
+        style={{ width: `${mapToRange(progress, 10, 100)}%` }}
+      ></motion.div>
+    </div>
+  )
+}
+
+const Card = ({ t1, t2, des, num1, num2, des2, progress }: TProps) => {
   return (
     <div className="w-288px h-219px card-border-3 box-border p-24px card mt-16px">
       <div className="h-72px">
@@ -26,16 +36,16 @@ const Card = ({ t1, t2, des, progressType, num1, num2, des2 }: TProps) => {
         </h4>
         <p className="text-xs mt-12px color-#fff opacity-65">{des}</p>
       </div>
-      <img
-        src={progressType === 1 ? img1 : progressType === 2 ? img2 : img3}
-        className="w-236px"
-      />
+      <Bar progress={progress} />
       {!des2 ? (
-        <div className="linear mt-2px text-3xl font-medium">
-          {num1}% <span className="text-base">Earned (+{num2}%)</span>
+        <div className="linear mt-24px text-3xl font-medium">
+          {(progress * num1).toFixed(0)}%{' '}
+          <span className="text-base">
+            Earned (+{(num2 * progress).toFixed(0)}%)
+          </span>
         </div>
       ) : (
-        <div className="linear mt-2px text-3xl font-medium flex items-center">
+        <div className="linear mt-24px text-3xl font-medium flex items-center">
           <span className="icon"></span>
           {des2}
         </div>

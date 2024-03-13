@@ -51,9 +51,9 @@ const Article = () => {
       setChartOpen(false)
     }
 
-    if (latest > 0.6 && !runNum) {
+    if (latest > 0.5 && !runNum) {
       setRunNum(true)
-    } else if (latest <= 0.6 && runNum) {
+    } else if (latest <= 0.5 && runNum) {
       setRunNum(false)
     }
   })
@@ -97,7 +97,7 @@ const Article = () => {
 warning"
           num1={5}
           num2={5}
-          progressType={1}
+          progress={runNumProgress}
         />
         <Card
           t1="Stage 2: Validation"
@@ -105,7 +105,7 @@ warning"
           des="Accessibility with quality warning"
           num1={20}
           num2={15}
-          progressType={2}
+          progress={runNumProgress}
         />
         <Card
           t1="Stage 3: Validation"
@@ -113,13 +113,13 @@ warning"
           des="Accessibility with trust"
           num1={100}
           num2={80}
-          progressType={3}
+          progress={runNumProgress}
         />
         <Card
           t1="Stage 4: Lifetime Community Correction"
           t2=""
           des="Continuous Improvement"
-          progressType={3}
+          progress={runNumProgress}
           des2="Reputation"
         />
         <StatisticalTable

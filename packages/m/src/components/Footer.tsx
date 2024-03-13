@@ -31,14 +31,19 @@ export default function Footer() {
       </section>
       <section className="mt-13px text-base">
         <div className="text-sm">Social</div>
-        <div className="icon twitter-icon mt-16px">
-          <a href="https://twitter.com/b18a_io">Twitter</a>
+        <div className="flex justify-start items-center">
+          <a href="https://twitter.com/b18a_io" className="no-underline">
+            <div className="icon twitter-icon" />
+          </a>
+          <a href="https://t.me/b18a_io" className="no-underline">
+            <div className="icon telegram-icon" />
+          </a>
+          <a href="https://medium.com/@b18a" className="no-underline">
+            <div className="icon medium-icon"></div>
+          </a>
         </div>
-        <div className="icon telegram-icon mt-12px">
-          <a href="https://t.me/b18a_io">Telegram</a>
-        </div>
-        <div className="icon discord-icon">Discord</div>
-        <div className="icon linkedin-icon">Linkedin</div>
+        {/* <div className="icon discord-icon">Discord</div>
+        <div className="icon linkedin-icon">Linkedin</div> */}
       </section>
       <Divider />
       <div className="text-base">
