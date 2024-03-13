@@ -98,6 +98,7 @@ warning"
           num1={5}
           num2={5}
           progress={runNumProgress}
+          bar={runNumProgress * 0.05}
         />
         <Card
           t1="Stage 2: Validation"
@@ -106,6 +107,7 @@ warning"
           num1={20}
           num2={15}
           progress={runNumProgress}
+          bar={runNumProgress * 0.2}
         />
         <Card
           t1="Stage 3: Validation"
@@ -114,13 +116,15 @@ warning"
           num1={100}
           num2={80}
           progress={runNumProgress}
+          bar={runNumProgress * 1}
         />
         <Card
           t1="Stage 4: Lifetime Community Correction"
           t2=""
           des="Continuous Improvement"
-          progress={runNumProgress}
           des2="Reputation"
+          progress={runNumProgress}
+          bar={runNumProgress * 1}
         />
         <StatisticalTable
           className="mt-86px"

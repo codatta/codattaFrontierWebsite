@@ -11,20 +11,21 @@ type TProps = {
   num1?: number
   num2?: number
   des2?: string
+  bar: number
 }
 
-const Bar = ({ progress }: { progress: number }) => {
+const Bar = ({ bar }: { bar: number }) => {
   return (
     <div className="bar">
       <motion.div
         className="w-full h-full rounded-8px inner"
-        style={{ width: `${mapToRange(progress, 10, 100)}%` }}
+        style={{ width: `${mapToRange(bar, 10, 100)}%` }}
       ></motion.div>
     </div>
   )
 }
 
-const Card = ({ t1, t2, des, num1, num2, des2, progress }: TProps) => {
+const Card = ({ t1, t2, des, num1, num2, des2, progress, bar }: TProps) => {
   return (
     <div className="w-288px h-219px card-border-3 box-border p-24px card mt-16px">
       <div className="h-72px">
@@ -36,7 +37,7 @@ const Card = ({ t1, t2, des, num1, num2, des2, progress }: TProps) => {
         </h4>
         <p className="text-xs mt-12px color-#fff opacity-65">{des}</p>
       </div>
-      <Bar progress={progress} />
+      <Bar bar={bar} />
       {!des2 ? (
         <div className="linear mt-24px text-3xl font-medium">
           {(progress * num1).toFixed(0)}%{' '}
