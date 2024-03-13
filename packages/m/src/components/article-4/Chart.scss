@@ -12,13 +12,12 @@
     }
 
     .arrow {
-        width: 760px;
         background: url(../../assets/images/article-4/arrow.svg) no-repeat right bottom;
         background-size: 100% auto;
         text-align: right;
     }
 
     .line {
-        border-top: 4px dashed rgba($color: #fff, $alpha: .25);
+        border-top: 2px dashed rgba($color: #fff, $alpha: .15);
     }
 }

@@ -13,17 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-p, html, body {
+p, html, body, h1, h2, h3, h4, h5  {
   margin: 0;
   padding: 0;
 }
 
-h1, h2, h3, h4, h5 {
-  margin: 0;
-  padding: 0;
-}
-
-body {
+html, body {
   overflow-x: hidden;
   width: 100vw;
   box-sizing: content-box;
@@ -120,6 +115,12 @@ body {
 .card-border-3 {
   border-style: solid;
   @apply flex-shrink-0 w-72 rounded-2xl border border-[#70767c]
+}
+
+button:disabled {
+  background-color: #808080; /* Change the background color for disabled state */
+  color: #555; /* Change the text color for disabled state */
+  cursor: not-allowed; /* Change the cursor to indicate that the button is not clickable */
 }
 
 

@@ -18,9 +18,10 @@ const StatisticalTable = ({ label, list, className }: TProps) => {
         <div className="relative w-274px">
           {list.map((item, index) => (
             <div
+              key={item.t1 + 'index'}
               className={`card-border-1 h-full box-content p-0  ${index > 0 ? 'mt-18px' : ''}`}
             >
-              <div key={item.t1} className="mt-32px ml-47px">
+              <div className="mt-32px ml-47px">
                 <div className="text-base font-semibold color-#fff">
                   {item.t1}
                 </div>

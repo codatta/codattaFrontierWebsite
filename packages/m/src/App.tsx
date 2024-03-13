@@ -14,7 +14,7 @@ function App() {
       <Article1 />
       <Article2 />
       <Article3 />
-      {/* <Article4 /> */}
+      <Article4 />
       <Article5 />
       <Footer />
     </div>

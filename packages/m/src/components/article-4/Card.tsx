@@ -16,7 +16,7 @@ type TProps = {
 
 const Card = ({ t1, t2, des, progressType, num1, num2, des2 }: TProps) => {
   return (
-    <div className="w-288px h-219px card-border-3 box-border p-24px card">
+    <div className="w-288px h-219px card-border-3 box-border p-24px card mt-16px">
       <div className="h-72px">
         <h4 className="font-bold color-#fff text-sm">
           {t1}

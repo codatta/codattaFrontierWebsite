@@ -1,7 +1,6 @@
 import microImg from '@/assets/images/article-1/micro.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 
-import { Button } from 'antd'
 import styled from 'styled-components'
 
 import Signup from './Signup'
@@ -20,9 +19,9 @@ function Head() {
           {'{'}blockchain:metadata{'}'}
         </div>
       </div>
-      <Button ghost size="middle" className="mr-25px">
+      <button className="mr-25px signin-btn text-sm color-#fff rounded-6px">
         Sign in
-      </Button>
+      </button>
     </header>
   )
 }
