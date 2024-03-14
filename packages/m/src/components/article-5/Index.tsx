@@ -5,44 +5,38 @@ import img3 from '@/assets/images/article-5/3.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 
 import StatisticalTable from '../effects/StatisticalTable'
-import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 
-import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import AniTitle from '../effects/AniTitle'
 import AniContent from '../effects/AniContent'
 import AniImage from '../effects/AniImage'
+import GuideLine from '../effects/GuideLine'
 
-const Line = styled(motion.div)`
-  background: linear-gradient(
-    to bottom,
-    rgba(56, 87, 248, 1),
-    rgba(56, 87, 248, 1) 92%,
-    rgba(56, 87, 248, 0) 100%
-  );
-`
-
-const GuideLine = ({ progress }: { progress: any }) => {
-  return (
-    <motion.div className="flex flex-col justify-between items-center guide-line ml-14px mr-7px">
-      <img src={tracingIcon} className="w-48px h-48px" />
-      <Line
-        className="w-4px h-1330px"
-        style={{ scaleY: progress, transformOrigin: 'top left' }}
-      />
-    </motion.div>
-  )
-}
+const sections = [
+  {
+    title: 'No PII Allowed',
+    content:
+      'Our system is meticulously designed to omit any collection of personal information.',
+    img: img1,
+  },
+  {
+    title: 'Anonymous Participation',
+    content:
+      'Contributors can utilize a web3-native method to create an account, thereby allowing them to remain anonymous and avoid disclosing personal information.',
+    img: img2,
+  },
+  {
+    title: 'Credential extracts',
+    content:
+      'Verifiable credentials (such as KYC or diplomas) constitute a treasure trove of high-value data. Extracted information from these credentials (such as gender or age group) provides anonymous but valuable demographic data that helps to empower the Web3 economy in numerous ways, including on-chain advertising.',
+  },
+]
 
 const Article = () => {
-  const { ref, progress } = useScrollWithProgress([0, 1], {
-    stiffness: 300,
-    damping: 80,
-  })
-
   return (
-    <motion.div className="relative text-xl flex" ref={ref}>
-      <GuideLine progress={progress} />
+    <motion.div className="relative text-xl flex">
+      <GuideLine icon={tracingIcon} className="h-1330px color-5" />
+
       <div className="main">
         <AniTitle
           t1="Privacy-preservation"
@@ -53,34 +47,12 @@ const Article = () => {
           and off-chain data, while ensuring personal privacy is uncompromised."
           color="#3857F8"
         ></AniTitle>
-        <div className="mt-32px">
-          <AniContent
-            t="No PII Allowed"
-            des="   Our system is meticulously designed to omit any collection of
-              personal information."
-          />
-          <AniImage src={img1} className="w-287px mt-32px" />
-        </div>
-        <div className="mt-32px">
-          <AniContent
-            t="Anonymous Participation"
-            des="Contributors can utilize a web3-native method to create an
-              account, thereby allowing them to remain anonymous and avoid
-              disclosing personal information."
-          />
-          <AniImage src={img2} className="w-287px mt-32px" />
-        </div>
-        <div className="mt-32px">
-          <AniContent
-            t="Credential extracts"
-            des="Verifiable credentials (such as KYC or diplomas) constitute a
-              treasure trove of high-value data. Extracted information from
-              these credentials (such as gender or age group) provides anonymous
-              but valuable demographic data that helps to empower the Web3
-              economy in numerous ways, including on-chain advertising."
-          />
-          <AniImage src={img3} className="w-287px mt-32px" />
-        </div>
+        {sections.map((item) => (
+          <div className="mt-32px" key={item.title}>
+            <AniContent t={item.title} des={item.content} />
+            <AniImage src={item.img} className="w-287px mt-32px" />
+          </div>
+        ))}
         <StatisticalTable
           label="Diversity"
           list={[{ t1: 'Gini-Coefficient: 0.92' }]}

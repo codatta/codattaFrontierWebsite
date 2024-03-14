@@ -1,0 +1,16 @@
+.aside-line {
+    &.show {
+        animation: fadeInOut 3s forwards;
+    }
+
+
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

@@ -6,80 +6,57 @@ import StatisticalTable from '../effects/StatisticalTable'
 import Chart from './Chart'
 import Card from './Card'
 
-import useScrollWithProgress from '../../hooks/useScrollWithProgress'
-
-import styled from 'styled-components'
-import { animate, motion, useMotionValueEvent } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import AniTitle from '../effects/AniTitle'
 import AniContent from '../effects/AniContent'
 import AniImage from '../effects/AniImage'
+import GuideLine from '../effects/GuideLine'
 
-const Line = styled(motion.div)`
-  background: linear-gradient(
-    to bottom,
-    rgba(248, 56, 171, 1),
-    rgba(248, 56, 171, 1) 80%,
-    rgba(56, 87, 248, 1)
-  );
-`
-
-const GuideLine = ({ progress }: { progress: any }) => {
-  return (
-    <motion.div className="flex flex-col justify-between items-center guide-line ml-14px mr-7px">
-      <img src={tracingIcon} className="w-48px h-48px" />
-      <Line
-        className="w-4px h-2180px"
-        style={{ scaleY: progress, transformOrigin: 'top left' }}
-      />
-    </motion.div>
-  )
-}
+const cards = [
+  {
+    t1: 'Stage  1 :Validation',
+    t2: 'AI-powered',
+    des: 'Conditional accessibility with quality warning',
+    num1: 5,
+    num2: 5,
+    bar: 0.05,
+  },
+  {
+    t1: 'Stage 2: Validation',
+    t2: 'AI+ Human Intelligence',
+    des: 'Accessibility with quality warning',
+    num1: 20,
+    num2: 15,
+    bar: 0.2,
+  },
+  {
+    t1: 'Stage 3: Validation',
+    t2: 'Public Exposure',
+    des: 'Accessibility with trust',
+    num1: 100,
+    num2: 80,
+    bar: 1,
+  },
+  {
+    t1: 'Stage 4: Lifetime Community Correction',
+    t2: '',
+    des: 'Continuous Improvement',
+    des2: 'Reputation',
+    bar: 1,
+  },
+]
 
 const Article = () => {
-  const [chartOpen, setChartOpen] = useState(false)
-
-  const { ref, progress } = useScrollWithProgress([0, 1], {
-    stiffness: 300,
-    damping: 80,
-  })
-
-  useMotionValueEvent(progress, 'change', (latest) => {
-    if (latest > 0.1 && !chartOpen) {
-      setChartOpen(true)
-    } else if (latest <= 0.1 && chartOpen) {
-      setChartOpen(false)
-    }
-
-    if (latest > 0.5 && !runNum) {
-      setRunNum(true)
-    } else if (latest <= 0.5 && runNum) {
-      setRunNum(false)
-    }
-  })
-
-  const [runNum, setRunNum] = useState(false)
-  const [runNumProgress, setRunNumProgress] = useState(0)
-
-  useEffect(() => {
-    console.log('num: ', runNum)
-
-    animate(runNumProgress, runNum ? 1 : 0, {
-      duration: 2,
-      onUpdate: (latest) => setRunNumProgress(latest),
-    })
-  }, [runNum])
-
   return (
-    <motion.div className="relative text-xl flex" ref={ref}>
-      <GuideLine progress={progress} />
+    <motion.div className="relative text-xl flex">
+      <GuideLine icon={tracingIcon} className="h-2180px color-4" />
       <div className="main">
         <AniTitle
           t1="Trustworthy"
           t2="Community-Driven High-Quality"
           color="#F55AB7"
         ></AniTitle>
-        <Chart open={chartOpen} />
+        <Chart />
         <AniContent
           className="mt-32px"
           t="Transparency"
@@ -90,59 +67,35 @@ const Article = () => {
         <AniImage src={img2} className="w-287px mt-32px" />
         <AniContent className="mt-32px" t="Multi-staged validation" des="" />
 
-        <Card
-          t1="Stage  1 :Validation"
-          t2="AI-powered"
-          des="Conditional accessibility with quality 
-warning"
-          num1={5}
-          num2={5}
-          progress={runNumProgress}
-          bar={runNumProgress * 0.05}
-        />
-        <Card
-          t1="Stage 2: Validation"
-          t2="AI+ Human Intelligence"
-          des="Accessibility with quality warning"
-          num1={20}
-          num2={15}
-          progress={runNumProgress}
-          bar={runNumProgress * 0.2}
-        />
-        <Card
-          t1="Stage 3: Validation"
-          t2="Public Exposure"
-          des="Accessibility with trust"
-          num1={100}
-          num2={80}
-          progress={runNumProgress}
-          bar={runNumProgress * 1}
-        />
-        <Card
-          t1="Stage 4: Lifetime Community Correction"
-          t2=""
-          des="Continuous Improvement"
-          des2="Reputation"
-          progress={runNumProgress}
-          bar={runNumProgress * 1}
-        />
+        {cards.map((card) => (
+          <Card
+            key={card.t1}
+            t1={card.t1}
+            t2={card.t2}
+            des={card.des}
+            des2={card.des2}
+            num1={card.num1}
+            num2={card.num2}
+            bar={card.bar}
+          />
+        ))}
         <StatisticalTable
           className="mt-86px"
           label="Quality"
           list={[
             {
               t1: 'Ground Truth',
-              t2: (runNumProgress * 5).toFixed(0),
+              t2: ['5'],
               t3: '%',
             },
             {
               t1: 'Inference (Heuristics + AI)',
-              t2: (runNumProgress * 43).toFixed(0),
+              t2: ['43'],
               t3: '%',
             },
             {
               t1: 'External',
-              t2: (runNumProgress * 52).toFixed(0),
+              t2: ['52'],
               t3: '%',
             },
           ]}

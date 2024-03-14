@@ -1,19 +1,15 @@
-import { useEffect, useState } from 'react'
+import useInViewWithAnimate from '../../hooks/useInViewWithAnimate'
 import './Chart.scss'
-import { motion, animate } from 'framer-motion'
+import { motion } from 'framer-motion'
 
-const Chart = ({ open }: { open: boolean }) => {
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    animate(progress, open ? 1 : 0, {
-      duration: 2,
-      onUpdate: (latest) => setProgress(latest),
-    })
-  }, [open])
+const Chart = () => {
+  const { ref, progress } = useInViewWithAnimate()
 
   return (
-    <div className="chart card-border-1 w-297px h-318px box-border p-24px relative mt-16px">
+    <div
+      className="chart card-border-1 w-297px h-318px box-border p-24px relative mt-16px"
+      ref={ref}
+    >
       <div className="text-sm color-#fff font-bold">
         Approximate <span className="color-#F55AB7">Ground Truth</span> with
         Aggregated Opinions

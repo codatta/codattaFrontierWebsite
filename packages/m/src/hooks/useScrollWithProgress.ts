@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { useScroll, useSpring, useTransform } from 'framer-motion'
 
 const useScrollWithProgress = (
@@ -15,11 +15,6 @@ const useScrollWithProgress = (
     useTransform(scrollYProgress, offsetRange, [0, 1]),
     springConfig
   )
-
-  useEffect(() => {
-    // Log the scroll progress without using useMotionValueEvent
-    console.log('Page scroll: ', scrollYProgress.get())
-  }, [scrollYProgress])
 
   return { ref, progress }
 }

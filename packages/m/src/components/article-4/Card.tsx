@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion'
 import { mapToRange } from '@/utils/util'
 
+import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
 import './Card.scss'
 
 type TProps = {
   t1: string
   t2: string
   des: string
-  progress: number
   num1?: number
   num2?: number
   des2?: string
@@ -25,9 +25,14 @@ const Bar = ({ bar }: { bar: number }) => {
   )
 }
 
-const Card = ({ t1, t2, des, num1, num2, des2, progress, bar }: TProps) => {
+const Card = ({ t1, t2, des, num1, num2, des2, bar }: TProps) => {
+  const { ref, progress } = useInViewWithAnimate()
+
   return (
-    <div className="w-288px h-219px card-border-3 box-border p-24px card mt-16px">
+    <div
+      className="w-288px h-219px card-border-3 box-border p-24px card mt-16px"
+      ref={ref}
+    >
       <div className="h-72px">
         <h4 className="font-bold color-#fff text-sm">
           {t1}
@@ -37,7 +42,7 @@ const Card = ({ t1, t2, des, num1, num2, des2, progress, bar }: TProps) => {
         </h4>
         <p className="text-xs mt-12px color-#fff opacity-65">{des}</p>
       </div>
-      <Bar bar={bar} />
+      <Bar bar={bar * progress} />
       {!des2 ? (
         <div className="linear mt-24px text-3xl font-medium">
           {(progress * num1).toFixed(0)}%{' '}
