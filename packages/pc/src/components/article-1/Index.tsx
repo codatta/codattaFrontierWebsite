@@ -1,15 +1,15 @@
 import microImg from '@/assets/images/article-1/micro.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
-
-
 import styled from 'styled-components'
-
 import Signup from './Signup'
 import BackgroundBeams from '../effects/BgBeam'
 import Bg from './Bg'
 import Title from './Title'
 
 import './Index.scss'
+import { DynamicConnectButton, useDynamicContext } from '@dynamic-labs/sdk-react-core'
+import { useEffect, useState } from 'react'
+import { Modal } from 'antd'
 
 function Head() {
   return (
@@ -20,9 +20,9 @@ function Head() {
           {'{'}blockchain:metadata{'}'}
         </div>
       </div>
-      <button className="ml-auto border-1px border-white bg-transparent text-white rounded-8px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
+      <DynamicConnectButton buttonClassName='ml-auto border-1px border-white bg-transparent text-white rounded-8px text-16px font-500 leading-24px px-12px py-6px cursor-pointer'>
         Sign in
-      </button>
+      </DynamicConnectButton>
     </header>
   )
 }
@@ -59,6 +59,15 @@ const GuideLine = () => {
 }
 
 const Article = () => {
+  const { user, handleLogOut } = useDynamicContext()
+  const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    if (!user) return
+    handleLogOut()
+    setOpen(true)
+  }, [user])
+
   return (
     <div className="relative overflow-hidden">
       <Head />
@@ -107,6 +116,13 @@ const Article = () => {
         </svg>
       </div> */}
       <Bg />
+      <Modal open={open} centered onCancel={() => setOpen(false)} closable={false} footer={null} >
+        <h2 className='text-20px font-700 m-b-20px'>Thank You</h2>
+        <span className='text-16px'>
+          Thank you for registering! Your account has been successfully created. We're excited to announce that new services are coming soon. Stay tuned!
+        </span>
+        <button className='mt-24px m-l-auto rounded-8px h-36px px-32px block border-none outline-none text-white font-700 text-16px bg-gradient-to-b from-#C63F6C to-#652ECC' onClick={() => setOpen(false)}>OK</button>
+      </Modal>
     </div>
   )
 }

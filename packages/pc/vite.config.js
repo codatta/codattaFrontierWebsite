@@ -13,6 +13,9 @@ export default defineConfig({
       configFile: './unocss.config.ts',
     }),
   ],
+  define: {
+    'process.env': {},
+  },
   base: './',
   resolve: {
     alias: {
