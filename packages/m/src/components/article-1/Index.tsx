@@ -93,12 +93,26 @@ const Article = () => {
         </div>
       </div>
 
-      <Modal width={'83%'} centered open={open} onCancel={() => setOpen(false)} closable={false} footer={null} >
-        <h2 className='text-20px font-700 m-b-16px'>Thank You</h2>
+      <Modal
+        width={'83%'}
+        centered
+        open={open}
+        onCancel={() => setOpen(false)}
+        closable={false}
+        footer={null}
+      >
+        <h2 className="text-20px font-700 m-b-16px">Thank You</h2>
         <span>
-          Thank you for registering! Your account has been successfully created. We're excited to announce that new services are coming soon. Stay tuned!
+          Thank you for your interest in our product. Your email has been added
+          to the waiting list. Once our product is released, we will promptly
+          send an email for you.
         </span>
-        <button className='mt-24px m-l-auto rounded-8px h-36px px-32px block border-none outline-none text-white font-700 text-14px bg-gradient-to-b from-#C63F6C to-#652ECC' onClick={() => setOpen(false)}>OK</button>
+        <button
+          className="mt-24px m-l-auto rounded-8px h-36px px-32px block border-none outline-none text-white font-700 text-14px bg-gradient-to-b from-#C63F6C to-#652ECC"
+          onClick={() => setOpen(false)}
+        >
+          OK
+        </button>
       </Modal>
     </div>
   )

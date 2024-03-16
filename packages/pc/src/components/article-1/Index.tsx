@@ -96,32 +96,26 @@ const Article = () => {
           </div>
         </div>
       </div>
-      {/* <div className="w-300px h-300px">
-        <svg width="400" height="180">
-          <rect
-            x="50"
-            y="20"
-            width="150"
-            height="150"
-            style="fill:none; stroke:red; stroke-width:2"
-          >
-            <animate
-              attributeName="x"
-              from="50"
-              to="200"
-              dur="2s"
-              repeatCount="indefinite"
-            />
-          </rect>
-        </svg>
-      </div> */}
       <Bg />
-      <Modal open={open} centered onCancel={() => setOpen(false)} closable={false} footer={null} >
-        <h2 className='text-20px font-700 m-b-20px'>Thank You</h2>
-        <span className='text-16px'>
-          Thank you for registering! Your account has been successfully created. We're excited to announce that new services are coming soon. Stay tuned!
+      <Modal
+        open={open}
+        centered
+        onCancel={() => setOpen(false)}
+        closable={false}
+        footer={null}
+      >
+        <h2 className="text-20px font-700 m-b-20px">Thank You</h2>
+        <span className="text-16px">
+          Thank you for your interest in our product. Your email has been added
+          to the waiting list. Once our product is released, we will promptly
+          send an email for you.
         </span>
-        <button className='mt-24px m-l-auto rounded-8px h-36px px-32px block border-none outline-none text-white font-700 text-16px bg-gradient-to-b from-#C63F6C to-#652ECC' onClick={() => setOpen(false)}>OK</button>
+        <button
+          className="mt-24px m-l-auto rounded-8px h-36px px-32px block border-none outline-none text-white font-700 text-16px bg-gradient-to-b from-#C63F6C to-#652ECC"
+          onClick={() => setOpen(false)}
+        >
+          OK
+        </button>
       </Modal>
     </div>
   )
