@@ -2,7 +2,6 @@ import asideLine from '@/assets/images/aside-line.svg'
 import asideLine2 from '@/assets/images/aside-line-2.svg'
 
 import styled from 'styled-components'
-// import EffectCard from './EffectCard'
 
 const SplitLine = styled.div`
   width: 1px;

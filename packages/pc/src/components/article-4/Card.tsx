@@ -1,7 +1,3 @@
-import img1 from '../../assets/images/article-4/progress-1.svg'
-import img2 from '../../assets/images/article-4/progress-2.svg'
-import img3 from '../../assets/images/article-4/progress-3.svg'
-
 import './Card.scss'
 
 type TProps = {
@@ -30,7 +26,7 @@ const Bar = () => {
           x=".5"
           y="16.5"
           fill="url(#a)"
-          fill-opacity=".1"
+          fillOpacity=".1"
           stroke="url(#b)"
           rx="7.5"
           className="w-full h-full block"
@@ -38,7 +34,7 @@ const Bar = () => {
         <path fill="url(#c)" d="M1 24a7 7 0 0 1 7-7h45v14H8a7 7 0 0 1-7-7Z" />
         <g filter="url(#d)">
           <circle cx="57" cy="24" r="8" fill="#F838AB" />
-          <circle cx="57" cy="24" r="12" stroke="#fff" stroke-width="8" />
+          <circle cx="57" cy="24" r="12" stroke="#fff" strokeWidth="8" />
         </g>
         <defs>
           <linearGradient
@@ -49,8 +45,8 @@ const Bar = () => {
             y2="31.606"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#fff" stop-opacity=".7" />
-            <stop offset="1" stop-color="#fff" stop-opacity=".1" />
+            <stop stopColor="#fff" stopOpacity=".7" />
+            <stop offset="1" stopColor="#fff" stopOpacity=".1" />
           </linearGradient>
           <linearGradient
             id="b"
@@ -60,8 +56,8 @@ const Bar = () => {
             y2="32"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#fff" stop-opacity=".3" />
-            <stop offset="1" stop-color="#fff" stop-opacity=".2" />
+            <stop stopColor="#fff" stopOpacity=".3" />
+            <stop offset="1" stopColor="#fff" stopOpacity=".2" />
           </linearGradient>
           <linearGradient
             id="c"
@@ -71,8 +67,8 @@ const Bar = () => {
             y2="24"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#F838AB" />
-            <stop offset="1" stop-color="#F8385B" />
+            <stop stopColor="#F838AB" />
+            <stop offset="1" stopColor="#F8385B" />
           </linearGradient>
           <filter
             id="d"
@@ -80,10 +76,10 @@ const Bar = () => {
             height="48"
             x="33"
             y="0"
-            color-interpolation-filters="sRGB"
+            colorInterpolationFilters="sRGB"
             filterUnits="userSpaceOnUse"
           >
-            <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
             <feColorMatrix
               in="SourceAlpha"
               result="hardAlpha"
@@ -109,7 +105,7 @@ const Bar = () => {
   )
 }
 
-const Card = ({ t1, t2, des, progressType, num1, num2, des2 }: TProps) => {
+const Card = ({ t1, t2, des, num1, num2, des2 }: TProps) => {
   return (
     <div className="w-288px h-219px card-border-3 box-border p-24px card">
       <div className="h-72px">
