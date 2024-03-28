@@ -16,6 +16,7 @@ RUN yarn install
 COPY ./ /opt/
 
 # Build the application
+ARG BUILDTYPE
 #RUN yarn build
 RUN if [ $BUILDTYPE = 'DEV' ]; then \
          yarn build:dev;  \
