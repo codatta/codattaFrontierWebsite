@@ -18,8 +18,8 @@ COPY ./ /opt/
 # Build the application
 ARG BUILDTYPE
 #RUN yarn build
-RUN if [ $BUILDTYPE = 'DEV' ]; then \
-         yarn build:dev;  \
+RUN if [ $BUILDTYPE = 'PRE' ]; then \
+         yarn build:pre;  \
     elif [  $BUILDTYPE = 'PROD' ]; then \
          yarn build:prod;  \
     elif [  $BUILDTYPE = 'TEST' ]; then \

@@ -14,7 +14,7 @@
     "build": "rm -rf dist && yarn workspace pc build && yarn workspace m build && yarn copy:pc && yarn copy:m",
     "build:test": "echo 'test'",
     "build:prod": "echo 'prod'",
-    "build:dev": "echo 'dev'",
+    "build:pre": "echo 'pre'",
     "copy:pc": "cp -r packages/pc/dist dist",
     "copy:m": "cp -r packages/m/dist dist/m",
     "preview": "vite preview",
