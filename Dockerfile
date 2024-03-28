@@ -16,7 +16,16 @@ RUN yarn install
 COPY ./ /opt/
 
 # Build the application
-RUN yarn build
+#RUN yarn build
+RUN if [ $BUILDTYPE = 'DEV' ]; then \
+         yarn build:dev;  \
+    elif [  $BUILDTYPE = 'PROD' ]; then \
+         yarn build:prod;  \
+    elif [  $BUILDTYPE = 'TEST' ]; then \
+         yarn build:test;  \
+    else \
+         yarn build; \
+    fi;
 
 # Stage 3: Create the final image
 FROM nginx:1.25.2-alpine-slim
