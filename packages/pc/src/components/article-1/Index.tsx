@@ -14,11 +14,11 @@ import { Modal } from 'antd'
 function Head() {
   return (
     <header className="header flex justify-between items-center font-medium pt-14px color-white pr-64px">
-      <div className="pl-34px w-68px text-xs logo">
-        <div className="bold text-base">b18a</div>
+      <div className="w-200px h-30px text-xs logo">
+        {/* <div className="bold text-base">b18a</div>
         <div className="text-8px">
           <i>Blockchain:Metadata</i>
-        </div>
+        </div> */}
       </div>
       <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-8px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
         Sign in
