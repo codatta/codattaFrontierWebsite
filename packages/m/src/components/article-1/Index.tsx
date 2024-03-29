@@ -19,7 +19,7 @@ function Head() {
       <div className="pl-32px w-109px text-xs logo">
         <div className="bold text-base">b18a</div>
         <div className="text-8px leading-8px">
-          {'{'}blockchain:metadata{'}'}
+          <i>Blockchain:Metadata</i>
         </div>
       </div>
       <DynamicConnectButton buttonClassName="mr-25px signin-btn text-sm color-#fff rounded-6px">

@@ -41,6 +41,9 @@ export default function Footer() {
           <a href="https://medium.com/@b18a" className="no-underline">
             <div className="icon medium-icon"></div>
           </a>
+          <a href="https://discord.gg/xPjQrrQp" className="no-underline">
+            <div className="icon discord-icon" />
+          </a>
         </div>
         {/* <div className="icon discord-icon">Discord</div>
         <div className="icon linkedin-icon">Linkedin</div> */}
