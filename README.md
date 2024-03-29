@@ -1,3 +1,2 @@
 # omnitagOfficialWebsite
 
-trigger build
