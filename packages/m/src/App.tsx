@@ -12,7 +12,7 @@ import './App.scss'
 
 function App() {
   const settings: DynamicContextProps['settings'] = {
-    environmentId: 'ddf871be-8ba9-48df-826a-31d6e573f189',
+    environmentId: 'a55eb2b4-84ca-41ff-a369-fc52646ed585',
     walletConnectors: [EthereumWalletConnectors],
   }
 
