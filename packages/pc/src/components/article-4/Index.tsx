@@ -1,81 +1,54 @@
 import img2 from '@/assets/images/article-4/2.svg'
-import img3 from '@/assets/images/article-4/3.svg'
-import img4 from '@/assets/images/article-4/4.svg'
-import img5 from '@/assets/images/article-4/5.svg'
-import img6 from '@/assets/images/article-4/6.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 
 import EffectCard from '../effects/EffectCard'
 import StatisticalTable from '../effects/StatisticalTable'
 import Chart from './Chart'
-import Card from './Card'
+import Card from './Card2'
 
-import useScrollWithProgress from '../../hooks/useScrollWithProgress'
+import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
 
-import styled from 'styled-components'
-import { animate, motion, useMotionValueEvent } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import AniTitle from '../effects/AniTitle'
+import AniGuideLine from '../effects/GuideLine'
 
-const Line = styled(motion.div)`
-  background: linear-gradient(
-    to bottom,
-    rgba(248, 56, 171, 1),
-    rgba(248, 56, 171, 1) 80%,
-    rgba(56, 87, 248, 1)
-  );
-`
-
-const GuideLine = ({ progress }: { progress: any }) => {
+const StatisticalTableWrapper = () => {
+  const { ref, progress } = useInViewWithAnimate()
   return (
-    <motion.div className="flex flex-col justify-between items-center guide-line">
-      <img src={tracingIcon} className="w-48px h-48px" />
-      <Line
-        className="w-4px h-1780px"
-        style={{ scaleY: progress, transformOrigin: 'top left' }}
+    <div ref={ref}>
+      <StatisticalTable
+        label="Quality"
+        list={[
+          {
+            t1: 'Ground Truth',
+            t2: (progress * 5).toFixed(0),
+            t3: '%',
+          },
+          {
+            t1: 'Inference (Heuristics + AI)',
+            t2: (progress * 43).toFixed(0),
+            t3: '%',
+          },
+          {
+            t1: 'External',
+            t2: (progress * 52).toFixed(0),
+            t3: '%',
+          },
+        ]}
       />
-    </motion.div>
+    </div>
   )
 }
 
 const Article = () => {
-  const [chartOpen, setChartOpen] = useState(false)
-
-  const { ref, progress } = useScrollWithProgress([0, 1], {
-    stiffness: 300,
-    damping: 80,
-  })
-
-  useMotionValueEvent(progress, 'change', (latest) => {
-    if (latest > 0.1 && !chartOpen) {
-      setChartOpen(true)
-    } else if (latest <= 0.1 && chartOpen) {
-      setChartOpen(false)
-    }
-
-    if (latest > 0.6 && !runNum) {
-      setRunNum(true)
-    } else if (latest <= 0.6 && runNum) {
-      setRunNum(false)
-    }
-  })
-
-  const [runNum, setRunNum] = useState(false)
-  const [runNumProgress, setRunNumProgress] = useState(0)
-
-  useEffect(() => {
-    console.log('num: ', runNum)
-
-    animate(runNumProgress, runNum ? 1 : 0, {
-      duration: 2,
-      onUpdate: (latest) => setRunNumProgress(latest),
-    })
-  }, [runNum])
-
   return (
-    <motion.div className="relative text-xl flex" ref={ref}>
-      <GuideLine progress={progress} />
+    <motion.div className="relative text-xl flex">
+      <AniGuideLine
+        icon={tracingIcon}
+        className="h-1780px color-4"
+        height="1780px"
+      />
       <div className="main">
         <AniTitle
           t1="Trustworthy"
@@ -83,7 +56,7 @@ const Article = () => {
           color="#F55AB7"
         ></AniTitle>
         <EffectCard className="mt-32px">
-          <Chart open={chartOpen} />
+          <Chart />
         </EffectCard>
         <div className="mt-32px flex justify-between">
           <img src={img2} className="w-705px h-300px mr-68px" />
@@ -105,7 +78,8 @@ const Article = () => {
 warning"
             num1={5}
             num2={5}
-            progressType={1}
+            bar={0.05}
+            // progressType={1}
           />
           <Card
             t1="Stage 2: Validation"
@@ -113,7 +87,8 @@ warning"
             des="Accessibility with quality warning"
             num1={20}
             num2={15}
-            progressType={2}
+            bar={0.2}
+            // progressType={2}
           />
           <Card
             t1="Stage 3: Validation"
@@ -121,36 +96,19 @@ warning"
             des="Accessibility with trust"
             num1={100}
             num2={80}
-            progressType={3}
+            bar={1}
+            // progressType={3}
           />
           <Card
             t1="Stage 4: Lifetime Community Correction"
             t2=""
             des="Continuous Improvement"
-            progressType={3}
+            // progressType={3}
             des2="Reputation"
+            bar={1}
           />
         </div>
-        <StatisticalTable
-          label="Quality"
-          list={[
-            {
-              t1: 'Ground Truth',
-              t2: (runNumProgress * 5).toFixed(0),
-              t3: '%',
-            },
-            {
-              t1: 'Inference (Heuristics + AI)',
-              t2: (runNumProgress * 43).toFixed(0),
-              t3: '%',
-            },
-            {
-              t1: 'External',
-              t2: (runNumProgress * 52).toFixed(0),
-              t3: '%',
-            },
-          ]}
-        />
+        <StatisticalTableWrapper />
       </div>
     </motion.div>
   )

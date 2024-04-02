@@ -5,17 +5,15 @@ import img3 from '@/assets/images/article-3/3.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
 
-import useScrollWithProgress from '@/hooks/useScrollWithProgress'
+import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
 import StatisticalTable from '../effects/StatisticalTable'
 
 import EffectCard from '../effects/EffectCard'
 import AniTitle from '../effects/AniTitle'
 import AniImage from '../effects/AniImage'
+import AniGuideLine from '../effects/GuideLine'
 
-import styled from 'styled-components'
-
-import { animate, motion, useMotionValueEvent } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import AniContent from '../effects/AniContent'
 
 const Head = () => {
@@ -89,69 +87,43 @@ const Section3 = () => {
   )
 }
 
-const Line = styled(motion.div)`
-  background: linear-gradient(to bottom, #33b3ae, #33b3ae 38%, #f838ab);
-`
+const StatisticalTableWrapper = () => {
+  const { ref, progress } = useInViewWithAnimate()
+  return (
+    <div ref={ref}>
+      <StatisticalTable
+        label="Coverage"
+        list={[
+          {
+            t1: 'Labeled Addresses',
+            t2: `>${Math.round(progress * 530)}`,
+            t3: 'Million',
+          },
+          {
+            t1: 'Supported Networks',
+            t2: `${Math.round(progress * 35)}`,
+            t3: 'Blockchains',
+          },
+        ]}
+      />
+    </div>
+  )
+}
 
 const Article = () => {
-  const { ref, progress } = useScrollWithProgress([0, 1], {
-    stiffness: 300,
-    damping: 80,
-  })
-  const [runNum, setRunNum] = useState(false)
-  const [runNumProgress, setRunNumProgress] = useState(0)
-
-  useEffect(() => {
-    console.log('progress: ', progress)
-  }, [progress])
-
-  useMotionValueEvent(progress, 'change', (latest) => {
-    if (latest > 0.6 && !runNum) {
-      setRunNum(true)
-    } else if (latest <= 0.6 && runNum) {
-      setRunNum(false)
-    }
-  })
-
-  useEffect(() => {
-    console.log('num: ', runNum)
-
-    animate(runNumProgress, runNum ? 1 : 0, {
-      duration: 2,
-      onUpdate: (latest) => setRunNumProgress(latest),
-    })
-  }, [runNum])
-
   return (
-    <motion.div className="h-2532px relative mt-12px flex" ref={ref}>
-      {/* Guide line */}
-      <motion.div className="flex flex-col justify-between items-center guide-line relative">
-        <img src={tracingIcon} className="w-48px h-48px" />
-        <Line
-          className="w-4px h-2490px"
-          style={{ scaleY: progress, transformOrigin: 'top left' }}
-        />
-      </motion.div>
+    <motion.div className="h-2532px relative mt-12px flex">
+      <AniGuideLine
+        className="h-2490px color-3"
+        height="2490px"
+        icon={tracingIcon}
+      />
       <div className="main">
         <Head />
         <Section1 />
         <Section2 />
         <Section3 />
-        <StatisticalTable
-          label="Coverage"
-          list={[
-            {
-              t1: 'Labeled Addresses',
-              t2: `>${Math.round(runNumProgress * 530)}`,
-              t3: 'Million',
-            },
-            {
-              t1: 'Supported Networks',
-              t2: `${Math.round(runNumProgress * 35)}`,
-              t3: 'Blockchains',
-            },
-          ]}
-        />
+        <StatisticalTableWrapper />
         <div className="mt-100px"></div>
       </div>
     </motion.div>

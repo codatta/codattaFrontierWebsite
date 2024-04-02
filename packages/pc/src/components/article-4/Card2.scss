@@ -1,0 +1,58 @@
+.card {
+    .linear {
+        background: linear-gradient(to right,  rgba(248, 56, 171, 1) 0%, rgba(255, 255, 255, 1) 100% );
+        color: transparent; /* 隐藏实际文本颜色，只显示背景 */
+        background-clip: text;
+    }
+
+    .icon {
+        width: 16px;
+        height: 16px;
+        display: block;
+        background: url(../../assets/images/article-4/polygon.svg) left center no-repeat;
+        background-size: 16px 16px;
+        margin-right: 8px;
+    }
+
+    .bar {
+        position: relative;
+        width: 240px;
+        height: 16px;
+        margin-top: 24px;
+
+        &::before {
+            position: absolute;
+            content: '';
+            display: block;
+            border-radius: 8px;
+            background: linear-gradient(to right,  rgba(255,255,255, .3) 0%, rgba(255, 255, 255, .1) 100% );
+            border: 1px solid rgba($color: #fff, $alpha: 0.2);
+            box-sizing: border-box;
+            width: 100%;
+            height: 16px;
+            top: 0px;
+            left: 0;
+            z-index: -1;
+        }
+
+        .inner {
+            position: relative;
+            background: linear-gradient(to right, rgba(248, 56, 91, 1) 0%, rgba(248, 56, 171, 1) 100%);
+
+            &::after {
+                position: absolute;
+                content: '';
+                display: block;
+                top:-8px;
+                right: 0;
+                width: 32px;
+                height: 32px;
+                background-color: #F838AB;
+                box-sizing: border-box;
+                border: 8px solid #fff;
+                border-radius: 50%;
+                filter: drop-shadow(0 1px 1px rgba(255, 255, 255, 0.55));
+            }
+        }
+    }
+}

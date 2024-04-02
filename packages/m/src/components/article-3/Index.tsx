@@ -54,7 +54,11 @@ const sections = [
 const Article = () => {
   return (
     <motion.div className="h-2200px relative mt-12px flex">
-      <GuideLine icon={tracingIcon} className="h-2490px color-3" />
+      <GuideLine
+        icon={tracingIcon}
+        className="h-2490px color-3"
+        height="2490px"
+      />
 
       <div className="main">
         <Head />

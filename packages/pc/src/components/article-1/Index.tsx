@@ -2,7 +2,7 @@ import microImg from '@/assets/images/article-1/micro.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 import styled from 'styled-components'
 import Signup from './Signup'
-import BackgroundBeams from '../effects/BgBeam'
+// import BackgroundBeams from '../effects/BgBeam'
 import Bg from './Bg'
 import Title from './Title'
 
@@ -14,12 +14,7 @@ import { Modal } from 'antd'
 function Head() {
   return (
     <header className="header flex justify-between items-center font-medium pt-14px color-white pr-64px">
-      <div className="w-200px h-30px text-xs logo">
-        {/* <div className="bold text-base">b18a</div>
-        <div className="text-8px">
-          <i>Blockchain:Metadata</i>
-        </div> */}
-      </div>
+      <div className="w-200px h-30px text-xs logo"></div>
       <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-8px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
         Sign in
       </DynamicConnectButton>
@@ -75,14 +70,7 @@ const Article = () => {
         <GuideLine />
         <div className="main">
           <Title />
-          {/* <div className="text-80px leading-88px color-#fff font-semibold">
-            Let's annotate crypto
-            <br /> addresses from here
-          </div>
-          <p className="text-2xl mt-16px">
-            The world's leading AI-powered collaboration protocol for blockchain
-            metadata.
-          </p> */}
+
           <Signup />
           <a
             href="https://microscopeprotocol.xyz"
@@ -91,9 +79,6 @@ const Article = () => {
           >
             <img src={microImg} className="h-124px" />
           </a>
-          <div className="w-full absolute inset-0 top-0 left-0 pointer-events-none">
-            <BackgroundBeams />
-          </div>
         </div>
       </div>
       <Bg />

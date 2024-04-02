@@ -1,8 +1,11 @@
 import { motion, useTransform } from 'framer-motion'
+// import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
 import './Chart.scss'
 
-const Chart = ({ progress }: { progress: any }) => {
-  const path1 = useTransform(progress, [0, 0.2], [0, 1])
+const Chart = () => {
+  // const { ref, progress } = useInViewWithAnimate
+
+  // const path1 = useTransform(progress, [0, 0.2], [0, 1])
 
   return (
     <motion.div className="chart w-663px h-471px relative">

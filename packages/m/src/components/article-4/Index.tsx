@@ -49,7 +49,11 @@ const cards = [
 const Article = () => {
   return (
     <motion.div className="relative text-xl flex">
-      <GuideLine icon={tracingIcon} className="h-2180px color-4" />
+      <GuideLine
+        icon={tracingIcon}
+        className="h-2180px color-4"
+        height="2180px"
+      />
       <div className="main">
         <AniTitle
           t1="Trustworthy"

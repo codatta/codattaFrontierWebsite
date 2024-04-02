@@ -1,7 +1,6 @@
 import asideLine from '@/assets/images/aside-line.svg'
 import asideLine2 from '@/assets/images/aside-line-2.svg'
 import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
-import { motion } from 'framer-motion'
 
 type TProps = {
   label: string

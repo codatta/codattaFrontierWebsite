@@ -1,7 +1,7 @@
-import { motion, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import './Chart.scss'
 
-const Chart = ({ progress }: { progress: any }) => {
+const Chart = () => {
   return (
     <motion.div className="chart w-218px h-218px relative m-auto">
       <motion.svg

@@ -11,12 +11,9 @@ import { EthereumWalletConnectors } from '@dynamic-labs/ethereum'
 import './App.scss'
 
 function App() {
-
-  const settings: DynamicContextProps["settings"] = {
+  const settings: DynamicContextProps['settings'] = {
     environmentId: 'ddf871be-8ba9-48df-826a-31d6e573f189',
-    walletConnectors: [
-      EthereumWalletConnectors,
-    ]
+    walletConnectors: [EthereumWalletConnectors],
   }
 
   return (
@@ -28,8 +25,7 @@ function App() {
         <Article4 />
         <Article5 />
         <Footer />
-      </DynamicContextProvider >
-
+      </DynamicContextProvider>
     </div>
   )
 }

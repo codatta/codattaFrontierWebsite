@@ -1,19 +1,16 @@
-import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
+
 import './Chart.scss'
-import { motion, animate } from 'framer-motion'
 
-const Chart = ({ open }: { open: boolean }) => {
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    animate(progress, open ? 1 : 0, {
-      duration: 2,
-      onUpdate: (latest) => setProgress(latest),
-    })
-  }, [open])
+const Chart = () => {
+  const { ref, progress } = useInViewWithAnimate(4)
 
   return (
-    <div className="chart card-border-2 w-1200px h-573px box-border p-32px relative">
+    <div
+      className="chart card-border-2 w-1200px h-573px box-border p-32px relative"
+      ref={ref}
+    >
       <div className="text-xl color-#fff font-bold">
         Approximate <span className="color-#F55AB7">Ground Truth</span> with
         Aggregated Opinions
@@ -77,7 +74,10 @@ const Chart = ({ open }: { open: boolean }) => {
             fill="#F838AB"
             stroke="#fff"
             strokeWidth="4"
-            animate={{ opacity: progress, strokeWidth: 4 * progress }}
+            animate={{
+              opacity: progress,
+              strokeWidth: Math.max(2, 4 * progress),
+            }}
           />
           <defs>
             <linearGradient

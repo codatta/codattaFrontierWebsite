@@ -10,29 +10,20 @@ import Title from './Title'
 
 import './Index.scss'
 import { DynamicConnectButton, useDynamicContext } from '@dynamic-labs/sdk-react-core'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'antd'
+import { useInView } from 'framer-motion'
 
 function Head() {
   return (
     <header className="header flex justify-between items-center font-medium pt-12px pl-24px color-white">
-      <div className="w-200px h-30px text-xs logo">
-        {/* <div className="bold text-base">b18a</div>
-        <div className="text-8px leading-8px">
-          <i>Blockchain:Metadata</i>
-        </div> */}
-      </div>
+      <div className="w-200px h-30px text-xs logo"></div>
       <DynamicConnectButton buttonClassName="mr-25px signin-btn text-sm color-#fff rounded-6px">
         Sign in
       </DynamicConnectButton>
     </header>
   )
 }
-
-const Circle = styled.div`
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-`
 
 const Line1 = styled.div`
   background: linear-gradient(
@@ -52,7 +43,6 @@ const Line2 = styled.div`
 const GuideLine = () => {
   return (
     <div className="flex flex-col justify-between items-center guide-line ml-14px mr-7px">
-      {/* <Circle className="w-10px h-10px" /> */}
       <Line1 className="w-4px h-343px" />
       <img src={tracingIcon} className="w-48px h-48px" />
       <Line2 className="w-4px h-172px" />
@@ -61,9 +51,10 @@ const GuideLine = () => {
 }
 
 const Article = () => {
-
   const { user, handleLogOut } = useDynamicContext()
   const [open, setOpen] = useState(false)
+  const ref = useRef()
+  const isInview = useInView(ref)
 
   useEffect(() => {
     if (!user) return
@@ -75,9 +66,12 @@ const Article = () => {
     <div className="relative">
       <Head />
       <Bg />
-      <div className="w-full h-580px absolute inset-0 top-0 left-0 pointer-events-none">
-        <BackgroundBeams />
-      </div>
+      {/* <div
+        className="w-full h-580px absolute inset-0 top-0 left-0 pointer-events-none"
+        ref={ref}
+      >
+        {isInview && <BackgroundBeams />}
+      </div> */}
       <div className="flex mt-243px ">
         <GuideLine />
         <div className="main">

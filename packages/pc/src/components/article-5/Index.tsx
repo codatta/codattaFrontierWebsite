@@ -5,42 +5,19 @@ import img3 from '@/assets/images/article-5/3.svg'
 import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 
 import StatisticalTable from '../effects/StatisticalTable'
-import useScrollWithProgress from '../../hooks/useScrollWithProgress'
 
-import styled from 'styled-components'
 import { motion } from 'framer-motion'
 import AniTitle from '../effects/AniTitle'
-
-const Line = styled(motion.div)`
-  background: linear-gradient(
-    to bottom,
-    rgba(56, 87, 248, 1),
-    rgba(56, 87, 248, 1) 92%,
-    rgba(56, 87, 248, 0) 100%
-  );
-`
-
-const GuideLine = ({ progress }: { progress: any }) => {
-  return (
-    <motion.div className="flex flex-col justify-between items-center guide-line">
-      <img src={tracingIcon} className="w-48px h-48px" />
-      <Line
-        className="w-4px h-1700px"
-        style={{ scaleY: progress, transformOrigin: 'top left' }}
-      />
-    </motion.div>
-  )
-}
+import AniGuideLine from '../effects/GuideLine'
 
 const Article = () => {
-  const { ref, progress } = useScrollWithProgress([0, 1], {
-    stiffness: 300,
-    damping: 80,
-  })
-
   return (
-    <motion.div className="relative text-xl flex" ref={ref}>
-      <GuideLine progress={progress} />
+    <motion.div className="relative text-xl flex">
+      <AniGuideLine
+        icon={tracingIcon}
+        className="h-1700px color-5"
+        height="1700px"
+      />
       <div className="main">
         <AniTitle
           t1="Privacy-preservation"

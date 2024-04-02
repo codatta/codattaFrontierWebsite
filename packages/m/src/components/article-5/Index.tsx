@@ -1,6 +1,5 @@
 import img1 from '@/assets/images/article-5/1.svg'
 import img2 from '@/assets/images/article-5/2.svg'
-import img3 from '@/assets/images/article-5/3.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 
@@ -35,7 +34,11 @@ const sections = [
 const Article = () => {
   return (
     <motion.div className="relative text-xl flex">
-      <GuideLine icon={tracingIcon} className="h-1330px color-5" />
+      <GuideLine
+        icon={tracingIcon}
+        className="h-1330px color-5"
+        height="1330px"
+      />
 
       <div className="main">
         <AniTitle

@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useScroll, useSpring, useTransform } from 'framer-motion'
 
 const useScrollWithProgress = (
-  offsetRange = [0, 0.5],
+  offsetRange = [0, 1],
   springConfig = { stiffness: 500, damping: 90 }
 ) => {
   const ref = useRef<HTMLDivElement>(null)
