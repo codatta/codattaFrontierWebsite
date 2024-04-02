@@ -5,7 +5,7 @@ import tracingIcon from '@/assets/images/icons/tracing-icon-4.svg'
 import EffectCard from '../effects/EffectCard'
 import StatisticalTable from '../effects/StatisticalTable'
 import Chart from './Chart'
-import Card from './Card2'
+import Card from './Card'
 
 import useInViewWithAnimate from '@/hooks/useInViewWithAnimate'
 
