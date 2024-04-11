@@ -18,16 +18,7 @@ COPY ./ /opt/
 # Build the application
 ARG BUILDTYPE
 #RUN yarn build
-RUN if [ $BUILDTYPE = 'PRE' ]; then \
-         yarn build:pre;  \
-    elif [  $BUILDTYPE = 'PROD' ]; then \
-         yarn build:prod;  \
-    elif [  $BUILDTYPE = 'TEST' ]; then \
-         yarn build:test;  \
-    else \
-         yarn build; \
-    fi;
-
+RUN yarn build;
 # Stage 3: Create the final image
 FROM nginx:1.25.2-alpine-slim
 
