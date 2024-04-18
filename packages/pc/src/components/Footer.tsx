@@ -45,7 +45,7 @@ export default function Footer() {
             </a>
           </div>
           <div className="icon discord-icon">
-            <a href="https://discord.gg/rrmQ498s" className="no-underline">
+            <a href="https://discord.gg/YCESVmHEYv" className="no-underline">
               Discord
             </a>
           </div>
