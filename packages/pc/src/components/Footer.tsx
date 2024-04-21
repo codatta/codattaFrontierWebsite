@@ -1,13 +1,6 @@
 import styled from 'styled-components'
 import './Footer.scss'
 
-const Divider = styled.div`
-  width: 100%;
-  height: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.45);
-  margin-bottom: 32px;
-`
-
 export default function Footer() {
   return (
     <div className="mt-64px footer">
@@ -51,10 +44,6 @@ export default function Footer() {
           </div>
           {/* <div className="icon linkedin-icon">Linkedin</div>  */}
         </aside>
-      </div>
-      <div className="mt-48px pt-32px text-base">
-        <Divider />
-        <div>© 2024 b18a Labs Inc. All rights reserved.</div>
       </div>
     </div>
   )

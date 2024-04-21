@@ -13,6 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  font-size: 20px;
+  line-height: 24px;
+  color: rgba($color: #fff, $alpha: 0.45);
+}
+
+
 p, html, body {
   margin: 0;
   padding: 0;
