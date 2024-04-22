@@ -10,7 +10,7 @@ export default defineConfig({
     react(),
     vitePluginGCPStorage({
       bucket: 'static-chaintool-ai',
-      keyFile: path.resolve(__dirname, '../../ ', './chaintool-etl-32deb09152c3.json'),
+      keyFile: path.resolve(__dirname, '../../', './chaintool-etl-32deb09152c3.json'),
       exclude: ['**/*.map', '**/*.html'],
       bucketDomain: 'https://static.b18a.io',
       uploadPath: 'web/pc'
