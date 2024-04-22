@@ -8,15 +8,15 @@ import vitePluginGCPStorage from '../../vite-plugin-gcp-storage'
 export default defineConfig({
   plugins: [
     react(),
+    Unocss({
+      configFile: './unocss.config.ts',
+    }),
     vitePluginGCPStorage({
       bucket: 'static-chaintool-ai',
       keyFile: path.resolve(__dirname, '../../', './chaintool-etl-32deb09152c3.json'),
       exclude: ['**/*.map', '**/*.html'],
       bucketDomain: 'https://static.b18a.io',
       uploadPath: 'web/pc'
-    }),
-    Unocss({
-      configFile: './unocss.config.ts',
     }),
   ],
   define: {
