@@ -1,0 +1,20 @@
+.scroll-content-1 {
+  animation: scroll 5s linear infinite; /* 使用动画 scroll */
+}
+
+.scroll-content-2 {
+  animation: scroll 6s linear infinite; /* 使用动画 scroll */
+}
+
+.scroll-content-3 {
+  animation: scroll 5s linear infinite; /* 使用动画 scroll */
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0); /* 初始位置在最右侧 */
+  }
+  100% {
+    transform: translateX(-100%); /* 最终位置在最左侧 */
+  }
+}

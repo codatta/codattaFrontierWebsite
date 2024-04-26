@@ -6,6 +6,8 @@ import { Modal } from 'antd'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import logImg from '../assets/images/icons/logo-text.jpeg'
+import { NavLink } from 'react-router-dom'
+import './Header.scss'
 
 const Logo = styled.div`
   background: url(${logImg}) left center no-repeat;
@@ -14,6 +16,7 @@ const Logo = styled.div`
 export default function Head() {
   const { user, handleLogOut } = useDynamicContext()
   const [open, setOpen] = useState(false)
+  const [nav, setNav] = useState('/')
 
   useEffect(() => {
     if (!user) return
@@ -26,8 +29,21 @@ export default function Head() {
     <>
       <header className="header flex justify-between items-center font-medium pt-14px color-white pr-64px">
         <Logo className="w-200px h-30px text-xs"></Logo>
-        <div className="border-1px border-solid border-#fff border-opacity-10 w-224px h-48px rounded-24px text-#fff text-opacity-60">
-          e
+        <div className="border-1px border-solid border-#fff border-opacity-10 w-224px h-48px rounded-24px text-#fff text-opacity-60 flex justify-around">
+          <NavLink
+            className="h-full leading-48px no-underline nav"
+            to="/"
+            onClick={() => setNav('/')}
+          >
+            Features
+          </NavLink>
+          <NavLink
+            className="h-full leading-48px no-underline nav"
+            to="/board"
+            onClick={() => setNav('/board')}
+          >
+            Monitoring
+          </NavLink>
         </div>
         <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
           Sign in

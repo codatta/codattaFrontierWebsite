@@ -4,6 +4,7 @@ import Article3 from '../components/article-3/Index'
 import Article4 from '../components/article-4/Index'
 import Article5 from '../components/article-5/Index'
 import Footer from '@/components/Footer'
+import CopyRights from '@/components/CopyRights'
 
 export const Component = () => {
   return (
@@ -14,6 +15,7 @@ export const Component = () => {
       <Article4 />
       <Article5 />
       <Footer />
+      <CopyRights />
     </>
   )
 }

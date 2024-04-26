@@ -11,7 +11,7 @@ type TDashboardStore = {
   categoryNum: number
   addressNum: number
   entityNum: number
-  topCates: { cat: string; cnt: number; order: number }[]
+  topCates: { name: string; num: number }[]
 }
 
 export const dashboardStore = proxy<TDashboardStore>({
@@ -24,7 +24,7 @@ export const dashboardStore = proxy<TDashboardStore>({
   categoryNum: 0,
   addressNum: 0,
   entityNum: 0,
-  topCates: [{ cat: '', cnt: 0, order: 0 }],
+  topCates: [],
 })
 
 async function getCommonData() {
@@ -41,7 +41,13 @@ async function getCommonData() {
     dashboardStore.categoryNum = data.category_num || 0
     dashboardStore.addressNum = data.address_num || 0
     dashboardStore.entityNum = data.entity_num || 0
-    dashboardStore.topCates = data.top_cate_num || []
+    dashboardStore.topCates = (data.top_cate_num || [])
+      .slice(0, 5)
+      .sort((a, b) => b.cnt - a.cnt)
+      .map((item) => ({
+        name: item.cat,
+        num: item.cnt,
+      }))
   } catch (e) {
     console.error('getCommonData error: ', e)
   }
