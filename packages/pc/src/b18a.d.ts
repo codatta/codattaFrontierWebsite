@@ -24,4 +24,12 @@ namespace B18A {
     entity_num: number
     top_cate_num: { cat: string; cnt: number; order: number }[]
   }
+
+  type DashboardPointsResponse = {
+    user_info: {
+      user_name: string
+      avatar: string
+    }
+    total_point: number
+  }[]
 }

@@ -35,7 +35,10 @@ export const Component = () => {
           />
         </div>
         <div className="w-370px">
-          <Card3 num={dashboard.rewardsCount} />
+          <Card3
+            num={dashboard.rewardsCount}
+            points={dashboard.points.slice(0)}
+          />
           <Card4 num={dashboard.contributionUserCount} />
           <Card5 num={dashboard.validationUserCount} />
         </div>

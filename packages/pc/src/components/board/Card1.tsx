@@ -15,41 +15,42 @@ const Card = ({
 }) => {
   return (
     <div className="rounded-3xl bg-#21ffe4 bg-opacity-6 overflow-hidden">
-      <ul className="h-108px flex gap-24px py-24px px-32px items-center justify-center box-border">
-        <li className="flex items-top w-220px">
-          <Globe
-            className="mr-12px"
-            size={14}
-            color="rgba(64, 246, 225, 0.93)"
-          />
-          <div>
-            <div className="font-light text-sm">Protocol distinct network</div>
-            <RunNum num={networkNum} className="text-2xl mt-8px" />
-
-            {/* <div className="text-2xl mt-8px"></div> */}
+      <ul className="flex justify-between px-32px pb-24px items-center justify-center box-border list-none bg-#21FFE405 bg-opacity-2 mt-0 pt-12px">
+        <li className="flex-1">
+          <div className="font-light text-sm flex items-center">
+            <Globe
+              className="mr-12px"
+              size={14}
+              color="rgba(64, 246, 225, 0.93)"
+            />
+            <span>Protocol distinct network</span>
           </div>
+          <RunNum num={networkNum} className="text-2xl mt-8px ml-26px" />
         </li>
-        <li className="flex items-top w-220px">
-          <Network
-            className="mr-12px"
-            size={14}
-            color="rgba(64, 246, 225, 0.93)"
-          />
-          <div>
-            <div className="font-light text-sm">Protocol distinct address</div>
-            <RunNum num={contributionAddressNum} className="text-2xl mt-8px" />
+        <li className="flex-1">
+          <div className="font-light text-sm flex items-center">
+            <Network
+              className="mr-12px"
+              size={14}
+              color="rgba(64, 246, 225, 0.93)"
+            />
+            <span>Protocol distinct address</span>
           </div>
+          <RunNum
+            num={contributionAddressNum}
+            className="text-2xl mt-8px ml-26px"
+          />
         </li>
-        <li className="flex items-top w-220px">
-          <Braces
-            className="mr-12px"
-            size={14}
-            color="rgba(64, 246, 225, 0.93)"
-          />
-          <div>
-            <div className="font-light text-sm">Protocol distinct entity</div>
-            <RunNum num={entityNum} className="text-2xl mt-8px" />
+        <li className="flex-1">
+          <div className="font-light text-sm flex items-center">
+            <Braces
+              className="mr-12px"
+              size={14}
+              color="rgba(64, 246, 225, 0.93)"
+            />
+            <span>Protocol distinct entity</span>
           </div>
+          <RunNum num={entityNum} className="text-2xl mt-8px ml-26px" />
         </li>
       </ul>
       <div className="mt-24px">
