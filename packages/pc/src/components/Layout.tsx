@@ -15,7 +15,7 @@ const Layout = () => {
   }
 
   return (
-    <div className="ml-64px pb-46px min-h-screen m-auto">
+    <div className="pb-46px min-h-screen m-auto">
       <DynamicContextProvider settings={settings}>
         <Header />
         <Outlet />

@@ -27,7 +27,7 @@ export default function Head() {
 
   return (
     <>
-      <header className="header flex justify-between items-center font-medium pt-14px color-white pr-64px">
+      <header className="header flex justify-between items-center font-medium pt-14px color-white pr-48px ml-64px">
         <Logo className="w-200px h-30px text-xs"></Logo>
         <div className="border-1px border-solid border-#fff border-opacity-10 w-224px h-48px rounded-24px text-#fff text-opacity-60 flex justify-around">
           <NavLink

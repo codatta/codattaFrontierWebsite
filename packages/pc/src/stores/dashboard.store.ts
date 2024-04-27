@@ -67,16 +67,16 @@ async function getPoints() {
       avatar: item.user_info.avatar,
       totalPoint: item.total_point,
     }))
-    // for (let i = 0; i < 50; i++) {
-    //   let user = {
-    //     userName: ('a_' + Math.random()).slice(),
-    //     avatar:
-    //       'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',
-    //     totalPoint: Math.round(Math.random() * 50),
-    //   }
+    for (let i = 0; i < 50; i++) {
+      let user = {
+        userName: ('a_' + Math.random()).slice(-5),
+        avatar:
+          'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',
+        totalPoint: Math.round(Math.random() * 50),
+      }
 
-    //   dashboardStore.points.push(user)
-    // }
+      dashboardStore.points.push(user)
+    }
   } catch (e) {
     console.error('getPoints error: ', e)
   }

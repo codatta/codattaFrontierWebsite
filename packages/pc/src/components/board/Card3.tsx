@@ -6,6 +6,25 @@ import defaultAvatarIcon from '../../assets/images/board/default-avatar-1.png'
 import bg from '@/assets/images/board/point-bg.svg'
 import pointItemBg from '@/assets/images/board/point-rect.svg'
 import './Card3.scss'
+import styled from 'styled-components'
+
+const Bg = styled.div`
+  // background: linear-gradient(
+  //   to right,
+  //   rgba(0, 0, 0, 0.5) 0%,
+  //   rgba(255, 255, 255, 0) 50%,
+  //   rgba(0, 0, 0, 0.5) 100%
+  // );
+  background:
+    radial-gradient(
+        148.57% 148.96% at -30.44% -48.96%,
+        rgba(19, 99, 255, 0.16) 0%,
+        rgba(6, 71, 77, 0.7) 79.33%,
+        rgba(6, 77, 77, 0.13) 100%
+      )
+      /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */,
+    linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+`
 
 const CarouselItem = ({
   icon,
@@ -68,17 +87,18 @@ const Card = ({ num = 0, points = [] }: { num: number; points: TPoints }) => {
 
   return (
     <div
-      className="rounded rounded-t-3xl py-24px h-350px g-no-repeat bg-center bg-cover box-border "
+      className="rounded rounded-t-3xl py-24px h-350px g-no-repeat bg-center bg-cover box-border relative"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="px-32px">
+      <div className="px-32px relative z-1">
         <CardHeader Icon={Send} title="Total Earned Points" num={num} />
       </div>
-      <div className="mt-35px mx-8px overflow-hidden">
+      <div className="mt-35px overflow-hidden ">
         <Row index={0} points={points.slice(0, count1)} />
         <Row index={1} points={points.slice(count1, count1 + avCount)} />
         <Row index={2} points={points.slice(count1 + avCount)} />
       </div>
+      <Bg className="left-0 top-0 bottom-0 right-0 absolute rounded-3xl" />
     </div>
   )
 }

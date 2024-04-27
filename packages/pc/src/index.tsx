@@ -19,10 +19,8 @@ const settings: DynamicContextProps['settings'] = {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <div className="ml-64px pb-46px min-h-screen m-auto">
-      <DynamicContextProvider settings={settings}>
-        <RouterProvider router={router} />
-      </DynamicContextProvider>
-    </div>
+    <DynamicContextProvider settings={settings}>
+      <RouterProvider router={router} />
+    </DynamicContextProvider>
   </React.StrictMode>
 )

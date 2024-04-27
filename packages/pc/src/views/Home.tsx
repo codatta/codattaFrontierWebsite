@@ -9,13 +9,17 @@ import CopyRights from '@/components/CopyRights'
 export const Component = () => {
   return (
     <>
-      <Article1 />
-      <Article2 />
-      <Article3 />
-      <Article4 />
-      <Article5 />
-      <Footer />
-      <CopyRights />
+      <div className="ml-64px">
+        <Article1 />
+        <Article2 />
+        <Article3 />
+        <Article4 />
+        <Article5 />
+      </div>
+      <div className="px-64px">
+        <Footer />
+        <CopyRights />
+      </div>
     </>
   )
 }

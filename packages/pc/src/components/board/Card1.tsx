@@ -15,7 +15,7 @@ const Card = ({
 }) => {
   return (
     <div className="rounded-3xl bg-#21ffe4 bg-opacity-6 overflow-hidden">
-      <ul className="flex justify-between px-32px pb-24px items-center justify-center box-border list-none bg-#21FFE405 bg-opacity-2 mt-0 pt-12px">
+      <ul className="flex justify-between px-32px pb-24px items-center justify-center box-border list-none bg-#21FFE405 bg-opacity-2 mt-0 pt-24px">
         <li className="flex-1">
           <div className="font-light text-sm flex items-center">
             <Globe
