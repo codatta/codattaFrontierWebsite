@@ -62,11 +62,22 @@ async function getPoints() {
   try {
     const { data } = await dashboardApi.getPointsDistribution()
 
-    dashboardStore.points = data.map((item) => ({
-      userName: item.user_info.user_name,
-      avatar: item.user_info.avatar,
-      totalPoint: item.total_point,
-    }))
+    dashboardStore.points = data.map((item) => {
+      let username = item.user_info?.user_name ?? ''
+      username =
+        username.length < 7
+          ? username.padEnd(7, '*')
+          : username.slice(0, 7).replace(/(.{3}$)/, '***')
+      // username = username.length < 9 ? username : username.slice replace(/^\.{3}/, '***')
+      // username = username.split('***')[1] || username.split('***')[0] || ''
+      // username = '*' + username.slice(-9)
+
+      return {
+        userName: username,
+        avatar: item.user_info?.avatar,
+        totalPoint: item.total_point,
+      }
+    })
     // for (let i = 0; i < 50; i++) {
     //   let user = {
     //     userName: ('a_' + Math.random()).slice(-5),

@@ -6,7 +6,6 @@ import {
 import { Outlet } from 'react-router-dom'
 
 import Header from './Header'
-// import CopyRights from './CopyRights'
 
 const Layout = () => {
   const settings: DynamicContextProps['settings'] = {

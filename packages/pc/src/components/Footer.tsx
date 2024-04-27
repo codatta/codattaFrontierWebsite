@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+// import styled from 'styled-components'
 import './Footer.scss'
 
 export default function Footer() {

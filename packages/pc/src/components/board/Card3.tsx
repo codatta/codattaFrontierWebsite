@@ -59,7 +59,7 @@ const Row = ({ index, points = [] }: { index: number; points: TPoints }) => {
   return (
     <motion.ul
       className="list-none flex justify-start p-0 m-0 mt-12px relative h-28px"
-      initial={{ x: 0 }}
+      initial={{ x: 'calc(370)px' }}
       animate={{
         x: `calc(-${(155 + 8) * len}px)`,
       }}
