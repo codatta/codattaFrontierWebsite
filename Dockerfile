@@ -18,7 +18,7 @@ COPY ./ /opt/
 # Build the application
 ARG BUILDTYPE
 #RUN yarn build
-RUN yarn build;
+RUN yarn build
 # Stage 3: Create the final image
 FROM nginx:1.25.2-alpine-slim
 
