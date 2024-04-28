@@ -12,7 +12,7 @@ const config = createRoutesFromElements(
       <Route path="" lazy={() => import('@/views/Home.tsx')} />
       <Route path="board" lazy={() => import('@/views/Board.tsx')} />
     </Route>
-    <Route path="*" lazy={() => import('@/views/Home.tsx')} />
+    {/* <Route path="*" lazy={() => import('@/views/Home.tsx')} /> */}
   </>
 )
 
