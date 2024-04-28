@@ -14,7 +14,7 @@ const Card = ({
   contributionAddressNum: number
 }) => {
   return (
-    <div className="rounded-3xl bg-#8AD4F90A bg-opacity-6 overflow-hidden mt-16px">
+    <div className="rounded-3xl bg-#8AD4F90A bg-opacity-10 overflow-hidden mt-16px">
       <ul className="grid grid-cols-3 gap-1 px-32px pb-24px box-border list-none bg-#21FFE405 bg-opacity-2 my-0 pt-24px">
         <li className="col-span-1">
           <div>

@@ -15,7 +15,7 @@ export default function Footer() {
 
   return (
     <div className="mt-24px pb-36px text-sm footer">
-      {location.pathname !== '/board' && (
+      {!/board/.test(location.pathname) && (
         <div className="flex">
           <div className="text-10px leading-12px mr-6px">1</div>
           <div>

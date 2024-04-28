@@ -22,7 +22,7 @@ function Head({ className }: { className?: string }) {
   return (
     <div className="relative">
       <header
-        className={`header flex justify-between items-center font-medium pt-12px color-white relative z-1 ${className}`}
+        className={`header flex justify-between items-center font-medium pt-12px color-white relative z-3 ${className}`}
       >
         <div className="w-200px h-30px text-xs logo"></div>
         <div className="flex items-center">
@@ -36,7 +36,7 @@ function Head({ className }: { className?: string }) {
         </div>
       </header>
       {menuOpen && (
-        <div className="absolute w-100vw h-100vh top-0 left-0 bg-#000 bg-opacity-80 box-border pt-78px px-12px font-sm leading-40px">
+        <div className="absolute w-100vw h-100vh top-0 left-0 bg-#000 bg-opacity-90 box-border pt-78px px-12px font-sm leading-40px z-2">
           <NavLink
             className={` no-underline nav block text-#fff ${!/board/.test(nav) ? '' : 'text-opacity-70'}`}
             to="/m"

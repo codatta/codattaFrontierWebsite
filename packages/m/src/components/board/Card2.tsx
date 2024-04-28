@@ -15,7 +15,7 @@ const Card = ({
   const max = topCates[0]?.num ?? 1
 
   return (
-    <div className="rounded-3xl bg-#8AD4F90A bg-opacity-6 mt-16px  py-24px px-32px overflow-hidden">
+    <div className="rounded-3xl bg-#8AD4F90A bg-opacity-10 mt-16px  py-24px px-32px overflow-hidden">
       <CardHeader
         Icon={Tag}
         title="Catagories"
@@ -23,7 +23,7 @@ const Card = ({
         isBigIcon={true}
         label="Total protocol distinct"
       />
-      <ul className=" list-none m-0 p-0 mt-20px">
+      <ul className=" list-none m-0 p-0 mt-20px  text-nowrap">
         {topCates.map((item, index) => (
           <li className="relative h-21px mb-15px" key={item.name + index}>
             <div
