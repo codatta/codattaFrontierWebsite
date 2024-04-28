@@ -1,7 +1,7 @@
 import { type LucideIcon } from 'lucide-react'
 import styled from 'styled-components'
-import colorBorder from '@/assets/images/board/color-border.svg'
 import RunNum from './RunNum'
+import './CardHeader.scss'
 
 const Gradient = styled.div`
   background: linear-gradient(
@@ -14,13 +14,6 @@ const Gradient = styled.div`
   text-fill-color: transparent;
   -webkit-text-fill-color: transparent;
 `
-const Border = styled.div`
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-image: url(${colorBorder});
-  background-size: contain;
-`
-
 const CardHeader = ({
   isBigIcon,
   Icon,
@@ -37,11 +30,11 @@ const CardHeader = ({
   return isBigIcon ? (
     <>
       <div className="flex items-center">
-        <Border
-          className="w-36px h-36px flex items-center justify-center mr-6px"
+        <div
+          className="w-36px h-36px flex items-center justify-center mr-6px bg-no-repeat bg-contain bg-center card-bg"
         >
           <Icon size={18} />
-        </Border>
+        </div>
         <div>
           <div className="text-11px text-#40F6E1ED/[0.93]">{label}</div>
           <div className="text-base">{title}</div>
