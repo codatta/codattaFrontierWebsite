@@ -7,7 +7,6 @@ import Card3 from '@/components/board/Card3'
 import Card4 from '@/components/board/Card4'
 import Card5 from '@/components/board/Card5'
 
-import './Board.scss'
 import { useEffect } from 'react'
 import { dashboardStore, getDashboardData } from '@/stores/dashboard.store'
 import { useSnapshot } from 'valtio'

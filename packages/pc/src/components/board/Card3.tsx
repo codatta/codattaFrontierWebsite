@@ -9,12 +9,6 @@ import './Card3.scss'
 import styled from 'styled-components'
 
 const Bg = styled.div`
-  // background: linear-gradient(
-  //   to right,
-  //   rgba(0, 0, 0, 0.5) 0%,
-  //   rgba(255, 255, 255, 0) 50%,
-  //   rgba(0, 0, 0, 0.5) 100%
-  // );
   background:
     radial-gradient(
         148.57% 148.96% at -30.44% -48.96%,
@@ -37,19 +31,22 @@ const CarouselItem = ({
 }) => {
   return (
     <motion.li
-      className="h-28px w-155px rounded-20px px-4px flex shrink-0 items-center gap-8px bg-no-repeat bg-center bg-contain text-sm box-border mr-8px"
+      className="h-28px mr-8px relative rounded-14px"
       style={{
         backgroundImage: `url(${pointItemBg})`,
       }}
     >
-      <span
-        className="w-19px h-19px rounded-full bg-no-repeat bg-center bg-contain block"
-        style={{ backgroundImage: `url(${icon || defaultAvatarIcon})` }}
-      ></span>
-      <span className="text-#A9FAFA font-light">{userName}</span>
-      <span className="text-#40F6E1 text-opacity-90 italic font-semibold">
-        +{num}
-      </span>
+      <div className="relative h-full rounded-14px pl-4px pr-12px flex shrink-0 items-center gap-8px text-sm z-1 bg-#16383d">
+        <span
+          className="w-19px h-19px rounded-full bg-no-repeat bg-center bg-contain block"
+          style={{ backgroundImage: `url(${icon || defaultAvatarIcon})` }}
+        ></span>
+        <span className="text-#A9FAFA font-light">{userName}</span>
+        <span className="text-#40F6E1 text-opacity-90 italic font-semibold">
+          +{num}
+        </span>
+      </div>
+      <div className="absolute -left-1px -top-1px -right-1px -bottom-1px bg-red rounded-14px z-0 color-bg"></div>
     </motion.li>
   )
 }
@@ -87,13 +84,13 @@ const Card = ({ num = 0, points = [] }: { num: number; points: TPoints }) => {
 
   return (
     <div
-      className="rounded rounded-t-3xl py-24px h-350px g-no-repeat bg-center bg-cover box-border relative"
+      className="rounded rounded-t-3xl py-24px g-no-repeat bg-center bg-cover relative"
       style={{ backgroundImage: `url(${bg})` }}
     >
       <div className="px-32px relative z-1">
         <CardHeader Icon={Send} title="Total Earned Points" num={num} />
       </div>
-      <div className="mt-35px overflow-hidden ">
+      <div className="mt-35px overflow-hidden pb-24px">
         <Row index={0} points={points.slice(0, count1)} />
         <Row index={1} points={points.slice(count1, count1 + avCount)} />
         <Row index={2} points={points.slice(count1 + avCount)} />

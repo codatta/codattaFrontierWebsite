@@ -63,31 +63,23 @@ async function getPoints() {
     const { data } = await dashboardApi.getPointsDistribution()
 
     dashboardStore.points = data.map((item) => {
-      let username = item.user_info?.user_name ?? ''
-      username =
-        username.length < 7
-          ? username.padEnd(7, '*')
-          : username.slice(0, 7).replace(/(.{3}$)/, '***')
-      // username = username.length < 9 ? username : username.slice replace(/^\.{3}/, '***')
-      // username = username.split('***')[1] || username.split('***')[0] || ''
-      // username = '*' + username.slice(-9)
-
       return {
-        userName: username,
+        userName: item.user_info?.user_name ?? '',
         avatar: item.user_info?.avatar,
         totalPoint: item.total_point,
       }
     })
-    // for (let i = 0; i < 50; i++) {
-    //   let user = {
-    //     userName: ('a_' + Math.random()).slice(-5),
-    //     avatar:
-    //       'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',
-    //     totalPoint: Math.round(Math.random() * 50),
-    //   }
+    for (let i = 0; i < 50; i++) {
+      const len = Math.round(5 + Math.random() * 8)
+      let user = {
+        userName: ('a_' + Math.random()).slice(-len),
+        avatar:
+          'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',
+        totalPoint: Math.round(Math.random() * 50),
+      }
 
-    //   dashboardStore.points.push(user)
-    // }
+      dashboardStore.points.push(user)
+    }
   } catch (e) {
     console.error('getPoints error: ', e)
   }

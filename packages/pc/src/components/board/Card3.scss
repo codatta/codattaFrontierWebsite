@@ -1,3 +1,17 @@
+.color-bg {
+  background-image: linear-gradient(
+      135deg,
+      #ffc4f5 0%,
+      #00c6e1 25%,
+      #21ffa2 50%,
+      #4553fa 75%,
+      #ffc4f5 100%
+    );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .scroll-content-1 {
   animation: scroll 5s linear infinite; /* 使用动画 scroll */
 }
