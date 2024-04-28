@@ -8,7 +8,7 @@ import Layout from '@/components/Layout'
 
 const config = createRoutesFromElements(
   <>
-    <Route path="/" element={<Layout />}>
+    <Route path="/m" element={<Layout />}>
       <Route path="" lazy={() => import('@/views/Home.tsx')} />
       <Route path="board" lazy={() => import('@/views/Board.tsx')} />
     </Route>

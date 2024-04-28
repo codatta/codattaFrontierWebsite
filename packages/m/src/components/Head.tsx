@@ -38,16 +38,16 @@ function Head({ className }: { className?: string }) {
       {menuOpen && (
         <div className="absolute w-100vw h-100vh top-0 left-0 bg-#000 bg-opacity-80 box-border pt-78px px-12px font-sm leading-40px">
           <NavLink
-            className={` no-underline nav block text-#fff ${nav === '/' ? '' : 'text-opacity-70'}`}
-            to="/"
-            onClick={() => setNav('/')}
+            className={` no-underline nav block text-#fff ${!/board/.test(nav) ? '' : 'text-opacity-70'}`}
+            to="/m"
+            onClick={() => setNav('/m')}
           >
             Features
           </NavLink>
           <NavLink
-            className={`no-underline nav block text-#fff ${nav === '/board' ? '' : 'text-opacity-70'}`}
-            to="/board"
-            onClick={() => setNav('/board')}
+            className={`no-underline nav block text-#fff ${/board/.test(nav) ? '' : 'text-opacity-70'}`}
+            to="/m/board"
+            onClick={() => setNav('/m/board')}
           >
             Monitoring
           </NavLink>
