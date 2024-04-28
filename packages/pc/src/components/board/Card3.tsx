@@ -7,6 +7,7 @@ import bg from '@/assets/images/board/point-bg.svg'
 import pointItemBg from '@/assets/images/board/point-rect.svg'
 import './Card3.scss'
 import styled from 'styled-components'
+import { useEffect, useRef, useState } from 'react'
 
 const Bg = styled.div`
   background:
@@ -51,20 +52,35 @@ const CarouselItem = ({
   )
 }
 const Row = ({ index, points = [] }: { index: number; points: TPoints }) => {
-  const len = points.length
+  const ref = useRef<HTMLUListElement>()
+  const [width, setWiddth] = useState(370)
+  const [count, setCount] = useState(1)
+
+  useEffect(() => {
+    const lis = ref.current.getElementsByTagName('li')
+    let totalWidth = 0
+
+    for (let i = 0; i < lis.length; i++) {
+      totalWidth += lis[i].offsetWidth
+    }
+
+    setWiddth(totalWidth)
+    setCount(Math.max(totalWidth / ref.current.offsetWidth))
+  }, [points, ref])
 
   return (
     <motion.ul
       className="list-none flex justify-start p-0 m-0 mt-12px relative h-28px"
-      initial={{ x: 'calc(370)px' }}
+      initial={{ x: 0 }}
       animate={{
-        x: `calc(-${(155 + 8) * len}px)`,
+        x: -width,
       }}
       transition={{
         ease: 'linear',
-        duration: len * 6 * (1 - index * 0.15),
+        duration: count * 10 * (1 - index * 0.15),
         repeat: Infinity,
       }}
+      ref={ref}
     >
       {points.map((item, index) => (
         <CarouselItem
