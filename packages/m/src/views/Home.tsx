@@ -15,8 +15,8 @@ export const Component = () => {
       <Article4 />
       <Article5 />
       <div className="px-24px">
-        <Footer />
-        <CopyRights />
+        {/* <Footer />
+        <CopyRights /> */}
       </div>
     </>
   )
