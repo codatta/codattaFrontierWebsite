@@ -14,6 +14,12 @@ const Gradient = styled.div`
   text-fill-color: transparent;
   -webkit-text-fill-color: transparent;
 `
+const Border = styled.div`
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-image: url(${colorBorder});
+  background-size: contain;
+`
 
 const CardHeader = ({
   isBigIcon,
@@ -31,12 +37,11 @@ const CardHeader = ({
   return isBigIcon ? (
     <>
       <div className="flex items-center">
-        <div
-          className="w-36px h-36px flex items-center justify-center bg-no-repeat bg-center bg-contain mr-6px"
-          style={{ backgroundImage: `url(${colorBorder})` }}
+        <Border
+          className="w-36px h-36px flex items-center justify-center mr-6px"
         >
           <Icon size={18} />
-        </div>
+        </Border>
         <div>
           <div className="text-11px text-#40F6E1ED/[0.93]">{label}</div>
           <div className="text-base">{title}</div>
