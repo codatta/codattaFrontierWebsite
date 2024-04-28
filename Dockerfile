@@ -14,6 +14,8 @@ RUN yarn install
 
 #这两个文件要提交到git仓库
 COPY ./ /opt/
+COPY .env /opt/pc
+COPY .env /opt/m
 
 # Build the application
 ARG BUILDTYPE

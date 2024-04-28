@@ -15,7 +15,7 @@ const Card = ({
   const max = topCates[0]?.num ?? 1
 
   return (
-    <div className="rounded-3xl bg-#21ffe4 bg-opacity-6 mt-16px  py-24px px-32px overflow-hidden">
+    <div className="rounded-3xl bg-#8AD4F90A bg-opacity-6 mt-16px  py-24px px-32px overflow-hidden">
       <CardHeader
         Icon={Tag}
         title="Catagories"
@@ -24,7 +24,7 @@ const Card = ({
       />
       <ul className=" list-none m-0 p-0 mt-20px">
         {topCates.map((item, index) => (
-          <li className="relative h-21px mb-15px">
+          <li className="relative h-21px mb-15px" key={item.name + index}>
             <div
               className="rounded-8px indent-16px font-semibold text-sm"
               style={{

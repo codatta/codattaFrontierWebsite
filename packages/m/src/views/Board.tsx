@@ -19,7 +19,7 @@ export const Component = () => {
     getDashboardData()
   }, [])
   return (
-    <div className="text-#fff bg-#000 px-18px">
+    <div className="text-#fff bg-#000 px-18px tracking-tight">
       <Head />
       <Header />
       <Card3 num={dashboard.rewardsCount} points={dashboard.points.slice(0)} />
@@ -35,8 +35,10 @@ export const Component = () => {
         totalNum={dashboard.categoryNum}
         topCates={dashboard.topCates.slice(0)}
       />
-      <Footer />
-      <CopyRights />
+      <div className="px-32px">
+        <Footer />
+        <CopyRights />
+      </div>
     </div>
   )
 }

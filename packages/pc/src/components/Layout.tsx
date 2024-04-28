@@ -6,10 +6,11 @@ import {
 import { Outlet } from 'react-router-dom'
 
 import Header from './Header'
+import { VITE_DYNAMIC_ENVIRONMENT_ID } from '@/config'
 
 const Layout = () => {
   const settings: DynamicContextProps['settings'] = {
-    environmentId: 'a55eb2b4-84ca-41ff-a369-fc52646ed585',
+    environmentId: VITE_DYNAMIC_ENVIRONMENT_ID,
     walletConnectors: [EthereumWalletConnectors],
   }
 

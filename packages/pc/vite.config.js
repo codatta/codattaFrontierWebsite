@@ -4,6 +4,15 @@ import react from '@vitejs/plugin-react'
 import Unocss from 'unocss/vite'
 
 import path from 'path'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: path.resolve(__dirname, '.env') })
+
+console.log(
+  'VITE_DYNAMIC_ENVIRONMENT_ID',
+  process.env.VITE_DYNAMIC_ENVIRONMENT_ID
+)
+
 
 // https://vitejs.dev/config/
 export default defineConfig({

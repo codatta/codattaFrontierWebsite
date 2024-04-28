@@ -63,23 +63,26 @@ async function getPoints() {
     const { data } = await dashboardApi.getPointsDistribution()
 
     dashboardStore.points = data.map((item) => {
+      const userName = item.user_info?.user_name ?? ''
+
       return {
-        userName: item.user_info?.user_name ?? '',
+        userName:
+          userName.length <= 12 ? userName : userName.slice(0, 12) + '*',
         avatar: item.user_info?.avatar,
         totalPoint: item.total_point,
       }
     })
-    for (let i = 0; i < 50; i++) {
-      const len = Math.round(5 + Math.random() * 8)
-      let user = {
-        userName: ('a_' + Math.random()).slice(-len),
-        avatar:
-          'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',
-        totalPoint: Math.round(Math.random() * 50),
-      }
+    // for (let i = 0; i < 50; i++) {
+    //   const len = Math.round(5 + Math.random() * 8)
+    //   let user = {
+    //     userName: ('a_' + Math.random()).slice(-len),
+    //     avatar:
+    //       'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',
+    //     totalPoint: Math.round(Math.random() * 50),
+    //   }
 
-      dashboardStore.points.push(user)
-    }
+    //   dashboardStore.points.push(user)
+    // }
   } catch (e) {
     console.error('getPoints error: ', e)
   }

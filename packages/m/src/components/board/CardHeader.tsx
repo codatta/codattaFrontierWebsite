@@ -35,14 +35,14 @@ const CardHeader = ({
           className="w-36px h-36px flex items-center justify-center bg-no-repeat bg-center bg-contain mr-6px"
           style={{ backgroundImage: `url(${colorBorder})` }}
         >
-          <Icon size={17} />
+          <Icon size={18} />
         </div>
         <div>
-          <div className="text-sm text-#40F6E1ED/[0.93]">{label}</div>
+          <div className="text-11px text-#40F6E1ED/[0.93]">{label}</div>
           <div className="text-base">{title}</div>
         </div>
       </div>
-      <Gradient className="text-5xl mt-16px">
+      <Gradient className="text-5xl mt-12px">
         <RunNum num={num} />
       </Gradient>
     </>
@@ -51,11 +51,11 @@ const CardHeader = ({
       <div className="flex">
         <div className="flex items-center justify-center pl-6px pr-12px h-18px rounded-12px bg-#fff bg-opacity-10">
           <Icon color="rgba(64, 246, 225, 0.93)" size={12} className="mr-6px" />
-          <div className="text-sm text-#40F6E1ED/[0.93]">{label}</div>
+          <div className="text-11px text-#40F6E1ED/[0.93]">{label}</div>
         </div>
       </div>
       <div className="text-base indent-6px mt-6px">{title}</div>
-      <Gradient className="text-4xl mt-16px indent-6px ">
+      <Gradient className="text-4xl mt-12px indent-6px">
         <RunNum num={num} />
       </Gradient>
     </>

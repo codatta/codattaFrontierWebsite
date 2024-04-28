@@ -31,7 +31,7 @@ const CarouselItem = ({
 }) => {
   return (
     <li className="relative h-21px mr-6px">
-      <div className="relative h-full rounded-12px px-3px pr-9px flex shrink-0 items-center gap-6px text-xs z-1 bg-black">
+      <div className="relative h-full rounded-12px px-3px pr-9px flex shrink-0 items-center gap-6px text-xs z-1 bg-black whitespace-nowrap">
         <span
           className="w-15px h-15px rounded-full bg-no-repeat bg-center bg-contain block"
           style={{ backgroundImage: `url(${icon || defaultAvatarIcon})` }}
