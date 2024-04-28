@@ -22,31 +22,29 @@ const Card = ({
         num={totalNum}
         isBigIcon={true}
       />
-      <ul className="grid grid-cols-12 gap-20px list-none m-0 p-0 mt-30px">
+      <ul className=" list-none m-0 p-0 mt-20px">
         {topCates.map((item, index) => (
-          <>
-            <li className="indent-24px font-semibold text-lg col-span-9">
-              <div
-                className="rounded-8px min-w-30%"
-                style={{
-                  backgroundColor:
-                    index === 0
-                      ? 'rgba(23, 190, 207, 0.4)'
-                      : 'rgba(23, 190, 207, 0.2)',
-                  color: index === 0 ? '#09a4a2' : '#059c93',
-                  width: (item.num / max) * 100 + '%',
-                }}
-              >
-                {item.name}
-              </div>
-            </li>
-            <li className="font-light text-sm tracking-tight flex items-center justify-end col-span-3">
-              <span className="text-#009E8C text-opacity-93 mr-8px">
+          <li className="relative h-21px mb-15px">
+            <div
+              className="rounded-8px indent-16px font-semibold text-sm"
+              style={{
+                backgroundColor:
+                  index === 0
+                    ? 'rgba(23, 190, 207, 0.4)'
+                    : 'rgba(23, 190, 207, 0.2)',
+                color: index === 0 ? '#09a4a2' : '#059c93',
+                width: (item.num / max) * 100 + '%',
+              }}
+            >
+              {item.name}
+            </div>
+            <div className="font-light text-10px tracking-tight flex items-center justify-end absolute top-0 right-18px h-full">
+              <span className="text-#009E8C text-opacity-93 mr-6px">
                 Addresses
               </span>
               <RunNum className="text-#fff text-opacity-65" num={item.num} />
-            </li>
-          </>
+            </div>
+          </li>
         ))}
       </ul>
     </div>

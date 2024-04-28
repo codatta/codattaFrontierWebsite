@@ -48,12 +48,14 @@ const CardHeader = ({
     </>
   ) : (
     <>
-      <div className="flex items-center justify-center w-60px h-18px rounded-12px bg-#fff bg-opacity-10">
-        <Icon color="rgba(64, 246, 225, 0.93)" size={12} className="mr-6px" />
-        <div className="text-sm text-#40F6E1ED/[0.93]">{label}</div>
+      <div className="flex">
+        <div className="flex items-center justify-center pl-6px pr-12px h-18px rounded-12px bg-#fff bg-opacity-10">
+          <Icon color="rgba(64, 246, 225, 0.93)" size={12} className="mr-6px" />
+          <div className="text-sm text-#40F6E1ED/[0.93]">{label}</div>
+        </div>
       </div>
       <div className="text-base indent-6px mt-6px">{title}</div>
-      <Gradient className="text-4xl mt-12px indent-6px ">
+      <Gradient className="text-4xl mt-16px indent-6px ">
         <RunNum num={num} />
       </Gradient>
     </>

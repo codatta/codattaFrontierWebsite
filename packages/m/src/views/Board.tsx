@@ -23,28 +23,18 @@ export const Component = () => {
       <Head />
       <Header />
       <Card3 num={dashboard.rewardsCount} points={dashboard.points.slice(0)} />
-      <div className="flex mt-30px px-18px">
-        {/* <div className="w-774px mr-16px">
-          <Card1
-            networkNum={dashboard.networkNum}
-            entityNum={dashboard.entityNum}
-            addressNum={dashboard.addressNum}
-            contributionAddressNum={dashboard.contributionAddressCount}
-          />
-          <Card2
-            totalNum={dashboard.categoryNum}
-            topCates={dashboard.topCates.slice(0)}
-          />
-        </div> */}
-        {/* <div className="w-370px">
-     
-          <Card4 num={dashboard.contributionUserCount} />
-          <Card5 num={dashboard.validationUserCount} />
-        </div> */}
-      </div>
-
-      <div></div>
-
+      <Card1
+        networkNum={dashboard.networkNum}
+        entityNum={dashboard.entityNum}
+        addressNum={dashboard.addressNum}
+        contributionAddressNum={dashboard.contributionAddressCount}
+      />
+      <Card4 num={dashboard.contributionUserCount} />
+      <Card5 num={dashboard.validationUserCount} />
+      <Card2
+        totalNum={dashboard.categoryNum}
+        topCates={dashboard.topCates.slice(0)}
+      />
       <Footer />
       <CopyRights />
     </div>

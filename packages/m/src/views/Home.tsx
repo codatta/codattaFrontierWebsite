@@ -14,8 +14,10 @@ export const Component = () => {
       <Article3 />
       <Article4 />
       <Article5 />
-      <Footer />
-      <CopyRights />
+      <div className="px-24px">
+        <Footer />
+        <CopyRights />
+      </div>
     </>
   )
 }
