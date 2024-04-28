@@ -3,15 +3,14 @@ import react from '@vitejs/plugin-react'
 import Unocss from 'unocss/vite'
 import path from 'path'
 import dotenv from 'dotenv'
+import vitePluginGCPStorage from '../../vite-plugin-gcp-storage'
 
-dotenv.config({ path: path.resolve(__dirname, '.env') })
+dotenv.config({ path: path.resolve(__dirname, '../../', './.env') })
 
 console.log(
   'VITE_DYNAMIC_ENVIRONMENT_ID',
   process.env.VITE_DYNAMIC_ENVIRONMENT_ID
 )
-
-import vitePluginGCPStorage from '../../vite-plugin-gcp-storage'
 
 // https://vitejs.dev/config/
 export default defineConfig({
