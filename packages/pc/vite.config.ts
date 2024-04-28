@@ -1,8 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
 import Unocss from 'unocss/vite'
-
 import path from 'path'
 import dotenv from 'dotenv'
 
@@ -13,6 +11,7 @@ console.log(
   process.env.VITE_DYNAMIC_ENVIRONMENT_ID
 )
 
+import vitePluginGCPStorage from '../../vite-plugin-gcp-storage'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,6 +19,17 @@ export default defineConfig({
     react(),
     Unocss({
       configFile: './unocss.config.ts',
+    }),
+    vitePluginGCPStorage({
+      bucket: 'static-chaintool-ai',
+      keyFile: path.resolve(
+        __dirname,
+        '../../',
+        './chaintool-etl-32deb09152c3.json'
+      ),
+      exclude: ['**/*.map', '**/*.html'],
+      bucketDomain: 'https://static.b18a.io',
+      uploadPath: 'web/pc',
     }),
   ],
   define: {
