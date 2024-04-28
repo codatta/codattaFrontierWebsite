@@ -48,10 +48,7 @@ export default function Footer() {
         {/* <div className="icon discord-icon">Discord</div>
         <div className="icon linkedin-icon">Linkedin</div> */}
       </section>
-      <Divider />
-      <div className="text-base">
-        © 2024 b18a Labs Inc. All rights reserved.
-      </div>
+
     </div>
   )
 }

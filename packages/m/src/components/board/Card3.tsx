@@ -4,9 +4,8 @@ import CardHeader from './CardHeader'
 import { type TPoints } from '@/stores/dashboard.store'
 import defaultAvatarIcon from '../../assets/images/board/default-avatar-1.png'
 import bg from '@/assets/images/board/point-bg.svg'
-import pointItemBg from '@/assets/images/board/point-rect.svg'
-import './Card3.scss'
 import styled from 'styled-components'
+import './Card3.scss'
 
 const Bg = styled.div`
   background:
@@ -30,15 +29,10 @@ const CarouselItem = ({
   num: number
 }) => {
   return (
-    <motion.li
-      className="h-28px mr-8px relative rounded-14px"
-      style={{
-        backgroundImage: `url(${pointItemBg})`,
-      }}
-    >
-      <div className="relative h-full rounded-14px pl-4px pr-12px flex shrink-0 items-center gap-8px text-sm z-1 bg-#16383d">
+    <li className="relative h-21px mr-6px">
+      <div className="relative h-full rounded-12px px-3px pr-9px flex shrink-0 items-center gap-6px text-xs z-1 bg-black">
         <span
-          className="w-19px h-19px rounded-full bg-no-repeat bg-center bg-contain block"
+          className="w-15px h-15px rounded-full bg-no-repeat bg-center bg-contain block"
           style={{ backgroundImage: `url(${icon || defaultAvatarIcon})` }}
         ></span>
         <span className="text-#A9FAFA font-light">{userName}</span>
@@ -46,8 +40,8 @@ const CarouselItem = ({
           +{num}
         </span>
       </div>
-      <div className="absolute -left-1px -top-1px -right-1px -bottom-1px bg-red rounded-14px z-0 color-bg"></div>
-    </motion.li>
+      <div className="absolute -left-1px -top-1px -right-1px -bottom-1px bg-red rounded-12px z-0 color-bg"></div>
+    </li>
   )
 }
 const Row = ({ index, points = [] }: { index: number; points: TPoints }) => {
@@ -84,13 +78,13 @@ const Card = ({ num = 0, points = [] }: { num: number; points: TPoints }) => {
 
   return (
     <div
-      className="rounded rounded-t-3xl py-24px g-no-repeat bg-center bg-cover relative"
+      className="rounded rounded-3xl  g-no-repeat bg-center bg-cover box-border relative mt-24px"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="px-32px relative z-1">
+      <div className="relative z-1 p-18px">
         <CardHeader Icon={Send} title="Total Earned Points" num={num} />
       </div>
-      <div className="mt-35px overflow-hidden pb-24px">
+      <div className="mt-6px overflow-hidden pb-32px ">
         <Row index={0} points={points.slice(0, count1)} />
         <Row index={1} points={points.slice(count1, count1 + avCount)} />
         <Row index={2} points={points.slice(count1 + avCount)} />

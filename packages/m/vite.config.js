@@ -22,4 +22,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  server: {
+    // port: 5175,
+    open: false,
+    proxy: {
+      '^/api/': {
+        target: 'https://app.test.b18a.io',
+        changeOrigin: true,
+      },
+    },
+  },
 })
