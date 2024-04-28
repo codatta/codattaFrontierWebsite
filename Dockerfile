@@ -3,7 +3,7 @@ FROM node:20-alpine as dependencies
 
 WORKDIR /opt/
 
-COPY package.json yarn.lock /opt/
+COPY package.json /opt/
 
 # Copy the rest of the application code
 RUN yarn install
