@@ -15,7 +15,7 @@ const Header = () => {
       </Title>
       <p className="text-xl tracking-tighter text-#fff text-opacity-25">
         The world's leading Al-powered collaboration protocol for blockchain
-        metadata
+        metadata.
       </p>
     </>
   )

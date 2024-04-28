@@ -1,23 +1,29 @@
 // import styled from 'styled-components'
+import { useLocation } from 'react-router-dom'
 import './Footer.scss'
 
 export default function Footer() {
+  const location = useLocation()
+
   return (
-    <div className="mt-64px footer">
+    <div className="mt-64px footer text-base">
       {/* <span className="title-1">* </span> */}
-      <div>
-        We utilize the Microscope protocol for storing and managing our data.
-        The collected data will be contributed to the Microscope protocol.
-      </div>
-      <div className="flex justify-between mt-64px">
+      {location.pathname !== '/board' && (
+        <div>
+          We utilize the Microscope protocol for storing and managing our data.
+          The collected data will be contributed to the Microscope protocol.
+        </div>
+      )}
+      <div className="flex justify-between mt-64px text-#fff text-opacity-45">
         <section>
-          <div className="title-1">b18a Protocol</div>
-          <div>
+          <div className="text-#fff font-semibold text-2xl">b18a Protocol</div>
+          <div className="mt-16px">
             The world's leading AI-powered collaboration protocol for blockchain
             metadata.
           </div>
-          <div className="mt-43px text-base">
-            Have questions? Email us at hello@b18a.io
+          <div className="mt-43px ">
+            Have questions? Email us at
+            <br /> hello@b18a.io
           </div>
         </section>
         <aside className="text-sm w-256px mt-13px">

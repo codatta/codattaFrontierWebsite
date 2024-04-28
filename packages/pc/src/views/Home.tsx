@@ -16,8 +16,10 @@ export const Component = () => {
         <Article4 />
         <Article5 />
       </div>
-      <Footer />
-      <CopyRights />
+      <div className="px-96px">
+        <Footer />
+        <CopyRights />
+      </div>
     </>
   )
 }

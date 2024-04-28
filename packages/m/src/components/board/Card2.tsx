@@ -21,6 +21,7 @@ const Card = ({
         title="Catagories"
         num={totalNum}
         isBigIcon={true}
+        label="Total protocol distinct"
       />
       <ul className=" list-none m-0 p-0 mt-20px">
         {topCates.map((item, index) => (

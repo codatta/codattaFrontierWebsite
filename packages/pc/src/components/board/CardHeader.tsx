@@ -48,7 +48,9 @@ const CardHeader = ({
     </>
   ) : (
     <>
-      <div className="flex items-center justify-center w-80px h-24px rounded-16px bg-#fff bg-opacity-10">
+      <div
+        className={`flex items-center justify-center w-80px h-24px rounded-16px ${/points/i.test(label) ? 'bg-#0E0E21 bg-opacity-45' : 'bg-#fff bg-opacity-10'}`}
+      >
         <Icon color="rgba(64, 246, 225, 0.93)" size={12} className="mr-8px" />
         <div className="text-sm text-#40F6E1ED/[0.93]">{label}</div>
       </div>

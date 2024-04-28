@@ -29,23 +29,23 @@ export default function Head() {
     <>
       <header className="header flex justify-between items-center font-medium pt-14px color-white pr-48px ml-64px">
         <Logo className="w-200px h-30px text-xs"></Logo>
-        <div className="border-1px border-solid border-#fff border-opacity-10 w-224px h-48px rounded-24px text-#fff text-opacity-60 flex justify-around">
+        <div className="border-1px border-solid border-#fff border-opacity-10 py-8px px-16px rounded-20px text-#fff text-opacity-60 flex justify-around bg-#fff bg-opacity-2">
           <NavLink
-            className="h-full leading-48px no-underline nav"
+            className="h-full leading-24px no-underline nav cursor-pointer block mr-40px"
             to="/"
             onClick={() => setNav('/')}
           >
             Features
           </NavLink>
           <NavLink
-            className="h-full leading-48px no-underline nav"
+            className="h-full leading-24px no-underline nav cursor-pointer block"
             to="/board"
             onClick={() => setNav('/board')}
           >
             Monitoring
           </NavLink>
         </div>
-        <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
+        <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer hover:bg-#fff hover:bg-opacity-16">
           Sign in
         </DynamicConnectButton>
       </header>

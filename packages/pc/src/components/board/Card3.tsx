@@ -32,7 +32,7 @@ const CarouselItem = ({
 }) => {
   return (
     <motion.li
-      className="h-28px mr-8px relative rounded-14px"
+      className="h-28px mr-8px relative rounded-14px whitespace-nowrap"
       style={{
         backgroundImage: `url(${pointItemBg})`,
       }}

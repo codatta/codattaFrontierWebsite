@@ -19,15 +19,16 @@ const Card = ({
       <CardHeader
         Icon={Tag}
         title="Catagories"
+        label="Total protocol distinct"
         num={totalNum}
         isBigIcon={true}
       />
-      <ul className="grid grid-cols-12 gap-20px list-none m-0 p-0 mt-30px">
+      <ul className="grid grid-cols-12 gap-20px list-none m-0 p-0 mt-30px text-nowrap">
         {topCates.map((item, index) => (
           <>
             <li className="indent-24px font-semibold text-lg col-span-9">
               <div
-                className="rounded-8px min-w-30%"
+                className="rounded-8px"
                 style={{
                   backgroundColor:
                     index === 0

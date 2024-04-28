@@ -9,9 +9,9 @@ const Divider = styled.div`
 
 const CopyRights = () => {
   return (
-    <div className="mt-48px pt-32px text-base">
+    <div className="mt-12px text-base text-#fff text-opacity-45">
       <Divider />
-      <div>© 2024 b18a Labs Inc. All rights reserved.</div>
+      <div>© 2024 Blockchain Metadata Labs Inc. All rights reserved.</div>
     </div>
   )
 }
