@@ -104,7 +104,7 @@ const Card = ({ num = 0, points = [] }: { num: number; points: TPoints }) => {
       style={{ backgroundImage: `url(${bg})` }}
     >
       <div className="px-32px relative z-1">
-        <CardHeader Icon={Send} title="Total Earned Points" num={num} />
+        <CardHeader Icon={Send} title="Earned Points" num={num} />
       </div>
       <div className="mt-35px overflow-hidden pb-24px">
         <Row index={0} points={points.slice(0, count1)} />

@@ -36,10 +36,7 @@ const Card = ({
             />
             <span>Protocol distinct address</span>
           </div>
-          <RunNum
-            num={contributionAddressNum}
-            className="text-2xl mt-8px ml-26px"
-          />
+          <RunNum num={addressNum} className="text-2xl mt-8px ml-26px" />
         </li>
         <li className="flex-1">
           <div className="font-light text-sm flex items-center">
@@ -59,7 +56,7 @@ const Card = ({
             Icon={Send}
             isBigIcon={true}
             title="Labelled Addresses"
-            num={addressNum}
+            num={contributionAddressNum}
           />
         </div>
         <svg
