@@ -66,8 +66,8 @@ async function getPoints() {
       const userName = item.user_info?.user_name ?? ''
 
       return {
-        userName:
-          userName.length <= 12 ? userName : userName.slice(0, 12) + '*',
+        userName: userName,
+        // userName.length <= 12 ? userName : userName.slice(0, 12) + '*',
         avatar:
           item.user_info?.avatar ??
           'https://file.b18a.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_165485_default-avatar-2.png',

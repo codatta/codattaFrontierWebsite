@@ -66,8 +66,8 @@ async function getPoints() {
       const userName = item.user_info?.user_name ?? ''
 
       return {
-        userName:
-          userName.length <= 12 ? userName : userName.slice(0, 12) + '*',
+        userName: userName,
+        // userName.length <= 12 ? userName : userName.slice(0, 12) + '*',
         avatar: item.user_info?.avatar,
         totalPoint: item.total_point,
       }
