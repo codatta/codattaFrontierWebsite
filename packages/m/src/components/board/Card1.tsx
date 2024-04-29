@@ -25,9 +25,11 @@ const Card = ({
             />
           </div>
           <div className="font-light text-10px leading-14px  mt-8px tracking-tight">
-            Protocol distinct network
+            Supported
+            <br />
+            Networks
           </div>
-          <RunNum num={networkNum} className="text-lg mt-4px" />
+          <RunNum num={networkNum} className="text-base mt-4px" />
         </li>
         <li className="col-span-1">
           <div>
@@ -38,9 +40,11 @@ const Card = ({
             />
           </div>
           <div className="font-light text-10px leading-14px mt-8px tracking-tight">
-            Protocol distinct address
+            Labelled
+            <br />
+            Addresses
           </div>
-          <RunNum num={addressNum} className="text-lg mt-4px" />
+          <RunNum num={addressNum} className="text-base mt-4px" />
         </li>
         <li className="col-span-1">
           <div>
@@ -51,9 +55,11 @@ const Card = ({
             />
           </div>
           <div className="font-light text-10px leading-14px mt-8px tracking-tight">
-            Protocol distinct entity
+            Unique
+            <br />
+            Entities
           </div>
-          <RunNum num={entityNum} className="text-lg mt-4px" />
+          <RunNum num={entityNum} className="text-base mt-4px" />
         </li>
       </ul>
       <div className="mt-10px">
@@ -61,7 +67,7 @@ const Card = ({
           <CardHeader
             Icon={Send}
             isBigIcon={true}
-            title="Labelled Addresses"
+            title="Newly Labelled Addresses"
             num={contributionAddressNum}
           />
         </div>

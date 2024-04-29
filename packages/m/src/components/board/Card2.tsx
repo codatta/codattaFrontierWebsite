@@ -18,10 +18,10 @@ const Card = ({
     <div className="rounded-3xl bg-#8AD4F90A bg-opacity-10 mt-16px  py-24px px-32px overflow-hidden">
       <CardHeader
         Icon={Tag}
-        title="Catagories"
+        title="Categories Distribution"
         num={totalNum}
         isBigIcon={true}
-        label="Total protocol distinct"
+        label="Total"
       />
       <ul className=" list-none m-0 p-0 mt-20px  text-nowrap">
         {topCates.map((item, index) => (

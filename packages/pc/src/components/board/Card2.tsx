@@ -18,8 +18,8 @@ const Card = ({
     <div className="rounded-3xl bg-#21ffe4 bg-opacity-6 mt-16px  py-24px px-32px overflow-hidden">
       <CardHeader
         Icon={Tag}
-        title="Catagories"
-        label="Total protocol distinct"
+        title="Categories Distribution"
+        label="Total"
         num={totalNum}
         isBigIcon={true}
       />

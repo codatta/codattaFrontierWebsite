@@ -23,7 +23,7 @@ const Card = ({
               size={14}
               color="rgba(64, 246, 225, 0.93)"
             />
-            <span>Protocol distinct network</span>
+            <span>Supported Networks</span>
           </div>
           <RunNum num={networkNum} className="text-2xl mt-8px ml-26px" />
         </li>
@@ -34,7 +34,7 @@ const Card = ({
               size={14}
               color="rgba(64, 246, 225, 0.93)"
             />
-            <span>Protocol distinct address</span>
+            <span>Labelled Addresses</span>
           </div>
           <RunNum num={addressNum} className="text-2xl mt-8px ml-26px" />
         </li>
@@ -45,7 +45,7 @@ const Card = ({
               size={14}
               color="rgba(64, 246, 225, 0.93)"
             />
-            <span>Protocol distinct entity</span>
+            <span>Unique Entities</span>
           </div>
           <RunNum num={entityNum} className="text-2xl mt-8px ml-26px" />
         </li>
@@ -55,7 +55,7 @@ const Card = ({
           <CardHeader
             Icon={Send}
             isBigIcon={true}
-            title="Labelled Addresses"
+            title="Newly Labelled Addresses"
             num={contributionAddressNum}
           />
         </div>
