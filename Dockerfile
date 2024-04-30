@@ -3,7 +3,7 @@ FROM node:20-alpine as dependencies
 
 WORKDIR /opt/
 
-COPY package.json yarn.lock /opt/
+COPY package.json /opt/
 
 # Copy the rest of the application code
 RUN yarn install
@@ -18,7 +18,7 @@ COPY ./ /opt/
 # Build the application
 ARG BUILDTYPE
 #RUN yarn build
-RUN yarn build;
+RUN yarn build
 # Stage 3: Create the final image
 FROM nginx:1.25.2-alpine-slim
 

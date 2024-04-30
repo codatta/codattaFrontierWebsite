@@ -4,26 +4,10 @@ import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
 import styled from 'styled-components'
 
 import Signup from './Signup'
-import BackgroundBeams from '../effects/BgBeam'
 import Bg from './Bg'
 import Title from './Title'
 
-import './Index.scss'
-import { DynamicConnectButton, useDynamicContext } from '@dynamic-labs/sdk-react-core'
-import { useEffect, useRef, useState } from 'react'
-import { Modal } from 'antd'
-import { useInView } from 'framer-motion'
-
-function Head() {
-  return (
-    <header className="header flex justify-between items-center font-medium pt-12px pl-24px color-white">
-      <div className="w-200px h-30px text-xs logo"></div>
-      <DynamicConnectButton buttonClassName="mr-25px signin-btn text-sm color-#fff rounded-6px">
-        Sign in
-      </DynamicConnectButton>
-    </header>
-  )
-}
+import Head from '../Head'
 
 const Line1 = styled.div`
   background: linear-gradient(
@@ -51,27 +35,10 @@ const GuideLine = () => {
 }
 
 const Article = () => {
-  const { user, handleLogOut } = useDynamicContext()
-  const [open, setOpen] = useState(false)
-  const ref = useRef()
-  const isInview = useInView(ref)
-
-  useEffect(() => {
-    if (!user) return
-    handleLogOut()
-    setOpen(true)
-  }, [user])
-
   return (
     <div className="relative">
-      <Head />
+      <Head className="px-24px" />
       <Bg />
-      {/* <div
-        className="w-full h-580px absolute inset-0 top-0 left-0 pointer-events-none"
-        ref={ref}
-      >
-        {isInview && <BackgroundBeams />}
-      </div> */}
       <div className="flex mt-243px ">
         <GuideLine />
         <div className="main">
@@ -86,28 +53,6 @@ const Article = () => {
           </a>
         </div>
       </div>
-
-      <Modal
-        width={'83%'}
-        centered
-        open={open}
-        onCancel={() => setOpen(false)}
-        closable={false}
-        footer={null}
-      >
-        <h2 className="text-20px font-700 m-b-16px">Thank You</h2>
-        <span>
-          Thank you for your interest in our product. Your email has been added
-          to the waiting list. Once our product is released, we will promptly
-          send an email for you.
-        </span>
-        <button
-          className="mt-24px m-l-auto rounded-8px h-36px px-32px block border-none outline-none text-white font-700 text-14px bg-gradient-to-b from-#C63F6C to-#652ECC"
-          onClick={() => setOpen(false)}
-        >
-          OK
-        </button>
-      </Modal>
     </div>
   )
 }

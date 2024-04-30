@@ -21,4 +21,8 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
+*.sw?.env
+
+packages/m/.env
+packages/pc/.env
+.env
