@@ -4,7 +4,6 @@ import path from 'path'
 import { PluginOption, normalizePath } from 'vite'
 import fs from 'fs'
 
-
 type VitePluginGCPStorageOptions = {
   bucket: string
   keyFile: string
@@ -31,7 +30,6 @@ export default function vitePluginGCPStorage(options: VitePluginGCPStorageOption
     configResolved(config) {
       const keyfile = path.resolve(__dirname, options.keyFile)
       if (fs.existsSync(keyfile)) {
-        config.base = `${options.bucketDomain}/${options.uploadPath}`
         console.info(`发现google云key文件[${keyfile}], 修改编译base为: ${config.base}`)
       }
       buildConfig = config

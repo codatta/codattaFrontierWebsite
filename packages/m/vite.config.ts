@@ -9,6 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../', './.env') })
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.MOBILE_CDN_ASSETS_PATH ? `https://static.b18a.io/${process.env.MOBILE_CDN_ASSETS_PATH}` : './',
   plugins: [
     react(),
     Unocss({
@@ -23,13 +24,12 @@ export default defineConfig({
       ),
       exclude: ['**/*.map', '**/*.html'],
       bucketDomain: 'https://static.b18a.io',
-      uploadPath: 'web/m',
+      uploadPath: process.env.MOBILE_CDN_ASSETS_PATH,
     }),
   ],
   define: {
     'process.env': {},
   },
-  base: './',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
