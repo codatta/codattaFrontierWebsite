@@ -1,23 +1,31 @@
-import {
-  DynamicConnectButton,
-  useDynamicContext,
-} from '@dynamic-labs/sdk-react-core'
-import { Modal } from 'antd'
-import { useEffect, useState } from 'react'
+// import {
+//   DynamicConnectButton,
+//   useDynamicContext,
+// } from '@dynamic-labs/sdk-react-core'
+// import { Modal } from 'antd'
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import './Head.scss'
 
 function Head({ className }: { className?: string }) {
-  const { user, handleLogOut } = useDynamicContext()
-  const [open, setOpen] = useState(false)
+  // const { user, handleLogOut } = useDynamicContext()
+  // const [open, setOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [nav, setNav] = useState('/')
 
-  useEffect(() => {
-    if (!user) return
-    handleLogOut()
-    setOpen(true)
-  }, [user])
+  function jump2App() {
+    const href = /test/.test(location.pathname)
+      ? 'https://app.test.b18a.io/account/signin'
+      : 'https://app.b18a.io/account/signin'
+
+    location.href = href
+  }
+
+  // useEffect(() => {
+  //   if (!user) return
+  //   handleLogOut()
+  //   setOpen(true)
+  // }, [user])
 
   return (
     <div className="relative">
@@ -26,9 +34,15 @@ function Head({ className }: { className?: string }) {
       >
         <div className="w-200px h-30px text-xs logo"></div>
         <div className="flex items-center">
-          <DynamicConnectButton buttonClassName="mr-8px signin-btn text-sm color-#fff rounded-6px">
+          {/* <DynamicConnectButton buttonClassName="mr-8px signin-btn text-sm color-#fff rounded-6px">
             Sign in
-          </DynamicConnectButton>
+          </DynamicConnectButton> */}
+          <button
+            className="mr-8px signin-btn text-sm color-#fff rounded-6px"
+            onClick={jump2App}
+          >
+            Sign in
+          </button>
           <div
             className={`rounded-12px border-1px border-solid border-#fff border-opacity-10 w-32px h-26px box-border menu ${menuOpen ? 'open' : ''}`}
             onClick={() => setMenuOpen((pre) => !pre)}
@@ -53,7 +67,7 @@ function Head({ className }: { className?: string }) {
           </NavLink>
         </div>
       )}
-      <Modal
+      {/* <Modal
         width={'83%'}
         centered
         open={open}
@@ -73,7 +87,7 @@ function Head({ className }: { className?: string }) {
         >
           OK
         </button>
-      </Modal>
+      </Modal> */}
     </div>
   )
 }
