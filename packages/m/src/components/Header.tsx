@@ -1,9 +1,9 @@
-import {
-  DynamicConnectButton,
-  useDynamicContext,
-} from '@dynamic-labs/sdk-react-core'
-import { Modal } from 'antd'
-import { useEffect, useState } from 'react'
+// import {
+// DynamicConnectButton,
+//   useDynamicContext,
+// } from '@dynamic-labs/sdk-react-core'
+// import { Modal } from 'antd'
+import { useState } from 'react'
 import styled from 'styled-components'
 import logImg from '../assets/images/icons/logo-text.jpeg'
 import { NavLink } from 'react-router-dom'
@@ -14,26 +14,38 @@ const Logo = styled.div`
   background-size: contain;
 `
 export default function Head() {
-  const { user, handleLogOut } = useDynamicContext()
-  const [open, setOpen] = useState(false)
+  // const { user, handleLogOut } = useDynamicContext()
+  // const [open, setOpen] = useState(false)
   const [nav, setNav] = useState('/')
 
-  useEffect(() => {
-    if (!user) return
+  // useEffect(() => {
+  //   if (!user) return
 
-    handleLogOut()
-    setOpen(true)
-  }, [user])
+  //   handleLogOut()
+  //   setOpen(true)
+  // }, [user])
+
+  function jump2App() {
+    const href = /test/.test(location.pathname)
+      ? 'https://app.test.b18a.io/account/signin'
+      : 'https://app.b18a.io/account/signin'
+
+    location.href = href
+  }
 
   return (
     <>
       <header className="header flex justify-between items-center font-medium pt-12px pl-24px color-white">
         <Logo className="w-200px h-30px text-xs"></Logo>
-
-        <DynamicConnectButton buttonClassName="mr-25px signin-btn text-sm color-#fff rounded-6px">
+        {/* <DynamicConnectButton buttonClassName="mr-25px signin-btn text-sm color-#fff rounded-6px">
           Sign in
-        </DynamicConnectButton>
-
+        </DynamicConnectButton> */}
+        <button
+          className="mr-25px signin-btn text-sm color-#fff rounded-6px"
+          onClick={() => jump2App}
+        >
+          Sign in
+        </button>
         <div className="border-1px border-solid border-#fff border-opacity-10 w-224px h-48px rounded-24px text-#fff text-opacity-60 flex justify-around">
           <NavLink
             className="h-full leading-48px no-underline nav"
@@ -50,12 +62,18 @@ export default function Head() {
             Monitoring
           </NavLink>
         </div>
-        <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
+        {/* <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer">
           Sign in
-        </DynamicConnectButton>
+        </DynamicConnectButton> */}
+        <button
+          className="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer"
+          onClick={jump2App}
+        >
+          Sign in
+        </button>
       </header>
 
-      <Modal
+      {/* <Modal
         open={open}
         centered
         onCancel={() => setOpen(false)}
@@ -74,7 +92,7 @@ export default function Head() {
         >
           OK
         </button>
-      </Modal>
+      </Modal> */}
     </>
   )
 }

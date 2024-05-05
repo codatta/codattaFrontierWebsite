@@ -26,7 +26,10 @@ const Card = ({
       <ul className="grid grid-cols-12 gap-20px list-none m-0 p-0 mt-30px text-nowrap">
         {topCates.map((item, index) => (
           <>
-            <li className="indent-24px font-semibold text-lg col-span-9">
+            <li
+              className="indent-24px font-semibold text-lg col-span-9"
+              key={item.name + index + '_1'}
+            >
               <div
                 className="rounded-8px"
                 style={{
@@ -41,7 +44,10 @@ const Card = ({
                 {item.name}
               </div>
             </li>
-            <li className="font-light text-sm tracking-tight flex items-center justify-end col-span-3">
+            <li
+              className="font-light text-sm tracking-tight flex items-center justify-end col-span-3"
+              key={item.name + index + '_2'}
+            >
               <span className="text-#009E8C text-opacity-93 mr-8px">
                 Addresses
               </span>

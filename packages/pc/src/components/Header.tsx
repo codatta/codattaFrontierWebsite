@@ -1,29 +1,38 @@
-import {
-  DynamicConnectButton,
-  useDynamicContext,
-} from '@dynamic-labs/sdk-react-core'
-import { Modal } from 'antd'
-import { useEffect, useState } from 'react'
+// import {
+//   DynamicConnectButton,
+//   useDynamicContext,
+// } from '@dynamic-labs/sdk-react-core'
+// import { Modal } from 'antd'
+import { useState } from 'react'
 import styled from 'styled-components'
-import logImg from '../assets/images/icons/logo-text.jpeg'
 import { NavLink } from 'react-router-dom'
 import './Header.scss'
+import logImg from '../assets/images/icons/logo-text.jpeg'
 
 const Logo = styled.div`
   background: url(${logImg}) left center no-repeat;
   background-size: contain;
 `
 export default function Head() {
-  const { user, handleLogOut } = useDynamicContext()
-  const [open, setOpen] = useState(false)
+  // const { user, handleLogOut } = useDynamicContext()
+  // const [open, setOpen] = useState(false)
   const [nav, setNav] = useState('/')
 
-  useEffect(() => {
-    if (!user) return
+  // useEffect(() => {
+  //   if (!user) return
 
-    handleLogOut()
-    setOpen(true)
-  }, [user])
+  //   handleLogOut()
+  //   setOpen(true)
+  // }, [user])
+
+  function jump2App() {
+    const href = /test/.test(location.pathname)
+      ? 'https://app.test.b18a.io/account/signin'
+      : 'https://app.b18a.io/account/signin'
+
+    console.log('jump2App', href)
+    location.href = href
+  }
 
   return (
     <>
@@ -45,12 +54,18 @@ export default function Head() {
             Monitoring
           </NavLink>
         </div>
-        <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer hover:bg-#fff hover:bg-opacity-16">
+        {/* <DynamicConnectButton buttonClassName="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer hover:bg-#fff hover:bg-opacity-16">
           Sign in
-        </DynamicConnectButton>
+        </DynamicConnectButton> */}
+        <button
+          className="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer hover:bg-#fff hover:bg-opacity-16"
+          onClick={jump2App}
+        >
+          Sign in
+        </button>
       </header>
 
-      <Modal
+      {/* <Modal
         open={open}
         centered
         onCancel={() => setOpen(false)}
@@ -69,7 +84,7 @@ export default function Head() {
         >
           OK
         </button>
-      </Modal>
+      </Modal> */}
     </>
   )
 }
