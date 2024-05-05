@@ -14,6 +14,7 @@ console.log(
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: process.env.PC_CDN_ASSETS_PATH ? `https://static.b18a.io/${process.env.PC_CDN_ASSETS_PATH}` : './',
   plugins: [
     react(),
     Unocss({
@@ -28,13 +29,12 @@ export default defineConfig({
       ),
       exclude: ['**/*.map', '**/*.html'],
       bucketDomain: 'https://static.b18a.io',
-      uploadPath: 'web/pc',
+      uploadPath: process.env.PC_CDN_ASSETS_PATH,
     }),
   ],
   define: {
     'process.env': {},
   },
-  base: './',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
