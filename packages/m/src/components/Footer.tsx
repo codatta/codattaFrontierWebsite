@@ -38,13 +38,13 @@ export default function Footer() {
       <section className="mt-24px text-base">
         <div className="text-sm text-#fff text-opacity-45">Social</div>
         <div className="flex justify-start items-center">
-          <a href="https://twitter.com/codatta_io" className="no-underline">
+          <a href="https://x.com/codatta_io" className="no-underline">
             <div className="icon twitter-icon" />
           </a>
-          <a href="https://t.me/b18a_io" className="no-underline">
+          <a href="https://t.me/codatta_io" className="no-underline">
             <div className="icon telegram-icon" />
           </a>
-          <a href="https://medium.com/@b18a" className="no-underline">
+          <a href="https://codatta.medium.com" className="no-underline">
             <div className="icon medium-icon"></div>
           </a>
           <a href="https://discord.gg/YCESVmHEYv" className="no-underline">

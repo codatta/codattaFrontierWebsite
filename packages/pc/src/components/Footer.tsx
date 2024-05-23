@@ -29,17 +29,17 @@ export default function Footer() {
         <aside className="text-sm w-256px mt-13px">
           Social
           <div className="icon twitter-icon">
-            <a href="https://twitter.com/b18a_io" className="no-underline">
+            <a href="https://x.com/codatta_io" className="no-underline">
               Twitter
             </a>
           </div>
           <div className="icon telegram-icon">
-            <a href="https://t.me/b18a_io" className="no-underline">
+            <a href="https://t.me/codatta_io" className="no-underline">
               Telegram
             </a>
           </div>
           <div className="icon medium-icon">
-            <a href="https://medium.com/@b18a" className="no-underline">
+            <a href="https://codatta.medium.com" className="no-underline">
               Medium
             </a>
           </div>
