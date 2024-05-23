@@ -1,4 +1,4 @@
-# b18a官网
+# codatta官网
 
 ## 发布记录
 - b18a.io 切换到 codatta.io, 更换favicon  2024-05-23
