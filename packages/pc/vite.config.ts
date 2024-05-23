@@ -14,7 +14,7 @@ console.log(
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.PC_CDN_ASSETS_PATH ? `https://static.b18a.io/${process.env.PC_CDN_ASSETS_PATH}` : './',
+  base: process.env.PC_CDN_ASSETS_PATH ? `https://static.codatta.io/${process.env.PC_CDN_ASSETS_PATH}` : './',
   plugins: [
     react(),
     Unocss({
@@ -28,7 +28,7 @@ export default defineConfig({
         './chaintool-etl-32deb09152c3.json'
       ),
       exclude: ['**/*.map', '**/*.html'],
-      bucketDomain: 'https://static.b18a.io',
+      bucketDomain: 'https://static.codatta.io',
       uploadPath: process.env.PC_CDN_ASSETS_PATH,
     }),
   ],
@@ -45,7 +45,7 @@ export default defineConfig({
     open: false,
     proxy: {
       '^/api/': {
-        target: 'https://app.test.b18a.io',
+        target: 'https://app.test.codatta.io',
         changeOrigin: true,
       },
     },

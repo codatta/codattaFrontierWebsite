@@ -15,8 +15,8 @@ function Head({ className }: { className?: string }) {
 
   function jump2App() {
     const href = /test/.test(location.pathname)
-      ? 'https://app.test.b18a.io/account/signin'
-      : 'https://app.b18a.io/account/signin'
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
     location.href = href
   }
@@ -41,7 +41,7 @@ function Head({ className }: { className?: string }) {
             className="mr-8px signin-btn text-sm color-#fff rounded-6px"
             onClick={jump2App}
           >
-            Sign in
+            Launch App
           </button>
           <div
             className={`rounded-12px border-1px border-solid border-#fff border-opacity-10 w-32px h-26px box-border menu ${menuOpen ? 'open' : ''}`}

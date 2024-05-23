@@ -26,25 +26,25 @@ export default function Footer() {
         </div>
       )}
       <section className="mt-48px text-base text-#fff text-opacity-45">
-        <div className="text-2xl text-#fff tracing-tight">b18a Protocol</div>
+        <div className="text-2xl text-#fff tracing-tight">codatta</div>
         <div className="mt-16px">
           The world's leading AI-powered collaboration protocol for blockchain
           metadata.
         </div>
         <div className="mt-18px text-base">
-          Have questions? Email us at hello@b18a.io
+          Have questions? Email us at hello@codatta.io
         </div>
       </section>
       <section className="mt-24px text-base">
         <div className="text-sm text-#fff text-opacity-45">Social</div>
         <div className="flex justify-start items-center">
-          <a href="https://twitter.com/b18a_io" className="no-underline">
+          <a href="https://x.com/codatta_io" className="no-underline">
             <div className="icon twitter-icon" />
           </a>
-          <a href="https://t.me/b18a_io" className="no-underline">
+          <a href="https://t.me/codatta_io" className="no-underline">
             <div className="icon telegram-icon" />
           </a>
-          <a href="https://medium.com/@b18a" className="no-underline">
+          <a href="https://codatta.medium.com" className="no-underline">
             <div className="icon medium-icon"></div>
           </a>
           <a href="https://discord.gg/YCESVmHEYv" className="no-underline">

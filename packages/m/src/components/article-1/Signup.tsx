@@ -4,8 +4,8 @@ import './Signup.scss'
 export default function Signup() {
   function jump2App() {
     const href = /test/.test(location.pathname)
-      ? 'https://app.test.b18a.io/account/signin'
-      : 'https://app.b18a.io/account/signin'
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
     location.href = href
   }

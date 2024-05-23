@@ -16,30 +16,30 @@ export default function Footer() {
       )}
       <div className="flex justify-between mt-64px text-#fff text-opacity-45">
         <section>
-          <div className="text-#fff font-semibold text-2xl">b18a Protocol</div>
+          <div className="text-#fff font-semibold text-2xl">codatta</div>
           <div className="mt-16px">
             The world's leading AI-powered collaboration protocol for blockchain
             metadata.
           </div>
           <div className="mt-43px ">
             Have questions? Email us at
-            <br /> hello@b18a.io
+            <br /> hello@codatta.io
           </div>
         </section>
         <aside className="text-sm w-256px mt-13px">
           Social
           <div className="icon twitter-icon">
-            <a href="https://twitter.com/b18a_io" className="no-underline">
+            <a href="https://x.com/codatta_io" className="no-underline">
               Twitter
             </a>
           </div>
           <div className="icon telegram-icon">
-            <a href="https://t.me/b18a_io" className="no-underline">
+            <a href="https://t.me/codatta_io" className="no-underline">
               Telegram
             </a>
           </div>
           <div className="icon medium-icon">
-            <a href="https://medium.com/@b18a" className="no-underline">
+            <a href="https://codatta.medium.com" className="no-underline">
               Medium
             </a>
           </div>

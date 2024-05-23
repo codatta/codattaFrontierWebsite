@@ -27,8 +27,8 @@ export default function Head() {
 
   function jump2App() {
     const href = /test/.test(location.pathname)
-      ? 'https://app.test.b18a.io/account/signin'
-      : 'https://app.b18a.io/account/signin'
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
     location.href = href
   }
@@ -44,7 +44,7 @@ export default function Head() {
           className="mr-25px signin-btn text-sm color-#fff rounded-6px"
           onClick={() => jump2App}
         >
-          Sign in
+          Launch App
         </button>
         <div className="border-1px border-solid border-#fff border-opacity-10 w-224px h-48px rounded-24px text-#fff text-opacity-60 flex justify-around">
           <NavLink
@@ -69,7 +69,7 @@ export default function Head() {
           className="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer"
           onClick={jump2App}
         >
-          Sign in
+          Launch App
         </button>
       </header>
 

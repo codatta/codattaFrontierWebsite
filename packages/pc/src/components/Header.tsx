@@ -1,34 +1,19 @@
-// import {
-//   DynamicConnectButton,
-//   useDynamicContext,
-// } from '@dynamic-labs/sdk-react-core'
-// import { Modal } from 'antd'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
 import './Header.scss'
-import logImg from '../assets/images/icons/logo-text.jpeg'
+import logImg from '../assets/images/icons/logo-white.png'
 
 const Logo = styled.div`
   background: url(${logImg}) left center no-repeat;
   background-size: contain;
 `
 export default function Head() {
-  // const { user, handleLogOut } = useDynamicContext()
-  // const [open, setOpen] = useState(false)
   const [nav, setNav] = useState('/')
-
-  // useEffect(() => {
-  //   if (!user) return
-
-  //   handleLogOut()
-  //   setOpen(true)
-  // }, [user])
-
   function jump2App() {
     const href = /test/.test(location.pathname)
-      ? 'https://app.test.b18a.io/account/signin'
-      : 'https://app.b18a.io/account/signin'
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
     console.log('jump2App', href)
     location.href = href
@@ -61,7 +46,7 @@ export default function Head() {
           className="ml-auto border-1px border-white bg-transparent text-white rounded-16px text-16px font-500 leading-24px px-12px py-6px cursor-pointer hover:bg-#fff hover:bg-opacity-16"
           onClick={jump2App}
         >
-          Sign in
+          Launch App
         </button>
       </header>
 
