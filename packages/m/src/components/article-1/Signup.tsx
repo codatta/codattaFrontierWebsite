@@ -33,13 +33,13 @@ export default function Signup() {
         Sign up for THE Great Mission
       </button>
 
-      <div className="w-299px h-1px bg-#fff opacity-10 mt-16px"></div>
+      {/* <div className="w-299px h-1px bg-#fff opacity-10 mt-16px"></div>
       <button
         className="wallet-btn rounded-lg color-#fff font-bold w-299px h-38px mt-16px"
         onClick={jump2App}
       >
         Start with your wallet
-      </button>
+      </button> */}
     </div>
   )
 }

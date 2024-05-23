@@ -8,8 +8,8 @@ import './Signup.scss'
 export default function Signup() {
   function jump2App() {
     const href = /test/.test(location.pathname)
-      ? 'https://app.test.b18a.io/account/signin'
-      : 'https://app.b18a.io/account/signin'
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
     location.href = href
   }
@@ -27,18 +27,18 @@ export default function Signup() {
           Sign up for THE Great Mission
         </button>
       </div>
-      <div className="w-1px h-48px bg-#fff opacity-10"></div>
+      {/* <div className="w-1px h-48px bg-#fff opacity-10"></div> */}
       {/* <DynamicConnectButton buttonClassName="cursor-pointer flex items-center border-1px border-#B67FE0 bg-transparent rounded-8px text-white h-48px block p-x-24px text-16px font-700">
         Start with your wallet
         <RightOutlined size={3} className="ml-12px" />
       </DynamicConnectButton> */}
-      <button
+      {/* <button
         className="cursor-pointer flex items-center border-1px border-#B67FE0 bg-transparent rounded-8px text-white h-48px block p-x-24px text-16px font-700"
         onClick={jump2App}
       >
         Start with your wallet
         <RightOutlined size={3} className="ml-12px" />
-      </button>
+      </button> */}
     </div>
   )
 }

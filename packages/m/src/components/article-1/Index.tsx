@@ -27,7 +27,7 @@ const Line2 = styled.div`
 const GuideLine = () => {
   return (
     <div className="flex flex-col justify-between items-center guide-line ml-14px mr-7px">
-      <Line1 className="w-4px h-343px" />
+      <Line1 className="w-4px h-220px" />
       <img src={tracingIcon} className="w-48px h-48px" />
       <Line2 className="w-4px h-172px" />
     </div>
