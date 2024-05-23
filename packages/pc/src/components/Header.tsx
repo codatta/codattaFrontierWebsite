@@ -1,8 +1,3 @@
-// import {
-//   DynamicConnectButton,
-//   useDynamicContext,
-// } from '@dynamic-labs/sdk-react-core'
-// import { Modal } from 'antd'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { NavLink } from 'react-router-dom'
@@ -14,17 +9,7 @@ const Logo = styled.div`
   background-size: contain;
 `
 export default function Head() {
-  // const { user, handleLogOut } = useDynamicContext()
-  // const [open, setOpen] = useState(false)
   const [nav, setNav] = useState('/')
-
-  // useEffect(() => {
-  //   if (!user) return
-
-  //   handleLogOut()
-  //   setOpen(true)
-  // }, [user])
-
   function jump2App() {
     const href = /test/.test(location.pathname)
       ? 'https://app.test.codatta.io/account/signin'
