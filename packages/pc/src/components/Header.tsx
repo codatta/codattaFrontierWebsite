@@ -31,7 +31,7 @@ export default function Head() {
             Monitoring
           </NavLink>
         </div>
-        <div />
+        {/* <div /> */}
       </header>
     </>
   )
