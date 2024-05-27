@@ -50,6 +50,9 @@ export default function Footer() {
           <a href="https://discord.gg/YCESVmHEYv" className="no-underline">
             <div className="icon discord-icon" />
           </a>
+          <a href="https://t.me/codatta_ann" className="no-underline">
+            <div className="icon annoucement-icon" />
+          </a>
         </div>
       </section>
     </div>
