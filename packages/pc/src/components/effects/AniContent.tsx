@@ -4,7 +4,7 @@ import './AniContent.scss'
 
 const AniContent: React.FC<{
   t: string
-  des: string
+  des?: React.ReactNode | string
   className?: string
 }> = ({ t, des, className }) => {
   const ref = useRef(null)
@@ -12,8 +12,8 @@ const AniContent: React.FC<{
 
   return (
     <div className={`ani-content ${isInView && 'ani'} ${className}`} ref={ref}>
-      <div className="title-1">{t}</div>
-      <div className="mt-16px">{des}</div>
+      <div className="title-2">{t}</div>
+      <div className="text-lg leading-26px text-#FFFFFF73">{des}</div>
     </div>
   )
 }

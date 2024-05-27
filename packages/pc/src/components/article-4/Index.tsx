@@ -61,7 +61,7 @@ const Article = () => {
         <div className="mt-32px flex justify-between">
           <img src={img2} className="w-705px h-300px mr-68px" />
           <div>
-            <div className="title-1">Transparency</div>
+            <div className="title-2">Transparency</div>
             <div>
               We clearly communicate the data derived from ground-truth,
               heuristic methods, machine learning, and external sources to
@@ -69,7 +69,7 @@ const Article = () => {
             </div>
           </div>
         </div>
-        <div className="mt-48px title-1">Multi-staged validation</div>
+        <div className="mt-48px title-2">Multi-staged validation</div>
         <div className="flex justify-between">
           <Card
             t1="Stage  1 :Validation"

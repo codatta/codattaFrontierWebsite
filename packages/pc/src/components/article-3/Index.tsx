@@ -1,6 +1,6 @@
 import img from '@/assets/images/article-3/0.svg'
 import img1 from '@/assets/images/article-3/1.svg'
-import img2 from '@/assets/images/article-3/2.png'
+import img2 from '@/assets/images/article-3/2.svg'
 import img3 from '@/assets/images/article-3/3.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-2.svg'
@@ -18,19 +18,25 @@ import AniContent from '../effects/AniContent'
 
 const Head = () => {
   return (
-    <div className="flex justify-between text-2xl">
-      <div className="w-440px">
+    <div className="flex justify-between">
+      <div className="w-500px">
         <AniTitle
           t1="Public Infrastructure"
           t2="Decentralized Intelligence Data Layer for All"
-          des="We aim to develop a foundational metadata infrastructure characterized
-          by high coverage, quality, and diversity, empowering builders to focus
-          on crafting data-driven AI applications."
+          des={
+            <>
+              We aim to develop a foundational metadata infrastructure
+              characterized by high <span className="text-#fff">coverage</span>,{' '}
+              <span className="text-#fff">quality</span>, and{' '}
+              <span className="text-#fff">diversity</span>, empowering builders
+              to focus on crafting data-driven AI applications.
+            </>
+          }
           color="cyan"
         ></AniTitle>
       </div>
       <EffectCard color="#33B3AE">
-        <AniImage src={img} className="w-700px" />
+        <AniImage src={img} className="w-490px" />
       </EffectCard>
     </div>
   )
@@ -40,14 +46,20 @@ const Section1 = () => {
   return (
     <div className="mt--140px flex">
       <EffectCard color="#33B3AE">
-        <AniImage src={img1} className="w-396px" />
+        <AniImage src={img1} className="w-376px" />
       </EffectCard>
       <AniContent
-        className="mt-208px ml-70px w-630px"
+        className="mt-208px ml-70px mr-100 w-630px"
         t="Permissionless"
-        des="Web3 users and businesses of all sizes can contribute label data
-          carrying no privacy. Rewards are granted based on contribution
-          significance and in exchange of access to the entire metadata space."
+        des={
+          <>
+            <span className="text-#fff">Web3 users</span> and{' '}
+            <span className="text-#fff">businesses of all sizes</span> can
+            contribute label data carrying no privacy. Rewards are granted based
+            on contribution significance and in exchange of access to the entire
+            metadata space.
+          </>
+        }
       />
     </div>
   )
@@ -64,7 +76,7 @@ const Section2 = () => {
           the long run."
       />
       <EffectCard color="#33B3AE">
-        <AniImage src={img2} className="w-400px" />
+        <AniImage src={img2} className="w-448px" />
       </EffectCard>
     </div>
   )
@@ -74,10 +86,10 @@ const Section3 = () => {
   return (
     <div className="mt-40px flex justify-between">
       <EffectCard color="#33B3AE">
-        <AniImage src={img3} className="w-600px" />
+        <AniImage src={img3} className="w-620px" />
       </EffectCard>
       <AniContent
-        className="w-500px mt-23px"
+        className="w-505px mt-23px"
         t="Open Source"
         des="  Our protocol and software pipeline have been made entirely
           open-sourced in order to foster further community-driven development

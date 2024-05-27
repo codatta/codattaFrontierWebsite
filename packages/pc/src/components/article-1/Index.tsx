@@ -1,60 +1,51 @@
 import microImg from '@/assets/images/article-1/micro.svg'
-import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
-import styled from 'styled-components'
-import Signup from './Signup'
-import Bg from './Bg'
+import bannerImg from '@/assets/images/article-1/banner.svg'
 import Title from './Title'
 
-const Circle = styled.div`
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-`
+function Signup() {
+  function jump2App() {
+    const href = /test/.test(location.pathname)
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
-const Line1 = styled.div`
-  background: linear-gradient(
-    to bottom,
-    rgba(139, 63, 198, 0.01),
-    rgba(90, 36, 133, 1)
-  );
-`
+    location.href = href
+  }
 
-const Line2 = styled.div`
-  background: linear-gradient(
-    to bottom,
-    rgba(108, 41, 160, 1),
-    rgba(0, 170, 81, 1)
-  );
-`
-const GuideLine = () => {
   return (
-    <div className="flex flex-col justify-between items-center guide-line">
-      <Circle className="w-10px h-10px" />
-      <Line1 className="w-4px h-300px" />
-      <img src={tracingIcon} className="w-48px h-48px" />
-      <Line2 className="w-4px h-274px" />
+    <button
+      className="cursor-pointer rounded-8px h-48px px-24px block border-none outline-none text-#020008E0 font-600 text-base bg-#fff m-auto my-8"
+      onClick={jump2App}
+    >
+      Sign up for THE Great Mission
+    </button>
+  )
+}
+
+function Banner() {
+  return (
+    <div className="h-396px ">
+      <img src={bannerImg} className="w-970px h-auto m-auto block" />
     </div>
   )
 }
 
 const Article = () => {
   return (
-    <div className="relative overflow-hidden">
-      <div className="relative flex mt-94px overflow-hidden">
-        <GuideLine />
-        <div className="main">
-          <Title />
-
-          <Signup />
-          <a
-            href="https://microscopeprotocol.xyz"
-            target="_blank"
-            className="mt-67px block"
-          >
-            <img src={microImg} className="h-124px" />
-          </a>
-        </div>
+    <div className="main">
+      <Banner />
+      <Title />
+      <Signup />
+      <div className="flex items-center justify-center text-#FFFFFF73 gap-3 mb-67px">
+        <span className="text-sm">Powered by↘︎</span>
+        <a
+          href="https://microscopeprotocol.xyz"
+          target="_blank"
+          className="block"
+        >
+          <img src={microImg} className="h-16px" />
+        </a>
+        <span className="text-sm">with shared technologies</span>
       </div>
-      <Bg />
     </div>
   )
 }
