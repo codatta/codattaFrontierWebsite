@@ -49,7 +49,7 @@ export default function Footer() {
               Discord
             </a>
           </div>
-          <div className="icon telegram-icon">
+          <div className="icon annoucement-icon">
             <a href="https://t.me/codatta_ann" className="no-underline">
               Announcement
             </a>
