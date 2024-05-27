@@ -14,7 +14,7 @@ export default function Footer() {
   const location = useLocation()
 
   return (
-    <div className="mt-24px pb-36px text-sm footer">
+    <div className="mt-24px pb-36px text-sm footer text-#FFFFFF73">
       {!/board/.test(location.pathname) && (
         <div className="flex">
           <div className="text-10px leading-12px mr-6px">1</div>
@@ -25,18 +25,18 @@ export default function Footer() {
           </div>
         </div>
       )}
-      <section className="mt-48px text-base text-#fff text-opacity-45">
-        <div className="text-2xl text-#fff tracing-tight">codatta</div>
+      <section className="mt-48px text-base">
+        <div className="text-2xl text-#fff tracing-tight">codatta Protocal</div>
         <div className="mt-16px">
           The world's leading AI-powered collaboration protocol for blockchain
           metadata.
         </div>
-        <div className="mt-18px text-base">
+        <div className="mt-18px text-base text-#FFFFFF99">
           Have questions? Email us at hello@codatta.io
         </div>
       </section>
       <section className="mt-24px text-base">
-        <div className="text-sm text-#fff text-opacity-45">Social</div>
+        <div className="text-sm ">Social</div>
         <div className="flex justify-start items-center">
           <a href="https://x.com/codatta_io" className="no-underline">
             <div className="icon twitter-icon" />

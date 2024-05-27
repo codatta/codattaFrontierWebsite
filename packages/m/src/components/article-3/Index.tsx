@@ -1,6 +1,6 @@
 import img from '@/assets/images/article-3/0.svg'
 import img1 from '@/assets/images/article-3/1.svg'
-import img2 from '@/assets/images/article-3/2.png'
+import img2 from '@/assets/images/article-3/2.svg'
 import img3 from '@/assets/images/article-3/3.svg'
 
 import tracingIcon from '@/assets/images/icons/tracing-icon-3.svg'
@@ -20,9 +20,15 @@ const Head = () => {
       <AniTitle
         t1="Public Infrastructure"
         t2="Decentralized Intelligence Data Layer for All"
-        des="We aim to develop a foundational metadata infrastructure characterized
-          by high coverage, quality, and diversity, empowering builders to focus
-          on crafting data-driven AI applications."
+        des={
+          <>
+            We aim to develop a foundational metadata infrastructure
+            characterized by high <span className="text-#fff">coverage</span>,
+            <span className="text-#fff">quality</span>, and{' '}
+            <span className="text-#fff">diversity</span>, empowering builders to
+            focus on crafting data-driven AI applications.
+          </>
+        }
         color="cyan"
       ></AniTitle>
       <AniImage src={img} className="w-286px mt-23px" />
@@ -33,8 +39,15 @@ const Head = () => {
 const sections = [
   {
     title: 'Permissionless',
-    content:
-      'Web3 users and businesses of all sizes can contribute label data carrying no privacy. Rewards are granted based on contribution significance and in exchange of access to the entire metadata space.',
+    content: (
+      <>
+        <span className="text-#FFFFFFD9">Web3 users</span> and{' '}
+        <span className="text-#FFFFFFD9">businesses of all sizes</span> can
+        contribute label data carrying no privacy. Rewards are granted based on
+        contribution significance and in exchange of access to the entire
+        metadata space.
+      </>
+    ),
     img: img1,
   },
   {

@@ -1,35 +1,25 @@
 import microImg from '@/assets/images/article-1/micro.svg'
-import tracingIcon from '@/assets/images/icons/tracing-icon-1.svg'
-
-import styled from 'styled-components'
-
-import Signup from './Signup'
-import Bg from './Bg'
 import Title from './Title'
 
 import Head from '../Head'
 
-const Line1 = styled.div`
-  background: linear-gradient(
-    to bottom,
-    rgba(139, 63, 198, 0.01),
-    rgba(90, 36, 133, 1)
-  );
-`
+function Signup() {
+  function jump2App() {
+    const href = /test/.test(location.pathname)
+      ? 'https://app.test.codatta.io/account/signin'
+      : 'https://app.codatta.io/account/signin'
 
-const Line2 = styled.div`
-  background: linear-gradient(
-    to bottom,
-    rgba(108, 41, 160, 1),
-    rgba(0, 170, 81, 1)
-  );
-`
-const GuideLine = () => {
+    location.href = href
+  }
+
   return (
-    <div className="flex flex-col justify-between items-center guide-line ml-14px mr-7px">
-      <Line1 className="w-4px h-220px" />
-      <img src={tracingIcon} className="w-48px h-48px" />
-      <Line2 className="w-4px h-172px" />
+    <div className="text-sm ">
+      <button
+        className="rounded-lg color-#020008E0 font-semibold h-38px w-full bg-#fff border-none"
+        onClick={jump2App}
+      >
+        Sign up for THE Great Mission
+      </button>
     </div>
   )
 }
@@ -38,19 +28,19 @@ const Article = () => {
   return (
     <div className="relative">
       <Head className="px-24px" />
-      <Bg />
-      <div className="flex mt-243px ">
-        <GuideLine />
-        <div className="main">
-          <Title />
-          <Signup />
+      <div className="w-300px m-auto mb-72px">
+        <Title />
+        <Signup />
+        <div className="text-#FFFFFF73 text-sm mt-40px">
+          <span>Powered by↘︎</span>
           <a
             href="https://microscopeprotocol.xyz"
             target="_blank"
-            className="mt-40px block"
+            className="block"
           >
-            <img src={microImg} className="h-94px" />
+            <img src={microImg} className="h-16px" />
           </a>
+          <span>with shared technologies</span>
         </div>
       </div>
     </div>
