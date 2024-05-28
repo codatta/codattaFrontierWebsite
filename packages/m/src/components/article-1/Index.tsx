@@ -40,7 +40,7 @@ const Article = () => {
         <Banner />
         <Title />
         <Signup />
-        <div className="text-#FFFFFF73 text-sm mt-40px flex flex-col gap-1">
+        <div className="text-#FFFFFF73 text-sm mt-40px flex flex-col gap-1 opacity-30">
           <span>Powered by↘︎</span>
           <a
             href="https://microscopeprotocol.xyz"
