@@ -9,7 +9,7 @@ const Divider = styled.div`
 
 const CopyRights = () => {
   return (
-    <div className="mt-12px text-base text-#fff text-opacity-45">
+    <div className="mt-48px text-base text-#fff text-opacity-45">
       <Divider />
       <div>© 2024 Blockchain Metadata Labs Inc. All rights reserved.</div>
     </div>

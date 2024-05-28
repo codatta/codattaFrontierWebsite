@@ -14,16 +14,17 @@ export default function Footer() {
           The collected data will be contributed to the Microscope protocol.
         </div>
       )}
-      <div className="flex justify-between mt-64px text-#fff text-opacity-45">
+      <div className="flex justify-between mt-64px text-#FFFFFF73">
         <section>
-          <div className="text-#fff font-semibold text-2xl">codatta</div>
-          <div className="mt-16px">
+          <div className="text-#fff font-semibold text-2xl">
+            codatta Protocal
+          </div>
+          <div className="mt-16px ">
             The world's leading AI-powered collaboration protocol for blockchain
             metadata.
           </div>
-          <div className="mt-43px ">
-            Have questions? Email us at
-            <br /> hello@codatta.io
+          <div className="mt-43px text-#FFFFFF99">
+            Have questions? Email us at hello@codatta.io
           </div>
         </section>
         <aside className="text-sm w-256px mt-13px">
@@ -46,6 +47,11 @@ export default function Footer() {
           <div className="icon discord-icon">
             <a href="https://discord.gg/YCESVmHEYv" className="no-underline">
               Discord
+            </a>
+          </div>
+          <div className="icon annoucement-icon">
+            <a href="https://t.me/codatta_ann" className="no-underline">
+              Announcement
             </a>
           </div>
           {/* <div className="icon linkedin-icon">Linkedin</div>  */}

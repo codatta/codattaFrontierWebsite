@@ -5,7 +5,7 @@ import './AniTitle.scss'
 const AniTitle: React.FC<{
   t1: string
   t2: string
-  des?: string
+  des?: React.ReactNode | string
   color?: string
 }> = ({ t1, t2, des, color = '#fff' }) => {
   const ref = useRef(null)
@@ -13,17 +13,17 @@ const AniTitle: React.FC<{
 
   return (
     <div className={`ani-title ${isInView && 'ani'}`} ref={ref}>
-      <div className="title-1 mt-12px">
+      <div className="text-base tracking-tight font-bold text-#fff">
         {t1.split(' ').map((text, index) => (
           <span key={text + index}>{text}&nbsp;</span>
         ))}
       </div>
-      <div className={`title-2 color-${color}`}>
+      <div className={`text-xl tracking-tight font-medium color-${color} mt-4`}>
         {t2.split(' ').map((text, index) => (
           <span key={text + index + 100}>{text}&nbsp;</span>
         ))}
       </div>
-      {des && <div className="mt-24px des text-xs">{des}</div>}
+      {des && <div className="mt-16px des text-xs">{des}</div>}
     </div>
   )
 }
