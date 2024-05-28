@@ -23,19 +23,38 @@ function Signup() {
 
 function Banner() {
   return (
-    <div className="h-396px ">
+    <div
+      className="h-396px "
+      // style={{
+      //   background:
+      //     'radial-gradient(38.32% 149.86% at 50% 6.18%, #000 0%, rgba(102, 102, 102, 0.50) 100%)',
+      // }}
+    >
       <img src={bannerImg} className="w-970px h-auto m-auto block" />
     </div>
+  )
+}
+
+function Bg() {
+  return (
+    <div
+      className="w-full h-850px absolute left-0 top-0 pointer-events-none"
+      style={{
+        background:
+          'radial-gradient(174.95% 169.46% at 27.93% -66.74%, rgba(0, 124, 141, 0.20) 8.97%, rgba(11, 11, 11, 0.20) 71.61%)',
+      }}
+    ></div>
   )
 }
 
 const Article = () => {
   return (
     <div className="main">
+      <Bg />
       <Banner />
       <Title />
       <Signup />
-      <div className="flex items-center justify-center text-#FFFFFF73 gap-3 mb-67px">
+      <div className="flex items-center justify-center text-#FFFFFF73 gap-3 mb-67px opacity-30">
         <span className="text-sm">Powered by↘︎</span>
         <a
           href="https://microscopeprotocol.xyz"
