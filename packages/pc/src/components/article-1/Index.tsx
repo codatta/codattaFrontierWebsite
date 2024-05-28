@@ -23,13 +23,7 @@ function Signup() {
 
 function Banner() {
   return (
-    <div
-      className="h-396px "
-      // style={{
-      //   background:
-      //     'radial-gradient(38.32% 149.86% at 50% 6.18%, #000 0%, rgba(102, 102, 102, 0.50) 100%)',
-      // }}
-    >
+    <div className="h-396px ">
       <img src={bannerImg} className="w-970px h-auto m-auto block" />
     </div>
   )
