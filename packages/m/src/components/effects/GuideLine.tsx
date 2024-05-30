@@ -30,7 +30,7 @@ const GuideLine = ({ className, height, icon }: TProps) => {
 
   return (
     <motion.div
-      className="flex flex-col justify-between items-center guide-line ml-14px mr-7px"
+      className="flex flex-col justify-between items-center guide-line ml-14px mr-7px -mt-12px"
       ref={ref}
     >
       <img src={icon} className="w-48px h-48px" />

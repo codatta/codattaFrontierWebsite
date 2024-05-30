@@ -1,5 +1,5 @@
 import microImg from '@/assets/images/article-1/micro.svg'
-import bannerImg from '@/assets/images/article-1/banner.svg'
+import bannerImg from '@/assets/images/article-1/banner.png'
 
 import Title from './Title'
 
@@ -27,7 +27,7 @@ function Signup() {
 function Banner() {
   return (
     <div className="h-220px">
-      <img src={bannerImg} className="w-375px h-auto m-auto block -ml-47px" />
+      <img src={bannerImg} className="w-375px h-auto m-auto block -ml-38px" />
     </div>
   )
 }

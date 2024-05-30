@@ -1,5 +1,5 @@
 import microImg from '@/assets/images/article-1/micro.svg'
-import bannerImg from '@/assets/images/article-1/banner.svg'
+import bannerImg from '@/assets/images/article-1/banner.png'
 import Title from './Title'
 
 function Signup() {

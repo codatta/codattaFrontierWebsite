@@ -16,7 +16,7 @@ const Article = () => {
     <motion.div className="h-1084px relative text-xl flex">
       <GuideLine
         icon={tracingIcon}
-        className="h-1050px color-2"
+        className="h-1050px color-2 -mt-12px"
         height="1050px"
       />
       <div className="main ">
