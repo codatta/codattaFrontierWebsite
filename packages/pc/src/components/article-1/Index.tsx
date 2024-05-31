@@ -16,7 +16,7 @@ function Signup() {
       className="cursor-pointer rounded-8px h-48px px-24px block border-none outline-none text-#020008E0 font-600 text-base bg-#fff m-auto my-8"
       onClick={jump2App}
     >
-      Sign up for THE Great Mission
+      Sign up for The Great Mission
     </button>
   )
 }

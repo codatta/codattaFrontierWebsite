@@ -19,7 +19,7 @@ function Signup() {
       className="rounded-lg color-#020008E0 font-semibold h-38px w-full bg-#fff border-none text-sm block mt-24px"
       onClick={jump2App}
     >
-      Sign up for THE Great Mission
+      Sign up for The Great Mission
     </button>
   )
 }
