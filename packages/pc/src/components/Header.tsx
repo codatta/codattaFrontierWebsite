@@ -18,7 +18,7 @@ export default function Head() {
         <div className="w-110px">
           <Logo className="w-200px h-24px text-xs"></Logo>
         </div>
-        <div className="border-1px border-solid border-#FFFFFF1A rounded-20px text-#fff text-opacity-60 flex justify-center bg-#FFFFFF05">
+        <div className="border-1px border-solid border-#FFFFFF1A rounded-20px text-#fff text-opacity-60 flex justify-center bg-#FFFFFF05 text-base">
           <NavLink
             className="leading-24px no-underline nav cursor-pointer block py-8px px-24px rounded-20px"
             to="/"

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import './Head.scss'
 import { jump2App } from '@/utils/util'
+import './Head.scss'
 
 function Head({ className }: { className?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
