@@ -1,29 +1,22 @@
 import microImg from '@/assets/images/article-1/micro.svg'
 import bannerImg from '@/assets/images/article-1/banner.png'
 import Title from './Title'
+import { jump2App } from '@/utils/util'
 
 function Signup() {
-  function jump2App() {
-    const href = /test/.test(location.pathname)
-      ? 'https://app.test.codatta.io/account/signin'
-      : 'https://app.codatta.io/account/signin'
-
-    location.href = href
-  }
-
   return (
     <button
       className="cursor-pointer rounded-8px h-48px px-24px block border-none outline-none text-#020008E0 font-600 text-base bg-#fff m-auto my-8"
       onClick={jump2App}
     >
-      Sign up for The Great Mission
+      Sign Up For The Great Mission
     </button>
   )
 }
 
 function Banner() {
   return (
-    <div className="h-396px ">
+    <div className="h-396px mt-30px">
       <img src={bannerImg} className="w-970px h-auto m-auto block" />
     </div>
   )
@@ -43,7 +36,7 @@ function Bg() {
 
 const Article = () => {
   return (
-    <div className="main">
+    <>
       <Bg />
       <Banner />
       <Title />
@@ -59,7 +52,7 @@ const Article = () => {
         </a>
         <span className="text-sm">with shared technologies</span>
       </div>
-    </div>
+    </>
   )
 }
 
