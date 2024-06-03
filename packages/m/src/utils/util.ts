@@ -12,3 +12,11 @@ export function mapToRange(
   // 确保映射后的值在目标区间内
   return Math.max(toMin, Math.min(toMax, mappedValue))
 }
+
+export function jump2App() {
+  const href = /test/.test(location.pathname)
+    ? 'https://app.test.codatta.io/account/signin'
+    : 'https://app.codatta.io/account/signin'
+
+  location.href = href
+}

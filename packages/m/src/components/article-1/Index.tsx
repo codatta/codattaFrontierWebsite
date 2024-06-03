@@ -4,22 +4,15 @@ import bannerImg from '@/assets/images/article-1/banner.png'
 import Title from './Title'
 
 import Head from '../Head'
+import { jump2App } from '@/utils/util'
 
 function Signup() {
-  function jump2App() {
-    const href = /test/.test(location.pathname)
-      ? 'https://app.test.codatta.io/account/signin'
-      : 'https://app.codatta.io/account/signin'
-
-    location.href = href
-  }
-
   return (
     <button
       className="rounded-lg color-#020008E0 font-semibold h-38px w-full bg-#fff border-none text-sm block mt-24px"
       onClick={jump2App}
     >
-      Sign up for The Great Mission
+      Sign Up For The Great Mission
     </button>
   )
 }
