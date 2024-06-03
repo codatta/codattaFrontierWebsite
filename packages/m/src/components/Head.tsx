@@ -18,7 +18,7 @@ function Head({ className }: { className?: string }) {
             className="rounded-16px w-104px h-26px flex items-center justify-center mr-8px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base"
             onClick={jump2App}
           >
-            Lunch App
+            Launch App
           </button>
           <div
             className={`rounded-12px border-1px border-solid border-#fff border-opacity-10 w-32px h-26px box-border menu ${menuOpen ? 'open' : ''}`}

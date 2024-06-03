@@ -39,7 +39,7 @@ export default function Head() {
           className="cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base"
           onClick={jump2App}
         >
-          Lunch App
+          Launch App
         </button>
       </header>
     </>
