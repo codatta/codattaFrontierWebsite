@@ -20,14 +20,14 @@ export default function Head() {
         </div>
         <div className="border-1px border-solid border-#FFFFFF1A rounded-20px text-#fff text-opacity-60 flex justify-center bg-#FFFFFF05 text-base">
           <NavLink
-            className="leading-24px no-underline nav cursor-pointer block py-8px px-24px rounded-20px"
+            className="leading-24px no-underline nav cursor-pointer block py-4px px-24px rounded-20px"
             to="/"
             onClick={() => setNav('/')}
           >
             Features
           </NavLink>
           <NavLink
-            className="leading-24px no-underline nav cursor-pointer block py-8px px-24px rounded-20px"
+            className="leading-24px no-underline nav cursor-pointer block py-4px px-24px rounded-20px"
             to="/board"
             onClick={() => setNav('/board')}
           >
