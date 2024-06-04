@@ -12,7 +12,7 @@ function Head({ className }: { className?: string }) {
       <header
         className={`header flex justify-between items-center font-medium pt-12px color-white relative z-3 ${className}`}
       >
-        <div className="w-200px h-30px text-xs logo"></div>
+        <div className="w-120px h-20px text-xs logo"></div>
         <div className="flex items-center">
           <button
             className="rounded-16px w-104px h-26px flex items-center justify-center mr-8px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base"
