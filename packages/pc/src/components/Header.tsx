@@ -36,7 +36,7 @@ export default function Head() {
           {/* </div> */}
         </div>
         <button
-          className="cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base"
+          className="cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap"
           onClick={jump2App}
         >
           Launch App

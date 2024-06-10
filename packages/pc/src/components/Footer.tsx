@@ -17,7 +17,7 @@ export default function Footer() {
       <div className="flex justify-between mt-64px text-#FFFFFF73">
         <section>
           <div className="text-#fff font-semibold text-2xl">
-            codatta Protocal
+            codatta Protocol
           </div>
           <div className="mt-16px ">
             The world's leading AI-powered collaboration protocol for blockchain

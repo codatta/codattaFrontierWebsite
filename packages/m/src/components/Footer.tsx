@@ -26,7 +26,7 @@ export default function Footer() {
         </div>
       )}
       <section className="mt-48px text-base">
-        <div className="text-2xl text-#fff tracing-tight">codatta Protocal</div>
+        <div className="text-2xl text-#fff tracing-tight">codatta Protocol</div>
         <div className="mt-16px">
           The world's leading AI-powered collaboration protocol for blockchain
           metadata.
