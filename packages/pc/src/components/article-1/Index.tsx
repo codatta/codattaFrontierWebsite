@@ -36,23 +36,25 @@ function Bg() {
 
 const Article = () => {
   return (
-    <>
+    <div className="">
       <Bg />
-      <Banner />
-      <Title />
-      <Signup />
-      <div className="flex items-center justify-center text-#FFFFFF73 gap-3 mb-67px opacity-30">
-        <span className="text-sm">Powered by↘︎</span>
-        <a
-          href="https://microscopeprotocol.xyz"
-          target="_blank"
-          className="block"
-        >
-          <img src={microImg} className="h-16px" />
-        </a>
-        <span className="text-sm">with shared technologies</span>
+      <div className="relative z-1">
+        <Banner />
+        <Title />
+        <Signup />
+        <div className="flex items-center justify-center text-#FFFFFF73 gap-3 mb-67px opacity-30">
+          <span className="text-sm">Powered by↘︎</span>
+          <a
+            href="https://microscopeprotocol.xyz"
+            target="_blank"
+            className="block"
+          >
+            <img src={microImg} className="h-16px" />
+          </a>
+          <span className="text-sm">with shared technologies</span>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 

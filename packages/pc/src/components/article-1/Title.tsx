@@ -2,15 +2,15 @@ import './Title.scss'
 
 const Title = () => {
   return (
-    <div className="text-center h-224px">
+    <div className="text-center">
       <h1 className=" m-auto">
         <svg
           width="1082"
           height="165"
           viewBox="0 0 1082 165"
+          className="h-165px w-auto m-auto block"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-3/5 block h-auto m-auto"
         >
           <path
             className="path"
@@ -36,7 +36,7 @@ const Title = () => {
           </defs>
         </svg>
       </h1>
-      <p className="mt-32px text-2xl text-#FFFFFF73">
+      <p className="mt-32px text-xl text-#FFFFFF73 w-4/5 m-auto">
         The first decentralized data protocol building foundational
         infrastructure for developers, protocols, and AI, with mechanisms
         generating scientific confidence levels.
