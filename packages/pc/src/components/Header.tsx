@@ -1,7 +1,7 @@
 // import { useState } from 'react'
 import styled from 'styled-components'
 // import { NavLink } from 'react-router-dom'
-// import { jump2App } from '@/utils/util'
+import { jump2App } from '@/utils/util'
 import logImg from '../assets/images/icons/logo-white.png'
 import './Header.scss'
 
@@ -19,12 +19,12 @@ export default function Head() {
           <Logo className="w-200px h-24px text-xs"></Logo>
         </div>
         <div></div>
-        {/* <button
+        <button
           className="cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap"
           onClick={jump2App}
         >
           Launch App
-        </button> */}
+        </button>
       </header>
     </>
   )
