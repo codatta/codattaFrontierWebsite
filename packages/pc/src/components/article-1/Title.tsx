@@ -37,8 +37,9 @@ const Title = () => {
         </svg>
       </h1>
       <p className="mt-32px text-2xl text-#FFFFFF73">
-        The world's leading AI-powered collaboration protocol for blockchain
-        metadata.
+        The first decentralized data protocol building foundational
+        infrastructure for developers, protocols, and AI, with mechanisms
+        generating scientific confidence levels.
       </p>
     </div>
   )

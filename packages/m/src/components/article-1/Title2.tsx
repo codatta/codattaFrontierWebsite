@@ -17,8 +17,9 @@ const Title = () => {
         ))}
       </h1>
       <p>
-        The world's leading AI-powered collaboration protocol for blockchain
-        metadata.
+        The first decentralized data protocol building foundational
+        infrastructure for developers, protocols, and AI, with mechanisms
+        generating scientific confidence levels.
       </p>
     </div>
   )
