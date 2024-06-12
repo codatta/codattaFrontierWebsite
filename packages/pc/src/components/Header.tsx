@@ -1,7 +1,7 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import styled from 'styled-components'
-import { NavLink } from 'react-router-dom'
-import { jump2App } from '@/utils/util'
+// import { NavLink } from 'react-router-dom'
+// import { jump2App } from '@/utils/util'
 import logImg from '../assets/images/icons/logo-white.png'
 import './Header.scss'
 
@@ -10,7 +10,7 @@ const Logo = styled.div`
   background-size: contain;
 `
 export default function Head() {
-  const [nav, setNav] = useState('/')
+  // const [nav, setNav] = useState('/')
 
   return (
     <>
@@ -18,30 +18,32 @@ export default function Head() {
         <div className="w-110px">
           <Logo className="w-200px h-24px text-xs"></Logo>
         </div>
-        <div className="border-1px border-solid border-#FFFFFF1A rounded-20px text-#fff text-opacity-60 flex justify-center bg-#FFFFFF05 text-base">
-          <NavLink
-            className="leading-24px no-underline nav cursor-pointer block py-4px px-24px rounded-20px"
-            to="/"
-            onClick={() => setNav('/')}
-          >
-            Features
-          </NavLink>
-          <NavLink
-            className="leading-24px no-underline nav cursor-pointer block py-4px px-24px rounded-20px"
-            to="/board"
-            onClick={() => setNav('/board')}
-          >
-            Monitoring
-          </NavLink>
-          {/* </div> */}
-        </div>
-        <button
+        <div></div>
+        {/* <button
           className="cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap"
           onClick={jump2App}
         >
           Launch App
-        </button>
+        </button> */}
       </header>
     </>
   )
 }
+
+// ;<div className="border-1px border-solid border-#FFFFFF1A rounded-20px text-#fff text-opacity-60 flex justify-center bg-#FFFFFF05 text-base">
+//   <NavLink
+//     className="leading-24px no-underline nav cursor-pointer block py-4px px-24px rounded-20px"
+//     to="/"
+//     onClick={() => setNav('/')}
+//   >
+//     Features
+//   </NavLink>
+//   <NavLink
+//     className="leading-24px no-underline nav cursor-pointer block py-4px px-24px rounded-20px"
+//     to="/board"
+//     onClick={() => setNav('/board')}
+//   >
+//     Monitoring
+//   </NavLink>
+//   {/* </div> */}
+// </div>

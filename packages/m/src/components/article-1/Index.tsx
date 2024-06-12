@@ -12,7 +12,7 @@ function Signup() {
       className="rounded-lg color-#020008E0 font-semibold h-38px w-full bg-#fff border-none text-sm block mt-24px"
       onClick={jump2App}
     >
-      Sign Up For The Great Mission
+      Sign Up
     </button>
   )
 }
