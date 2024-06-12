@@ -15,7 +15,7 @@ function Head({ className }: { className?: string }) {
         <div className="w-120px h-20px text-xs logo"></div>
         <div className="flex items-center">
           <button
-            className="rounded-16px w-104px h-26px flex items-center justify-center block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap"
+            className="rounded-16px px-16px h-26px flex items-center justify-center block border-none outline-none text-#fff text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap"
             onClick={jump2App}
           >
             Launch App
