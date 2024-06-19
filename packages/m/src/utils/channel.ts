@@ -1,5 +1,3 @@
-'use client'
-
 import cookies from 'js-cookie'
 const CHANNEL_KEY = '_ch'
 
