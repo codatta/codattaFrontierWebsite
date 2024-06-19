@@ -36,23 +36,40 @@ export default function Footer() {
         <aside className="w-256px mt-13px font-semibold">
           <div className="text-sm ">Social</div>
           <div className="icon twitter-icon">
-            <a href="https://x.com/codatta_io">Twitter</a>
+            <a href="https://x.com/codatta_io" target="_blank">
+              Twitter
+            </a>
           </div>
           <div className="icon telegram-icon">
-            <a href="https://t.me/codatta_io">Telegram</a>
+            <a href="https://t.me/codatta_io" target="_blank">
+              Telegram
+            </a>
           </div>
           <div className="icon medium-icon">
-            <a href="https://codatta.medium.com">Medium</a>
+            <a href="https://codatta.medium.com" target="_blank">
+              Medium
+            </a>
           </div>
           <div className="icon discord-icon">
-            <a href="https://discord.gg/YCESVmHEYv">Discord</a>
+            <a href="https://discord.gg/YCESVmHEYv" target="_blank">
+              Discord
+            </a>
           </div>
           <div className="icon annoucement-icon">
-            <a href="https://t.me/codatta_ann">Announcement</a>
+            <a href="https://t.me/codatta_ann" target="_blank">
+              Announcement
+            </a>
           </div>
           <div className="mt-16px text-sm ">Docs</div>
           <div className="icon brand-icon">
-            <a href="https://github.com/codatta/brand-kit/">Brand Kit</a>
+            <a href="https://docs.codatta.io/codatta" target="_blank">
+              Documentation
+            </a>
+          </div>
+          <div className="icon github-icon">
+            <a href="https://github.com/codatta/brand-kit/" target="_blank">
+              Brand Kit
+            </a>
           </div>
         </aside>
       </div>

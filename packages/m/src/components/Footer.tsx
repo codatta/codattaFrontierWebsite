@@ -44,26 +44,29 @@ export default function Footer() {
       <section className="mt-24px text-base">
         <div className="text-sm ">Social</div>
         <div className="flex justify-start items-center">
-          <a href="https://x.com/codatta_io">
+          <a href="https://x.com/codatta_io" target="_blank">
             <div className="icon twitter-icon" />
           </a>
-          <a href="https://t.me/codatta_io">
+          <a href="https://t.me/codatta_io" target="_blank">
             <div className="icon telegram-icon" />
           </a>
-          <a href="https://codatta.medium.com">
+          <a href="https://codatta.medium.com" target="_blank">
             <div className="icon medium-icon"></div>
           </a>
-          <a href="https://discord.gg/YCESVmHEYv">
+          <a href="https://discord.gg/YCESVmHEYv" target="_blank">
             <div className="icon discord-icon" />
           </a>
-          <a href="https://t.me/codatta_ann">
+          <a href="https://t.me/codatta_ann" target="_blank">
             <div className="icon annoucement-icon" />
           </a>
         </div>
         <div className="text-sm mt-16px">Docs</div>
         <div className="flex justify-start items-center">
-          <a href="https://github.com/codatta/brand-kit">
+          <a href="https://docs.codatta.io/codatta" target="_blank">
             <div className="icon brand-icon" />
+          </a>
+          <a href="https://github.com/codatta/brand-kit" target="_blank">
+            <div className="icon github-icon" />
           </a>
         </div>
       </section>
