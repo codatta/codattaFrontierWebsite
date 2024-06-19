@@ -24,37 +24,36 @@ export default function Footer() {
             metadata.
           </div>
           <div className="mt-43px text-#FFFFFF99">
-            Have questions? Email us at hello@codatta.io
+            Have questions? Email us at{' '}
+            <a
+              href="mailto:hello@codatta.io"
+              className="text-#FFFFFF99 no-underline hover:underline"
+            >
+              hello@codatta.io
+            </a>
           </div>
         </section>
-        <aside className="text-sm w-256px mt-13px">
-          Social
+        <aside className="w-256px mt-13px font-semibold">
+          <div className="text-sm ">Social</div>
           <div className="icon twitter-icon">
-            <a href="https://x.com/codatta_io" className="no-underline">
-              Twitter
-            </a>
+            <a href="https://x.com/codatta_io">Twitter</a>
           </div>
           <div className="icon telegram-icon">
-            <a href="https://t.me/codatta_io" className="no-underline">
-              Telegram
-            </a>
+            <a href="https://t.me/codatta_io">Telegram</a>
           </div>
           <div className="icon medium-icon">
-            <a href="https://codatta.medium.com" className="no-underline">
-              Medium
-            </a>
+            <a href="https://codatta.medium.com">Medium</a>
           </div>
           <div className="icon discord-icon">
-            <a href="https://discord.gg/YCESVmHEYv" className="no-underline">
-              Discord
-            </a>
+            <a href="https://discord.gg/YCESVmHEYv">Discord</a>
           </div>
           <div className="icon annoucement-icon">
-            <a href="https://t.me/codatta_ann" className="no-underline">
-              Announcement
-            </a>
+            <a href="https://t.me/codatta_ann">Announcement</a>
           </div>
-          {/* <div className="icon linkedin-icon">Linkedin</div>  */}
+          <div className="mt-16px text-sm ">Docs</div>
+          <div className="icon brand-icon">
+            <a href="https://github.com/codatta/brand-kit/">Brand Kit</a>
+          </div>
         </aside>
       </div>
     </div>

@@ -8,37 +8,41 @@
         background-repeat: no-repeat;
         background-size: 24px auto;
 
-        a {
+        >a {
             color: inherit;
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline
+            }
         }
+  
 
         &.twitter-icon {
-            margin-top: 16px;
             background-image: url(../assets/images/icons/twitter-icon.svg);
         }
         &.telegram-icon {    
-            margin-top: 16px;
             background-image: url(../assets/images/icons/telegram-icon.svg);
         }
 
         &.discord-icon {
-            margin-top: 16px;
             background-image: url(../assets/images/icons/discord-icon.svg);
         }
 
         &.linkedin-icon {
-            margin-top: 16px;
             background-image: url(../assets/images/icons/linkedin-icon.svg);
         }
 
         &.medium-icon {
-            margin-top: 16px;
             background-image: url(../assets/images/icons/medium-icon.svg);
         }
 
         &.annoucement-icon {
-            margin-top: 16px;
             background-image: url(../assets/images/icons/announcement-icon.svg);
+        }
+
+        &.brand-icon {
+            background-image: url(../assets/images/icons/gitbook-icon.svg);
         }
     }
 

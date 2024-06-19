@@ -32,26 +32,38 @@ export default function Footer() {
           metadata.
         </div>
         <div className="mt-18px text-base text-#FFFFFF99">
-          Have questions? Email us at hello@codatta.io
+          Have questions? Email us at
+          <a
+            href="mailto:hello@codatta.io "
+            className="no-underline hover:underline text-#FFFFFF99"
+          >
+            hello@codatta.io
+          </a>
         </div>
       </section>
       <section className="mt-24px text-base">
         <div className="text-sm ">Social</div>
         <div className="flex justify-start items-center">
-          <a href="https://x.com/codatta_io" className="no-underline">
+          <a href="https://x.com/codatta_io">
             <div className="icon twitter-icon" />
           </a>
-          <a href="https://t.me/codatta_io" className="no-underline">
+          <a href="https://t.me/codatta_io">
             <div className="icon telegram-icon" />
           </a>
-          <a href="https://codatta.medium.com" className="no-underline">
+          <a href="https://codatta.medium.com">
             <div className="icon medium-icon"></div>
           </a>
-          <a href="https://discord.gg/YCESVmHEYv" className="no-underline">
+          <a href="https://discord.gg/YCESVmHEYv">
             <div className="icon discord-icon" />
           </a>
-          <a href="https://t.me/codatta_ann" className="no-underline">
+          <a href="https://t.me/codatta_ann">
             <div className="icon annoucement-icon" />
+          </a>
+        </div>
+        <div className="text-sm mt-16px">Docs</div>
+        <div className="flex justify-start items-center">
+          <a href="https://github.com/codatta/brand-kit">
+            <div className="icon brand-icon" />
           </a>
         </div>
       </section>

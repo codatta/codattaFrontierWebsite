@@ -62,7 +62,7 @@ const Article = () => {
               <AniImage src={img3} className="w-186px" />
 
               <AniContent
-                t="For Global Reputation Socre"
+                t="For Global Reputation Score"
                 des="Provide the data foundation for building a global FICO score
                   via privacy-preserving technologies (e.g., zkML)"
                 className="w-344px [&_.title-2]:text-xl"
