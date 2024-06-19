@@ -32,7 +32,7 @@ export default function Footer() {
           metadata.
         </div>
         <div className="mt-18px text-base text-#FFFFFF99">
-          Have questions? Email us at
+          Have questions? Email us at{' '}
           <a
             href="mailto:hello@codatta.io "
             className="no-underline hover:underline text-#FFFFFF99"
