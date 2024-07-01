@@ -43,13 +43,9 @@ const StatisticalTableWrapper = () => {
 
 const Article = () => {
   return (
-    <motion.div className="relative text-xl flex">
-      <AniGuideLine
-        icon={tracingIcon}
-        className="h-1780px color-4"
-        height="1780px"
-      />
-      <div className="main">
+    <motion.div className="relative text-xl max-w-1240px m-auto box-border pl-17 pr-5 pt-2.5 pb-40">
+      <AniGuideLine containerClassName='absolute left-5 h-full top-0' lineClassName="color-4" icon={tracingIcon} />
+      <div>
         <AniTitle
           t1="Trustworthy"
           t2="Community-Driven High-Quality"
@@ -59,7 +55,7 @@ const Article = () => {
           <Chart />
         </EffectCard>
         <div className="mt-32px flex justify-between">
-          <img src={img2} className="w-705px h-300px mr-68px" />
+          <img src={img2} className="h-300px mr-68px" />
           <div>
             <div className="title-2">Transparency</div>
             <div>
@@ -70,16 +66,14 @@ const Article = () => {
           </div>
         </div>
         <div className="mt-48px title-2">Multi-staged validation</div>
-        <div className="flex justify-between">
+        <div className="grid grid-cols-4 gap-3">
           <Card
             t1="Stage  1 :Validation"
             t2="AI-powered"
-            des="Conditional accessibility with quality 
-warning"
+            des="Conditional accessibility with quality warning"
             num1={5}
             num2={5}
             bar={0.05}
-            // progressType={1}
           />
           <Card
             t1="Stage 2: Validation"
@@ -88,7 +82,6 @@ warning"
             num1={20}
             num2={15}
             bar={0.2}
-            // progressType={2}
           />
           <Card
             t1="Stage 3: Validation"
@@ -97,13 +90,11 @@ warning"
             num1={100}
             num2={80}
             bar={1}
-            // progressType={3}
           />
           <Card
             t1="Stage 4: Lifetime Community Correction"
             t2=""
             des="Continuous Improvement"
-            // progressType={3}
             des2="Reputation"
             bar={1}
           />

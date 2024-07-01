@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #0D1116;
+  background-color: #0B0B0B;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,10 +28,6 @@ p, html, body {
 h1, h2, h3, h4, h5 {
   margin: 0;
   padding: 0;
-}
-
-.main {
-  width: 1200px;
 }
 
 .guide-line {
@@ -117,12 +113,12 @@ h1, h2, h3, h4, h5 {
 .card-border-2 {
   border-radius: 16px;
   border-style: solid;
-  @apply rounded-2xl border border-blue-50/[.11] bg-white/[.1];
+  @apply rounded-2xl border border-blue-50/[.11];
 }
 
 .card-border-3 {
   border-style: solid;
-  @apply flex-shrink-0 w-72 rounded-2xl border border-[#70767c]
+  @apply flex-shrink-0 rounded-2xl border border-[#70767c]
 }
 
 

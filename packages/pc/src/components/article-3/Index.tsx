@@ -44,37 +44,36 @@ const Head = () => {
 
 const Section1 = () => {
   return (
-    <div className="mt--140px flex">
+    <div className="flex">
       <EffectCard color="#33B3AE">
         <AniImage src={img1} className="w-376px" />
       </EffectCard>
-      <AniContent
-        className="mt-208px ml-70px mr-100 w-630px"
-        t="Permissionless"
-        des={
-          <>
-            <span className="text-#fff">Web3 users</span> and{' '}
-            <span className="text-#fff">businesses of all sizes</span> can
-            contribute label data carrying no privacy. Rewards are granted based
-            on contribution significance and in exchange of access to the entire
-            metadata space.
-          </>
-        }
-      />
+      <AniContent className='ml-70px pt-10 pr-12 flex-1'>
+        <h3 className='text-white text-xl mb-4'>Permissionless</h3>
+        <p className='text-lg'>
+          <span className="text-#fff">Web3 users</span> and{' '}
+          <span className="text-#fff">businesses of all sizes</span> can
+          contribute label data carrying no privacy. Rewards are granted based
+          on contribution significance and in exchange of access to the entire
+          metadata space.
+        </p>
+      </AniContent>
     </div>
   )
 }
 
 const Section2 = () => {
   return (
-    <div className="mt-100px flex justify-around items-center">
-      <AniContent
-        className="643px"
-        t="Ubiquitous Access"
-        des="We offer both on-chain and off-chain access, as well as batch or
-          single-item-query options via fully decentralized infrastructure in
-          the long run."
-      />
+    <div className="flex justify-around items-center">
+      <AniContent className='pt-0 pr-12 flex-1'>
+        <h3 className='text-white text-xl mb-4'>Ubiquitous Access</h3>
+        <p className='text-lg'>
+          <span className="text-#fff">Web3 users</span> and{' '}
+          <span className="text-#fff">We offer both on-chain and off-chain access, as well as batch or
+            single-item-query options via fully decentralized infrastructure in
+            the long run.</span>
+        </p>
+      </AniContent>
       <EffectCard color="#33B3AE">
         <AniImage src={img2} className="w-448px" />
       </EffectCard>
@@ -88,13 +87,15 @@ const Section3 = () => {
       <EffectCard color="#33B3AE">
         <AniImage src={img3} className="w-620px" />
       </EffectCard>
-      <AniContent
-        className="w-505px mt-23px"
-        t="Open Source"
-        des="  Our protocol and software pipeline have been made entirely
-          open-sourced in order to foster further community-driven development
-          and step up the trust-less game."
-      />
+      <AniContent className="mt-6 ml-18">
+        <h3 className='text-white text-xl mb-4'>Open Source</h3>
+        <p className='text-lg'>
+          <span className="text-#fff">Web3 users</span> and{' '}
+          <span className="text-#fff">ur protocol and software pipeline have been made entirely
+            open-sourced in order to foster further community-driven development
+            and step up the trust-less game.</span>
+        </p>
+      </AniContent>
     </div>
   )
 }
@@ -124,13 +125,10 @@ const StatisticalTableWrapper = () => {
 
 const Article = () => {
   return (
-    <motion.div className="h-2532px relative mt-12px flex">
-      <AniGuideLine
-        className="h-2490px color-3"
-        height="2490px"
-        icon={tracingIcon}
-      />
-      <div className="main">
+    <motion.div className="relative text-xl max-w-1240px m-auto box-border pl-17 pr-5 pt-2.5 pb-40">
+      <AniGuideLine containerClassName='absolute left-5 h-full top-0' lineClassName="color-3" icon={tracingIcon} />
+
+      <div>
         <Head />
         <Section1 />
         <Section2 />
