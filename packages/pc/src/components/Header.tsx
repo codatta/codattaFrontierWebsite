@@ -4,7 +4,7 @@ import logoImg from '@/assets/images/icons/logo-white.png'
 export default function Head() {
 
   return (
-    <header className="m-auto p-4 flex items-center">
+    <header className="m-auto p-4 flex items-center max-w-1240px box-border">
       <div>
         <img src={logoImg} className='block h-6' alt="" />
       </div>
