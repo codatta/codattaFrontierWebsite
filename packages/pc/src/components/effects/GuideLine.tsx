@@ -6,8 +6,8 @@ import { useRef } from 'react'
 
 type TProps = {
   icon: string
-  className: string
-  height: string
+  containerClassName: string,
+  lineClassName: string
 }
 
 const AniLine = ({ className }: { className: string }) => {
@@ -19,25 +19,26 @@ const AniLine = ({ className }: { className: string }) => {
       style={{
         scaleY: progress,
         transformOrigin: 'top left',
+        height: '100%',
       }}
       ref={ref}
     />
   )
 }
-const GuideLine = ({ className, height, icon }: TProps) => {
+const GuideLine = ({ containerClassName, lineClassName, icon }: TProps) => {
   const ref = useRef(null)
   const isInView = useInView(ref)
 
   return (
     <motion.div
-      className="flex flex-col justify-between items-center guide-line  mr-32px"
+      className={`guide-line flex flex-col justify-between items-center ${containerClassName}`}
       ref={ref}
     >
       <img src={icon} className="w-48px h-48px" />
       {isInView ? (
-        <AniLine className={className} />
+        <AniLine className={lineClassName} />
       ) : (
-        <div style={{ height: height }}></div>
+        <div className='h-full'></div>
       )}
     </motion.div>
   )

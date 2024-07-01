@@ -30,7 +30,7 @@ const Card = ({ t1, t2, des, num1, num2, des2, bar }: TProps) => {
 
   return (
     <div
-      className="w-288px h-219px card-border-3 box-border p-24px card mt-16px"
+      className="h-219px card-border-3 box-border p-24px card mt-16px w-full"
       ref={ref}
     >
       <div className="h-72px">

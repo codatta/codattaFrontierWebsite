@@ -8,14 +8,14 @@ const Chart = () => {
 
   return (
     <div
-      className="chart card-border-2 w-1200px h-573px box-border p-32px relative"
+      className="chart card-border-2 apect-[120/57] box-border p-32px relative bg-gradient-to-b from-#ffffff02 to-#ffffff06"
       ref={ref}
     >
       <div className="text-xl color-#fff font-bold">
         Approximate <span className="color-#F55AB7">Ground Truth</span> with
         Aggregated Opinions
       </div>
-      <div className="mt-30px ml-24px w-1088px h-427px flex flex-col justify-between">
+      <div className="pt-30px pl-24px w-full h-427px flex flex-col justify-between box-border">
         <div>
           <div className="flex justify-between">
             <div>Accuracy </div>
@@ -34,11 +34,11 @@ const Chart = () => {
               </div>
             </div>
           </div>
-          <div className="text-xl color-#fff  mt-10px pl-163px font-bold pt-12px line">
+          <div className="text-xl color-#fff mt-1 pl-163px font-bold pt-12px line">
             8 Independent Contributors
           </div>
         </div>
-        <div className="flex justify-between h-56px">
+        <div className="flex justify-between">
           <div>
             <span className="num-2 text-40px leading-48px font-bold w-350px">
               {(20 * progress).toFixed(1)}
@@ -52,11 +52,9 @@ const Chart = () => {
           </div>
         </div>
       </div>
-      <motion.div className="absolute left-64px top-143px w-1087px h-311px">
+      <motion.div className="absolute left-0 top-143px w-full box-border pr-32px pl-64px">
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
-          width="1087"
-          height="311"
           fill="none"
           viewBox="0 0 1087 311"
           className="w-full h-full block"

@@ -1,12 +1,13 @@
 // import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import './Footer.scss'
+import CopyRights from './CopyRights'
 
 export default function Footer() {
   const location = useLocation()
 
   return (
-    <div className="mt-64px footer text-base">
+    <div className="mt-64px footer text-base max-w-1240px m-auto box-border pl-5 pr-5 pt-2.5 pb-16">
       {/* <span className="title-1">* </span> */}
       {location.pathname !== '/board' && (
         <div>
@@ -73,6 +74,7 @@ export default function Footer() {
           </div>
         </aside>
       </div>
+      <CopyRights />
     </div>
   )
 }

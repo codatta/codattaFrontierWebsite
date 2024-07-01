@@ -6,50 +6,31 @@ import { jump2App } from '@/utils/util'
 function Signup() {
   return (
     <button
-      className="cursor-pointer rounded-8px h-48px px-24px block border-none outline-none text-#020008E0 font-600 text-base bg-#fff m-auto my-8"
+      className="cursor-pointer rounded-8px h-48px px-24px block border-none outline-none text-#020008E0 font-600 text-base bg-white m-auto my-8"
       onClick={jump2App}
-    >
-      Sign Up
+    > Sign Up
     </button>
-  )
-}
-
-function Banner() {
-  return (
-    <div className="h-396px mt-30px">
-      <img src={bannerImg} className="w-970px h-auto m-auto block" />
-    </div>
-  )
-}
-
-function Bg() {
-  return (
-    <div
-      className="w-full h-850px absolute left-0 top-0 pointer-events-none"
-      style={{
-        background:
-          'radial-gradient(174.95% 169.46% at 27.93% -66.74%, rgba(0, 124, 141, 0.20) 8.97%, rgba(11, 11, 11, 0.20) 71.61%)',
-      }}
-    ></div>
   )
 }
 
 const Article = () => {
   return (
     <div className="">
-      <Bg />
-      <div className="relative z-1">
-        <Banner />
-        <Title />
+      <img src={bannerImg} className="max-w-970px w-100% h-auto m-auto block" />
+      <div className='-mt-20 text-center px-5'>
+        <div className='w-100% max-w-1080px m-auto'>
+          <Title />
+          <p className="mt-32px text-xl text-#FFFFFF73 w-4/5 m-auto">
+            The first decentralized data protocol building foundational
+            infrastructure for developers, protocols, and AI, with mechanisms
+            generating scientific confidence levels.
+          </p>
+        </div>
         <Signup />
-        <div className="flex items-center justify-center text-#FFFFFF73 gap-3 mb-67px opacity-30">
+        <div className="flex flex-wrap items-center justify-center text-#FFFFFF73 gap-3 mb-67px opacity-30">
           <span className="text-sm">Powered by↘︎</span>
-          <a
-            href="https://microscopeprotocol.xyz"
-            target="_blank"
-            className="block"
-          >
-            <img src={microImg} className="h-16px" />
+          <a href="https://microscopeprotocol.xyz" target="_blank">
+            <img src={microImg} className="h-16px block" />
           </a>
           <span className="text-sm">with shared technologies</span>
         </div>

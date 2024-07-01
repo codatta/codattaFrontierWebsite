@@ -12,12 +12,8 @@ import AniGuideLine from '../effects/GuideLine'
 
 const Article = () => {
   return (
-    <motion.div className="relative text-xl flex">
-      <AniGuideLine
-        icon={tracingIcon}
-        className="h-1700px color-5"
-        height="1700px"
-      />
+    <motion.div className="relative text-xl max-w-1240px m-auto box-border pl-17 pr-5 pt-2.5 pb-40">
+      <AniGuideLine containerClassName='absolute left-5 h-full top-0' lineClassName="color-5" icon={tracingIcon} />
       <div className="main text-lg tracking-tight leading-26px text-#FFFFFF73">
         <AniTitle
           t1="Privacy-preservation"

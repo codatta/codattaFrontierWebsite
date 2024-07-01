@@ -12,7 +12,7 @@ const AniTitle: React.FC<{
   const isInView = useInView(ref, { once: false })
 
   return (
-    <div className={`ani-title ${isInView && 'ani'} mt-10px`} ref={ref}>
+    <div className={`ani-title ${isInView && 'ani'}`} ref={ref}>
       <div className="text-#fff text-lg font-bold tracking-tight mb-16px">
         {t1.split(' ').map((text, index) => (
           <span key={text + index}>{text}&nbsp;</span>
