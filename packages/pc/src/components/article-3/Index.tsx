@@ -88,12 +88,14 @@ const Section3 = () => {
         <AniImage src={img3} className="w-620px" />
       </EffectCard>
       <AniContent className="mt-6 ml-18">
-        <h3 className='text-white text-xl mb-4'>Open Source</h3>
-        <p className='text-lg'>
+        <h3 className="text-white text-xl mb-4">Open Source</h3>
+        <p className="text-lg">
           <span className="text-#fff">Web3 users</span> and{' '}
-          <span className="text-#fff">ur protocol and software pipeline have been made entirely
+          <span className="text-#fff">
+            our protocol and software pipeline have been made entirely
             open-sourced in order to foster further community-driven development
-            and step up the trust-less game.</span>
+            and step up the trust-less game.
+          </span>
         </p>
       </AniContent>
     </div>

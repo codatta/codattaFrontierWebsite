@@ -58,8 +58,13 @@ const sections = [
   },
   {
     title: 'Open Source',
-    content:
-      'Our protocol and software pipeline have been made entirely open-sourced in order to foster further community-driven development and step up the trust-less game.',
+    content: (
+      <>
+        Our protocol and software pipeline have been made entirely open-sourced
+        in order to foster further community-driven development and step up the
+        trust-less game.
+      </>
+    ),
     img: img3,
   },
 ]
