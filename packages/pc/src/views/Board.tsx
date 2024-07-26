@@ -18,7 +18,7 @@ export const Component = () => {
     getDashboardData()
   }, [])
   return (
-    <div className="w-1160px m-auto mt-57px text-#fff">
+    <div className="w-1160px m-auto text-#fff">
       <Header />
       <div className="flex mt-30px">
         <div className="w-774px mr-16px">
@@ -44,7 +44,7 @@ export const Component = () => {
       </div>
 
       <Footer />
-      <CopyRights />
+      {/* <CopyRights /> */}
     </div>
   )
 }

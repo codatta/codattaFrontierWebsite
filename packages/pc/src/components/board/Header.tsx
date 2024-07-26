@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 
+import Header from '@/components/Header'
+
 const Title = styled.div`
   background: linear-gradient(90deg, #fff 0%, #5f6883 100%);
   background-clip: text;
@@ -7,10 +9,11 @@ const Title = styled.div`
   -webkit-text-fill-color: transparent;
 `
 
-const Header = () => {
+const BoardHeader = () => {
   return (
     <>
-      <Title className="text-2xl font-bold tracking-tight">
+      <Header />
+      <Title className="text-2xl font-bold tracking-tight mt-24px">
         Let's annotate crypto addresses from here
       </Title>
       <p className="text-xl tracking-tighter text-#fff text-opacity-25">
@@ -21,4 +24,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default BoardHeader

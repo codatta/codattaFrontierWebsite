@@ -14,7 +14,9 @@ console.log(
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.PC_CDN_ASSETS_PATH ? `https://static.codatta.io/${process.env.PC_CDN_ASSETS_PATH}` : './',
+  base: process.env.PC_CDN_ASSETS_PATH
+    ? `https://static.codatta.io/${process.env.PC_CDN_ASSETS_PATH}`
+    : './',
   plugins: [
     react(),
     Unocss({
@@ -45,7 +47,8 @@ export default defineConfig({
     open: false,
     proxy: {
       '^/api/': {
-        target: 'https://app.test.codatta.io',
+        // target: 'https://app.test.codatta.io',
+        target: 'https://app.codatta.io',
         changeOrigin: true,
       },
     },

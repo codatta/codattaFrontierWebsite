@@ -5,25 +5,28 @@ import Article3 from '../components/article-3/Index'
 import Article4 from '../components/article-4/Index'
 import Article5 from '../components/article-5/Index'
 import Footer from '@/components/Footer'
-import CopyRights from '@/components/CopyRights'
+
 
 export const Component = () => {
-  return (<>
-    <div
-      className='min-w-1240px'
-      style={{
-        background: "radial-gradient(168.69% 168.69% at 27.93% -66.74%, rgba(0, 124, 141, 0.2) 8.97%, rgba(11, 11, 11, 0.2) 71.61%)"
-      }}>
-      <Header />
-      <Article1 />
-    </div>
-    <div className='w-1240px m-auto'>
-      <Article2 />
-      <Article3 />
-      <Article4 />
-      <Article5 />
-      <Footer />
-    </div >
-  </ >
+  return (
+    <>
+      <div
+        className="min-w-1240px"
+        style={{
+          background:
+            'radial-gradient(168.69% 168.69% at 27.93% -66.74%, rgba(0, 124, 141, 0.2) 8.97%, rgba(11, 11, 11, 0.2) 71.61%)',
+        }}
+      >
+        <Header isHome={true} />
+        <Article1 />
+      </div>
+      <div className="w-1240px m-auto">
+        <Article2 />
+        <Article3 />
+        <Article4 />
+        <Article5 />
+        <Footer />
+      </div>
+    </>
   )
 }
