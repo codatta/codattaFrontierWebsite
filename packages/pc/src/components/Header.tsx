@@ -14,11 +14,10 @@ export default function Head({ isHome }: { isHome?: boolean }) {
 
   return (
     <header className="m-auto p-4 flex items-center max-w-1240px box-border">
-      {isHome && (
-        <div>
-          <img src={logoImg} className="block h-6" alt="" />
-        </div>
-      )}
+      <div className={!isHome && 'invisible'}>
+        <img src={logoImg} className="block h-6" alt="" />
+      </div>
+
       <div className="flex-1 flex justify-center">
         <div className="border-1px border-solid border-#fff border-opacity-10 py-8px px-16px rounded-20px text-#fff text-opacity-60 flex justify-around bg-#fff bg-opacity-2">
           <NavLink
@@ -44,14 +43,15 @@ export default function Head({ isHome }: { isHome?: boolean }) {
         </div>
       </div>
 
-      {isHome && (
-        <button
-          className="ml-auto  cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-white text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap"
-          onClick={jump2App}
-        >
-          Launch App
-        </button>
-      )}
+      <button
+        className={cn(
+          'ml-auto  cursor-pointer rounded-16px h-32px px-24px block border-none outline-none text-white text-sm border-1px border-solid border-#FFFFFF99 font-500 bg-transparent text-base text-nowrap',
+          !isHome && 'invisible'
+        )}
+        onClick={jump2App}
+      >
+        Launch App
+      </button>
     </header>
   )
 }

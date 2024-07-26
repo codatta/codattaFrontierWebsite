@@ -16,9 +16,12 @@ function Signup() {
 const Article = () => {
   return (
     <div className="">
-      <img src={bannerImg} className="max-w-970px w-100% h-auto m-auto block" />
-      <div className='-mt-20 text-center px-5'>
-        <div className='w-100% max-w-1080px m-auto'>
+      <img
+        src={bannerImg}
+        className="max-w-970px w-100% h-460px m-auto block"
+      />
+      <div className="-mt-20 text-center px-5">
+        <div className="w-100% max-w-1080px m-auto">
           <Title />
           <p className="mt-32px text-xl text-#FFFFFF73 w-4/5 m-auto">
             The first decentralized data protocol building foundational
