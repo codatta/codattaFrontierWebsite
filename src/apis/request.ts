@@ -30,7 +30,9 @@ function baseResponseInterceptor(res: AxiosResponse) {
 
 function errorResponseInterceptor(err: AxiosError) {
   if (err.status === 401) {
-    window.location.href = '/account/login'
+    const redirect = window.location.href
+    window.location.href =
+      '/account/login?redirect=' + encodeURIComponent(redirect)
   }
   return Promise.reject(err)
 }

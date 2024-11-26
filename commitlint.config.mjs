@@ -10,7 +10,7 @@ const Configuration = {
     'type-enum': [
       2,
       'always',
-      ['feat', 'fix', 'docs', 'test', 'build', 'other']
+      ['feat', 'fix', 'refactor', 'docs', 'test', 'build', 'other']
     ],
     'type-case': [2, 'always', 'lower-case'],
     'type-empty': [2, 'never'],
