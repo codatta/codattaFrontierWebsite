@@ -65,7 +65,7 @@ function Card({
         {steps.map((item) => (
           <li
             key={item}
-            className="pl-8 bg-left-top bg-no-repeat"
+            className="pl-8 bg-left-top bg-no-repeat mt-8 first-of-type:mt-0"
             style={{
               backgroundImage: `url(${checkCircleIcon})`,
               backgroundSize: '20px 20px',
@@ -73,8 +73,6 @@ function Card({
             }}
           >
             {item}
-            <br />
-            jljklj
           </li>
         ))}
       </ul>
