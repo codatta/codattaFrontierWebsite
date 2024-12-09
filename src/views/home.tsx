@@ -1,5 +1,9 @@
+import Header from '@/components/header/header'
+
 export default function HomePage() {
-  return <div>
-    <h2>Home Page</h2>
-  </div>
+  return (
+    <>
+      <Header className="px-6 py-4" />
+    </>
+  )
 }
