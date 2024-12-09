@@ -24,8 +24,8 @@ export default function Section({ className }: { className?: string }) {
         className
       )}
     >
-      {BRANDS.map((brand) => (
-        <a href={brand.url} key={brand.icon} className="flex-shrink-0">
+      {BRANDS.map((brand, index) => (
+        <a href={brand.url} key={'brand_' + index} className="flex-shrink-0">
           <img
             src={brand.icon}
             className="h-[30px] w-auto object-contain"
