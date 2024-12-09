@@ -15,7 +15,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '^/api/': {
-        target: 'https://app-test.b18a.io',
+        target: 'http://app-test.b18a.io/',
         changeOrigin: true
       }
     }

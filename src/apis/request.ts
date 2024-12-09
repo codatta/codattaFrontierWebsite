@@ -6,7 +6,7 @@ import axios, {
 import cookies from 'js-cookie'
 
 const request = axios.create({
-  baseURL: '/api',
+  baseURL: '/api/v2',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json'
@@ -16,16 +16,24 @@ const request = axios.create({
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const token = cookies.get('token') || localStorage.getItem('token')
   const uid = cookies.get('uid') || localStorage.getItem('uid')
-  config.headers.Authorization = `${token}`
+  config.headers['token'] = `${token}`
   config.headers['uid'] = `${uid}`
   return config
 }
 
 function baseResponseInterceptor(res: AxiosResponse) {
-  if (res.data.data?.code !== '0000') {
-    return Promise.reject(res.data)
+  if (res.data?.success === false) {
+    const error = new AxiosError(
+      res.data?.errorMessage,
+      res.data?.errorCode,
+      res.config,
+      res.request,
+      res
+    )
+    return Promise.reject(error)
+  } else {
+    return res
   }
-  return res
 }
 
 function errorResponseInterceptor(err: AxiosError) {
