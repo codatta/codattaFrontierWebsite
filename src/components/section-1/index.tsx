@@ -14,7 +14,7 @@ export default function Section({ className }: { className?: string }) {
           Connect, Collaborate, and Co-Train the Future of AGI
         </p>
       </div>
-      <div className="aspect-1 relative pointer-events-none">
+      <div className="aspect-1 relative pointer-events-none overflow-hidden">
         <div className="p-9">
           <img src={Logo3D} className="w-full h-auto " />
         </div>

@@ -20,7 +20,7 @@ export default function Section({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex items-center  flex-nowrap gap-[56px] px-6',
+        'flex items-center  flex-nowrap gap-[56px] px-6 w-full overflow-hidden',
         className
       )}
     >
