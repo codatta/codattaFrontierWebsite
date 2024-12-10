@@ -39,7 +39,7 @@ export default function Section({ className }: { className?: string }) {
       <div className="overflow-hidden mt-10">
         <div className="flex items-stretch gap-6 flex-nowrap w-max">
           {CARDS.map((card) => (
-            <Card data={card} className="w-[240px]" />
+            <Card data={card} className="w-[240px]" key={card.title} />
           ))}
         </div>
       </div>

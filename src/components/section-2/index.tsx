@@ -32,21 +32,28 @@ const BRANDS = [
 
 export default function Section({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        'flex items-center flex-nowrap gap-[56px]  w-full overflow-hidden',
-        className
-      )}
-    >
-      {BRANDS.map((brand, index) => (
-        <a href={brand.url} key={'brand_' + index} className="flex-shrink-0">
-          <img
-            src={brand.icon}
-            className="h-[30px] w-auto object-contain"
-            alt="Brand logo"
-          />
-        </a>
-      ))}
+    <div className={cn('w-full overflow-hidden', className)}>
+      <div className="w-max flex items-center flex-nowrap gap-[56px] animate-[marquee_40s_linear_infinite] hover:[animation-play-state:paused]">
+        {BRANDS.map((brand, index) => (
+          <div key={'brand_' + index} className="flex-shrink-0">
+            <img
+              src={brand.icon}
+              className="h-[30px] w-auto object-contain"
+              alt="Brand logo"
+            />
+          </div>
+        ))}
+        {/* Duplicate logos for seamless scrolling */}
+        {BRANDS.map((brand, index) => (
+          <div key={'brand_duplicate_' + index} className="flex-shrink-0">
+            <img
+              src={brand.icon}
+              className="h-[30px] w-auto object-contain"
+              alt="Brand logo"
+            />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

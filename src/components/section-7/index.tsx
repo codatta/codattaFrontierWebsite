@@ -45,8 +45,8 @@ export default function Section({ className }: { className?: string }) {
         <a className="text-[#1C1C26] font-medium text-xl">View more</a>
       </h3>
       <div>
-        {CARDS.map((card) => (
-          <Card data={card} />
+        {CARDS.map((card, index) => (
+          <Card data={card} key={'section_7_' + index} />
         ))}
       </div>
     </div>

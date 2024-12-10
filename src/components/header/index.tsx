@@ -52,7 +52,7 @@ function Nav() {
     <>
       {/* <MobileNav /> */}
       <Button
-        className=""
+        className="py-2 px-6"
         onClick={(e) =>
           onClick(e as unknown as React.MouseEvent<MouseEvent>, BUTTON.url)
         }
