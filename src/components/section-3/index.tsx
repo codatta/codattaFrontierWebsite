@@ -5,16 +5,18 @@ import DynamicSvg from '@/components/dynamic-svg'
 export default function Section({ className }: { className?: string }) {
   return (
     <div className={cn('text-center', className)}>
-      <p className="font-medium text-xl tracking-wide">Vertical AI Agents</p>
-      <h3 className="font-extrabold text-[32px] leading-10 mt-4">
+      <p className="font-medium text-xl tracking-wide md:text-2xl">
+        Vertical AI Agents
+      </p>
+      <h3 className="font-extrabold text-[32px] leading-10 mt-4 md:font-bold md:text-[56px] md:leading-[68px] md:tracking-tight">
         The New Saas Build Vertical AI Agents
       </h3>
-      <p className="text-base tracking-wide mt-4">
+      <p className="text-base tracking-wide mt-4 md:text-[18px] md:leading-[28px]">
         Vertical AI Agents are specialized AI entities tailored for specific
         industries. For instance, in healthcare, they assist with medical
         diagnoses using patient data,
       </p>
-      <div className="text-left mt-[48px] flex flex-col gap-6">
+      <div className="text-left mt-[48px] flex flex-col gap-6 md:mt-[100px] md:flex md:gap-10 md:justify-center md:flex-row">
         <Card
           iconName="rect-ai"
           title="Industry-Specific Intelligence"
