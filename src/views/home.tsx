@@ -16,15 +16,15 @@ export default function HomePage() {
       <Header className="px-6 py-4 snap-start" />
       <Section1 className="mt-7" />
       <Section2 className="mt-0" />
-      <Section3 className="px-6 mt-[120px] snap-start" />
+      <Section3 className="px-6 pt-[60px] mt-[60px] snap-start" />
       <div className="mt-[80px] rounded-3xl bg-black pb-[80px]">
         <Section4 className="px-6 snap-start" />
-        <Section5 className="px-6 mt-[180px] snap-start" />
+        <Section5 className="px-6 pt-[60px] mt-[120px] snap-start" />
       </div>
-      <Section6 className="px-6 mt-[120px] snap-start" />
-      <Section7 className="px-6 mt-[120px] snap-start" />
-      <Section8 className="px-6 mt-[120px] snap-start" />
-      <Footer className="px-6 mt-[150px] snap-start" />
+      <Section6 className="px-6 pt-[60px] mt-[60px] snap-start" />
+      <Section7 className="px-6 pt-[60px] mt-[60px] snap-start" />
+      <Section8 className="px-6 pt-[60px] mt-[60px] snap-start" />
+      <Footer className="px-6 pt-[60px] mt-[90px] snap-start" />
     </div>
   )
 }

@@ -13,28 +13,28 @@ export default function Header({ className }: { className?: string }) {
   )
 }
 
-type TNav = {
-  label: string
-  url: string
-}
-const NAVS: TNav[] = [
-  {
-    label: 'Build',
-    url: '',
-  },
-  {
-    label: 'Explore',
-    url: '',
-  },
-  {
-    label: 'Community',
-    url: '',
-  },
-  {
-    label: 'About',
-    url: '',
-  },
-]
+// type TNav = {
+//   label: string
+//   url: string
+// }
+// const NAVS: TNav[] = [
+//   {
+//     label: 'Build',
+//     url: '',
+//   },
+//   {
+//     label: 'Explore',
+//     url: '',
+//   },
+//   {
+//     label: 'Community',
+//     url: '',
+//   },
+//   {
+//     label: 'About',
+//     url: '',
+//   },
+// ]
 const BUTTON = {
   label: 'Launch App',
   url: 'https://app.codatta.io/',

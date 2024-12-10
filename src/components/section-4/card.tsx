@@ -1,10 +1,12 @@
 import { useMemo } from 'react'
-import Indicators from './Indicators'
 
-import { CARDS } from './data'
+import { cn } from '@udecode/cn'
+
+import Indicators from './indicators2'
 
 import gridBg from '@/assets/works-grid-bg.png'
-import { cn } from '@udecode/cn'
+import { CARDS } from './data'
+
 
 export default function Card({
   total,
