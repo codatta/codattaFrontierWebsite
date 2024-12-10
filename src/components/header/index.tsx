@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 export default function Header({ className }: { className?: string }) {
   return (
     <header className={cn('flex items-center justify-between', className)}>
-      <img src={Logo} className="h-8 relative z-20" />
+      <img src={Logo} className="h-8 relative z-30" />
       <Nav />
     </header>
   )
@@ -76,12 +76,12 @@ function MobileNav({ className }: { className?: string }) {
     <div className={cn('', className)}>
       <SVGIcon
         iconName={menuShow ? 'close-btn' : 'menu-btn'}
-        className="w-6 h-6 relative z-20"
+        className="w-6 h-6 relative z-30"
         onClick={() => setMenuShow((pre) => !pre)}
       />
       <div
         className={cn(
-          'fixed left-0 top-0 w-screen h-screen bg-white z-10 flex flex-col justify-end px-6 pb-[48px]',
+          'fixed left-0 top-0 w-screen h-screen bg-white z-20 flex flex-col justify-end px-6 pb-[48px]',
           menuShow ? 'visible' : 'hidden'
         )}
       >
