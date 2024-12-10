@@ -8,8 +8,8 @@ import { motion, useScroll } from 'motion/react'
 
 export default function Section({ className }: { className?: string }) {
   return (
-    <section className={cn('text-white', className)}>
-      <h2 className="font-extrabold text-[32px] leading-10 text-center">
+    <section className={cn('text-white md:flex', className)}>
+      <h2 className="font-extrabold text-[32px] leading-10 text-center md:w-1/2 md:text-left">
         Codatta Platform
         <br />
         Roadmap
@@ -31,7 +31,7 @@ function Cards() {
   })
 
   return (
-    <div className="mt-[80px] flex gap-10" ref={carouselRef}>
+    <div className="mt-[80px] flex gap-10 md:w-1/2 md:mt-0" ref={carouselRef}>
       <div className="w-[2px] bg-[#2B2B2B] overflow-hidden">
         <motion.div
           className="h-[120px] bg-gradient-to-b from-[#2B2B2B] to-[#4190FF]"

@@ -17,9 +17,9 @@ export default function HomePage() {
       <Section1 className="mt-7 md:px-[120px] md:my-[90px]" />
       <Section2 className="mt-0" />
       <Section3 className="px-6 pt-[60px] mt-[60px] snap-start md:mt-[180px] md:px-[120px]" />
-      <div className="mt-[80px] rounded-3xl bg-black pb-[80px] md:mt-[194px]">
+      <div className="mt-[80px] rounded-3xl bg-black pb-[80px] md:mt-[194px] md:pb-[180px]">
         <Section4 className="px-6 snap-start" />
-        <Section5 className="px-6 pt-[60px] mt-[120px] snap-start" />
+        <Section5 className="px-6 pt-[60px] mt-[120px] snap-start md:px-[120px]" />
       </div>
       <Section6 className="px-6 pt-[60px] mt-[60px] snap-start" />
       <Section7 className="px-6 pt-[60px] mt-[60px] snap-start" />
