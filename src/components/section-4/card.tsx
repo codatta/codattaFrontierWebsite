@@ -20,8 +20,8 @@ export default function Card({
   }, [index])
 
   return (
-    <div>
-      <div className="aspect-1 flex-1 items-center justify-center relative">
+    <div className="md:mt-[118px] md:px-[230px] md:flex md:gap-[140px]">
+      <div className="aspect-1 relative md:w-[590px] md:h-[590px]">
         <div>
           {CARDS.map(({ icon }, i) => (
             <img
@@ -39,7 +39,7 @@ export default function Card({
           />
         </div>
       </div>
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col justify-between md:py-[70px] ">
         <div>
           <h3 className={`tracking-tight ${data.titleColor}`}>{data.title}</h3>
           <p className="text-[#FFFFFFA3] text-base leading-8 tracking-wide">

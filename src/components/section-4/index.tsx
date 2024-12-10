@@ -27,8 +27,8 @@ export default function Section({ className }: { className?: string }) {
 
   return (
     <div className={cn('snap-start works-box', className)} ref={containerRef}>
-      <div className="sticky top-0 pt-[80px] h-screen">
-        <h2 className="font-extrabold text-[32px] leading-10 text-center text-white">
+      <div className="sticky top-0 pt-[80px] h-screen md:pt-[90px]">
+        <h2 className="font-extrabold text-[32px] leading-10 text-center text-white md:font-bold md:text-[56px] md:leading-[68px] md:tracking-tight">
           How It Works
         </h2>
         <Card total={3} index={index} />
