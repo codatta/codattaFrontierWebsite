@@ -1,9 +1,9 @@
 import { cn } from '@udecode/cn'
 import { useMemo, useRef, useState } from 'react'
 
-import workIcon1 from '@/assets/works-1.png'
-import workIcon2 from '@/assets/works-2.png'
-import workIcon3 from '@/assets/works-3.png'
+// import workIcon1 from '@/assets/works-1.png'
+// import workIcon2 from '@/assets/works-2.png'
+// import workIcon3 from '@/assets/works-3.png'
 // import gridBg from '@/assets/grid.svg'
 
 export default function Section({ className }: { className?: string }) {
@@ -26,19 +26,19 @@ type TCard = {
 
 const CARDS: TCard[] = [
   {
-    icon: workIcon1,
+    icon: 'https://s.xny.ai/static/works-movie-1.png',
     title: 'For AI Developers:',
     titleColor: '#30C341',
     des: 'Open Collaboration Platform Connect directly with data creators-no upfront costs. Permissionless access eliminates opinionated restrictions, allowing everyone to leverage human expertise to advance AI. Share rewards through our royalty model.',
   },
   {
-    icon: workIcon2,
+    icon: 'https://s.xny.ai/static/works-movie-2.png',
     title: 'For Data Creators',
     titleColor: '#3063C3',
     des: 'Open Collaboration Platform Connect directly with data creators-no upfront costs. Permissionless access eliminates opinionated restrictions, allowing everyone to leverage human expertise to advance AI. Share rewards through our royalty model.',
   },
   {
-    icon: workIcon3,
+    icon: 'https://s.xny.ai/static/works-movie-3.png',
     title: 'For Investors',
     titleColor: '#FCC800',
     des: 'Open Collaboration Platform Connect directly with data creators-no upfront costs. Permissionless access eliminates opinionated restrictions, allowing everyone to leverage human expertise to advance AI. Share rewards through our royalty model.',
