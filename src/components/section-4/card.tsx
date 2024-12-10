@@ -25,6 +25,7 @@ export default function Card({
         <div>
           {CARDS.map(({ icon }, i) => (
             <img
+              key={icon}
               src={icon}
               className={cn('w-full ', index === i ? 'visible' : 'hidden')}
             />

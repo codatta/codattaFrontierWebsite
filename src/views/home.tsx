@@ -13,7 +13,7 @@ import Footer from '@/components/footer'
 export default function HomePage() {
   return (
     <div className="snap-mandatory snap-y overflow-y-auto h-screen">
-      <Header className="px-6 py-4 snap-start" />
+      <Header className="px-6 py-4 snap-start md:py-5 md:px-[120px]" />
       <Section1 className="mt-7" />
       <Section2 className="mt-0" />
       <Section3 className="px-6 pt-[60px] mt-[60px] snap-start" />

@@ -1,7 +1,10 @@
 import { cn } from '@udecode/cn'
+import { useRef } from 'react'
+
 import { CARDS, TCard } from './data'
 
 import checkCircleIcon from '@/assets/check-circle.svg'
+import { motion, useScroll } from 'motion/react'
 
 export default function Section({ className }: { className?: string }) {
   return (
@@ -16,12 +19,24 @@ export default function Section({ className }: { className?: string }) {
   )
 }
 
-
 function Cards() {
+  const carouselRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: carouselRef,
+    offset: ['start end', 'end end'],
+  })
+
+  scrollYProgress.on('change', (latest) => {
+    console.log('Scroll progress:', latest)
+  })
+
   return (
-    <div className="mt-[80px] flex gap-10">
+    <div className="mt-[80px] flex gap-10" ref={carouselRef}>
       <div className="w-[2px] bg-[#2B2B2B] overflow-hidden">
-        <div className="h-[120px] bg-gradient-to-b from-[#2B2B2B] to-[#4190FF]"></div>
+        <motion.div
+          className="h-[120px] bg-gradient-to-b from-[#2B2B2B] to-[#4190FF]"
+          style={{ y: scrollYProgress }}
+        ></motion.div>
       </div>
       <div className="flex-1">
         {CARDS.map((card, index) => (

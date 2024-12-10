@@ -6,10 +6,13 @@ import Button from '@/components/button'
 
 export default function Header({ className }: { className?: string }) {
   return (
-    <header className={cn('flex items-center justify-between', className)}>
-      <img src={Logo} className="h-8 relative z-30" />
-      <Nav />
-    </header>
+    <>
+      <header className={cn('flex items-center justify-between', className)}>
+        <img src={Logo} className="h-8 relative z-30" />
+        <Nav />
+      </header>
+      <div className="w-full h-[1px] bg-[#00000014] invisible md:visible"></div>
+    </>
   )
 }
 
