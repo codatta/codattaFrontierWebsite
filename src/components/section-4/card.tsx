@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { cn } from '@udecode/cn'
 
-import Indicators from './indicators2'
+import Indicators from './indicators'
 
 import gridBg from '@/assets/works-grid-bg.png'
 import { CARDS } from './data'
