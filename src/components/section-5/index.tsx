@@ -49,14 +49,7 @@ function Card({ data, className }: { data: TCard; className?: string }) {
       <p className="text-base leading-7 tracking-wide text-white/40 mt-3">
         {data.des}
       </p>
-      <ul
-        className="text-white/40 mt-[56px] text-base tracking-wide list-inside"
-        style={
-          {
-            //   listStyleImage: `url(${checkCircleIcon})`,
-          }
-        }
-      >
+      <ul className="text-white/40 mt-[56px] text-base tracking-wide list-inside">
         {data.steps.map((item) => (
           <li
             key={item}

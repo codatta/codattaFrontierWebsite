@@ -1,10 +1,38 @@
 import { cn } from '@udecode/cn'
+import { useRef, useState } from 'react'
+
 import DynamicSvg from '../dynamic-svg'
 import { CARDS, TCard } from './data'
 
 export default function Section({ className }: { className?: string }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const scrollToCard = (index: number) => {
+    if (!containerRef.current) return
+
+    const cards = containerRef.current.querySelectorAll('.snap-start')
+
+    if (index >= 0 && index < cards.length) {
+      cards[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      })
+      setCurrentIndex(index)
+    }
+  }
+
+  const handlePrev = () => {
+    scrollToCard(Math.max(0, currentIndex - 1))
+  }
+
+  const handleNext = () => {
+    scrollToCard(Math.min(CARDS.length - 1, currentIndex + 1))
+  }
+
   return (
-    <div className={cn('', className)}>
+    <div className={cn('', className)} ref={containerRef}>
       <div className="flex items-center justify-between">
         <h3 className="font-extrabold text-[32px] leading-10 text-[#1D1D1D]">
           History
@@ -12,9 +40,20 @@ export default function Section({ className }: { className?: string }) {
         <div className="w-[112px] flex items-center justify-between">
           <DynamicSvg
             iconName="arrow-right-circle"
-            className="w-8 h-8 rotate-180"
+            className={cn(
+              'w-8 h-8 rotate-180 cursor-pointer',
+              currentIndex === 0 ? 'text-[#00000029]' : ''
+            )}
+            onClick={handlePrev}
           />
-          <DynamicSvg iconName="arrow-right-circle" />
+          <DynamicSvg
+            iconName="arrow-right-circle"
+            onClick={handleNext}
+            className={cn(
+              'w-8 h-8 cursor-pointer',
+              currentIndex === CARDS.length - 1 ? 'text-[#00000029]' : ''
+            )}
+          />
         </div>
       </div>
       <div className="overflow-x-hidden mt-10">
