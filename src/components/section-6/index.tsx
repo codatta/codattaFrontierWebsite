@@ -1,6 +1,26 @@
 import { cn } from '@udecode/cn'
 import DynamicSvg from '../dynamic-svg'
 
+
+const CARDS = [
+  {
+    title: '2024/07',
+    des: 'Commercialization of Crypto Account Annotation, Empowering CipherOwl ',
+  },
+  {
+    title: '2024/06',
+    des: 'Launched Pathology frontier, backed by network of doctors from US,Canada, China',
+  },
+  {
+    title: '2024/03 ',
+    des: 'Open Codatta 1.0 to public',
+  },
+  {
+    title: '2024/12',
+    des: 'Codatta 2.0',
+  },
+]
+
 export default function Section({ className }: { className?: string }) {
   return (
     <div className={cn('', className)}>
@@ -16,7 +36,13 @@ export default function Section({ className }: { className?: string }) {
           <DynamicSvg iconName="arrow-right-circle" />
         </div>
       </div>
-      <div className="h-[272px] overflow-hidden"></div>
+      <div className="overflow-hidden mt-10">
+        <div className="flex items-stretch gap-6 flex-nowrap w-max">
+          {CARDS.map((card) => (
+            <Card data={card} className="w-[240px]" />
+          ))}
+        </div>
+      </div>
     </div>
   )
 }
