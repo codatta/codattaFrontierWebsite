@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from 'react'
 import workIcon1 from '@/assets/works-1.png'
 import workIcon2 from '@/assets/works-2.png'
 import workIcon3 from '@/assets/works-3.png'
+// import gridBg from '@/assets/grid.svg'
 
 export default function Section({ className }: { className?: string }) {
   return (
@@ -51,8 +52,14 @@ function Cards() {
 
   return (
     <div>
-      <div className="aspect-1 flex-1 items-center justify-center">
+      <div className="aspect-1 flex-1 items-center justify-center relative">
         <img src={card.icon} className="w-full" />
+        {/* <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center ">
+          <img
+            src={gridBg}
+            className="scale-[1.9] origin-right min-w-full min-h-full"
+          />
+        </div> */}
       </div>
       <div className="flex flex-col justify-between">
         <div>

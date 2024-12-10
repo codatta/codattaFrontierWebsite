@@ -1,7 +1,7 @@
 import { cn } from '@udecode/cn'
-import Logo3D from '@/assets/logo-3d.png'
-import LogoBg from '@/assets/grid.svg'
-import Button from '../button'
+import logo3D from '@/assets/logo-3d.png'
+import gridBg from '@/assets/grid.svg'
+// import Button from '../button'
 
 export default function Section({ className }: { className?: string }) {
   return (
@@ -16,12 +16,12 @@ export default function Section({ className }: { className?: string }) {
       </div>
       <div className="aspect-1 relative pointer-events-none overflow-hidden">
         <div className="p-9">
-          <img src={Logo3D} className="w-full h-auto " />
+          <img src={logo3D} className="w-full h-auto relative z-10" />
         </div>
         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center ">
           <img
-            src={LogoBg}
-            className="scale-[1.9] origin-center min-w-full min-h-full"
+            src={gridBg}
+            className="scale-[1.9] origin-right min-w-full min-h-full"
           />
         </div>
       </div>

@@ -63,14 +63,19 @@ const CARDS: TCard[] = [
 ]
 function Cards() {
   return (
-    <div className="mt-[80px]  ">
-      {CARDS.map((card, index) => (
-        <Card
-          data={card}
-          className={index !== 0 ? 'mt-[160px]' : ''}
-          key={card.title}
-        />
-      ))}
+    <div className="mt-[80px] flex gap-10">
+      <div className="w-[2px] bg-[#2B2B2B] overflow-hidden">
+        <div className="h-[120px] bg-gradient-to-b from-[#2B2B2B] to-[#4190FF]"></div>
+      </div>
+      <div className="flex-1">
+        {CARDS.map((card, index) => (
+          <Card
+            data={card}
+            className={index !== 0 ? 'mt-[160px]' : ''}
+            key={card.title}
+          />
+        ))}
+      </div>
     </div>
   )
 }
@@ -84,7 +89,7 @@ function Card({ data, className }: { data: TCard; className?: string }) {
         </div>
         <div className="text-white">{data.time}</div>
       </div>
-      <h3 className="font-bold text-2xl leading-6 mt-6">{data.title}</h3>
+      <h3 className="font-bold text-2xl mt-6">{data.title}</h3>
       <p className="text-base leading-7 tracking-wide text-white/40 mt-3">
         {data.des}
       </p>
