@@ -55,7 +55,7 @@ export default function Section({ className }: { className?: string }) {
 
 function Card({ data }: { data: TCard }) {
   return (
-    <div>
+    <div className="snap-start">
       {data.img && <img src={data.img} className="w-full mt-10" />}
       <h3 className="mt-8 font-semibold text-2xl leading-9 tracking-tight">
         <a href={data.url} target="_blank">

@@ -71,7 +71,7 @@ function Cards() {
         {CARDS.map((card, index) => (
           <Card
             data={card}
-            className={index !== 0 ? 'mt-[160px]' : ''}
+            className={index !== 0 ? 'mt-[160px] snap-start' : ''}
             key={card.title}
           />
         ))}

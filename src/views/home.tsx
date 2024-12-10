@@ -12,19 +12,19 @@ import Footer from '@/components/footer'
 
 export default function HomePage() {
   return (
-    <>
-      <Header className="px-6 py-4" />
+    <div className="snap-mandatory snap-y overflow-y-auto h-screen">
+      <Header className="px-6 py-4 snap-start" />
       <Section1 className="mt-7" />
       <Section2 className="mt-0" />
-      <Section3 className="px-6 mt-[120px]" />
-      <div className="mt-[80px] rounded-3xl bg-black overflow-hidden py-[80px]">
-        <Section4 className="px-6" />
-        <Section5 className="px-6 mt-[180px]" />
+      <Section3 className="px-6 mt-[120px] snap-start" />
+      <div className="mt-[80px] rounded-3xl bg-black pb-[80px]">
+        <Section4 className="px-6 snap-start" />
+        <Section5 className="px-6 mt-[180px] snap-start" />
       </div>
-      <Section6 className="px-6 mt-[120px]" />
-      <Section7 className="px-6 mt-[120px]" />
-      <Section8 className="px-6 mt-[120px]" />
-      <Footer className="px-6 mt-[150px]" />
-    </>
+      <Section6 className="px-6 mt-[120px] snap-start" />
+      <Section7 className="px-6 mt-[120px] snap-start" />
+      <Section8 className="px-6 mt-[120px] snap-start" />
+      <Footer className="px-6 mt-[150px] snap-start" />
+    </div>
   )
 }
