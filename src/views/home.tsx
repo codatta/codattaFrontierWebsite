@@ -5,6 +5,7 @@ import Section3 from '@/components/section-3'
 import Section4 from '@/components/section-4'
 import Section5 from '@/components/section-5'
 import Section6 from '@/components/section-6'
+import Section7 from '@/components/section-7'
 
 import Footer from '@/components/footer'
 
@@ -20,6 +21,7 @@ export default function HomePage() {
         <Section5 className="px-6 mt-[180px]" />
       </div>
       <Section6 className="px-6 mt-[128px]" />
+      <Section7 className="px-6 mt-[120px]" />
       <Footer className="px-6 mt-[150px]" />
     </>
   )

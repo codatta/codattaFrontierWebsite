@@ -1,9 +1,9 @@
 import { cn } from '@udecode/cn'
+import { useMemo, useRef, useState } from 'react'
 
 import workIcon1 from '@/assets/works-1.png'
 import workIcon2 from '@/assets/works-2.png'
 import workIcon3 from '@/assets/works-3.png'
-import { useEffect, useMemo, useRef, useState } from 'react'
 
 export default function Section({ className }: { className?: string }) {
   return (
