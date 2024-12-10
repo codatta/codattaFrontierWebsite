@@ -15,7 +15,7 @@ export default function HomePage() {
     <>
       <Header className="px-6 py-4" />
       <Section1 className="mt-7" />
-      <Section2 className="mt-[56px]" />
+      <Section2 className="mt-0" />
       <Section3 className="px-6 mt-[120px]" />
       <div className="mt-[80px] rounded-3xl bg-black overflow-hidden py-[80px]">
         <Section4 className="px-6" />

@@ -14,7 +14,7 @@ export default function Button({
   isLight?: boolean
   hasArrow?: boolean
   disable?: boolean
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }) {
   return (
     <button
@@ -26,7 +26,7 @@ export default function Button({
       )}
       onClick={(e) => {
         e.preventDefault()
-        onClick?.()
+        onClick?.(e)
       }}
     >
       {children}

@@ -5,9 +5,11 @@ import React, { Suspense } from 'react'
 export default function DynamicSvg({
   iconName,
   className,
+  onClick,
 }: {
   iconName: string
   className?: string
+  onClick?: () => void
 }) {
   const SvgIcon = React.lazy(async () => {
     const module = await import(`@/assets/icons/${iconName}.svg?react`)
@@ -17,13 +19,13 @@ export default function DynamicSvg({
   return (
     <Suspense
       fallback={
-        <div className={cn('text-black w-6 h-6 cursor-pointer', className)}>
-          Loading...
-        </div>
+        <div
+          className={cn('text-black w-6 h-6 cursor-pointer', className)}
+        ></div>
       }
     >
       {/* @ts-ignore */}
-      <SvgIcon className={className} />
+      <SvgIcon className={className} onClick={() => onClick?.()} />
     </Suspense>
   )
 }

@@ -25,14 +25,14 @@ export default function Section({ className }: { className?: string }) {
           />
         </div>
       </div>
-      <div className="flex items-center justify-between gap-3 px-6">
+      {/* <div className="flex items-center justify-between gap-3 px-6">
         <Button hasArrow={true} className="flex-1 text-sm ">
           Join as Developer
         </Button>
         <Button isLight={true} hasArrow={true} className="flex-1 text-sm">
           Join as Data Creator
         </Button>
-      </div>
+      </div> */}
     </div>
   )
 }
