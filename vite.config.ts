@@ -4,7 +4,9 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.CDN_ASSETS_PATH || undefined,
+  base: process.env.CDN_ASSETS_PATH
+    ? `https://s.codatta.io/${process.env.CDN_ASSETS_PATH}`
+    : undefined,
   plugins: [react()],
   resolve: {
     alias: {
