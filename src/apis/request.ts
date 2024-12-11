@@ -14,15 +14,13 @@ const request = axios.create({
 })
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
-  const token = cookies.get('token') || localStorage.getItem('token')
-  const uid = cookies.get('uid') || localStorage.getItem('uid')
+  const token = cookies.get('auth') || localStorage.getItem('auth')
   config.headers['token'] = `${token}`
-  config.headers['uid'] = `${uid}`
   return config
 }
 
 function baseResponseInterceptor(res: AxiosResponse) {
-  if (res.data?.success === false) {
+  if (res.data?.success !== true) {
     const error = new AxiosError(
       res.data?.errorMessage,
       res.data?.errorCode,
