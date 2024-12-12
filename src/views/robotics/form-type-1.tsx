@@ -16,6 +16,7 @@ export default function RoboticsSubmitPage(props: { templateId: string }) {
   const [_loading, setLoading] = useState(true)
   const [modalShow, setModalShow] = useState(false)
   const [error, setError] = useState()
+  const [rewardPoints, setRewardPoints] = useState(0)
 
   const onGifPlayerReady = useCallback((frameCount: number) => {
     setFrameCount(frameCount)
@@ -28,6 +29,17 @@ export default function RoboticsSubmitPage(props: { templateId: string }) {
       if (res.data.data_display.template_id !== templateId) {
         throw new Error('Template not match!')
       }
+      const totalRewards = res.data.reward_info
+        .filter((item) => {
+          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+        })
+        .reduce((acc, cur) => {
+          return acc + cur.reward_value
+        }, 0)
+
+      console.log(totalRewards, 'totalRewards')
+      setRewardPoints(totalRewards)
+
       setGifFile(res.data.data_display.gif_resource)
     } catch (err) {
       message.error(err.message)
@@ -64,11 +76,9 @@ export default function RoboticsSubmitPage(props: { templateId: string }) {
       )}
 
       <SubmitSuccessModal
-        points={40}
+        points={rewardPoints}
         open={modalShow}
-        onClose={() => {
-          setModalShow(false)
-        }}
+        onClose={() => window.history.back()}
       />
     </div>
   )

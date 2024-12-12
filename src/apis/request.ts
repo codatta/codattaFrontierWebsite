@@ -36,9 +36,12 @@ function baseResponseInterceptor(res: AxiosResponse) {
 
 function errorResponseInterceptor(err: AxiosError) {
   if (err.status === 401) {
+    localStorage.removeItem('uid')
+    localStorage.removeItem('token')
+    localStorage.removeItem('auth')
+
     const redirect = window.location.href
-    window.location.href =
-      '/account/login?redirect=' + encodeURIComponent(redirect)
+    window.location.href = `/account/signin?from=${encodeURIComponent(redirect)}`
   }
   return Promise.reject(err)
 }
