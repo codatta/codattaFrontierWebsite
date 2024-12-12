@@ -33,7 +33,7 @@ export default function RoboticsSubmitPage(props: { templateId: string }) {
 
       const totalRewards = res.data.reward_info
         .filter((item) => {
-          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINT'
+          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
         })
         .reduce((acc, cur) => {
           return acc + cur.reward_value
