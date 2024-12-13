@@ -61,7 +61,7 @@ export default function RoboticsSubmitPage(props: { templateId: string }) {
   }
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-84px)] max-w-[1500px] flex-1 flex-col gap-10 overflow-scroll p-10 text-white lg:flex-row">
+    <div className="no-scrollbar mx-auto flex h-[calc(100vh-84px)] max-w-[1500px] flex-1 flex-col gap-10 overflow-scroll p-10 text-white lg:flex-row">
       {error && <PageError error={error}></PageError>}
       {!error && (
         <>
