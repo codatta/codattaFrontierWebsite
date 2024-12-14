@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import Router from '@/router'
+import '@/styles/tailwind.css'
 
 const container = document.getElementById('root')
 if (!container) {

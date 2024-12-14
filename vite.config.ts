@@ -4,6 +4,9 @@ import path from 'path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: process.env.CDN_ASSETS_PATH
+    ? `https://s.codatta.io/${process.env.CDN_ASSETS_PATH}`
+    : undefined,
   plugins: [react()],
   resolve: {
     alias: {
@@ -15,7 +18,7 @@ export default defineConfig({
     host: '0.0.0.0',
     proxy: {
       '^/api/': {
-        target: 'https://app-test.b18a.io',
+        target: 'http://app-test.b18a.io/',
         changeOrigin: true
       }
     }
