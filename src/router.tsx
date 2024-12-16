@@ -2,10 +2,13 @@ import { Route, BrowserRouter, Routes } from 'react-router-dom'
 import { lazy } from 'react'
 
 import RoboticsLayout from '@/layouts/robotics-layout'
+import SettingsLayout from '@/layouts/settings-layout'
 
 const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
+
+const SettingAccount = lazy(() => import('@/views/settings/account'))
 
 export default function Router() {
   return (
@@ -26,6 +29,10 @@ export default function Router() {
               element={<FormType3 templateId="ROBOTICS_TPL_000003" />}
             />
           </Route>
+        </Route>
+
+        <Route path="/settings" element={<SettingsLayout />}>
+          <Route path="account" element={<SettingAccount />} />
         </Route>
       </Routes>
     </BrowserRouter>

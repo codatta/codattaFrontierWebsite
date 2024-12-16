@@ -190,7 +190,7 @@ function RelationsExampleCard() {
     }
   ]
   return (
-    <div className="mt-6 max-w-[640px] rounded-xl border border-solid border-[#FFFFFF1F] p-4">
+    <div className="mt-6 max-w-sm rounded-xl border border-solid border-[#FFFFFF1F] p-4">
       <Collapse
         ghost
         items={items}
@@ -201,7 +201,7 @@ function RelationsExampleCard() {
         size="small"
         className="text-white [&_.ant-collapse-expand-icon]:text-white [&_.ant-collapse-header-text]:text-white"
       />
-      <div className="my-3 h-[1px] w-full bg-[#FFFFFF1F]"></div>
+      <div className="my-3 h-px w-full bg-[#FFFFFF1F]"></div>
       <div className="flex gap-6">
         <div className="flex-1">
           <div className="text-xs text-[#BBBBBE]">target A</div>

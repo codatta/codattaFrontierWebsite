@@ -53,3 +53,10 @@ request.interceptors.response.use(
 )
 
 export default request
+
+export interface Response<T> {
+  data: T
+  success: true
+  errorCode: 0
+  errorMessage: string
+}

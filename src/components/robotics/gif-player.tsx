@@ -115,7 +115,7 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
   }, [currentFrameIndex, frames])
 
   return (
-    <div className="items-cente box-content flex w-full flex-col text-white">
+    <div className="box-content flex w-full flex-col items-center text-white">
       <Player
         frames={frames}
         frame={currentFrameIndex}
@@ -127,7 +127,7 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
           <object
             data={isPlaying ? pauseIcon : playIcon}
             type="image/png"
-            className="h-6 w-6"
+            className="size-6"
           />
         </Button>
         <div className="min-w-[40px] text-center text-xs">
@@ -154,7 +154,7 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
         <div className="flex gap-2">
           <div
             className={cn(
-              'h-5 w-10 cursor-pointer rounded-[4px] bg-white bg-opacity-35 text-center text-xs leading-5 text-white text-opacity-40 transition-all',
+              'h-5 w-10 cursor-pointer rounded-[4px] bg-white bg-opacity-35 text-center text-xs leading-5 text-white/40 transition-all',
               speed === 1 &&
                 'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
             )}

@@ -86,7 +86,7 @@ export default function Component({
           <></>
         )}
         <Button
-          className="w-full rounded-full bg-[#875DFF]"
+          className="w-full rounded-full bg-primary"
           type="primary"
           onClick={handleSubmit}
           loading={isSubmitting}
