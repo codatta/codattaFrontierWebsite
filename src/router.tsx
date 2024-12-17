@@ -4,6 +4,7 @@ import { lazy } from 'react'
 import RoboticsLayout from '@/layouts/robotics-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 
+const Home = lazy(() => import('@/views/home'))
 const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
@@ -15,6 +16,7 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/frontier">
+          <Route path="home" element={<Home />} />
           <Route path="robotics" element={<RoboticsLayout />}>
             <Route
               path="ROBOTICS_TPL_000001/:taskId"
