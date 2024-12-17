@@ -10,6 +10,7 @@ const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
 const SettingAccount = lazy(() => import('@/views/settings/account'))
+const QuestMain = lazy(() => import('@/views/quest/index'))
 
 export default function Router() {
   return (
@@ -36,6 +37,9 @@ export default function Router() {
           <Route path="/settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
           </Route>
+        </Route>
+        <Route path="/quest" element={<AppLayout />}>
+          <Route path="" element={<QuestMain />} />
         </Route>
       </Routes>
     </BrowserRouter>
