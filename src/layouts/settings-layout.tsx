@@ -12,10 +12,10 @@ function SettingsMenu() {
   const location = useLocation()
 
   const menuItems: AccountSubMenu[] = [
-    { label: 'Personal Info', key: '/app/settings/account' },
-    { label: 'Notification', key: '/app/settings/notification' },
-    { label: 'Reward', key: '/app/settings/reward' },
-    { label: 'Reputation', key: '/app/settings/reputation' }
+    { label: 'Personal Info', key: '/settings/account' },
+    // { label: 'Notification', key: '/settings/notification' },
+    { label: 'Reward', key: '/settings/reward' },
+    { label: 'Reputation', key: '/settings/reputation' }
   ]
 
   function handleMenuClick(item: AccountSubMenu) {
@@ -23,7 +23,7 @@ function SettingsMenu() {
   }
 
   return (
-    <div className="w-[147px] shrink-0 cursor-pointer border-r border-gray-300">
+    <div className="w-[147px] shrink-0 cursor-pointer border-r border-white/10">
       {menuItems.map((item) => (
         <div
           key={item.key}
@@ -31,7 +31,7 @@ function SettingsMenu() {
           className={cn(
             'px-6 py-4 transition-all duration-300',
             location.pathname === item.key
-              ? 'bg-r-primary/25 border-r-[3px] border-r-primary text-primary'
+              ? 'border-r-[3px] border-r-primary bg-primary/25'
               : ''
           )}
         >
@@ -47,7 +47,7 @@ export default function SettingsLayout() {
     <TransitionEffect className="">
       <h1 className="mb-2 text-4xl font-semibold leading-8">User Settings</h1>
       <p className="mb-6">Manage your account settings and preferences</p>
-      <div className="flex bg-white/10 py-6">
+      <div className="flex rounded-2xl bg-white/10 py-6">
         <SettingsMenu />
         <Outlet />
       </div>
