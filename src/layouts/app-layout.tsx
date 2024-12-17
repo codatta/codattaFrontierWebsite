@@ -20,13 +20,9 @@ export default function AppLayout() {
   // }
 
   return (
-    <Layout className="mx-auto h-screen max-w-[1168px]">
-      <Layout>
-        <Layout.Sider
-          style={{ backgroundColor: 'transparent' }}
-          breakpoint="lg"
-          width={248}
-        >
+    <Layout className="mx-auto h-screen max-w-[1168px] bg-transparent">
+      <Layout className="bg-transparent">
+        <Layout.Sider className="bg-transparent" breakpoint="lg" width={248}>
           <SideNav />
         </Layout.Sider>
         <Layout.Content className="min-w-0 flex-1 overflow-y-scroll py-8 pl-2 pr-6 lg:px-12">

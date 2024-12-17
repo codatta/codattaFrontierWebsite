@@ -4,9 +4,9 @@ import { useUserStore } from '@/stores/user.store'
 //   useNotificationStore
 // } from '@/stores/notification.store'
 import { cn } from '@udecode/cn'
-import { Badge, Flex } from 'antd'
+import { Badge, Flex, Tooltip } from 'antd'
 import { motion } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, LogOut } from 'lucide-react'
 import ImageLogo from '@/assets/images/logo-white.png'
 import IconHome from '@/assets/icons/app-nav/home.svg'
 import IconQuest from '@/assets/icons/app-nav/quest.svg'
@@ -16,13 +16,21 @@ import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
 
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  MouseEventHandler,
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 interface MenuItem {
   icon: ReactNode
   label: string | ReactNode
   key: string
+  className?: string
 }
 
 function AppNavItem(props: {
@@ -31,7 +39,7 @@ function AppNavItem(props: {
   onClick: (item: MenuItem) => void
 }) {
   const { item, selectedKey, onClick } = props
-  const { icon, label, key } = props.item
+  const { icon, label, key, className } = props.item
   const [active, setActive] = useState(false)
 
   useEffect(() => {
@@ -45,18 +53,18 @@ function AppNavItem(props: {
   }
 
   return (
-    <div className="group relative">
+    <div className={cn('group relative', className)}>
       <div
         className="py-0.5 pl-4 pr-2 lg:pr-0"
         onClick={() => handleClick(item)}
       >
         <div
           className={cn(
-            'flex cursor-pointer items-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
+            'flex w-full min-w-0 cursor-pointer items-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
             active ? 'font-600 bg-primary text-white' : ''
           )}
         >
-          <div className="size-6 text-[24px]">{icon}</div>
+          <div className="size-6 shrink-0 text-[24px]">{icon}</div>
           <span className="hidden flex-1 text-[14px] lg:block">{label}</span>
         </div>
       </div>
@@ -112,6 +120,33 @@ const QuestLabel = () => {
   )
 }
 
+function UserNameLable() {
+  const { username } = useUserStore()
+
+  const handleLogout: MouseEventHandler<HTMLDivElement> = (e) => {
+    e.stopPropagation()
+    // handle logout here
+  }
+
+  return (
+    <div className="flex items-center">
+      <div className="truncate">{username}</div>
+      <Tooltip title="Log out" className="ml-auto">
+        <div className="py-2 pl-2" onClick={handleLogout}>
+          <LogOut size={16} className="hidden lg:block"></LogOut>
+        </div>
+      </Tooltip>
+    </div>
+  )
+}
+
+function UserAvatar() {
+  const { info } = useUserStore()
+  return (
+    <img src={info?.user_data.avatar} className="size-6 rounded-full"></img>
+  )
+}
+
 const menuItems: MenuItem[] = [
   {
     icon: <IconHome color={'white'} size={24} />,
@@ -151,7 +186,13 @@ const menuItems: MenuItem[] = [
   {
     icon: <IconSetting color={'white'} size={24} />,
     key: '/settings',
-    label: 'User Settings'
+    label: 'User Settings',
+    className: 'mt-auto'
+  },
+  {
+    icon: <UserAvatar />,
+    key: '/user-section',
+    label: <UserNameLable />
   }
 ]
 
