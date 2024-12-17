@@ -33,6 +33,10 @@ class UserApi {
     )
     return res.data
   }
+
+  async updateRelatedInfo(info: object) {
+    return this.request.post('/user/update/related_info', info)
+  }
 }
 
 export default new UserApi(request)

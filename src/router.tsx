@@ -3,6 +3,7 @@ import { lazy } from 'react'
 
 import RoboticsLayout from '@/layouts/robotics-layout'
 import SettingsLayout from '@/layouts/settings-layout'
+import AppLayout from '@/layouts/app-layout'
 
 const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
@@ -31,8 +32,10 @@ export default function Router() {
           </Route>
         </Route>
 
-        <Route path="/settings" element={<SettingsLayout />}>
-          <Route path="account" element={<SettingAccount />} />
+        <Route Component={AppLayout}>
+          <Route path="/settings" element={<SettingsLayout />}>
+            <Route path="account" element={<SettingAccount />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
