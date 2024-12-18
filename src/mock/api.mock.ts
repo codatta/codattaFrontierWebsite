@@ -155,5 +155,77 @@ export default defineMock([
       errorCode: 0,
       errorMessage: 'SUCCESS'
     }
+  },
+  {
+    url: '/api/v2/campaign/consult',
+    method: 'POST',
+    body: { data: {}, success: true, errorCode: 0, errorMessage: 'SUCCESS' }
+  },
+  {
+    url: '/api/v2/task/sub_categories',
+    method: 'POST',
+    body: {
+      data: {
+        sub_cate_id: 'SUBCATE012',
+        sub_cate_name: 'Submit Fashion data from Codatta Clip',
+        sub_cate_description:
+          'Submit your fashion data from Codatta Clip now and earn exciting rewards while helping us enhance our product offerings!',
+        tasks: [
+          {
+            task_id: 'SUBMIT-INS-DATA',
+            name: 'Submit fashion data from Codatta Clip',
+            description:
+              'Submit fashion data to maximize your rewards. This task offers unlimited submission opportunities. Unlocking endless opportunities to earn!(Rewards will be calculated within several minutes)',
+            type: 'MANUAL',
+            schema:
+              'https://chromewebstore.google.com/detail/codatta-clip/doklnekkemmhclakfekoccilofpdcncb?hl=zh-CN&utm_source=ext_sidebar',
+            rewards: [
+              {
+                reward_icon:
+                  'https://file.b18a.io/ee6ce56e-6080-411d-9ccf-62c5899e9052_810879_.png',
+                reward_type: 'points',
+                reward_value: '60'
+              }
+            ],
+            locked: false,
+            how_to_unlock: null,
+            refresh_time: null,
+            duration: 0,
+            instance_id: 'UT202412180533222845',
+            status: 'PENDING',
+            completed_times: 1,
+            expire_time: '2099-11-11T00:00:00+00:00'
+          },
+          {
+            task_id: 'SUBMIT-INS-USER-DATA',
+            name: 'Submit User homepage data from Codatta Clip',
+            description:
+              'Share your homepage data to boost your rewards! With unlimited submission opportunities, you can unlock countless ways to earn!(Rewards will be calculated within several minutes)',
+            type: 'MANUAL',
+            schema:
+              'https://chromewebstore.google.com/detail/codatta-clip/doklnekkemmhclakfekoccilofpdcncb?hl=zh-CN&utm_source=ext_sidebar',
+            rewards: [
+              {
+                reward_icon:
+                  'https://file.b18a.io/ee6ce56e-6080-411d-9ccf-62c5899e9052_810879_.png',
+                reward_type: 'points',
+                reward_value: '20'
+              }
+            ],
+            locked: false,
+            how_to_unlock: null,
+            refresh_time: null,
+            duration: 0,
+            instance_id: 'UT202412180723472847',
+            status: 'PENDING',
+            completed_times: 1,
+            expire_time: '2099-11-11T00:00:00+00:00'
+          }
+        ]
+      },
+      success: true,
+      errorCode: 0,
+      errorMessage: 'SUCCESS'
+    }
   }
 ])

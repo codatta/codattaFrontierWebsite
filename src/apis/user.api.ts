@@ -10,6 +10,38 @@ export interface UserAccount {
   wallet_name?: string
 }
 
+export interface AccountItem {
+  id: number
+  user_id: string
+  account_out_code: string
+  account: string
+  account_type: string
+  chain: 'eip155'
+  connector: 'dynamic' | 'ton'
+  wallet_name: string
+  public_identifier: string
+}
+
+export interface OldUserInfo {
+  avatar_url: string
+  username: string | null
+  email: string | null
+  user_id: string
+  code: string
+  roles: string | null
+  inviter_code: string | null
+  status: string
+  wallet_address: string | null
+  new_user: boolean
+  accounts: AccountItem[]
+  social_account_info: { channel: string; name: string }[]
+  current_account_info: {
+    account: string
+    account_type: 'email' | 'blockchain' | 'wallet' | null
+    connector: 'dynamic' | 'ton' | null
+  }
+}
+
 export interface UserInfo {
   user_reputation: string
   user_data: {
@@ -32,6 +64,12 @@ class UserApi {
       '/user/get/user_info'
     )
     return res.data
+  }
+
+  async getDetail() {
+    const { data } = await request.get<OldUserInfo>('/user/details')
+    // updateUserInfo(data)
+    return data
   }
 
   async updateRelatedInfo(info: object) {

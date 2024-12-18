@@ -73,11 +73,17 @@ export default defineConfig({
     port: 5175,
     host: '0.0.0.0',
     proxy: {
-      '^/api/(?!v2/task/categories)': {
+      '^/api/v2': {
         target: 'https://app.codatta.io/',
         changeOrigin: true,
         configure: proxyDebug
       }
+      // '^/api/v2': {
+      //   target: 'https://app.codatta.io/',
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/\/v2/, ''),
+      //   configure: proxyDebug
+      // }
     }
   }
 })

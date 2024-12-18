@@ -3,7 +3,15 @@ import { theme, ThemeConfig } from 'antd'
 const themeConfig: ThemeConfig = {
   algorithm: theme.darkAlgorithm,
   token: {
-    colorPrimary: '#875DFF'
+    colorPrimary: '#875DFF',
+    boxShadow: 'none',
+    colorSuccess: '#00C165',
+    colorInfo: '#0A77FF',
+    colorLink: '#875DFF',
+    // colorBgBase: '#1C1C26',
+    borderRadius: 8,
+    colorBorder: '#404049',
+    colorLinkHover: '#ffffff80'
 
     // screenXS: 0,
     // screenXSMax: 576,
@@ -18,6 +26,11 @@ const themeConfig: ThemeConfig = {
     // screenXXL: 1536
   },
   components: {
+    Button: {
+      primaryShadow: 'none',
+      fontSizeLG: 14,
+      boxShadow: 'none'
+    },
     Modal: {
       contentBg: '#1C1C26',
       colorBgMask: 'rgba(0,0, 0, 0.8)',

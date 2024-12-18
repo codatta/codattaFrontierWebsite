@@ -1,27 +1,27 @@
-import { AxiosInstance } from 'axios'
 import request from './request'
 import type { UserInfo } from './user.api'
 
 class TaskApi {
-  constructor(private request: AxiosInstance) {}
-
   async getActivities() {
-    const res = await this.request.post('/task/categories')
+    const res = await request.post('/task/categories')
     console.log(res)
     return res.data.data
-    return (await this.request.post<ActivityGroup[]>('/task/categories')).data
+    return (await request.post<ActivityGroup[]>('/task/categories')).data
   }
 
-  async getActivity(activityId: Activity['sub_cate_id']): Promise<Activity> {
-    const { data } = await this.request.post('/task/sub_categories', {
+  async getActivity(
+    activityId: Activity['sub_cate_id'] = ''
+  ): Promise<Activity> {
+    const { data } = await request.post('/task/sub_categories', {
       sub_cate_id: activityId
     })
+    return data.data
     return data
   }
 
   async receiveReward(taskInstanceId: string) {
     return (
-      await this.request.post<TaskReward[]>('/task/reward', {
+      await request.post<TaskReward[]>('/task/reward', {
         instance_id: taskInstanceId
       })
     ).data
@@ -29,7 +29,7 @@ class TaskApi {
 
   async verify(taskId: string) {
     return (
-      await this.request.post<{
+      await request.post<{
         verify_result: 'PASSED' | 'FAILED'
         instance_id: Task_New['instance_id']
         rewards: TaskReward[]
@@ -39,21 +39,21 @@ class TaskApi {
   }
 
   // async getQuestDetail(questId: string) {
-  //   const { data } = await this.request.post<any>('/quest/detail', {
+  //   const { data } = await request.post<any>('/quest/detail', {
   //     quest_id: questId
   //   })
   //   return data
   // }
 
   async finishTask(taskConfigId: string) {
-    const { data } = await this.request.post('/task/finish', {
+    const { data } = await request.post('/task/finish', {
       task_config_id: taskConfigId
     })
     return data
   }
 
   async getCheckinInfo() {
-    const { data } = await this.request.post<{
+    const { data } = await request.post<{
       check_in_days: number
       is_check_in: boolean
     }>('/check-in/consult')
@@ -61,7 +61,7 @@ class TaskApi {
   }
 
   async updateCheckin(params?: { chain: string; hash: string }) {
-    const { data } = await this.request.post<{ check_in_days: number }>(
+    const { data } = await request.post<{ check_in_days: number }>(
       '/check-in/check-in',
       params || {}
     )
@@ -69,7 +69,7 @@ class TaskApi {
   }
 
   async getCheckHistory(chain: string, year: number, month: number) {
-    const { data } = await this.request.post('/task/chain/check/history', {
+    const { data } = await request.post('/task/chain/check/history', {
       chain,
       year,
       month
@@ -78,7 +78,7 @@ class TaskApi {
   }
 }
 
-export default new TaskApi(request)
+export default new TaskApi()
 
 export enum TaskCategory {
   CompleteProfile = 'COMPELTE_PROFILE',

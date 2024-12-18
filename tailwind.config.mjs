@@ -6,12 +6,14 @@ module.exports = {
   darkMode: ['class'],
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    boxShadow: {
+      DEFAULT: '0px 4px 8px 0px #875DFF1A, 0px 14px 14px 0px #875DFF17'
+    },
     extend: {
-      boxShadow: {
-        primary: '0px 4px 8px 0px #875DFF1A, 0px 14px 14px 0px #875DFF17'
-      },
       colors: {
-        primary: '#875DFF',
+        primary: {
+          DEFAULT: '#875DFF'
+        },
         gray: {
           DEFAULT: '#1C1C26',
           50: '#252532',
@@ -24,6 +26,28 @@ module.exports = {
           700: '#BBBBBE',
           800: '#D2D2D4',
           900: '#E8E8E9'
+        }
+      },
+      keyframes: {
+        uneZoomIn: {
+          '0%': {
+            opacity: 0,
+            transform: 'scale3d(0.3, 0.3, 0.3)'
+          },
+          '50%': {
+            opacity: 1
+          }
+        },
+        uneZoomOut: {
+          '0%': {
+            opacity: 1
+          },
+          '50%': {
+            transform: 'scale3d(0.3, 0.3, 0.3)'
+          },
+          '50%,to': {
+            opacity: 0
+          }
         }
       }
     },

@@ -51,10 +51,10 @@ export default function Component() {
 const ActivityCard = ({ summary: activity }: { summary: ActivitySummary }) => {
   const highLight = activity.sub_cate_id === 'SUBCATE010'
   return (
-    <Link to={'/app/quest/' + activity.sub_cate_id}>
+    <Link to={'/quest/' + activity.sub_cate_id}>
       <div
         className={cn(
-          `relative h-full rounded-2xl border border-gray-50 bg-gray-50 px-6 pb-3 pt-6 transition-all hover:border hover:border-primary hover:shadow-primary`,
+          `relative h-full rounded-2xl border border-gray-50 bg-gray-50 px-6 pb-3 pt-6 transition-all hover:border hover:border-primary hover:shadow`,
           highLight ? 'bg-primary hover:border-white' : ''
         )}
       >
@@ -89,29 +89,31 @@ const ActivityCard = ({ summary: activity }: { summary: ActivitySummary }) => {
               <Badge
                 count={activity.finished_count}
                 size="small"
-                className="[&>.ant-badge-count]:shadow-none"
+                className="[&_.ant-badge-count]:[box-shadow:none]"
                 style={{
                   color: '#fff',
                   fontSize: '12px'
                 }}
-              ></Badge>
+              />
             </Button>
           </Col>
           <Col className="max-w-[50%]">
             <Flex vertical gap={6} align="center" wrap>
               <div>
                 <Avatar.Group>
-                  {activity.avatars?.slice(0, 3).map((src, index) => (
-                    <Avatar
-                      key={index}
-                      src={src}
-                      size={24}
-                      style={{
-                        background: '#333',
-                        border: '1px solid #DDD'
-                      }}
-                    />
-                  ))}
+                  {activity.avatars
+                    ?.slice(0, 3)
+                    .map((src: string, index: number) => (
+                      <Avatar
+                        key={index}
+                        src={src}
+                        size={24}
+                        style={{
+                          background: '#333',
+                          border: '1px solid #DDD'
+                        }}
+                      />
+                    ))}
                   <Avatar
                     icon={<Ellipsis color="#727272" />}
                     size={24}
