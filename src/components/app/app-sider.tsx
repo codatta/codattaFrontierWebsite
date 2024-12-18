@@ -130,7 +130,7 @@ const menuItems: MenuItem[] = [
   },
   {
     icon: <IconEcosystem color={'white'} size={24} />,
-    key: '/ecosystem',
+    key: '/leaderboard',
     label: 'Leaderboard'
   },
   {

@@ -5,11 +5,12 @@ import RoboticsLayout from '@/layouts/robotics-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
 
-const Home = lazy(() => import('@/views/home'))
 const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
+const Home = lazy(() => import('@/views/home'))
+const Leaderboard = lazy(() => import('@/views/leaderboard'))
 const SettingAccount = lazy(() => import('@/views/settings/account'))
 
 export default function Router() {
@@ -17,7 +18,6 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <Route path="/frontier">
-          <Route path="home" element={<Home />} />
           <Route path="robotics" element={<RoboticsLayout />}>
             <Route
               path="ROBOTICS_TPL_000001/:taskId"
@@ -35,6 +35,8 @@ export default function Router() {
         </Route>
 
         <Route Component={AppLayout}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
           </Route>

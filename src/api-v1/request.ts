@@ -31,3 +31,9 @@ export interface PaginationResponse<T> extends Response<T> {
   total_page: number
   page: number
 }
+
+export type PaginatedResponse<T> = {
+  data: T
+  total_count: number
+  total_page: number
+}
