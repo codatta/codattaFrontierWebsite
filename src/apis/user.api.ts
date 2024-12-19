@@ -19,7 +19,11 @@ export interface UserInfo {
     user_name: string
   }
   user_assets: {
-    asset: string
+    asset_type: 'POINTS'
+    balance: {
+      amount: string
+      currency: string
+    }
   }[]
   accounts_data: UserAccount[]
 }

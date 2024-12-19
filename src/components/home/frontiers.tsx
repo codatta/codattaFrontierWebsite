@@ -12,13 +12,13 @@ const Frontiers = () => {
       name: 'Crypto',
       img: crypto,
       desc: 'Collecting data on wallet addresses and transaction flows enhances transparency in the crypto ecosystem. This transparency enables AI models to detect fraud, improve compliance, and promote a safer environment for all participants, fostering trust in decentralized finance.',
-      active: () => navigate('/app/crypto')
+      active: () => navigate('/frontier/crypto')
     },
     {
       name: 'Fashion',
       img: fashion,
       desc: 'Codatta Fashion is more than just a data collection platform-it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.',
-      active: () => navigate('/app/fashion')
+      active: () => navigate('/frontier/fashion')
     },
     {
       name: 'Healthcare',
@@ -30,7 +30,7 @@ const Frontiers = () => {
       name: 'Robotics',
       img: robotics,
       desc: 'Visual data annotation is essential for training large AI models in robotics, especially for object recognition and spatial awareness. High-quality labeled data helps improve the accuracy of robotic vision, enabling robots to perform complex tasks with greater precision and adaptability.',
-      active: () => navigate('/app/robotics')
+      active: () => navigate('/frontier/robotics')
     }
   ]
 

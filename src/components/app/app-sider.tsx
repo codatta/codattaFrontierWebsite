@@ -151,7 +151,7 @@ const menuItems: MenuItem[] = [
   {
     icon: <IconHome color={'white'} size={24} />,
     label: 'Home',
-    key: '/home'
+    key: '/'
   },
   {
     icon: <IconQuest color={'white'} size={24} />,
@@ -181,13 +181,13 @@ const menuItems: MenuItem[] = [
   {
     icon: <IconMail color={'white'} size={24} />,
     key: '/app/notification',
-    label: <NotificationMenu />
+    label: <NotificationMenu />,
+    className: 'mt-auto'
   },
   {
     icon: <IconSetting color={'white'} size={24} />,
-    key: '/settings',
-    label: 'User Settings',
-    className: 'mt-auto'
+    key: '/settings/account',
+    label: 'User Settings'
   },
   {
     icon: <UserAvatar />,
@@ -270,7 +270,6 @@ export default function AppSider() {
     <div className="flex size-full flex-col py-6">
       <LogoSection />
       <AppNav className="flex-1" />
-      {/* <AppUser /> */}
     </div>
   )
 }

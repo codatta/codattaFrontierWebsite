@@ -1,6 +1,10 @@
 // import { TourMock } from '@/api/tour-mock'
 // import { updateUserInfo } from '@/store/user.store'
-import request, { type PaginationParam, PaginationResponse } from './request'
+import request, {
+  type PaginationParam,
+  PaginationResponse,
+  Response
+} from './request'
 
 class UserApi {
   async getInfo() {
@@ -37,12 +41,12 @@ class UserApi {
     return res.data
   }
 
-  // @TourMock(() => '2')
   async getReputation() {
-    const { data } = await request.post<{ reputation: string } | null>(
+    const res = await request.post<Response<{ reputation: string }>>(
       '/user/reputation/info'
     )
-    return data?.reputation ?? '0'
+    console.log(res)
+    return res.data.data.reputation ?? '0'
   }
 
   async getRewards(
@@ -50,17 +54,6 @@ class UserApi {
   ): Promise<PaginationResponse<UserReword[]>> {
     return request.post('/user/rewards', pagination)
   }
-
-  // only for test
-  // async setRiskLogin() {
-  //   const { data } = await request.post('/risk/login')
-  //   return data
-  // }
-
-  // async setRiskSignup() {
-  //   const { data } = await request.post('/risk/signup')
-  //   return data
-  // }
 }
 
 const userApi = new UserApi()

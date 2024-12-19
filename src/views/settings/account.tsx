@@ -496,7 +496,7 @@ function UserSecurity() {
             <WalletConnectButton />
           </TaskTarget>
         </div>
-        <div className="rounded-xl bg-gray-200 px-4">
+        <div className="rounded-xl bg-white/65 px-4">
           {walletAccounts?.map((item) => {
             return (
               <WalletAccountItem

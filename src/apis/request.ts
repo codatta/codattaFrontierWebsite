@@ -60,3 +60,15 @@ export interface Response<T> {
   errorCode: 0
   errorMessage: string
 }
+
+export interface PaginationParam {
+  page: number
+  page_size: number
+}
+
+export interface PaginationResponse<T> extends Response<T> {
+  data: T
+  total_count: number
+  total_page: number
+  page: number
+}
