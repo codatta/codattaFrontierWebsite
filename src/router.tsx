@@ -10,6 +10,7 @@ const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
 const Home = lazy(() => import('@/views/home'))
+const Referral = lazy(() => import('@/views/referral'))
 const Leaderboard = lazy(() => import('@/views/leaderboard'))
 const SettingAccount = lazy(() => import('@/views/settings/account'))
 
@@ -36,6 +37,7 @@ export default function Router() {
 
         <Route Component={AppLayout}>
           <Route path="/home" element={<Home />} />
+          <Route path="/referral" element={<Referral />} />
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
