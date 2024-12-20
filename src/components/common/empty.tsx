@@ -1,5 +1,5 @@
 import ImageEmpty from '@/assets/images/empty.svg'
-import { Empty } from 'antd'
+// import { Empty } from 'antd'
 
 export default function CustomEmpty(props: { text?: string }) {
   const { text = 'No Data' } = props
@@ -13,12 +13,12 @@ export default function CustomEmpty(props: { text?: string }) {
   )
 }
 
-export function CustomEmpty2() {
-  return (
-    <Empty
-      image={Empty.PRESENTED_IMAGE_SIMPLE}
-      imageStyle={{ height: 60 }}
-      description={<span>No data</span>}
-    ></Empty>
-  )
-}
+// export function CustomEmpty2() {
+//   return (
+//     <Empty
+//       image={Empty.PRESENTED_IMAGE_SIMPLE}
+//       imageStyle={{ height: 60 }}
+//       description={<span>No data</span>}
+//     ></Empty>
+//   )
+// }
