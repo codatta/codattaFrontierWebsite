@@ -56,6 +56,12 @@ export interface UserInfo {
   accounts_data: UserAccount[]
 }
 
+export type SummaryUserInfo = {
+  avatar: UserInfo['user_data']['avatar']
+  flag: boolean
+  rank: number
+} & Pick<OldUserInfo, 'email' | 'user_id'>
+
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -74,6 +80,13 @@ class UserApi {
 
   async updateRelatedInfo(info: object) {
     return this.request.post('/user/update/related_info', info)
+  }
+
+  async getReputation() {
+    const { data } = await request.post<{ reputation: string } | null>(
+      '/user/reputation/info'
+    )
+    return data?.reputation ?? '0'
   }
 }
 

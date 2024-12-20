@@ -526,8 +526,8 @@ export default function SettingsAccount() {
   return (
     <TransitionEffect className="flex flex-1 flex-wrap gap-6 px-6">
       <div className="flex flex-1 flex-col text-sm">
-        <h2 className="mb-4 font-semibold">Personal Info</h2>
-        <div className="mb-6">
+        <h2 className="mb-4 text-base font-semibold">Personal Info</h2>
+        {/* <div className="mb-6">
           <div className="mb-4">
             <h3 className="mb-4 text-sm">Avatar</h3>
             <UserAvatarEditor></UserAvatarEditor>
@@ -536,9 +536,9 @@ export default function SettingsAccount() {
             <h3 className="mb-4">Name</h3>
             <UserNameEditor></UserNameEditor>
           </div>
-        </div>
+        </div> */}
         <div className="mb-10">
-          <h2 className="mb-4 text-base font-medium">Login & Secuity</h2>
+          {/* <h2 className="mb-4 text-base font-medium">Login & Secuity</h2> */}
           <UserSecurity></UserSecurity>
         </div>
       </div>

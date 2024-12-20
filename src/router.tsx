@@ -1,4 +1,4 @@
-import { Route, BrowserRouter, Routes } from 'react-router-dom'
+import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 
 import RoboticsLayout from '@/layouts/robotics-layout'
@@ -10,6 +10,9 @@ const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
 const SettingAccount = lazy(() => import('@/views/settings/account'))
+const SettingReward = lazy(() => import('@/views/settings/reward'))
+const SettingReputation = lazy(() => import('@/views/settings/reputation'))
+
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
 const Activity = lazy(() => import('@/views/quest/activity'))
 
@@ -36,7 +39,10 @@ export default function Router() {
 
         <Route Component={AppLayout}>
           <Route path="/settings" element={<SettingsLayout />}>
+            <Route path="" element={<Navigate to="account" replace />} />
             <Route path="account" element={<SettingAccount />} />
+            <Route path="reward" element={<SettingReward />} />
+            <Route path="reputation" element={<SettingReputation />} />
           </Route>
           <Route path="/quest">
             <Route path="" element={<ActivityGroup />} />

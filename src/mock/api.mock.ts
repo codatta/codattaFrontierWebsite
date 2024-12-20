@@ -162,66 +162,191 @@ export default defineMock([
     body: { data: {}, success: true, errorCode: 0, errorMessage: 'SUCCESS' }
   },
   {
-    url: '/api/v2/task/sub_categories',
+    url: '/api/v2/user/get/user_info',
     method: 'POST',
     body: {
       data: {
-        sub_cate_id: 'SUBCATE012',
-        sub_cate_name: 'Submit Fashion data from Codatta Clip',
-        sub_cate_description:
-          'Submit your fashion data from Codatta Clip now and earn exciting rewards while helping us enhance our product offerings!',
-        tasks: [
+        user_data: {
+          user_id: '187531083055104',
+          user_name: null,
+          avatar: 'https://file.b18a.io/default.png',
+          referee_code: '9205669O'
+        },
+        accounts_data: [
           {
-            task_id: 'SUBMIT-INS-DATA',
-            name: 'Submit fashion data from Codatta Clip',
-            description:
-              'Submit fashion data to maximize your rewards. This task offers unlimited submission opportunities. Unlocking endless opportunities to earn!(Rewards will be calculated within several minutes)',
-            type: 'MANUAL',
-            schema:
-              'https://chromewebstore.google.com/detail/codatta-clip/doklnekkemmhclakfekoccilofpdcncb?hl=zh-CN&utm_source=ext_sidebar',
-            rewards: [
-              {
-                reward_icon:
-                  'https://file.b18a.io/ee6ce56e-6080-411d-9ccf-62c5899e9052_810879_.png',
-                reward_type: 'points',
-                reward_value: '60'
-              }
-            ],
-            locked: false,
-            how_to_unlock: null,
-            refresh_time: null,
-            duration: 0,
-            instance_id: 'UT202412180533222845',
-            status: 'PENDING',
-            completed_times: 1,
-            expire_time: '2099-11-11T00:00:00+00:00'
-          },
-          {
-            task_id: 'SUBMIT-INS-USER-DATA',
-            name: 'Submit User homepage data from Codatta Clip',
-            description:
-              'Share your homepage data to boost your rewards! With unlimited submission opportunities, you can unlock countless ways to earn!(Rewards will be calculated within several minutes)',
-            type: 'MANUAL',
-            schema:
-              'https://chromewebstore.google.com/detail/codatta-clip/doklnekkemmhclakfekoccilofpdcncb?hl=zh-CN&utm_source=ext_sidebar',
-            rewards: [
-              {
-                reward_icon:
-                  'https://file.b18a.io/ee6ce56e-6080-411d-9ccf-62c5899e9052_810879_.png',
-                reward_type: 'points',
-                reward_value: '20'
-              }
-            ],
-            locked: false,
-            how_to_unlock: null,
-            refresh_time: null,
-            duration: 0,
-            instance_id: 'UT202412180723472847',
-            status: 'PENDING',
-            completed_times: 1,
-            expire_time: '2099-11-11T00:00:00+00:00'
+            account_type: 'block_chain',
+            account: '0xbC4c61820812a5A48724058A523644b911F28ea1',
+            current_account: true
           }
-        ]
+        ],
+        user_assets: [
+          {
+            asset_id: '100575156051968',
+            asset_type: 'POINTS',
+            balance: {
+              currency: 'POINTS',
+              amount: '1705.0000000000'
+            },
+            status: 'ACTIVE'
+          }
+        ],
+        user_reputation: null
+      },
+      success: true,
+      errorCode: 0,
+      errorMessage: 'SUCCESS'
+    }
+  },
+  {
+    url: '/api/v2/customer/asset/entries',
+    method: 'POST',
+    body: {
+      data: [
+        {
+          create_at: 1734506682.0,
+          user_id: '187531083055104',
+          transaction_id: 'TSK202412160928194567',
+          asset_id: '100575156051968',
+          amount: {
+            currency: 'POINTS',
+            amount: '20.0000000000'
+          },
+          status: 'SUCCESS',
+          transaction_txh: null,
+          stage: 'SUBMISSION'
+        },
+        {
+          create_at: 1734506627.0,
+          user_id: '187531083055104',
+          transaction_id: 'UT202412180723472847',
+          asset_id: '100575156051968',
+          amount: {
+            currency: 'POINTS',
+            amount: '500.0000000000'
+          },
+          status: 'SUCCESS',
+          transaction_txh: null,
+          stage: 'SUBMISSION'
+        },
+        {
+          create_at: 1734500003.0,
+          user_id: '187531083055104',
+          transaction_id: 'UT202412180533222845',
+          asset_id: '100575156051968',
+          amount: {
+            currency: 'POINTS',
+            amount: '540.0000000000'
+          },
+          status: 'SUCCESS',
+          transaction_txh: null,
+          stage: 'SUBMISSION'
+        },
+        {
+          create_at: 1734498928.0,
+          user_id: '187531083055104',
+          transaction_id: 'UT202412180515282844',
+          asset_id: '100575156051968',
+          amount: {
+            currency: 'POINTS',
+            amount: '100.0000000000'
+          },
+          status: 'SUCCESS',
+          transaction_txh: null,
+          stage: 'SUBMISSION'
+        },
+        {
+          create_at: 1734379972.0,
+          user_id: '187531083055104',
+          transaction_id: 'VD202412160928297774',
+          asset_id: '100575156051968',
+          amount: {
+            currency: 'POINTS',
+            amount: '5.0000000000'
+          },
+          status: 'SUCCESS',
+          transaction_txh: null,
+          stage: 'SUBMISSION'
+        }
+      ],
+      page_num: 1,
+      page_size: 5,
+      total_count: 36,
+      total_page: 8,
+      success: true,
+      errorCode: 0,
+      errorMessage: 'SUCCESS'
+    }
+  },
+  {
+    url: 'api/v2/reputation/entry',
+    method: 'POST',
+    body: {
+      data: [
+        {
+          type: 'INCREASE',
+          memo: 'Validation',
+          date: '2024-12-16 20:12:52'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Validation',
+          date: '2024-12-16 18:13:21'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Validation',
+          date: '2024-12-09 19:52:59'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Validation',
+          date: '2024-12-09 18:19:38'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Validation',
+          date: '2024-12-09 16:39:26'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Understand validation and choose the correct answer.',
+          date: '2024-12-09 04:29:22'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Successfully complete two validations.',
+          date: '2024-12-09 04:27:49'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Understand submission and choose the correct answer.',
+          date: '2024-12-09 04:25:40'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Complete three valid submissions.',
+          date: '2024-12-09 04:24:18'
+        },
+        {
+          type: 'INCREASE',
+          memo: 'Submitted data once from Codatta Clip',
+          date: '2024-12-09 04:23:29'
+        }
+      ],
+      success: true,
+      errorCode: 0,
+      errorMessage: 'SUCCESS',
+      total_count: 13,
+      total_page: 2,
+      page: 1
+    }
+  },
+  {
+    url: 'api/v2/user/reputation/info',
+    method: 'POST',
+    body: {
+      data: {
+        reputation: 0.19324999999999998
       },
       success: true,
       errorCode: 0,

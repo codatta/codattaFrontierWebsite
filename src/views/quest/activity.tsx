@@ -6,7 +6,7 @@ import taskApi, {
 } from '@/apis/task.api'
 import TaskAction from '@/components/task/task-action'
 import TaskCard from '@/components/task/task-card'
-// import TransitionEffect from '@/components/common/transition-effect'
+import TransitionEffect from '@/components/common/transition-effect'
 import useRequest from '@/hooks/useRequest'
 import {
   activity as activityStore,
@@ -132,60 +132,60 @@ export default function Component() {
   }, [])
 
   return (
-    // <TransitionEffect>
-    <div className="">
-      <div className="mb-6 flex items-center gap-2">
-        <ArrowLeft
-          size={28}
-          onClick={() => navigate(-1)}
-          className="cursor-pointer"
-        />
-        <h1 className="text-2xl font-bold leading-9">Quest</h1>
-      </div>
-      <div className="flex flex-col gap-6">
-        {contextHolder}
-        {consult !== undefined && (
-          <>
-            <Summary
-              id={categoryId ?? ''}
-              activity={activity ?? null}
-              compact={!!consult}
-            />
-          </>
-        )}
-        <Spin
-          spinning={loading}
-          className="!max-h-full"
-          wrapperClassName={
-            '[&>.ant-spin-blur::after]:bg-transparent [&>div>.ant-spin]:max-h-[calc(100vh_-_220px)]'
-          }
-        >
-          {sortedTasks.length ? (
-            <Flex vertical gap={32} component="ul">
-              {sortedTasks.map((task) => {
-                return (
-                  <TaskCard
-                    key={task.task_id}
-                    task={task}
-                    action={
-                      <TaskAction
-                        task={task}
-                        onReward={onReward}
-                        onPending={handleActionPending}
-                      />
-                    }
-                    onTimeout={() => getActivity(categoryId ?? '')}
-                  />
-                )
-              })}
-            </Flex>
-          ) : (
-            <div className="h-[calc(100vh_-_220px)]"></div>
+    <TransitionEffect>
+      <div className="">
+        <div className="mb-6 flex items-center gap-2">
+          <ArrowLeft
+            size={28}
+            onClick={() => navigate(-1)}
+            className="cursor-pointer"
+          />
+          <h1 className="text-2xl font-bold leading-9">Quest</h1>
+        </div>
+        <div className="flex flex-col gap-6">
+          {contextHolder}
+          {consult !== undefined && (
+            <>
+              <Summary
+                id={categoryId ?? ''}
+                activity={activity ?? null}
+                compact={!!consult}
+              />
+            </>
           )}
-        </Spin>
+          <Spin
+            spinning={loading}
+            className="!max-h-full"
+            wrapperClassName={
+              '[&>.ant-spin-blur::after]:bg-transparent [&>div>.ant-spin]:max-h-[calc(100vh_-_220px)]'
+            }
+          >
+            {sortedTasks.length ? (
+              <Flex vertical gap={32} component="ul">
+                {sortedTasks.map((task) => {
+                  return (
+                    <TaskCard
+                      key={task.task_id}
+                      task={task}
+                      action={
+                        <TaskAction
+                          task={task}
+                          onReward={onReward}
+                          onPending={handleActionPending}
+                        />
+                      }
+                      onTimeout={() => getActivity(categoryId ?? '')}
+                    />
+                  )
+                })}
+              </Flex>
+            ) : (
+              <div className="h-[calc(100vh_-_220px)]"></div>
+            )}
+          </Spin>
+        </div>
       </div>
-    </div>
-    // </TransitionEffect>
+    </TransitionEffect>
   )
 }
 

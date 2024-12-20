@@ -19,10 +19,13 @@ import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
+import AppUser from './app-user'
+
 interface MenuItem {
   icon: ReactNode
   label: string | ReactNode
   key: string
+  style?: object
 }
 
 function AppNavItem(props: {
@@ -31,7 +34,7 @@ function AppNavItem(props: {
   onClick: (item: MenuItem) => void
 }) {
   const { item, selectedKey, onClick } = props
-  const { icon, label, key } = props.item
+  const { icon, label, key, style } = props.item
   const [active, setActive] = useState(false)
 
   useEffect(() => {
@@ -45,7 +48,7 @@ function AppNavItem(props: {
   }
 
   return (
-    <div className="group relative">
+    <div style={style} className="group relative">
       <div
         className="py-0.5 pl-4 pr-2 lg:pr-0"
         onClick={() => handleClick(item)}
@@ -146,7 +149,10 @@ const menuItems: MenuItem[] = [
   {
     icon: <IconMail color={'white'} size={24} />,
     key: '/app/notification',
-    label: <NotificationMenu />
+    label: <NotificationMenu />,
+    style: {
+      marginTop: 'auto'
+    }
   },
   {
     icon: <IconSetting color={'white'} size={24} />,
@@ -229,7 +235,7 @@ export default function AppSider() {
     <div className="flex size-full flex-col py-6">
       <LogoSection />
       <AppNav className="flex-1" />
-      {/* <AppUser /> */}
+      <AppUser />
     </div>
   )
 }

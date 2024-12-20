@@ -3,9 +3,6 @@ import type { UserInfo } from './user.api'
 
 class TaskApi {
   async getActivities() {
-    const res = await request.post('/task/categories')
-    console.log(res)
-    return res.data.data
     return (await request.post<ActivityGroup[]>('/task/categories')).data
   }
 
@@ -15,7 +12,6 @@ class TaskApi {
     const { data } = await request.post('/task/sub_categories', {
       sub_cate_id: activityId
     })
-    return data.data
     return data
   }
 

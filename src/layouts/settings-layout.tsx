@@ -29,7 +29,7 @@ function SettingsMenu() {
           key={item.key}
           onClick={() => handleMenuClick(item)}
           className={cn(
-            'px-6 py-4 transition-all duration-300',
+            'px-6 py-3 transition-all duration-300',
             location.pathname === item.key
               ? 'border-r-[3px] border-r-primary bg-primary/25'
               : ''
@@ -45,7 +45,9 @@ function SettingsMenu() {
 export default function SettingsLayout() {
   return (
     <TransitionEffect className="">
-      <h1 className="mb-2 text-4xl font-semibold leading-8">User Settings</h1>
+      <h1 className="mb-2 text-[32px] font-semibold leading-8">
+        User Settings
+      </h1>
       <p className="mb-6">Manage your account settings and preferences</p>
       <div className="flex rounded-2xl bg-white/10 py-6">
         <SettingsMenu />
