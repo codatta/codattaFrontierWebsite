@@ -1,7 +1,7 @@
 import request, {
   type Response,
-  PaginationParam,
-  PaginatedResponse
+  PaginationParam
+  // PaginatedResponse
 } from './request'
 // import { TourMock } from '@/api/tour-mock'
 import type { SummaryUserInfo } from './user.api'
@@ -28,12 +28,12 @@ class ReputationApi {
   }
 
   // @TourMock(() => import('@/api/mock/reputations.json'))
-  async getReputations(pagination: PaginationParam) {
-    return await request.post<void, PaginatedResponse<Reputation[]>>(
-      '/reputation/entry',
-      pagination
-    )
-  }
+  // async getReputations(pagination: PaginationParam) {
+  //   return await request.post<void, PaginatedResponse<Reputation[]>>(
+  //     '/reputation/entry',
+  //     pagination
+  //   )
+  // }
 }
 
 const reputationApi = new ReputationApi()
@@ -42,12 +42,12 @@ export default reputationApi
 export type UserContribution = SummaryUserInfo & { contribute: string }
 export type UserReputation = SummaryUserInfo & { reputation: string }
 
-export enum ReputationType {
-  Increase = 'INCREASE',
-  Decrease = 'DECREASE'
-}
-export interface Reputation {
-  type: ReputationType
-  memo: string
-  date: string
-}
+// export enum ReputationType {
+//   Increase = 'INCREASE',
+//   Decrease = 'DECREASE'
+// }
+// export interface Reputation {
+//   type: ReputationType
+//   memo: string
+//   date: string
+// }

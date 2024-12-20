@@ -1,30 +1,33 @@
 // import { TourMock } from '@/api/tour-mock'
 // import { updateUserInfo } from '@/store/user.store'
-import request, { type PaginationParam, PaginationResponse } from './request'
+import request, {
+  type PaginationParam
+  //  PaginationResponse
+} from './request'
 
 class UserApi {
-  async getInfo() {
-    const res = await request.get<UserInfo>('/user/info')
-    return res.data
-  }
+  // async getInfo() {
+  //   const res = await request.get<UserInfo>('/user/info')
+  //   return res.data
+  // }
 
-  async getDetail() {
-    const { data } = await request.get<UserInfo>('/user/details')
-    // updateUserInfo(data)
-    return data
-  }
+  // async getDetail() {
+  //   const { data } = await request.get<UserInfo>('/user/details')
+  //   // updateUserInfo(data)
+  //   return data
+  // }
 
-  async getBalance() {
-    const {
-      data: { balance }
-    } = await request.post<{ balance: number }>('/user/token/info')
-    return balance
-  }
+  // async getBalance() {
+  //   const {
+  //     data: { balance }
+  //   } = await request.post<{ balance: number }>('/user/token/info')
+  //   return balance
+  // }
 
-  async updateInfo(userFields: Partial<EditableUserInfo>) {
-    const { data } = await request.post<boolean>('/user/update', userFields)
-    return data
-  }
+  // async updateInfo(userFields: Partial<EditableUserInfo>) {
+  //   const { data } = await request.post<boolean>('/user/update', userFields)
+  //   return data
+  // }
 
   async getInviteRecords(
     pagination: PaginationParam = { page: 1, page_size: 20 }
@@ -38,18 +41,18 @@ class UserApi {
   }
 
   // @TourMock(() => '2')
-  async getReputation() {
-    const { data } = await request.post<{ reputation: string } | null>(
-      '/user/reputation/info'
-    )
-    return data?.reputation ?? '0'
-  }
+  // async getReputation() {
+  //   const { data } = await request.post<{ reputation: string } | null>(
+  //     '/user/reputation/info'
+  //   )
+  //   return data?.reputation ?? '0'
+  // }
 
-  async getRewards(
-    pagination: PaginationParam = { page: 1, page_size: 20 }
-  ): Promise<PaginationResponse<UserReword[]>> {
-    return request.post('/user/rewards', pagination)
-  }
+  // async getRewards(
+  //   pagination: PaginationParam = { page: 1, page_size: 20 }
+  // ): Promise<PaginationResponse<UserReword[]>> {
+  //   return request.post('/user/rewards', pagination)
+  // }
 
   // only for test
   // async setRiskLogin() {
@@ -121,12 +124,12 @@ export interface InviteRecord {
   address?: string
 }
 
-export interface UserReword {
-  address: string
-  amount: number
-  award_stage: string
-  category: string
-  entity: string
-  network: string
-  transaction_id: string
-}
+// export interface UserReword {
+//   address: string
+//   amount: number
+//   award_stage: string
+//   category: string
+//   entity: string
+//   network: string
+//   transaction_id: string
+// }
