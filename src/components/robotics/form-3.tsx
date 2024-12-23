@@ -8,11 +8,7 @@ import EnvironmentCard from './environment-card'
 import AgentCard from './agent-card'
 import ViewCard from './view-card'
 
-export default function Component({
-  onSubmit
-}: {
-  onSubmit: (data: object) => Promise<unknown>
-}) {
+export default function Component({ onSubmit }: { onSubmit: (data: object) => Promise<unknown> }) {
   const [form] = Form.useForm()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -30,9 +26,7 @@ export default function Component({
     setIsSubmitting(false)
   }
 
-  function convertObjectToArray(
-    obj: Record<string, object>
-  ): Record<string, object> {
+  function convertObjectToArray(obj: Record<string, object>): Record<string, object> {
     const result: Record<string, object> = {}
     const arrayFields: Record<string, object[]> = {}
     const agentType: Record<string, { [key: string]: object }> = {}
@@ -73,12 +67,7 @@ export default function Component({
 
   return (
     <div className="flex flex-col gap-6 pb-10">
-      <Form
-        name="form1"
-        layout="vertical"
-        className="flex flex-col gap-6"
-        form={form}
-      >
+      <Form name="form1" layout="vertical" className="flex flex-col gap-6" form={form}>
         <ObjectsCard form={form} />
         <EnvironmentCard />
         <AgentCard />

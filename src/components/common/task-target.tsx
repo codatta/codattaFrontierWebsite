@@ -25,12 +25,7 @@ export default function TaskTarget(props: TaskTargetProps) {
 
   return (
     <div
-      className={cn(
-        isTarget
-          ? 'animate-[pulsate-fwd_0.5s_ease-in-out_infinite_both]'
-          : 'transition duration-500 ease-in-out',
-        props.className
-      )}
+      className={cn(isTarget ? 'animate-pulse' : 'transition duration-500 ease-in-out', props.className)}
       onClick={() => {
         setIsTarget(false)
         history.replaceState(Object.assign({}, state, { [key]: null }), '')

@@ -26,8 +26,7 @@ export default function AccountSignin() {
 
   const from = sarechParams.get('from') || '/app'
   const source = from === 'extension' ? 'PLUG' : 'WEB'
-  const redirectUrl =
-    from === 'extension' ? '/account/extension/signin' : from || '/app'
+  const redirectUrl = from === 'extension' ? '/account/extension/signin' : from || '/app'
   const channelInfo = useChannelStore()
 
   if (appToken && from !== 'extension') {
@@ -54,9 +53,7 @@ export default function AccountSignin() {
         spinning={loading}
         fullscreen={true}
         size="large"
-        indicator={
-          <LoaderCircle className="animate-spin text-white" size={18} />
-        }
+        indicator={<LoaderCircle className="animate-spin text-white" size={18} />}
       ></Spin>
       <div className="flex h-screen w-full items-center justify-center bg-black p-4">
         <CodattaSignin

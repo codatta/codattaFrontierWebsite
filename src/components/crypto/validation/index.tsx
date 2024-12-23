@@ -8,10 +8,7 @@ import Empty from '@/components/common/empty'
 import { TopList } from './top-list'
 import Navigation from './navigation'
 
-import {
-  validationFilterStore,
-  getValidations
-} from '@/stores/validation-notstart.store'
+import { validationFilterStore, getValidations } from '@/stores/validation-notstart.store'
 import { splitArray } from '@/utils/split-array'
 
 import DetailsV2 from '@/components/crypto/validation/details-v2'
@@ -38,7 +35,7 @@ const TopBox = () => {
         carouselRef?.current?.next()
         break
       case 'more':
-        navigate(`/frontier/crypto/validation/list`)
+        navigate(`/app/crypto/validation/list`)
         break
       default:
         break

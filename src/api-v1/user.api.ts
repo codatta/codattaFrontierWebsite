@@ -1,10 +1,6 @@
 // import { TourMock } from '@/api/tour-mock'
 // import { updateUserInfo } from '@/store/user.store'
-import request, {
-  type PaginationParam,
-  PaginationResponse,
-  Response
-} from './request'
+import request, { type PaginationParam, PaginationResponse, Response } from './request'
 
 class UserApi {
   async getInfo() {
@@ -30,9 +26,7 @@ class UserApi {
     return data
   }
 
-  async getInviteRecords(
-    pagination: PaginationParam = { page: 1, page_size: 20 }
-  ) {
+  async getInviteRecords(pagination: PaginationParam = { page: 1, page_size: 20 }) {
     const res = await request.post<{
       total_count: number
       total_reward: number
@@ -42,9 +36,7 @@ class UserApi {
   }
 
   async getReputation() {
-    const res = await request.post<Response<{ reputation: string }>>(
-      '/user/reputation/info'
-    )
+    const res = await request.post<Response<{ reputation: string }>>('/user/reputation/info')
     console.log(res)
     return res.data.data.reputation ?? '0'
   }
@@ -101,10 +93,7 @@ export type SummaryUserInfo = {
   rank: number
 } & Pick<UserInfo, 'email' | 'user_id'>
 
-export type EditableUserInfo = Pick<
-  UserInfo,
-  'username' | 'avatar_url' | 'inviter_code'
->
+export type EditableUserInfo = Pick<UserInfo, 'username' | 'avatar_url' | 'inviter_code'>
 
 export interface InviteRecord {
   date: string

@@ -24,17 +24,7 @@ const imageLabelStore = proxy<ImageLabelStore>({
   frame: null
 })
 
-export const updateRect = ({
-  x,
-  y,
-  angle,
-  radius
-}: {
-  x?: number
-  y?: number
-  angle?: number
-  radius?: number
-}) => {
+export const updateRect = ({ x, y, angle, radius }: { x?: number; y?: number; angle?: number; radius?: number }) => {
   if (x !== undefined) imageLabelStore.rect.x = x
   if (y !== undefined) imageLabelStore.rect.y = y
   if (angle !== undefined) imageLabelStore.rect.angle = angle

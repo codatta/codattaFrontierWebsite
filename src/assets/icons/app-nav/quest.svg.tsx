@@ -6,13 +6,7 @@ export default function Icon(props: IconProps) {
   const size = props.size || 24
 
   return (
-    <svg
-      width={size}
-      height={(size * 25) / 24}
-      viewBox="0 0 24 25"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width={size} height={(size * 25) / 24} viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M11.9997 21.905C16.5184 21.905 20.1816 18.2419 20.1816 13.7232C20.1816 9.2045 16.5184 5.54135 11.9997 5.54135C7.481 5.54135 3.81787 9.2045 3.81787 13.7232C3.81787 18.2419 7.481 21.905 11.9997 21.905Z"
         stroke={color}

@@ -4,10 +4,7 @@ import CustomEmpty from '@/components/common/empty'
 import { Card } from '@/components/crypto/validation/down-list'
 import TypeOne from '@/components/crypto/validation/type-1'
 
-import {
-  TaskType,
-  validationFilterStore
-} from '@/stores/validation-filter.store'
+import { TaskType, validationFilterStore } from '@/stores/validation-filter.store'
 
 const Index = () => {
   const { pageData } = useSnapshot(validationFilterStore)

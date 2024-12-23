@@ -48,8 +48,7 @@ export async function reloadAnnoucements() {
 
 export async function reloadCheckin() {
   try {
-    const { check_in_days = 0, is_check_in = false } =
-      await taskApi.getCheckinInfo()
+    const { check_in_days = 0, is_check_in = false } = await taskApi.getCheckinInfo()
 
     homeStore.checkin.days = check_in_days
     homeStore.checkin.done = is_check_in

@@ -35,17 +35,11 @@ const Frontiers = () => {
               className="cursor-pointer rounded-2xl bg-[#252532] hover:border-primary hover:shadow-primary sm:flex"
             >
               <div className="flex-none overflow-hidden rounded-2xl sm:w-[260px]">
-                <img
-                  src={item.img}
-                  alt=""
-                  className="aspect-[260/148] object-cover"
-                />
+                <img src={item.img} alt="" className="aspect-[260/148] object-cover" />
               </div>
               <div className="flex flex-1 flex-col overflow-hidden p-6">
                 <h2 className="text-base font-bold">{item.title}</h2>
-                <div className="mt-3 text-sm text-white/50 sm:line-clamp-3">
-                  {item.desc}
-                </div>
+                <div className="mt-3 text-sm text-white/50 sm:line-clamp-3">{item.desc}</div>
               </div>
             </div>
           ))}

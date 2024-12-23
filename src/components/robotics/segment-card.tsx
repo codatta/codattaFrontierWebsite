@@ -67,11 +67,7 @@ export default function SegmentCard({
       <div className="mb-3">Time</div>
       <div className="mb-4 flex h-[50px] items-center text-sm leading-[50px]">
         <Form.Item name={`${id}:start`} className="mb-0 h-8">
-          <InputNumber
-            placeholder="1"
-            className="cursor-not-allowed"
-            readOnly
-          />
+          <InputNumber placeholder="1" className="cursor-not-allowed" readOnly />
         </Form.Item>
         <span className="mx-2 block h-[2px] w-6 bg-[#404049]"></span>
         <Form.Item
@@ -84,28 +80,17 @@ export default function SegmentCard({
                 if (!value || getFieldValue(`${id}:start`) <= value) {
                   return Promise.resolve()
                 }
-                return Promise.reject(
-                  new Error('End time must be greater than start time')
-                )
+                return Promise.reject(new Error('End time must be greater than start time'))
               }
             })
           ]}
         >
-          <InputNumber
-            placeholder="1"
-            min={start}
-            max={max}
-            onChange={handleEndChange}
-          />
+          <InputNumber placeholder="1" min={start} max={max} onChange={handleEndChange} />
         </Form.Item>
       </div>
       <div className="mb-3 mt-6">Description</div>
 
-      <Form.Item
-        className="h-8"
-        name={`${id}:des`}
-        rules={[{ required: true, message: 'Description is required' }]}
-      >
+      <Form.Item className="h-8" name={`${id}:des`} rules={[{ required: true, message: 'Description is required' }]}>
         <AutoInput
           autoComplete={false}
           onChange={(val) => handleDescriptionChange(val, `${id}:des`)}

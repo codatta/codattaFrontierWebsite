@@ -41,10 +41,7 @@ const Index = ({ files }: { files: { path: string }[] }) => {
       >
         {files.map((item) => (
           <div className="[&>.ant-image]:[360px] h-[360px] w-[688px] [&>.ant-image]:flex [&>.ant-image]:w-[688px]">
-            <Image
-              className="max-h-full max-w-full object-contain"
-              src={item?.path}
-            />
+            <Image className="max-h-full max-w-full object-contain" src={item?.path} />
           </div>
         ))}
       </Carousel>

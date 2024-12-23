@@ -23,28 +23,16 @@ export default function RadioCard({
   return (
     <div className={className}>
       {title && <h2 className="text-base font-semibold text-white">{title}</h2>}
-      {des && (
-        <p className="mb-4 mt-2 text-gray-400">
-          Describe the environment depicted in the material.
-        </p>
-      )}
+      {des && <p className="mb-4 mt-2 text-gray-400">Describe the environment depicted in the material.</p>}
       <Form.Item
         name={name}
         className="mb-0"
         initialValue=""
         rules={[{ required: true, message: 'Please select one option.' }]}
       >
-        <Radio.Group
-          onChange={handleRadioChange}
-          className="grid grid-cols-3 gap-4"
-          size="small"
-        >
+        <Radio.Group onChange={handleRadioChange} className="grid grid-cols-3 gap-4" size="small">
           {options.map((option) => (
-            <Radio
-              key={option.value}
-              value={option.value}
-              className="mx-0 text-sm text-white"
-            >
+            <Radio key={option.value} value={option.value} className="mx-0 text-sm text-white">
               {option.label || option.value}
             </Radio>
           ))}

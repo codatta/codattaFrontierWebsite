@@ -15,11 +15,7 @@ export interface ValidationActionProps {
   editable?: boolean
 }
 
-const reasonChoices = [
-  'Address does not exist',
-  'Evidence does not match data information',
-  'Invalid evidence'
-]
+const reasonChoices = ['Address does not exist', 'Evidence does not match data information', 'Invalid evidence']
 
 export default function ValidationAction(props: ValidationActionProps) {
   const [form] = useForm()
@@ -51,11 +47,7 @@ export default function ValidationAction(props: ValidationActionProps) {
           const isEmpty = !reason || (!reason.text && !reason.files?.length)
           const isReasonEmpty = !reason
           return isEmpty
-            ? Promise.reject(
-                isReasonEmpty
-                  ? 'Please provide the reason(s) for rejection.'
-                  : ''
-              )
+            ? Promise.reject(isReasonEmpty ? 'Please provide the reason(s) for rejection.' : '')
             : Promise.resolve()
         } else {
           return Promise.resolve()
@@ -87,27 +79,20 @@ export default function ValidationAction(props: ValidationActionProps) {
       >
         <Form.Item
           label={
-            <Tooltip
-              title={VALIDATION_TIPS.decision}
-              className="cursor-pointer"
-            >
+            <Tooltip title={VALIDATION_TIPS.decision} className="cursor-pointer">
               Solid Decision
             </Tooltip>
           }
           rules={[
             {
               required: true,
-              message:
-                'Please ensure you have selected a decision or opinion before submitting.'
+              message: 'Please ensure you have selected a decision or opinion before submitting.'
             }
           ]}
           // tooltip="Please choose your solid decision carefully, too many wrong decisions may impact your reputation."
           name="decision"
         >
-          <Radio.Group
-            buttonStyle="solid"
-            onChange={(e) => setDecision(e.target.value)}
-          >
+          <Radio.Group buttonStyle="solid" onChange={(e) => setDecision(e.target.value)}>
             <Radio.Button value="APPROVE" className="w-24 px-0 text-center">
               Approve
             </Radio.Button>
@@ -167,11 +152,7 @@ export default function ValidationAction(props: ValidationActionProps) {
       </div>
       <div className="flex flex-col gap-2 rounded-lg border border-white/10 p-3 text-sm text-[#2B005506]">
         {decision === 'REJECT' && (
-          <Radio.Group
-            name="reasonChoice"
-            defaultValue={0}
-            onChange={(e) => setReasonChoice(e.target.value)}
-          >
+          <Radio.Group name="reasonChoice" defaultValue={0} onChange={(e) => setReasonChoice(e.target.value)}>
             <div className="my-4 flex items-center justify-between">
               <span className="text-sm">{reasonChoices[0]}</span>
               <span>
@@ -212,10 +193,7 @@ export default function ValidationAction(props: ValidationActionProps) {
               rules={reasonRules}
               colon={false}
               label={
-                <Tooltip
-                  title={VALIDATION_TIPS.reason}
-                  className="cursor-pointer"
-                >
+                <Tooltip title={VALIDATION_TIPS.reason} className="cursor-pointer">
                   <span className="mb-3 text-sm font-medium">Reason</span>
                 </Tooltip>
               }
@@ -231,12 +209,7 @@ export default function ValidationAction(props: ValidationActionProps) {
       • Links from blockchain explorers`}
               />
             </Form.Item>
-            <Form.Item
-              className="mb-0"
-              name={['reason', 'files']}
-              rules={reasonRules}
-              dependencies={['decision']}
-            >
+            <Form.Item className="mb-0" name={['reason', 'files']} rules={reasonRules} dependencies={['decision']}>
               <FileUpload listType="picture" multiple accept="image/*">
                 <Button icon={<UploadOutlined />}>Upload</Button>
               </FileUpload>

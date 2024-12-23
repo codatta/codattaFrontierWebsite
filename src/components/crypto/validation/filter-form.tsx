@@ -26,10 +26,7 @@ const FilterFormBox = () => {
     setOpen(false)
   }
 
-  const startFilter = (
-    inputValue: string,
-    option: { label: string; value: string | number } | undefined
-  ) => {
+  const startFilter = (inputValue: string, option: { label: string; value: string | number } | undefined) => {
     if (!option) return false
     return option.label.toLowerCase().startsWith(inputValue.toLowerCase())
   }
@@ -66,21 +63,12 @@ const FilterFormBox = () => {
         maskClosable
         onCancel={() => setOpen(false)}
         modalRender={(dom) => (
-          <Form
-            layout="vertical"
-            form={form}
-            clearOnDestroy
-            onFinish={(values) => onCreate(values)}
-          >
+          <Form layout="vertical" form={form} clearOnDestroy onFinish={(values) => onCreate(values)}>
             {dom}
           </Form>
         )}
       >
-        <Form.Item
-          name="task_type"
-          label="Type"
-          initialValue={TaskType.SUBMISSION_ALL}
-        >
+        <Form.Item name="task_type" label="Type" initialValue={TaskType.SUBMISSION_ALL}>
           <Select
             options={[
               {
@@ -143,25 +131,13 @@ const FilterFormBox = () => {
           <div className="flex flex-row-reverse">
             <Space>
               <div className="h-11 w-[120px]">
-                <Button
-                  htmlType="reset"
-                  type="link"
-                  block
-                  shape="round"
-                  className="h-full text-white"
-                >
+                <Button htmlType="reset" type="link" block shape="round" className="h-full text-white">
                   Reset
                 </Button>
               </div>
 
               <div className="h-11 w-[120px]">
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  block
-                  shape="round"
-                  className="h-full"
-                >
+                <Button type="primary" htmlType="submit" block shape="round" className="h-full">
                   Apply
                 </Button>
               </div>

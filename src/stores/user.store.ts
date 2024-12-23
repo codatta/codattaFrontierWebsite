@@ -1,5 +1,5 @@
 // import accountApi from '@/api/account.api'
-import userApi, { UserInfo } from '@/apis/user.api'
+import userApi, { UserInfo, UserUpdateParams } from '@/apis/user.api'
 // import CustomAlert from '@/components/account/custom-alert'
 // import React, { useState } from 'react'
 // import { Button } from 'antd'
@@ -35,7 +35,7 @@ import { proxy, useSnapshot } from 'valtio'
 //         shape="round"
 //         block
 //         type="primary"
-//         className="font-700 py-5"
+//         className="font-bold py-5"
 //         onClick={() => {
 //           props.onClose?.()
 //           setShow(false)
@@ -64,7 +64,7 @@ import { proxy, useSnapshot } from 'valtio'
 //         shape="round"
 //         block
 //         type="primary"
-//         className="font-700 py-5"
+//         className="font-bold py-5"
 //         onClick={() => {
 //           props.onClose?.()
 //           setShow(false)
@@ -133,11 +133,7 @@ function getUsername(info: UserInfo | null) {
   if (!currentAccount) return '-'
   if (['email'].includes(currentAccount.account_type)) {
     return currentAccount.account
-  } else if (
-    ['blockchain', 'wallet', 'block_chain'].includes(
-      currentAccount.account_type
-    )
-  ) {
+  } else if (['blockchain', 'wallet', 'block_chain'].includes(currentAccount.account_type)) {
     if (['codatta_ton', 'ton'].includes(currentAccount.connector)) {
       return shortenAddress(toUserFriendlyAddress(currentAccount.account), 12)
     } else {
@@ -154,10 +150,10 @@ export function useUserStore() {
   }
 }
 
-// async function updateUserInfo(userFields: Partial<UserInfo>) {
-//   await userApi.updateInfo(userFields)
-//   userStore.info = Object.assign({}, snapshot(userStore).info, userFields)
-// }
+async function updateUserInfo(info: UserUpdateParams) {
+  await userApi.updateUserInfo(info)
+  await getUserInfo()
+}
 
 // async function linkDiscord() {
 //   try {
@@ -180,7 +176,10 @@ export function useUserStore() {
 // async function linkTelegram() {
 //   const data = await new Promise<any>((resolve) => {
 //     const BOT_ID = import.meta.env.VITE_TG_BOT_ID
-//     window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: true }, (data) => resolve(data))
+//     window.Telegram.Login.auth(
+//       { bot_id: BOT_ID, request_access: true },
+//       (data) => resolve(data)
+//     )
 //   })
 //   if (!data) return
 //   try {
@@ -203,7 +202,7 @@ export const userStoreActions = {
   // linkDiscord,
   // linkX,
   // linkTelegram,
-  // updateUserInfo,
+  updateUserInfo,
   getUserInfo
   // showLinkSuccess,
   // showLinkError,

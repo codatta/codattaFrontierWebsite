@@ -4,18 +4,12 @@ import request, { PaginationParam, PaginationResponse } from './request'
 class RewardsApi {
   constructor(private request: AxiosInstance) {}
 
-  async getRewards(
-    pagination: PaginationParam = { page: 1, page_size: 20 },
-    asset_type = 'POINTS'
-  ) {
-    const res = await this.request.post<PaginationResponse<RewardsDesc[]>>(
-      '/customer/asset/entries',
-      {
-        page_size: pagination.page_size,
-        page_num: pagination.page,
-        asset_type
-      }
-    )
+  async getRewards(pagination: PaginationParam = { page: 1, page_size: 20 }, asset_type = 'POINTS') {
+    const res = await this.request.post<PaginationResponse<RewardsDesc[]>>('/customer/asset/entries', {
+      page_size: pagination.page_size,
+      page_num: pagination.page,
+      asset_type
+    })
     return res.data
   }
 }

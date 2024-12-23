@@ -110,10 +110,7 @@ export interface TSubmitValidationParams {
 
 class ValidationApi {
   async getValidationList(params: RequestValidationsParams) {
-    const res = await request.post<PaginationResponse<TValidationItem[]>>(
-      '/meta/validation/search',
-      params
-    )
+    const res = await request.post<PaginationResponse<TValidationItem[]>>('/meta/validation/search', params)
     return res.data
   }
 
@@ -150,11 +147,7 @@ class ValidationApi {
     })
   }
 
-  async holdValidation(
-    validation_id: string | number,
-    stage: string,
-    task_type?: string
-  ) {
+  async holdValidation(validation_id: string | number, stage: string, task_type?: string) {
     return request.post('/user/certificate/claim', {
       biz_type: `VALIDATION_S${stage}`,
       biz_id: validation_id,

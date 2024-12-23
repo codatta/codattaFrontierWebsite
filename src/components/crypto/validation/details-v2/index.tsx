@@ -7,11 +7,7 @@ import ViewInput from './input'
 import Example from './example'
 
 import validationApi, { TValidationDetail } from '@/api-v1/validation.api'
-import {
-  validationDetailStore,
-  setSelectedItem,
-  setOpen
-} from '@/stores/validation-details.store'
+import { validationDetailStore, setSelectedItem, setOpen } from '@/stores/validation-details.store'
 import {
   getTopValidations,
   getDownValidations,
@@ -102,16 +98,11 @@ const Indec = () => {
             (selectedItem?.status === 'InProgress' ? (
               <div className="bg-[#00C39633] py-2 text-center text-sm font-normal text-[#008573]">
                 <InfoCircleOutlined size={12} className="mr-1" />
-                {['APPROVE', 'REJECT'].includes(
-                  validation.decision?.decision || ''
-                )
+                {['APPROVE', 'REJECT'].includes(validation.decision?.decision || '')
                   ? 'You will receive the response within 48 hours.'
                   : 'Your reward will be issued at the end of the task.'}
               </div>
-            ) : validation?.adopt ||
-              ['UPVOTE', 'DOWNVOTE'].includes(
-                validation.decision?.decision || ''
-              ) ? (
+            ) : validation?.adopt || ['UPVOTE', 'DOWNVOTE'].includes(validation.decision?.decision || '') ? (
               <div className="bg-[#00C39633] py-2 text-center text-sm font-normal text-[#008573]">
                 <InfoCircleOutlined size={12} className="mr-1" />
                 Your reward has been issued.
@@ -125,9 +116,7 @@ const Indec = () => {
         </div>
         <Tabs
           tabBarGutter={50}
-          tabBarExtraContent={
-            <CloseOutlined className="mr-4 text-white" onClick={handClose} />
-          }
+          tabBarExtraContent={<CloseOutlined className="mr-4 text-white" onClick={handClose} />}
           defaultActiveKey={isExample ? 'Example' : 'Input'}
           onChange={handChange}
           items={[
@@ -164,13 +153,11 @@ const Indec = () => {
               subTitle={
                 ['APPROVE', 'REJECT'].includes(decision) ? (
                   <div className="leading-5">
-                    We have received your recommendation, and will share our
-                    decision within approximately 48 hours
+                    We have received your recommendation, and will share our decision within approximately 48 hours
                   </div>
                 ) : (
                   <div className="leading-5">
-                    We have received your opinion, and you will receive less
-                    reward at the end of the task
+                    We have received your opinion, and you will receive less reward at the end of the task
                   </div>
                 )
               }

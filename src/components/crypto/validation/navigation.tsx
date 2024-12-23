@@ -8,12 +8,7 @@ type TProps = {
   onClick(type: 'pre' | 'next' | 'more'): void
 }
 
-export default function Navigation({
-  preDisabled,
-  nextDisabled,
-  showArrows = true,
-  onClick
-}: TProps) {
+export default function Navigation({ preDisabled, nextDisabled, showArrows = true, onClick }: TProps) {
   return (
     <div className="flex flex-1 items-center justify-between">
       <div className="flex">
@@ -26,9 +21,7 @@ export default function Navigation({
               opacity: preDisabled ? 0.12 : 1,
               cursor: preDisabled ? 'not-allowed' : 'pointer'
             }}
-            onClick={() =>
-              !preDisabled && showArrows && onClick && onClick('pre')
-            }
+            onClick={() => !preDisabled && showArrows && onClick && onClick('pre')}
           />
           <RightCircleFilled
             className="px-2"
@@ -37,16 +30,11 @@ export default function Navigation({
               opacity: nextDisabled ? 0.12 : 1,
               cursor: nextDisabled ? 'not-allowed' : 'pointer'
             }}
-            onClick={() =>
-              !nextDisabled && showArrows && onClick && onClick('next')
-            }
+            onClick={() => !nextDisabled && showArrows && onClick && onClick('next')}
           />
         </div>
       </div>
-      <div
-        onClick={() => onClick && onClick('more')}
-        className="flex cursor-pointer items-center"
-      >
+      <div onClick={() => onClick && onClick('more')} className="flex cursor-pointer items-center">
         <div className="text-xs font-normal text-white/80">History</div>
         <AngleRight size={14} />
       </div>

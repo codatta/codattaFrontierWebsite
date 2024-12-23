@@ -130,8 +130,5 @@ export const NETWORK_ICON_KEY_MAP = {
 }
 
 export const NETWORK_ICON_MAP = Object.fromEntries(
-  Object.entries(NETWORK_ICON_KEY_MAP).map(([k, v]) => [
-    k,
-    NETWORK_ICON_PATH + v + '?v=2.1'
-  ])
+  Object.entries(NETWORK_ICON_KEY_MAP).map(([k, v]) => [k, NETWORK_ICON_PATH + v + '?v=2.1'])
 )

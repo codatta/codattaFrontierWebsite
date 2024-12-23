@@ -15,11 +15,7 @@ export default function CryptoHome() {
       <div className="">
         {/* back */}
         <div className="mb-6 flex items-center gap-2">
-          <ArrowLeft
-            size={14}
-            onClick={() => navigate(-1)}
-            className="cursor-pointer"
-          />
+          <ArrowLeft size={14} onClick={() => navigate(-1)} className="cursor-pointer" />
           <h1>Back</h1>
         </div>
         {/* title */}
@@ -30,18 +26,16 @@ export default function CryptoHome() {
               <div className="flex gap-2">
                 <img src={goldCoin} alt="" className="h-10 w-10" />
                 <div>
-                  <div className="font-700 -mb-1 text-base">{balance}</div>
+                  <div className="font-bold -mb-1 text-base">{balance}</div>
                   <div className="text-gray-5 text-xs">Your Reward</div>
                 </div>
               </div>
             </div> */}
           </div>
           <div className="text-white/60">
-            Collecting data on wallet addresses and transaction flows enhances
-            transparency in the crypto ecosystem. This transparency enables AI
-            models to detect fraud, improve compliance, and promote a safer
-            environment for all participants, fostering trust in decentralized
-            finance.
+            Collecting data on wallet addresses and transaction flows enhances transparency in the crypto ecosystem.
+            This transparency enables AI models to detect fraud, improve compliance, and promote a safer environment for
+            all participants, fostering trust in decentralized finance.
           </div>
         </div>
         <div className="flex flex-col gap-6">

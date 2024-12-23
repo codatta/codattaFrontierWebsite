@@ -16,14 +16,7 @@ import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
 
-import {
-  MouseEventHandler,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from 'react'
+import { MouseEventHandler, ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 interface MenuItem {
@@ -33,11 +26,7 @@ interface MenuItem {
   className?: string
 }
 
-function AppNavItem(props: {
-  item: MenuItem
-  selectedKey: string
-  onClick: (item: MenuItem) => void
-}) {
+function AppNavItem(props: { item: MenuItem; selectedKey: string; onClick: (item: MenuItem) => void }) {
   const { item, selectedKey, onClick } = props
   const { icon, label, key, className } = props.item
   const [active, setActive] = useState(false)
@@ -54,10 +43,7 @@ function AppNavItem(props: {
 
   return (
     <div className={cn('group relative', className)}>
-      <div
-        className="py-0.5 pl-4 pr-2 lg:pr-0"
-        onClick={() => handleClick(item)}
-      >
+      <div className="py-0.5 pl-4 pr-2 lg:pr-0" onClick={() => handleClick(item)}>
         <div
           className={cn(
             'flex w-full min-w-0 cursor-pointer items-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
@@ -78,10 +64,7 @@ function AnimationDot(props: { show: boolean; customClass?: string }) {
       initial={{ scale: 0 }}
       animate={{ scale: props.show ? 1 : 0 }}
       transition={{ duration: 0.3, type: 'spring', bounce: 0.6 }}
-      className={[
-        props.customClass ? props.customClass : 'bg-primary',
-        'h-2 w-2 rounded-full'
-      ].join(' ')}
+      className={[props.customClass ? props.customClass : 'bg-primary', 'h-2 w-2 rounded-full'].join(' ')}
     ></motion.div>
   )
 }
@@ -113,7 +96,7 @@ const QuestLabel = () => {
           padding: '2px 8px',
           borderRadius: '12px'
         }}
-        className="[&>.ant-badge-count]:shadow-none"
+        className="[&>.ant-badge-count]:drop-shadow-none"
         size="small"
       />
     </Flex>
@@ -142,30 +125,28 @@ function UserNameLable() {
 
 function UserAvatar() {
   const { info } = useUserStore()
-  return (
-    <img src={info?.user_data.avatar} className="size-6 rounded-full"></img>
-  )
+  return <img src={info?.user_data.avatar} className="size-6 rounded-full"></img>
 }
 
 const menuItems: MenuItem[] = [
   {
     icon: <IconHome color={'white'} size={24} />,
     label: 'Home',
-    key: '/'
+    key: '/app'
   },
   {
     icon: <IconQuest color={'white'} size={24} />,
-    key: '/quest',
+    key: '/app/quest',
     label: <QuestLabel />
   },
   {
     icon: <IconReferral color={'white'} size={24} />,
-    key: '/referral',
+    key: '/app/referral',
     label: 'Referral'
   },
   {
     icon: <IconEcosystem color={'white'} size={24} />,
-    key: '/ecosystem',
+    key: '/app/ecosystem',
     label: 'Leaderboard'
   },
   {
@@ -186,7 +167,7 @@ const menuItems: MenuItem[] = [
   },
   {
     icon: <IconSetting color={'white'} size={24} />,
-    key: '/settings/account',
+    key: '/app/settings/account',
     label: 'User Settings'
   },
   {
@@ -217,14 +198,7 @@ function AppNav(_props: AppNavProps) {
   return (
     <div className="relative flex flex-1 flex-col">
       {menuItems.map((item) => {
-        return (
-          <AppNavItem
-            key={item.key}
-            item={item}
-            selectedKey={selectedKey}
-            onClick={handleMenuClick}
-          />
-        )
+        return <AppNavItem key={item.key} item={item} selectedKey={selectedKey} onClick={handleMenuClick} />
       })}
     </div>
   )
@@ -252,11 +226,7 @@ function LogoSection() {
     >
       <div>
         <img src={ImageLogo} className="h-6" />
-        <a
-          className="mt-2 flex text-sm hover:text-primary"
-          href="https://xny.ai/"
-          target="_blank"
-        >
+        <a className="mt-2 flex text-sm hover:text-primary" href="https://xny.ai/" target="_blank">
           <span className="mr-1">Powered by XnY</span>
           <ArrowUpRight strokeWidth={1.25} size={20} />
         </a>

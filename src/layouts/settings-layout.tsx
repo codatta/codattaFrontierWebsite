@@ -1,6 +1,8 @@
 import TransitionEffect from '@/components/common/transition-effect'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@udecode/cn'
+import { useEffect } from 'react'
+import { userStoreActions } from '@/stores/user.store'
 
 interface AccountSubMenu {
   label: string
@@ -12,10 +14,10 @@ function SettingsMenu() {
   const location = useLocation()
 
   const menuItems: AccountSubMenu[] = [
-    { label: 'Personal Info', key: '/settings/account' },
+    { label: 'Personal Info', key: '/app/settings/account' },
     // { label: 'Notification', key: '/settings/notification' },
-    { label: 'Reward', key: '/settings/reward' },
-    { label: 'Reputation', key: '/settings/reputation' }
+    { label: 'Reward', key: 'app/settings/reward' },
+    { label: 'Reputation', key: 'app/settings/reputation' }
   ]
 
   function handleMenuClick(item: AccountSubMenu) {
@@ -30,9 +32,7 @@ function SettingsMenu() {
           onClick={() => handleMenuClick(item)}
           className={cn(
             'px-6 py-4 transition-all duration-300',
-            location.pathname === item.key
-              ? 'border-r-[3px] border-r-primary bg-primary/25'
-              : ''
+            location.pathname === item.key ? 'border-r-[3px] border-r-primary bg-primary/25' : ''
           )}
         >
           {item.label}
@@ -43,6 +43,10 @@ function SettingsMenu() {
 }
 
 export default function SettingsLayout() {
+  useEffect(() => {
+    userStoreActions.getUserInfo()
+  }, [])
+
   return (
     <TransitionEffect className="">
       <h1 className="mb-2 text-4xl font-semibold leading-8">User Settings</h1>

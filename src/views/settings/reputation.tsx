@@ -116,11 +116,7 @@ export default function SettingReputation() {
         <div className="mb-4 flex items-center gap-4">
           {/* <span className="text-20px font-600 leading-30px mr-1">L{rate}</span> */}
           <span>Reputation</span>
-          <ReputationRate
-            rate={reputation}
-            size={24}
-            color={'rgba(255, 168, 0, 0.88)'}
-          ></ReputationRate>
+          <ReputationRate rate={reputation} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>
         </div>
         {/* <div className="m-b-16px">
             <ReputationRate rate={reputation} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>

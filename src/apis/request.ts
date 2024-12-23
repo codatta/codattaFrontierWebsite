@@ -1,8 +1,4 @@
-import axios, {
-  AxiosError,
-  AxiosResponse,
-  InternalAxiosRequestConfig
-} from 'axios'
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import cookies from 'js-cookie'
 
 const request = axios.create({
@@ -21,13 +17,7 @@ function authRequestInterceptor(config: InternalAxiosRequestConfig) {
 
 function baseResponseInterceptor(res: AxiosResponse) {
   if (res.data?.success !== true) {
-    const error = new AxiosError(
-      res.data?.errorMessage,
-      res.data?.errorCode,
-      res.config,
-      res.request,
-      res
-    )
+    const error = new AxiosError(res.data?.errorMessage, res.data?.errorCode, res.config, res.request, res)
     return Promise.reject(error)
   } else {
     return res
@@ -47,10 +37,7 @@ function errorResponseInterceptor(err: AxiosError) {
 }
 
 request.interceptors.request.use(authRequestInterceptor)
-request.interceptors.response.use(
-  baseResponseInterceptor,
-  errorResponseInterceptor
-)
+request.interceptors.response.use(baseResponseInterceptor, errorResponseInterceptor)
 
 export default request
 
@@ -71,4 +58,9 @@ export interface PaginationResponse<T> extends Response<T> {
   total_count: number
   total_page: number
   page: number
+}
+
+export interface TPagination {
+  page_size: number
+  page_num: number
 }

@@ -15,25 +15,15 @@ function NoExtension() {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <img className="mb-6" src={NoTextLogoWhite} alt="" />
-      <div className="mb-3 text-3xl font-bold text-gray-900">
-        Please install the extension
-      </div>
-      <a
-        className="text-base"
-        href={`https://chrome.google.com/webstore/detail/${extensionId}`}
-      >
-        <div className="text-base font-bold text-gray-700">
-          Click here to download
-        </div>
+      <div className="mb-3 text-3xl font-bold text-gray-900">Please install the extension</div>
+      <a className="text-base" href={`https://chrome.google.com/webstore/detail/${extensionId}`}>
+        <div className="text-base font-bold text-gray-700">Click here to download</div>
       </a>
     </div>
   )
 }
 
-export default function ExtensionChecker(props: {
-  children: React.ReactNode
-  check: boolean
-}) {
+export default function ExtensionChecker(props: { children: React.ReactNode; check: boolean }) {
   const [loading, setLoading] = useState(true)
   const [result, setResult] = useState<boolean | null>(null)
 

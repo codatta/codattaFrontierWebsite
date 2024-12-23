@@ -12,11 +12,7 @@ export default function PageHead() {
       >
         <ArrowLeft className="text-white"></ArrowLeft> Back
       </div>
-      <object
-        data={LogoWhiteSvgImage}
-        type="image/svg+xml"
-        className="h-8"
-      ></object>
+      <object data={LogoWhiteSvgImage} type="image/svg+xml" className="h-8"></object>
       <div></div>
     </div>
   )

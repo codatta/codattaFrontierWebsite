@@ -9,18 +9,11 @@ import type2new from '@/assets/crypto/validation-type-2-new.png'
 
 import { shortenAddress } from '@/utils/wallet-address'
 import { setSelectedItem, setOpen } from '@/stores/validation.store'
-import {
-  setSelectedItem as setSelectedItemNew,
-  setOpen as setOpenNew
-} from '@/stores/validation-details.store'
+import { setSelectedItem as setSelectedItemNew, setOpen as setOpenNew } from '@/stores/validation-details.store'
 import { TaskType } from './enum'
 import { TValidationItem } from '@/api-v1/validation.api'
 
-function RewardPoint(props: {
-  point?: number
-  status: string
-  send_point?: number
-}) {
+function RewardPoint(props: { point?: number; status: string; send_point?: number }) {
   const { point, status } = props
   const send_point = props.send_point || 0
   const showPoint = status === 'Completed' ? send_point : point
@@ -28,9 +21,7 @@ function RewardPoint(props: {
     <div
       className={cn(
         'rounded-4 bg-#875DFF/20 ml-2 h-[26px] flex-none px-2 py-[2px] text-[#875DFF]',
-        status === 'Completed' &&
-          send_point < 1 &&
-          'bg-[#404049] text-[#77777D]'
+        status === 'Completed' && send_point < 1 && 'bg-[#404049] text-[#77777D]'
       )}
     >
       {showPoint || 0} {showPoint && showPoint > 1 ? 'Points' : 'Point'}
@@ -86,15 +77,9 @@ const Index = ({ data }: { data: TValidationItem }) => {
             <div>
               <div className="flex items-center gap-[6px] text-sm">
                 <Network size={16} type={data.network} />
-                <Tooltip title={data.address}>
-                  {shortenAddress(data.address, 10)}
-                </Tooltip>
+                <Tooltip title={data.address}>{shortenAddress(data.address, 10)}</Tooltip>
                 {data.address && (
-                  <Copy
-                    size={13}
-                    className="w-[13px] shrink-0 cursor-pointer text-white"
-                    content={data.address}
-                  />
+                  <Copy size={13} className="w-[13px] shrink-0 cursor-pointer text-white" content={data.address} />
                 )}
               </div>
             </div>

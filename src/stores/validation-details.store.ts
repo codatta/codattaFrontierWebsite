@@ -1,7 +1,4 @@
-import {
-  TSubmitValidationParams,
-  TValidationItem
-} from '@/api-v1/validation.api'
+import { TSubmitValidationParams, TValidationItem } from '@/api-v1/validation.api'
 import validationApi from '@/api-v1/validation.api'
 import { debounce } from 'lodash'
 import { proxy } from 'valtio'
@@ -33,13 +30,7 @@ export let tempGetValidationListParams = {
 }
 
 export const getValidations = debounce(
-  async (params: {
-    status: string
-    decision?: string
-    page: number
-    page_size: number
-    stage?: number
-  }) => {
+  async (params: { status: string; decision?: string; page: number; page_size: number; stage?: number }) => {
     try {
       validationDetailStore.listLoading = true
       tempGetValidationListParams = params

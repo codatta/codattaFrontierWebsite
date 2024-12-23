@@ -22,9 +22,8 @@ export default function SettingsReward() {
     RewardStoreActions.reloadRewards()
     try {
       UserApi.getUserInfo().then((res) => {
-        const data = res?.data.user_assets?.filter(
-          (item) => item?.asset_type === 'POINTS'
-        )
+        const data = res?.data.user_assets?.filter((item) => item?.asset_type === 'POINTS')
+
         if (data[0]) {
           setRewardDesc(data[0].balance)
         }
@@ -54,11 +53,7 @@ export default function SettingsReward() {
                   <div className="flex w-full flex-col py-3">
                     <div className="flex items-center gap-1.5 leading-5">
                       {/* <NetworkIcon type={item.network} size={16} /> */}
-                      <div className="text-base">
-                        {dayjs(item.create_at * 1000).format(
-                          'YYYY/MM/DD HH:mm:ss'
-                        )}
-                      </div>
+                      <div className="text-base">{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
                       <div className="ml-auto text-base font-medium text-primary">
                         {parseInt(item.amount?.amount)} {item.amount?.currency}
                       </div>

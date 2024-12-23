@@ -75,11 +75,7 @@ export default function RoboticsSubmitPage(props: { templateId: string }) {
         </>
       )}
 
-      <SubmitSuccessModal
-        points={rewardPoints}
-        open={modalShow}
-        onClose={() => window.history.back()}
-      />
+      <SubmitSuccessModal points={rewardPoints} open={modalShow} onClose={() => window.history.back()} />
     </div>
   )
 }

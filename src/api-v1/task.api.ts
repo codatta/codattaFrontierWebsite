@@ -1,42 +1,44 @@
-import request from './request'
-import type { UserInfo } from './user.api'
+import request, { type Response } from './request'
+import type { UserInfo } from '@/apis/user.api'
 
 class TaskApi {
   async getActivities() {
-    const res = await request.post<ActivityGroup[]>('/task/categories')
+    const res = await request.post<Response<ActivityGroup[]>>('/task/categories')
     return res.data
   }
 
-  async getActivity(activityId: Activity['sub_cate_id']): Promise<Activity> {
-    const { data } = await request.post('/task/sub_categories', {
-      sub_cate_id: activityId
-    })
+  async getActivity(activityId: Activity['sub_cate_id'] = '') {
+    const { data } = await request.post<Response<Activity>>('/task/sub_categories', { sub_cate_id: activityId })
     return data
   }
 
   async receiveReward(taskInstanceId: string) {
-    const res = await request.post<TaskReward[]>('/task/reward', {
-      instance_id: taskInstanceId
-    })
-    return res.data
+    return (
+      await request.post<Response<TaskReward[]>>('/task/reward', {
+        instance_id: taskInstanceId
+      })
+    ).data
   }
 
   async verify(taskId: string) {
-    const res = await request.post<{
-      verify_result: 'PASSED' | 'FAILED'
-      instance_id: Task_New['instance_id']
-      rewards: TaskReward[]
-      msg?: string
-    }>('/task/verify', { task_id: taskId })
-    return res.data
+    return (
+      await request.post<
+        Response<{
+          verify_result: 'PASSED' | 'FAILED'
+          instance_id: Task_New['instance_id']
+          rewards: TaskReward[]
+          msg?: string
+        }>
+      >('/task/verify', { task_id: taskId })
+    ).data
   }
 
-  async getQuestDetail(questId: string) {
-    const { data } = await request.post('/quest/detail', {
-      quest_id: questId
-    })
-    return data
-  }
+  // async getQuestDetail(questId: string) {
+  //   const { data } = await request.post<any>('/quest/detail', {
+  //     quest_id: questId
+  //   })
+  //   return data
+  // }
 
   async finishTask(taskConfigId: string) {
     const { data } = await request.post('/task/finish', {
@@ -54,10 +56,7 @@ class TaskApi {
   }
 
   async updateCheckin(params?: { chain: string; hash: string }) {
-    const { data } = await request.post<{ check_in_days: number }>(
-      '/check-in/check-in',
-      params || {}
-    )
+    const { data } = await request.post<{ check_in_days: number }>('/check-in/check-in', params || {})
     return data
   }
 
@@ -71,8 +70,7 @@ class TaskApi {
   }
 }
 
-const taskApi = new TaskApi()
-export default taskApi
+export default new TaskApi()
 
 export enum TaskCategory {
   CompleteProfile = 'COMPELTE_PROFILE',
@@ -121,13 +119,10 @@ export interface Activity {
   tasks: Task_New[]
 }
 
-export type ActivitySummary = Pick<
-  Activity,
-  'sub_cate_id' | 'sub_cate_name' | 'sub_cate_description'
-> & {
+export type ActivitySummary = Pick<Activity, 'sub_cate_id' | 'sub_cate_name' | 'sub_cate_description'> & {
   award_icon: string
   completed_count: number
-  avatars: UserInfo['avatar_url'][]
+  avatars: UserInfo['user_data']['avatar'][]
   finished_count: number
   locked: boolean
   how_to_unlock: string

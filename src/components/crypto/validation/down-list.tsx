@@ -14,13 +14,7 @@ import { shortenAddress } from '@/utils/wallet-address'
 import { setSelectedItem, setOpen } from '@/stores/validation-details.store'
 import { TValidationItem } from '@/api-v1/validation.api'
 
-export const DownList = ({
-  list,
-  groupOne
-}: {
-  list: TValidationItem[]
-  groupOne?: boolean
-}) => {
+export const DownList = ({ list, groupOne }: { list: TValidationItem[]; groupOne?: boolean }) => {
   return (
     <TransitionEffect className="">
       <div>
@@ -34,11 +28,7 @@ export const DownList = ({
   )
 }
 
-function RewardPoint(props: {
-  point?: number
-  status: string
-  send_point?: number
-}) {
+function RewardPoint(props: { point?: number; status: string; send_point?: number }) {
   const { point, status } = props
   const send_point = props.send_point || 0
   const showPoint = status === 'Completed' ? send_point : point
@@ -46,9 +36,7 @@ function RewardPoint(props: {
     <div
       className={cn(
         'ml-2 h-[26px] flex-none rounded-2xl bg-primary/20 px-2 py-[2px] text-primary',
-        status === 'Completed' &&
-          send_point < 1 &&
-          'bg-[#404049] text-[#77777D]'
+        status === 'Completed' && send_point < 1 && 'bg-[#404049] text-[#77777D]'
       )}
     >
       {showPoint || 0} {showPoint && showPoint > 1 ? 'Points' : 'Point'}
@@ -56,13 +44,7 @@ function RewardPoint(props: {
   )
 }
 
-export const Card = ({
-  data
-}: {
-  data: TValidationItem
-  index?: number
-  groupOne?: boolean
-}) => {
+export const Card = ({ data }: { data: TValidationItem; index?: number; groupOne?: boolean }) => {
   function handleCardClick(item: TValidationItem) {
     setOpen(true)
     setSelectedItem(item)
@@ -83,9 +65,7 @@ export const Card = ({
                 <img
                   className="max-h-full max-w-full object-contain"
                   src={
-                    (data?.submission_evidence &&
-                      JSON.parse(data?.submission_evidence)?.files?.[0]
-                        ?.path) ||
+                    (data?.submission_evidence && JSON.parse(data?.submission_evidence)?.files?.[0]?.path) ||
                     standbyImg[data?.task_type || '']
                   }
                   alt=""
@@ -96,30 +76,20 @@ export const Card = ({
               <div className="flex-auto text-base font-bold">
                 {data.task_type === 'SUBMISSION_PRIVATE' &&
                   'Is the image sourced from third-party publicly available data?'}
-                {data.task_type === 'SUBMISSION_IMAGE_ADDRESS' &&
-                  'Is the image or description related to the address?'}
-                {data.task_type === 'SUBMISSION_IMAGE_ENTITY' &&
-                  'Is the image or description related to the Entity?'}
+                {data.task_type === 'SUBMISSION_IMAGE_ADDRESS' && 'Is the image or description related to the address?'}
+                {data.task_type === 'SUBMISSION_IMAGE_ENTITY' && 'Is the image or description related to the Entity?'}
               </div>
               <RewardPoint {...data} />
             </div>
 
             <div className="flex flex-wrap justify-between">
-              {['SUBMISSION_IMAGE_ADDRESS', 'SUBMISSION_IMAGE_ENTITY'].includes(
-                data.task_type!
-              ) && (
+              {['SUBMISSION_IMAGE_ADDRESS', 'SUBMISSION_IMAGE_ENTITY'].includes(data.task_type!) && (
                 <div>
                   <div className="flex items-center gap-[6px] text-sm">
                     <Network size={16} type={data.network} />
-                    <Tooltip title={data.address}>
-                      {shortenAddress(data.address, 10)}
-                    </Tooltip>
+                    <Tooltip title={data.address}>{shortenAddress(data.address, 10)}</Tooltip>
                     {data.address && (
-                      <Copy
-                        size={13}
-                        className="w-[13px] shrink-0 cursor-pointer text-white"
-                        content={data.address}
-                      />
+                      <Copy size={13} className="w-[13px] shrink-0 cursor-pointer text-white" content={data.address} />
                     )}
                   </div>
                 </div>

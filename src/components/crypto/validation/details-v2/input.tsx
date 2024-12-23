@@ -11,11 +11,7 @@ import type3 from '@/assets/crypto/validation-type-3.png'
 import type4 from '@/assets/crypto/validation-type-4.png'
 import Imgs from './imgs'
 
-import {
-  createValidation,
-  validationDetailStore,
-  setOpen
-} from '@/stores/validation-details.store'
+import { createValidation, validationDetailStore, setOpen } from '@/stores/validation-details.store'
 import { TaskType } from '../enum'
 
 const { TextArea } = Input
@@ -91,11 +87,7 @@ const Actions = ({
   const handleHold = () => {
     setInAsk(true)
     validationApi
-      .holdValidation(
-        selectedItem?.submission_id || '',
-        selectedItem?.stage || '',
-        selectedItem?.task_type as string
-      )
+      .holdValidation(selectedItem?.submission_id || '', selectedItem?.stage || '', selectedItem?.task_type as string)
       .then(() => {
         message.success('Validation has been held for review')
         setOpen(false)
@@ -108,14 +100,10 @@ const Actions = ({
   }
 
   const type = selectedItem?.task_type
-  const evidence = validation?.basic_info?.evidence
-    ? JSON.parse(validation?.basic_info?.evidence)
-    : {}
+  const evidence = validation?.basic_info?.evidence ? JSON.parse(validation?.basic_info?.evidence) : {}
   console.log(evidence, 'input tsx evidence print')
   const showPoint =
-    selectedItem?.status === 'Completed'
-      ? validation?.decision?.send_point
-      : validation?.decision?.point || 0
+    selectedItem?.status === 'Completed' ? validation?.decision?.send_point : validation?.decision?.point || 0
   return (
     <div>
       <div className="p-4 pt-2">
@@ -131,11 +119,7 @@ const Actions = ({
                   {evidence?.files?.[0] ? (
                     <Imgs files={evidence?.files} />
                   ) : (
-                    <img
-                      className="object-scale-down"
-                      src={standbyImg[validation?.task_type]}
-                      alt=""
-                    />
+                    <img className="object-scale-down" src={standbyImg[validation?.task_type]} alt="" />
                   )}
                 </div>
               </div>
@@ -145,75 +129,52 @@ const Actions = ({
               {selectedItem?.status !== 'OnHold' && (
                 <div className="my-[2px] mb-2 inline-block h-7 rounded-2xl bg-primary/20 px-3 align-middle text-primary">
                   <div className="flex size-full items-center">
-                    {showPoint || 0}{' '}
-                    {(showPoint as number) > 1 ? 'Points' : 'Point'}
+                    {showPoint || 0} {(showPoint as number) > 1 ? 'Points' : 'Point'}
                   </div>
                 </div>
               )}
 
               {type === TaskType.SUBMISSION_PRIVATE && (
-                <div className="text-lg font-bold">
-                  Is the image sourced from third-party publicly available data?
-                </div>
+                <div className="text-lg font-bold">Is the image sourced from third-party publicly available data?</div>
               )}
 
               {type === TaskType.SUBMISSION_HASH_ADDRESS && (
-                <div className="text-lg font-bold">
-                  Does the transaction hash include the address?
-                </div>
+                <div className="text-lg font-bold">Does the transaction hash include the address?</div>
               )}
 
               {type === TaskType.SUBMISSION_IMAGE_ADDRESS && (
-                <div className="text-lg font-bold">
-                  Is the image or description related to the address?
-                </div>
+                <div className="text-lg font-bold">Is the image or description related to the address?</div>
               )}
 
               {type === TaskType.SUBMISSION_IMAGE_ENTITY && (
-                <div className="text-lg font-bold">
-                  Is the image or description related to the entity?
-                </div>
+                <div className="text-lg font-bold">Is the image or description related to the entity?</div>
               )}
             </div>
             {/* )} */}
-            {[
-              TaskType.SUBMISSION_IMAGE_ADDRESS,
-              TaskType.SUBMISSION_IMAGE_ENTITY
-            ].includes(type as TaskType) &&
+            {[TaskType.SUBMISSION_IMAGE_ADDRESS, TaskType.SUBMISSION_IMAGE_ENTITY].includes(type as TaskType) &&
               evidence && (
                 <div className="mb-4 text-gray-400">
                   <div className="mb-1 flex">
                     <div className="leading-4">Description:</div>
                     <div className="ml-2 leading-4">
-                      {evidence.translation &&
-                        evidence.translation.trim() !==
-                          evidence.text?.trim() && (
-                          <>
-                            <div>AI Translator:</div>
-                            <pre className="text-wrap break-all">
-                              {evidence.translation}
-                            </pre>
-                            <div className="mt-4">Original:</div>
-                          </>
-                        )}
+                      {evidence.translation && evidence.translation.trim() !== evidence.text?.trim() && (
+                        <>
+                          <div>AI Translator:</div>
+                          <pre className="text-wrap break-all">{evidence.translation}</pre>
+                          <div className="mt-4">Original:</div>
+                        </>
+                      )}
                       <pre className="text-wrap break-all">{evidence.text}</pre>
                     </div>
                   </div>
                 </div>
               )}
             {/* Address */}
-            {[
-              TaskType.SUBMISSION_HASH_ADDRESS,
-              TaskType.SUBMISSION_IMAGE_ADDRESS
-            ].includes(type as TaskType) && (
+            {[TaskType.SUBMISSION_HASH_ADDRESS, TaskType.SUBMISSION_IMAGE_ADDRESS].includes(type as TaskType) && (
               <div className="my-2 flex items-center gap-[6px] text-sm">
                 <span className="text-[#84828E]">Address:</span>
                 <Network size={16} type={validation?.basic_info?.network} />
-                <a
-                  href={validation?.explorer_link?.address_link}
-                  target="_blank"
-                  className="break-all"
-                >
+                <a href={validation?.explorer_link?.address_link} target="_blank" className="break-all">
                   {validation?.basic_info?.address}
                 </a>
                 {validation?.basic_info?.address && (
@@ -242,9 +203,7 @@ const Actions = ({
             {type === TaskType.SUBMISSION_IMAGE_ENTITY && (
               <div>
                 <span className="mt-[12px] text-[#84828E]">Entity: </span>
-                <span className="ml-[6px] text-sm">
-                  {validation?.basic_info?.entity}
-                </span>
+                <span className="ml-[6px] text-sm">{validation?.basic_info?.entity}</span>
               </div>
             )}
           </div>
@@ -253,11 +212,7 @@ const Actions = ({
         <div className="mt-10">
           <Form
             form={form}
-            disabled={
-              !['NotStart', 'OnHold'].includes(selectedItem?.status || '') ||
-              inCreation ||
-              !validation
-            }
+            disabled={!['NotStart', 'OnHold'].includes(selectedItem?.status || '') || inCreation || !validation}
           >
             <div className="flex justify-between">
               <div className="text-sm font-semibold">Action *</div>

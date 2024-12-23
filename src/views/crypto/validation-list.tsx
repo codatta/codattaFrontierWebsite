@@ -45,10 +45,7 @@ export default function Component() {
     changeValidationFilter({ paramsData: { status } })
   }
 
-  const handleDateChange = (sortValue: {
-    sort: 'DESC' | 'ASC'
-    type: 'Date' | 'Point'
-  }) => {
+  const handleDateChange = (sortValue: { sort: 'DESC' | 'ASC'; type: 'Date' | 'Point' }) => {
     changeValidationFilter({ paramsData: sortValue })
   }
 
@@ -73,10 +70,7 @@ export default function Component() {
 
   return (
     <div className="">
-      <div
-        className="mb-6 flex cursor-pointer text-2xl font-semibold leading-[32px]"
-        onClick={() => navigate(-1)}
-      >
+      <div className="mb-6 flex cursor-pointer text-2xl font-semibold leading-[32px]" onClick={() => navigate(-1)}>
         <img src={arrowLeft} alt="" className="mr-1" />
         <span>Validation</span>
       </div>
@@ -103,13 +97,7 @@ export default function Component() {
             shape="round"
             className="flex justify-between bg-inherit [&>span]:text-base"
             style={{ height: 44 }}
-            icon={
-              sorts.pointSort === 'ASC' ? (
-                <CaretUpOutlined />
-              ) : (
-                <CaretDownOutlined />
-              )
-            }
+            icon={sorts.pointSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
             onClick={() => {
               const _sort = sorts.pointSort === 'ASC' ? 'DESC' : 'ASC'
@@ -126,13 +114,7 @@ export default function Component() {
             shape="round"
             style={{ height: 44 }}
             className="flex justify-between bg-inherit [&>span]:text-base"
-            icon={
-              sorts.dateSort === 'ASC' ? (
-                <CaretUpOutlined />
-              ) : (
-                <CaretDownOutlined />
-              )
-            }
+            icon={sorts.dateSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
             onClick={() => {
               const _sort = sorts.dateSort === 'ASC' ? 'DESC' : 'ASC'
@@ -155,10 +137,7 @@ export default function Component() {
             onPressEnter={searchAddress}
             onChange={(e) => setAddress(e.target.value)}
           />
-          <div
-            className="cursor-pointer text-[#606067] hover:text-primary"
-            onClick={searchAddress}
-          >
+          <div className="cursor-pointer text-[#606067] hover:text-primary" onClick={searchAddress}>
             <IconExplore size={24} />
           </div>
         </div>

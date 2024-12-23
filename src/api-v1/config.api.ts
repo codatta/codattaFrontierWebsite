@@ -23,12 +23,7 @@ class ConfigApi {
   }
 
   async getCategoryDict() {
-    const res = await request.post<Response<TCategoryDict[]>>(
-      '/config/categories',
-      {
-        entity: null
-      }
-    )
+    const res = await request.post<Response<TCategoryDict[]>>('/config/categories', { entity: null })
     return res.data
   }
 

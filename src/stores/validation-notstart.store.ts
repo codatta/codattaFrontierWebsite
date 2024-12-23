@@ -33,8 +33,7 @@ export const getValidations = debounce(async ({ page }) => {
     })
     const list = res.data ?? []
     validationFilterStore.page = page
-    validationFilterStore.topData.list =
-      page === 1 ? list : [...validationFilterStore.topData.list, ...list]
+    validationFilterStore.topData.list = page === 1 ? list : [...validationFilterStore.topData.list, ...list]
     validationFilterStore.topData.listLoading = false
   } catch (err) {
     console.log(err)

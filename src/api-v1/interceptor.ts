@@ -1,8 +1,4 @@
-import {
-  AxiosHeaders,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig
-} from 'axios'
+import { AxiosHeaders, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import CryptoJS from 'crypto-js'
 
 export const md5Interceptor = (config: InternalAxiosRequestConfig<unknown>) => {
@@ -27,7 +23,7 @@ export const baseResponseInterceptor = (res: AxiosResponse) => {
   if (res.data.success) {
     return res
   } else {
-    if (res.data.errorCode === 1003) {
+    if ([1003, 2011].includes(res.data.errorCode)) {
       localStorage.removeItem('uid')
       localStorage.removeItem('token')
       localStorage.removeItem('auth')

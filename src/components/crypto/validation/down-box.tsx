@@ -8,11 +8,7 @@ import Empty from '@/components/common/empty'
 import { DownList } from './down-list'
 import Navigation from '@/components/crypto/validation/navigation'
 
-import {
-  validationFilterStore,
-  getDownValidations,
-  TaskType
-} from '@/stores/validation-filter.store'
+import { validationFilterStore, getDownValidations, TaskType } from '@/stores/validation-filter.store'
 import { splitArray } from '@/utils/split-array'
 import { CarouselRef } from 'antd/es/carousel'
 
@@ -34,9 +30,7 @@ const TopBox = () => {
         calRef?.current?.next()
         break
       case 'more':
-        navigate(
-          `/app/validation/filter?task_type=${TaskType.SUBMISSION_ONLY_IMAGE}`
-        )
+        navigate(`/app/validation/filter?task_type=${TaskType.SUBMISSION_ONLY_IMAGE}`)
         break
       default:
         break

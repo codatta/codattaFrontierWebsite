@@ -1,33 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Button, Drawer, Flex, Modal, Result, Tooltip, message } from 'antd'
-import {
-  CloseOutlined,
-  InfoCircleOutlined,
-  QuestionCircleOutlined
-} from '@ant-design/icons'
+import { CloseOutlined, InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { useSnapshot } from 'valtio'
 
 import { VALIDATION_TIPS } from '@/config/validation-tips'
 
 import ValidationAction from './validation-action'
 import ValidationDetail from './validation-detail'
-import validationApi, {
-  TValidationItem,
-  TValidationDetail,
-  TSubmitValidationParams
-} from '@/api-v1/validation.api'
+import validationApi, { TValidationItem, TValidationDetail, TSubmitValidationParams } from '@/api-v1/validation.api'
 import {
   getTopValidations,
   getDownValidations,
   changeValidationFilter,
   validationFilterStore
 } from '@/stores/validation-filter.store'
-import {
-  createValidation,
-  validationStore,
-  setSelectedItem,
-  setOpen
-} from '@/stores/validation.store'
+import { createValidation, validationStore, setSelectedItem, setOpen } from '@/stores/validation.store'
 import { getValidations } from '@/stores/validation-notstart.store'
 
 const Index = (props: { onRefresh?: () => void }) => {
@@ -152,10 +139,7 @@ const Index = (props: { onRefresh?: () => void }) => {
         title={
           <>
             Details
-            <Tooltip
-              title={VALIDATION_TIPS.detail}
-              className="ml-2 cursor-pointer"
-            >
+            <Tooltip title={VALIDATION_TIPS.detail} className="ml-2 cursor-pointer">
               <QuestionCircleOutlined />
             </Tooltip>
           </>
@@ -192,16 +176,11 @@ const Index = (props: { onRefresh?: () => void }) => {
               (selectedItem?.status === 'InProgress' ? (
                 <div className="bg-[#00C39633] py-2 text-center text-sm font-normal text-[#008573]">
                   <InfoCircleOutlined size={12} className="mr-1" />
-                  {['APPROVE', 'REJECT'].includes(
-                    validation.decision?.decision || ''
-                  )
+                  {['APPROVE', 'REJECT'].includes(validation.decision?.decision || '')
                     ? 'You will receive the response within 48 hours.'
                     : 'Your reward will be issued at the end of the task.'}
                 </div>
-              ) : validation?.adopt ||
-                ['UPVOTE', 'DOWNVOTE'].includes(
-                  validation.decision?.decision || ''
-                ) ? (
+              ) : validation?.adopt || ['UPVOTE', 'DOWNVOTE'].includes(validation.decision?.decision || '') ? (
                 <div className="bg-[#00C39633] py-2 text-center text-sm font-normal text-[#008573]">
                   <InfoCircleOutlined size={12} className="mr-1" />
                   Your reward has been issued.
@@ -255,11 +234,7 @@ const Index = (props: { onRefresh?: () => void }) => {
         }
       >
         <Flex justify="space-between" vertical className="h-full">
-          <ValidationAction
-            onFinish={handleActionFinish}
-            editable={editable}
-            initialValue={initialValue}
-          />
+          <ValidationAction onFinish={handleActionFinish} editable={editable} initialValue={initialValue} />
           {/* <Flex align="start" gap={4} className="text-#0400119C text-xs">
               <Info size={12} className="mt-2px flex-none" />
               The reason you provide will be automatically validated by AI(LLM-Claude3) models
@@ -273,17 +248,13 @@ const Index = (props: { onRefresh?: () => void }) => {
               className="px-16 py-20"
               title="Submission Successful"
               subTitle={
-                ['APPROVE', 'REJECT'].includes(
-                  lastSubmitted?.formValue.decision || ''
-                ) ? (
+                ['APPROVE', 'REJECT'].includes(lastSubmitted?.formValue.decision || '') ? (
                   <div className="leading-5">
-                    We have received your recommendation, and will share our
-                    decision within approximately 48 hours
+                    We have received your recommendation, and will share our decision within approximately 48 hours
                   </div>
                 ) : (
                   <div className="leading-5">
-                    We have received your opinion, and you will receive less
-                    reward at the end of the task
+                    We have received your opinion, and you will receive less reward at the end of the task
                   </div>
                 )
               }

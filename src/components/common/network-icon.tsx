@@ -132,29 +132,15 @@ const NETWORK_ICON_KEY_MAP = {
 }
 
 const NETWORK_ICON_MAP = Object.fromEntries(
-  Object.entries(NETWORK_ICON_KEY_MAP).map(([k, v]) => [
-    k,
-    NETWORK_ICON_PATH + v + '?v=2.1'
-  ])
+  Object.entries(NETWORK_ICON_KEY_MAP).map(([k, v]) => [k, NETWORK_ICON_PATH + v + '?v=2.1'])
 )
 
-const Icon = ({
-  type,
-  size = 14,
-  className
-}: {
-  type: string
-  size: number
-  className?: string
-}) => {
+const Icon = ({ type, size = 14, className }: { type: string; size: number; className?: string }) => {
   const icon = NETWORK_ICON_MAP[type?.toLocaleLowerCase()]
 
   return (
     <span
-      className={cn(
-        'block rounded-full bg-contain bg-center bg-no-repeat',
-        className
-      )}
+      className={cn('block rounded-full bg-contain bg-center bg-no-repeat', className)}
       style={{
         width: `${size}px`,
         height: `${size}px`,

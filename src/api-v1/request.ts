@@ -1,9 +1,5 @@
 import axios from 'axios'
-import {
-  baseResponseInterceptor,
-  requestInterceptor,
-  md5Interceptor
-} from './interceptor'
+import { baseResponseInterceptor, requestInterceptor, md5Interceptor } from './interceptor'
 
 const request = axios.create({ baseURL: '/api' })
 
@@ -23,6 +19,12 @@ export default request
 export interface PaginationParam {
   page?: number
   page_size?: number
+}
+
+export interface TPagination {
+  current: number
+  pageSize: number
+  total?: number
 }
 
 export interface PaginationResponse<T> extends Response<T> {

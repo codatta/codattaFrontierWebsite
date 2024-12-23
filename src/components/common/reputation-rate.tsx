@@ -8,10 +8,7 @@ function RateItem(props: { value: number; bgColor?: string }) {
   return (
     <div className="relative">
       <StarFilled className={'text-gray-200'} style={{ color: bgColor }} />
-      <div
-        className="absolute left-0 top-0 overflow-hidden"
-        style={{ width: `${value * 100}%` }}
-      >
+      <div className="absolute left-0 top-0 overflow-hidden" style={{ width: `${value * 100}%` }}>
         <StarFilled />
       </div>
     </div>

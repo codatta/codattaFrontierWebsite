@@ -4,13 +4,7 @@ import { useState } from 'react'
 import { groupBy, map } from 'lodash'
 import SegmentCard from './segment-card'
 
-export default function Component({
-  max,
-  onSubmit
-}: {
-  max: number
-  onSubmit: (data: object) => Promise<unknown>
-}) {
+export default function Component({ max, onSubmit }: { max: number; onSubmit: (data: object) => Promise<unknown> }) {
   const maxCard = 10
   const [form] = Form.useForm()
   const [ends, setEnds] = useState<{ end: number; key: string }[]>([
@@ -67,17 +61,12 @@ export default function Component({
     formValues: Record<string, object>,
     spliter: string = ':'
   ): Array<{ start: number; end: number; des: string }> => {
-    const grouped = groupBy(
-      Object.entries(formValues),
-      ([key, _value]: [string, string]) => key.split(spliter)[0]
-    )
+    const grouped = groupBy(Object.entries(formValues), ([key, _value]: [string, string]) => key.split(spliter)[0])
 
     return map(grouped, (group: [string, string][], _index: number) => {
       const parsedGroup = group.map(([key, value]: [string, string]) => [
         key.split(spliter)[1],
-        key.endsWith('start') || key.endsWith('end')
-          ? parseInt(value, 10)
-          : value
+        key.endsWith('start') || key.endsWith('end') ? parseInt(value, 10) : value
       ])
       return Object.fromEntries(parsedGroup) as {
         start: number
@@ -90,15 +79,9 @@ export default function Component({
   return (
     <div className="flex-1">
       <h2 className="mb-4 pr-6 text-xl font-semibold text-white">
-        Please segment and describe the above content based on your
-        understanding.
+        Please segment and describe the above content based on your understanding.
       </h2>
-      <Form
-        name="form1"
-        layout="vertical"
-        className="flex flex-col gap-6"
-        form={form}
-      >
+      <Form name="form1" layout="vertical" className="flex flex-col gap-6" form={form}>
         {ends.map((end, index) => (
           <SegmentCard
             key={`form1-${end.key}`}

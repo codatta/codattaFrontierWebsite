@@ -84,11 +84,7 @@ const ActionsChoice: React.FC<ActionsChoiceProps> = ({ onSelect }) => {
   return (
     <Form.Item
       name="actionType"
-      label={
-        <h2 className="text-base text-white">
-          3. Choose a robot action from the following actions.
-        </h2>
-      }
+      label={<h2 className="text-base text-white">3. Choose a robot action from the following actions.</h2>}
       rules={[{ required: true, message: 'Please select one option.' }]}
     >
       <Radio.Group
@@ -104,9 +100,7 @@ const ActionsChoice: React.FC<ActionsChoiceProps> = ({ onSelect }) => {
               <div
                 className="relative cursor-pointer text-white hover:border-blue-300"
                 onClick={() => {
-                  const radio = document.querySelector(
-                    `input[type="radio"][value="${action.id}"]`
-                  ) as HTMLInputElement
+                  const radio = document.querySelector(`input[type="radio"][value="${action.id}"]`) as HTMLInputElement
                   if (radio) {
                     radio.click()
                   }
@@ -118,14 +112,8 @@ const ActionsChoice: React.FC<ActionsChoiceProps> = ({ onSelect }) => {
                     style={{
                       backgroundImage: `url(${actionsSprite})`,
                       backgroundPosition: `${action.spritePosition.x}px ${action.spritePosition.y}px`,
-                      backgroundSize: `${
-                        action.spriteSize.width === 'auto'
-                          ? 'auto'
-                          : action.spriteSize.width + 'px'
-                      } ${
-                        action.spriteSize.height === 'auto'
-                          ? 'auto'
-                          : action.spriteSize.height + 'px'
+                      backgroundSize: `${action.spriteSize.width === 'auto' ? 'auto' : action.spriteSize.width + 'px'} ${
+                        action.spriteSize.height === 'auto' ? 'auto' : action.spriteSize.height + 'px'
                       }`
                     }}
                   />
@@ -133,9 +121,7 @@ const ActionsChoice: React.FC<ActionsChoiceProps> = ({ onSelect }) => {
               </div>
               <div className="mt-3 flex items-center justify-center text-white">
                 <Radio key={action.id} value={action.id} />
-                <span className="text-nowrap text-sm font-medium">
-                  {action.name}
-                </span>
+                <span className="text-nowrap text-sm font-medium">{action.name}</span>
               </div>
             </div>
           ))}

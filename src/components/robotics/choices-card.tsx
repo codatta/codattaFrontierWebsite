@@ -13,12 +13,7 @@ interface ViewSelectorProps {
   options: ViewOption[]
 }
 
-const ChoicesCard: React.FC<ViewSelectorProps> = ({
-  name,
-  title,
-  des,
-  options
-}) => {
+const ChoicesCard: React.FC<ViewSelectorProps> = ({ name, title, des, options }) => {
   return (
     <div className="relative rounded-2xl bg-[#252532] p-6">
       <h2 className="text-base font-semibold text-white">{title}</h2>
@@ -36,10 +31,7 @@ const ChoicesCard: React.FC<ViewSelectorProps> = ({
           }
         ]}
       >
-        <Checkbox.Group
-          className="grid grid-cols-3 gap-4 text-white"
-          options={options}
-        ></Checkbox.Group>
+        <Checkbox.Group className="grid grid-cols-3 gap-4 text-white" options={options}></Checkbox.Group>
       </Form.Item>
     </div>
   )

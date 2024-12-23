@@ -26,20 +26,9 @@ export default function CopyAction(props: {
   return (
     <>
       {copied ? (
-        <span
-          className={cn(
-            'line-height-none text-nowrap text-gray-900',
-            props.className
-          )}
-        >
-          Copied!
-        </span>
+        <span className={cn('line-height-none text-nowrap text-gray-900', props.className)}>Copied!</span>
       ) : (
-        <Copy
-          size={size}
-          onClick={handleClick}
-          className={cn('cursor-pointer', props.className)}
-        />
+        <Copy size={size} onClick={handleClick} className={cn('cursor-pointer', props.className)} />
       )}
     </>
   )

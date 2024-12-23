@@ -1,9 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
 
-export default function TransitionEffect(props: {
-  children: React.ReactNode
-  className?: string
-}) {
+export default function TransitionEffect(props: { children: React.ReactNode; className?: string }) {
   return (
     <AnimatePresence>
       <motion.div

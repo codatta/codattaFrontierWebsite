@@ -1,7 +1,4 @@
-import validationApi, {
-  TSubmitValidationParams,
-  TValidationItem
-} from '@/api-v1/validation.api'
+import validationApi, { TSubmitValidationParams, TValidationItem } from '@/api-v1/validation.api'
 import { debounce } from 'lodash'
 import { proxy } from 'valtio'
 type ValidationStore = {

@@ -15,10 +15,6 @@ export default function CustomEmpty(props: { text?: string }) {
 
 export function CustomEmpty2() {
   return (
-    <Empty
-      image={Empty.PRESENTED_IMAGE_SIMPLE}
-      imageStyle={{ height: 60 }}
-      description={<span>No data</span>}
-    ></Empty>
+    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} imageStyle={{ height: 60 }} description={<span>No data</span>}></Empty>
   )
 }

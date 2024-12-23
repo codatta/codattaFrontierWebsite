@@ -17,18 +17,9 @@ const Index = () => {
             })
           }
         >
-          <img
-            src={
-              'https://static.codatta.io/static/images/ae8c866f59ee8af114ac27339c6f2bd3a1a105dc.jpg'
-            }
-            alt=""
-          />
+          <img src={'https://static.codatta.io/static/images/ae8c866f59ee8af114ac27339c6f2bd3a1a105dc.jpg'} alt="" />
           <div className="group absolute top-0 flex size-full items-center justify-center bg-[#00000010] transition-all hover:bg-[#00000024]">
-            <img
-              src={playCircle}
-              alt=""
-              className="size-9 transition-transform duration-200 group-hover:scale-110"
-            />
+            <img src={playCircle} alt="" className="size-9 transition-transform duration-200 group-hover:scale-110" />
           </div>
         </div>
         <div
@@ -40,18 +31,9 @@ const Index = () => {
             })
           }
         >
-          <img
-            src={
-              'https://static.codatta.io/static/images/fd8b92a3699de141f8a61072fa2f2098db77b9e3.jpg'
-            }
-            alt=""
-          />
+          <img src={'https://static.codatta.io/static/images/fd8b92a3699de141f8a61072fa2f2098db77b9e3.jpg'} alt="" />
           <div className="group absolute top-0 flex size-full items-center justify-center bg-[#00000010] transition-all hover:bg-[#00000024]">
-            <img
-              src={playCircle}
-              alt=""
-              className="size-9 transition-transform duration-200 group-hover:scale-110"
-            />
+            <img src={playCircle} alt="" className="size-9 transition-transform duration-200 group-hover:scale-110" />
           </div>
         </div>
         <div
@@ -63,18 +45,9 @@ const Index = () => {
             })
           }
         >
-          <img
-            src={
-              'https://static.codatta.io/static/images/94d56b66c8f31669b97a303a9e3aa06a1f34be6d.jpg'
-            }
-            alt=""
-          />
+          <img src={'https://static.codatta.io/static/images/94d56b66c8f31669b97a303a9e3aa06a1f34be6d.jpg'} alt="" />
           <div className="group absolute top-0 flex size-full items-center justify-center bg-[#00000010] transition-all hover:bg-[#00000024]">
-            <img
-              src={playCircle}
-              alt=""
-              className="size-9 transition-transform duration-200 group-hover:scale-110"
-            />
+            <img src={playCircle} alt="" className="size-9 transition-transform duration-200 group-hover:scale-110" />
           </div>
         </div>
         {/* <div

@@ -21,6 +21,15 @@ export const dicts = proxy<TConfigStore>({
   entities: []
 })
 
+export interface CategoryOption {
+  value: string
+  label: string
+  children?: CategoryOption[]
+  disableCheckbox?: boolean
+  isLeaf?: boolean
+  description?: string
+}
+
 const categoryParentMap = new Map<string, string>()
 const categoryDesMap = new Map<string, string>()
 
@@ -29,11 +38,9 @@ export function useConfigStore() {
 }
 
 export const options = derive({
-  networks: (get) =>
-    getOptionFromStringDict(sortByFirstLetter(get(dicts).networks)),
-  entities: (get) =>
-    getOptionFromStringDict(sortByFirstLetter(get(dicts).entities)),
-  categories: (get) => {
+  networks: (get) => getOptionFromStringDict(sortByFirstLetter(get(dicts).networks)),
+  entities: (get) => getOptionFromStringDict(sortByFirstLetter(get(dicts).entities)),
+  categories: (get): CategoryOption[] => {
     const data = get(dicts).categories
     categoryParentMap.clear()
     categoryDesMap.clear()
@@ -65,12 +72,7 @@ export const optionsWithExtra = derive({
       ...option,
       label: (
         <span className="flex items-center gap-2 pr-4">
-          <img
-            width={20}
-            height={20}
-            className="rounded-full"
-            src={NETWORK_ICON_MAP[option.value.toLowerCase()]}
-          />
+          <img width={20} height={20} className="rounded-full" src={NETWORK_ICON_MAP[option.value.toLowerCase()]} />
           {option.label}
         </span>
       )
@@ -80,9 +82,9 @@ export const optionsWithExtra = derive({
 })
 
 export function getCategoryValueByChild(category: string) {
-  return categoryParentMap.has(category)
-    ? [categoryParentMap.get(category), category]
-    : null
+  const item = categoryParentMap.get(category)
+  if (!item) return null
+  return [item, category]
 }
 
 export function getCategoryDesByName(category: string) {

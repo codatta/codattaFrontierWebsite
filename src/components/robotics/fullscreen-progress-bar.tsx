@@ -5,10 +5,7 @@ interface ProgressBarProps {
   isVisible: boolean
 }
 
-const FullscreenProgressBar: React.FC<ProgressBarProps> = ({
-  progress,
-  isVisible
-}) => {
+const FullscreenProgressBar: React.FC<ProgressBarProps> = ({ progress, isVisible }) => {
   if (!isVisible) return <></>
 
   return (
@@ -19,9 +16,7 @@ const FullscreenProgressBar: React.FC<ProgressBarProps> = ({
           style={{ width: `${progress}%` }}
         ></div>
       </div>
-      <div className="mt-4 text-2xl font-semibold text-white">
-        {Math.round(progress)}%
-      </div>
+      <div className="mt-4 text-2xl font-semibold text-white">{Math.round(progress)}%</div>
     </div>
   )
 }

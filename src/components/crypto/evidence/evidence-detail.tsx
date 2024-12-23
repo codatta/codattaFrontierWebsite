@@ -4,10 +4,7 @@ import { Box, FileImage, Link, Type } from 'lucide-react'
 import Copy from '@/components/common/copy'
 import { TEvidence, TValidationDetail } from '@/api-v1/validation.api'
 
-export default function EvidenceDetail(props: {
-  evidence: TEvidence
-  explorer?: TValidationDetail['explorer_link']
-}) {
+export default function EvidenceDetail(props: { evidence: TEvidence; explorer?: TValidationDetail['explorer_link'] }) {
   const {
     evidence: { link, hash, text, files: _files, translation },
     explorer
@@ -26,11 +23,7 @@ export default function EvidenceDetail(props: {
             <div className="flex items-center gap-1">
               <a
                 className="inline-block font-medium text-primary"
-                href={
-                  explorer &&
-                  explorer.base_link +
-                    (explorer.hash_match ?? '').replace(/%s/, hash)
-                }
+                href={explorer && explorer.base_link + (explorer.hash_match ?? '').replace(/%s/, hash)}
                 target="_blank"
               >
                 {hash}
@@ -67,11 +60,7 @@ export default function EvidenceDetail(props: {
             </Tooltip>
           </div>
           <Tooltip title={link}>
-            <a
-              href={link}
-              className="block truncate text-sm font-medium text-primary"
-              target="_blank"
-            >
+            <a href={link} className="block truncate text-sm font-medium text-primary" target="_blank">
               {link}
             </a>
           </Tooltip>
@@ -93,9 +82,7 @@ export default function EvidenceDetail(props: {
                 ></Image>
               ))}
               {files.length > 3 && (
-                <div className="flex-1 rounded bg-[#30004010] text-center leading-[72px]">
-                  +{files.length - 3}
-                </div>
+                <div className="flex-1 rounded bg-[#30004010] text-center leading-[72px]">+{files.length - 3}</div>
               )}
             </div>
           </Image.PreviewGroup>
