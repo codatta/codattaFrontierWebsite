@@ -13,7 +13,7 @@ import Empty from '@/components/common/empty'
 function RecordItem(props: { record: Reputation }) {
   const { record } = props
   return (
-    <Row className="flex w-full items-center justify-between rounded-lg bg-gray-100 py-3">
+    <Row className="flex w-full items-center justify-between rounded-lg py-3">
       <Col span={10}>{record.memo}</Col>
       <Col span={8} className="flex items-center justify-center gap-1 text-sm">
         <span>Reputation</span>

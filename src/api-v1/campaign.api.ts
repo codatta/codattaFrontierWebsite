@@ -1,22 +1,22 @@
 import { isEmpty } from 'lodash'
 import type { TaskReward } from '@/api-v1/task.api'
 import type { UserInfo } from '@/apis/user.api'
-import request from './request'
+import request, { Response } from './request'
 
 class CampaignApi {
   async getConsult(revealed: CampaignRevealed, id: string = '') {
-    const { data } = await request.post('/campaign/consult', {
-      revealed,
-      source_id: id
-    })
-
-    return isEmpty(data.data) ? undefined : data
-
-    // const { data } = await request.post<Campaign>('/campaign/consult', {
+    // const { data } = await request.post('/campaign/consult', {
     //   revealed,
     //   source_id: id
     // })
-    // return isEmpty(data) ? null : data
+
+    // return isEmpty(data.data) ? undefined : data
+
+    const { data } = await request.post<Response<Campaign>>('/campaign/consult', {
+      revealed,
+      source_id: id
+    })
+    return isEmpty(data.data) ? null : data.data
   }
 
   async preSettle(id: Campaign['campaign_id']) {

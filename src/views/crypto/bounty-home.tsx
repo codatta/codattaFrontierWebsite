@@ -138,7 +138,7 @@ export default function Component() {
         <h2 className="mb-3 text-xl font-bold">Experience</h2>
         <div className="grid grid-cols-2 gap-6 md:grid-cols-3">
           {features.map((item) => {
-            return <HuntingLevelCard feature={item}></HuntingLevelCard>
+            return <HuntingLevelCard key={item.level} feature={item}></HuntingLevelCard>
           })}
         </div>
       </div>

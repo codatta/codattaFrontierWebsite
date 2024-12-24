@@ -1,5 +1,5 @@
-import type { ActivityGroup, ActivitySummary } from '@/api-v1/task.api'
-import taskApi from '@/api-v1/task.api'
+import type { ActivityGroup, ActivitySummary } from '@/apis/task.api'
+import taskApi from '@/apis/task.api'
 import { proxy } from 'valtio'
 
 export interface ActivityStore {
@@ -12,8 +12,6 @@ export const activity = proxy<ActivityStore>({
 
 export async function reloadActivities() {
   const res = await taskApi.getActivities()
-  console.log('reload actifviti', res)
-
   const groups = res.data
   let sinkGroups: ActivitySummary[] = []
   activity.groups = groups.filter((category: ActivityGroup) => {

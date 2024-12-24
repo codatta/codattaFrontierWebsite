@@ -35,7 +35,7 @@ function SubmissionSuccess(props: {
         )}
       </div>
       <div className={cn('flex flex-col items-center gap-4')}>
-        <div className="flex w-full gap-4">
+        <div className="flex w-full justify-center gap-4">
           {/* <ShareButton
             className="mr-auto"
             request={getShareContent}

@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { message, Modal, Button } from 'antd'
 // import AppBlankHeader from '@/components/app-blank-header'
 import BountyForm, { BountyFormValues } from '@/components/crypto/bounty/bounty-form'
@@ -15,6 +15,7 @@ import { getCategoryValueByChild } from '@/stores/config.store'
 import RecommendBounty from '@/components/crypto/bounty/recommend-bounty'
 import ReactGA from 'react-ga4'
 import dayjs from 'dayjs'
+import { ArrowLeft } from 'lucide-react'
 
 function TimeCountDown(props: { duration: number }) {
   const { duration } = props
@@ -80,6 +81,7 @@ export default function Component() {
 
   const type = searchParams.get('type') as BountyType
   const params = useParams()
+  const navigate = useNavigate()
 
   async function getDetail(taskId: string, type: BountyType) {
     try {
@@ -149,7 +151,10 @@ export default function Component() {
       {/* <AppBlankHeader /> */}
       <div className="m-auto max-w-[1440px] px-6 pt-6 lg:px-16">
         <div className="flex-1">
-          <h1 className="mb-6 text-[32px] font-bold">Bounty Hunting</h1>
+          <div className="mb-6 flex items-center gap-2">
+            <ArrowLeft size={28} onClick={() => navigate(-1)} className="cursor-pointer" />
+            <h1 className="text-2xl font-bold">Bounty Hunting</h1>
+          </div>
           <BountyForm
             taskId={params.id!}
             type={type}

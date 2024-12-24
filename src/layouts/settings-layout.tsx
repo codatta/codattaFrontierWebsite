@@ -15,9 +15,8 @@ function SettingsMenu() {
 
   const menuItems: AccountSubMenu[] = [
     { label: 'Personal Info', key: '/app/settings/account' },
-    // { label: 'Notification', key: '/settings/notification' },
-    { label: 'Reward', key: 'app/settings/reward' },
-    { label: 'Reputation', key: 'app/settings/reputation' }
+    { label: 'Reward', key: '/app/settings/reward' },
+    { label: 'Reputation', key: '/app/settings/reputation' }
   ]
 
   function handleMenuClick(item: AccountSubMenu) {
@@ -31,8 +30,8 @@ function SettingsMenu() {
           key={item.key}
           onClick={() => handleMenuClick(item)}
           className={cn(
-            'px-6 py-4 transition-all duration-300',
-            location.pathname === item.key ? 'border-r-[3px] border-r-primary bg-primary/25' : ''
+            'border-r-[3px] px-6 py-4 transition-all duration-300',
+            location.pathname === item.key ? 'border-r-primary bg-primary/25' : 'border-r-primary/0'
           )}
         >
           {item.label}
@@ -51,7 +50,7 @@ export default function SettingsLayout() {
     <TransitionEffect className="">
       <h1 className="mb-2 text-4xl font-semibold leading-8">User Settings</h1>
       <p className="mb-6">Manage your account settings and preferences</p>
-      <div className="flex rounded-2xl bg-white/10 py-6">
+      <div className="flex rounded-2xl bg-white/5 py-6">
         <SettingsMenu />
         <Outlet />
       </div>

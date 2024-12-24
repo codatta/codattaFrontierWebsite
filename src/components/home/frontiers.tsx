@@ -40,6 +40,7 @@ const Frontiers = () => {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
         {frontiersList.map((item) => (
           <div
+            key={item.name}
             className="group relative aspect-[269/243] w-full cursor-pointer overflow-hidden rounded-2xl"
             onClick={item.active}
           >

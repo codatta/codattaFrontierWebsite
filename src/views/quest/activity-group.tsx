@@ -1,4 +1,4 @@
-import type { ActivitySummary } from '@/api-v1/task.api'
+import type { ActivitySummary } from '@/apis/task.api'
 import { activity, reloadActivities } from '@/stores/activity.store'
 import { Avatar, Badge, Button, Flex, Image, Spin, Col, Row } from 'antd'
 import { Ellipsis } from 'lucide-react'
@@ -47,7 +47,7 @@ export default function Component() {
 const ActivityCard = ({ summary: activity }: { summary: ActivitySummary }) => {
   const highLight = activity.sub_cate_id === 'SUBCATE010'
   return (
-    <Link to={'/quest/' + activity.sub_cate_id}>
+    <Link to={'/app/quest/' + activity.sub_cate_id}>
       <div
         className={cn(
           `relative h-full rounded-2xl border border-gray-50 bg-gray-50 px-6 pb-3 pt-6 transition-all hover:border hover:border-primary hover:shadow`,

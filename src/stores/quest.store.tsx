@@ -25,7 +25,11 @@ function showExtensionGuideModal() {
 }
 
 function unMountCompleteModal() {
-  if (rootdom) document.body.removeChild(rootdom)
+  try {
+    if (rootdom) document.removeChild(rootdom)
+  } catch (err) {
+    console.log(err)
+  }
   rootdom = null
 }
 

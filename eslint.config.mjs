@@ -12,8 +12,8 @@ export default tseslint.config(
     extends: [
       eslint.configs.recommended,
       prettierrRecommended,
-      noChinese.configs.recommended,
-      ...tseslint.configs.recommended
+      ...tseslint.configs.recommended,
+      noChinese.configs.recommended
     ],
     files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
     languageOptions: {
@@ -22,7 +22,8 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      tailwindcss: tailwind
+      tailwindcss: tailwind,
+      noChinese: noChinese
     },
     rules: {
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],

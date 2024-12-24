@@ -38,7 +38,7 @@ const Result = (props: { content: ReactNode | string; pass: boolean }) => {
 const ExpectTime = (props: { time: string }) => {
   const { time = '' } = props
   return (
-    <span className="inline-block items-center rounded-full bg-gray-400 px-2 py-0.5 text-xs">
+    <span className="flex items-center rounded-full bg-gray-400 px-2 py-0.5 text-xs">
       <Clock size={12} className="mr-1" /> <span>{time}</span>
     </span>
   )

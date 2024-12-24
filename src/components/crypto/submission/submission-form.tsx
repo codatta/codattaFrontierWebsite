@@ -148,7 +148,6 @@ export default function SubmissionForm(props: {
         <AutoComplete
           allowClear
           backfill
-          className="[&input:leading-1]"
           filterOption={entityFilter}
           options={options.entities as { label: string; value: string }[]}
           placeholder="Represent the address owner (company, institution, organization, etc.)."

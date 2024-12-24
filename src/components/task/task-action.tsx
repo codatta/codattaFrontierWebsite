@@ -7,7 +7,7 @@ import ReactGA from 'react-ga4'
 import { useNavigate } from 'react-router-dom'
 import Button3D from '../common/button-3d'
 import { questStoreActions, QUEST_TMA_TASK_IDS } from '@/stores/quest.store'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { cn } from '@udecode/cn'
 
 interface TaskActionProps {
@@ -20,12 +20,6 @@ export default function TaskAction(props: TaskActionProps) {
   const {
     task: { type, status, locked }
   } = props
-
-  useEffect(() => {
-    return () => {
-      questStoreActions.unMountCompleteModal()
-    }
-  }, [])
 
   return (
     <Space size={16}>
@@ -52,6 +46,7 @@ const actionButton: Record<string, ActionButton> = {
       ReactGA.event('verify_quest')
       try {
         const res = await taskApi.verify(props.task.task_id)
+        console.log(res, 'adlfkjasdklfjklasjdfklasdfklaslkjd')
         const verifyRes = res.data
         if (verifyRes?.verify_result === 'PASSED') {
           props.onReward?.(verifyRes.rewards)

@@ -100,6 +100,7 @@ export interface InviteRecord {
   user_id: string
   email: string
   reward: number
+  address?: string
 }
 
 export interface UserReword {

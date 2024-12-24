@@ -1,5 +1,6 @@
 // import accountApi from '@/api/account.api'
 import userApi, { UserInfo, UserUpdateParams } from '@/apis/user.api'
+import { authRedirect } from '@/utils/auth-redirect'
 // import CustomAlert from '@/components/account/custom-alert'
 // import React, { useState } from 'react'
 // import { Button } from 'antd'
@@ -198,14 +199,31 @@ async function getUserInfo() {
   return data
 }
 
+function logout() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('uid')
+  localStorage.removeItem('auth')
+  const url = authRedirect()
+  window.location.href = url
+}
+
+function checkLogin() {
+  const token = localStorage.getItem('token')
+  const uid = localStorage.getItem('uid')
+  const auth = localStorage.getItem('auth')
+  return !!token && !!uid && !!auth
+}
+
 export const userStoreActions = {
   // linkDiscord,
   // linkX,
   // linkTelegram,
   updateUserInfo,
-  getUserInfo
+  getUserInfo,
   // showLinkSuccess,
   // showLinkError,
   // closeLinkSuccess,
   // closeLinkError
+  logout,
+  checkLogin
 }

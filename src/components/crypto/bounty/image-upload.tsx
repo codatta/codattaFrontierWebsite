@@ -83,7 +83,7 @@ export default function ImageUpload(props: { onChange: (fileList: FileItem[]) =>
         return { name: item.name, path: item.path }
       })
     )
-  }, [uploadImages, onChange])
+  }, [uploadImages])
 
   function handleUploadFileChange(uploadFile: UploadChangeParam<UploadFile<File>>) {
     if (uploadFiles.find((existFile) => existFile.uid === uploadFile.file.uid)) return

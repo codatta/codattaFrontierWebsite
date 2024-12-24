@@ -32,23 +32,34 @@ const CryptoBountySubmit = lazy(() => import('@/views/crypto/bounty-submit'))
 
 const FashionHome = lazy(() => import('@/views/fashion/home'))
 const RoboticsHome = lazy(() => import('@/views/robotics/home'))
+const RoboticsHistory = lazy(() => import('@/views/robotics/history'))
 
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
 const Activity = lazy(() => import('@/views/quest/activity'))
 
 const ReferralLanding = lazy(() => import('@/views/referral-landing'))
+const AppReferral = lazy(() => import('@/views/referral'))
+const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
+const AppNotification = lazy(() => import('@/views/notification'))
+const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
+const DataProfile = lazy(() => import('@/views/data-profile'))
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Navigate to="/app" />} />
-
+        <Route path="/data-profile/:network/:address" element={<DataProfile />} />
+        <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout />}>
           <Route index element={<Home />} />
 
+          <Route path="referral" element={<AppReferral />}></Route>
+          <Route path="leaderboard" element={<AppLeaderboard />}></Route>
+          <Route path="notification" element={<AppNotification />}></Route>
           <Route path="fashion" element={<FashionHome />}></Route>
           <Route path="robotics" element={<RoboticsHome />}></Route>
+          <Route path="robotics/history" element={<RoboticsHistory />}></Route>
 
           <Route path="settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
@@ -68,10 +79,12 @@ export default function Router() {
           </Route>
 
           <Route path="quest">
-            <Route path="" element={<ActivityGroup />} />
+            <Route index element={<ActivityGroup />} />
             <Route path=":categoryId" element={<Activity />} />
           </Route>
         </Route>
+
+        <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
 
         <Route path="/account">
           <Route path="signin" element={<AccountSignin />} />

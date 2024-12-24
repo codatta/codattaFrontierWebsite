@@ -10,7 +10,7 @@ import CardList from '@/components/crypto/validation/card-list'
 import Details from '@/components/crypto/validation/details-v2'
 import OldDetails from '@/components/crypto/validation/details'
 
-import arrowLeft from '@/assets/crypto/arrow-left.svg'
+import arrowLeft from '@/assets/common/arrow-left.svg'
 
 import {
   validationFilterStore,

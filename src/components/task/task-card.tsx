@@ -239,7 +239,6 @@ const TaskProgress = (props: {
       // const itemFullValue = (i + 1) * unit
       const itemRate = _rateValue < unit ? _rateValue : 100
       _rateValue = _rateValue - unit
-      console.log(itemRate)
       items.push(<RateItem value={itemRate} key={i} />)
     }
     return items

@@ -1,4 +1,3 @@
-// import { shortenAddress } from '@/utils/wallet-address'
 import { Button, message, Modal, Spin } from 'antd'
 import {
   Check,
@@ -33,7 +32,9 @@ async function canvasToBlob(canvas: HTMLCanvasElement) {
 }
 
 function UserAvatarEditor() {
-  const [avatar, setAvatar] = useState('')
+  const { info } = useUserStore()
+
+  const [avatar, setAvatar] = useState(info?.user_data.avatar || '')
   const [showAvatarEditor, setShowAvatarEditor] = useState(false)
   const editor = useRef<AvatarEditor>(null)
   const [imageDataUrl, setImageDataUrl] = useState('')
@@ -90,8 +91,10 @@ function UserAvatarEditor() {
   return (
     <div className="flex items-start gap-6">
       <div className="block">
-        {avatar ? <img className="block rounded-full" src={avatar} height={80} width={80} /> : null}
-        {!avatar ? (
+        {info?.user_data.avatar ? (
+          <img className="block rounded-full" src={info?.user_data.avatar} height={80} width={80} />
+        ) : null}
+        {!info?.user_data.avatar ? (
           <div className="flex size-[80px] items-center justify-center rounded-full border border-[rgba(48,0,64,0.06)] bg-[rgba(237,233,239,1)]">
             <UserCircleIcon size={40} className="text-[rgba(0,0,0,0.24)]"></UserCircleIcon>
           </div>
@@ -409,6 +412,7 @@ function UserSecurity() {
         width={463}
         centered
         styles={{ content: { padding: 0 } }}
+        destroyOnClose
       >
         <CodattaConnect
           onEvmWalletConnect={handleEvmWalletConnect}

@@ -1,4 +1,4 @@
-import taskApi, { TaskStatus, type Activity, type TaskReward, type Task_New } from '@/api-v1/task.api'
+import taskApi, { TaskStatus, type Activity, type TaskReward, type TaskItem } from '@/apis/task.api'
 import TaskAction from '@/components/task/task-action'
 import TaskCard from '@/components/task/task-card'
 import TransitionEffect from '@/components/common/transition-effect'
@@ -11,7 +11,7 @@ import ReactGA from 'react-ga4'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 
-import campaignApi, { CampaignRevealed } from '@/api-v1/campaign.api'
+import campaignApi, { Campaign, CampaignRevealed } from '@/api-v1/campaign.api'
 import userApi from '@/apis/user.api'
 
 const channel = new BroadcastChannel('codatta:social-link')
@@ -25,11 +25,11 @@ const taskStatusSort: Record<TaskStatus, number> = {
 export default function Component() {
   const { categoryId } = useParams()
   const [activity, setActivity] = useState<Activity>()
-  const [sortedTasks, setSortedTasks] = useState<Task_New[]>([])
+  const [sortedTasks, setSortedTasks] = useState<TaskItem[]>([])
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
-  const [consult, setConsult] = useState<CampaignRevealed>()
+  const [consult, setConsult] = useState<Campaign | null>()
 
   async function loadData(categoryId: string) {
     try {
@@ -94,7 +94,9 @@ export default function Component() {
   const afterAction = async () => {
     try {
       await reloadActivities()
-      await campaignApi.getConsult(CampaignRevealed.Task, categoryId).then((res) => setConsult(res.data))
+      await campaignApi.getConsult(CampaignRevealed.Task, categoryId).then((res) => {
+        setConsult(res)
+      })
     } catch (err) {
       message.error(err.message)
     }
@@ -121,7 +123,7 @@ export default function Component() {
       </div>
       <div className="flex flex-col gap-6">
         {contextHolder}
-        {consult === undefined && <Summary id={categoryId ?? ''} activity={activity ?? null} compact={!!consult} />}
+        {consult && <Summary id={categoryId ?? ''} activity={activity ?? null} compact={!!consult} />}
         <Spin
           spinning={loading}
           className="!max-h-full"
@@ -193,7 +195,6 @@ function HelpInfo({ activity, className }: { activity: Activity; className?: str
     window.open(
       helpInfo.link,
       'targetWindow',
-
       `width=800,height=600,scrollbars=yes,toolbar=no,location=no,titlebar=no,menubar=no,resizable=yes,left=${-screen.width / 2 - 400},top=${screen.height / 2 - 400}`
     )
   }

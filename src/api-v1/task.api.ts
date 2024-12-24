@@ -1,6 +1,23 @@
 import request, { type Response } from './request'
 import type { UserInfo } from '@/apis/user.api'
 
+export interface QuestOption {
+  key: string
+  statement: string
+  answer?: boolean
+  correct?: boolean
+  errorMessage?: string
+}
+
+export interface Quest {
+  title: string
+  type: string
+  content?: string
+  answer?: string[]
+  errorMessage?: string
+  options: QuestOption[]
+}
+
 class TaskApi {
   async getActivities() {
     const res = await request.post<Response<ActivityGroup[]>>('/task/categories')
@@ -33,12 +50,12 @@ class TaskApi {
     ).data
   }
 
-  // async getQuestDetail(questId: string) {
-  //   const { data } = await request.post<any>('/quest/detail', {
-  //     quest_id: questId
-  //   })
-  //   return data
-  // }
+  async getQuestDetail(questId: string) {
+    const { data } = await request.post<Response<Quest[]>>('/quest/detail', {
+      quest_id: questId
+    })
+    return data
+  }
 
   async finishTask(taskConfigId: string) {
     const { data } = await request.post('/task/finish', {

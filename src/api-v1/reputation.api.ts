@@ -1,14 +1,14 @@
-import request, { PaginationParam, PaginationResponse } from './request'
+import request, { PaginationParam, PaginationResponse, Response } from './request'
 import type { SummaryUserInfo } from './user.api'
 
 class ReputationApi {
   async getTopContributions(pagination: PaginationParam = { page: 1, page_size: 50 }) {
-    const { data } = await request.post<UserContribution[]>('/user/contribution/top', pagination)
+    const { data } = await request.post<Response<UserContribution[]>>('/user/contribution/top', pagination)
     return data
   }
 
   async getTopReputations(pagination: PaginationParam = { page: 1, page_size: 50 }) {
-    const { data } = await request.post<UserReputation[]>('/user/reputation/top', pagination)
+    const { data } = await request.post<Response<UserReputation[]>>('/user/reputation/top', pagination)
     return data
   }
 

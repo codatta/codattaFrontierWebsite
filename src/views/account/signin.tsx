@@ -8,6 +8,7 @@ import { ILoginResponse } from 'codatta-connect/dist/api/account.api'
 import { CodattaSigninConfig } from 'codatta-connect/dist/providers/codatta-signin-context-provider'
 import { useChannelStore } from '@/stores/channel.store'
 import CodattaLogoWhite from '@/assets/common/logo-white.svg'
+import { userStoreActions } from '@/stores/user.store'
 
 function CodattaSigninHead() {
   return (
@@ -19,17 +20,18 @@ function CodattaSigninHead() {
 }
 
 export default function AccountSignin() {
-  const appToken = localStorage.getItem('token')
   const [sarechParams] = useSearchParams()
   const navigate = useNavigate()
   const [loading] = useState(false)
+  const isLogin = userStoreActions.checkLogin()
 
   const from = sarechParams.get('from') || '/app'
   const source = from === 'extension' ? 'PLUG' : 'WEB'
   const redirectUrl = from === 'extension' ? '/account/extension/signin' : from || '/app'
   const channelInfo = useChannelStore()
 
-  if (appToken && from !== 'extension') {
+  if (isLogin && from !== 'extension') {
+    console.log('redirect', redirectUrl)
     return <Navigate to={redirectUrl}></Navigate>
   }
 

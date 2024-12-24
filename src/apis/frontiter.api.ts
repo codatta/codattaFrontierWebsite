@@ -19,6 +19,9 @@ export interface TaskDetail {
   frontier_id: string
   task_id: string
   name: string
+  create_time: number
+  submission_id: string
+  task_type: string
   data_display: {
     gif_resource: string
     template_id: string
