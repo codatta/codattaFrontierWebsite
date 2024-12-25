@@ -1,3 +1,4 @@
+import { authRedirect } from '@/utils/auth-redirect'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import cookies from 'js-cookie'
 
@@ -30,8 +31,8 @@ function errorResponseInterceptor(err: AxiosError) {
     localStorage.removeItem('token')
     localStorage.removeItem('auth')
 
-    const redirect = window.location.href
-    window.location.href = `/account/signin?from=${encodeURIComponent(redirect)}`
+    const url = authRedirect()
+    window.location.href = url
   }
   return Promise.reject(err)
 }

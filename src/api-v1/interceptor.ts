@@ -1,3 +1,4 @@
+import { authRedirect } from '@/utils/auth-redirect'
 import { AxiosHeaders, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import CryptoJS from 'crypto-js'
 
@@ -28,8 +29,8 @@ export const baseResponseInterceptor = (res: AxiosResponse) => {
       localStorage.removeItem('token')
       localStorage.removeItem('auth')
 
-      const redirect = window.location.href
-      window.location.href = `/account/signin?from=${encodeURIComponent(redirect)}`
+      const url = authRedirect()
+      window.location.href = url
     }
     return Promise.reject(new Error(res.data?.errorMessage))
   }

@@ -123,7 +123,7 @@ export default function Component() {
       </div>
       <div className="flex flex-col gap-6">
         {contextHolder}
-        {consult && <Summary id={categoryId ?? ''} activity={activity ?? null} compact={!!consult} />}
+        {!consult && <Summary id={categoryId ?? ''} activity={activity ?? null} compact={!!consult} />}
         <Spin
           spinning={loading}
           className="!max-h-full"
