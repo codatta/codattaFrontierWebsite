@@ -41,7 +41,7 @@ function TableItem(props: { item: TSubmissionItem }, ref?: LegacyRef<HTMLTableRo
           </div>
           {basicInfo.entity && <div className="mt-2 truncate">{basicInfo.entity}</div>}
         </td>
-        <td className="w-1/5 overflow-hidden truncate break-words p-4">{basicInfo.category}</td>
+        <td className="w-1/5 max-w-[200px] overflow-hidden truncate break-words p-4">{basicInfo.category}</td>
         <td className="truncate p-4">
           <SubmissionProgressCompact reward={reward} />
         </td>

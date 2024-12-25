@@ -101,7 +101,7 @@ export default function Component() {
           </Flex>
         </div>
         <Spin spinning={listLoading}>
-          <div className="overflow-y-scroll">
+          <div className="no-scrollbar overflow-y-scroll">
             <div className="flex h-full flex-col gap-2 overflow-hidden rounded-sm bg-gray-50">
               <SubmissionList />
             </div>

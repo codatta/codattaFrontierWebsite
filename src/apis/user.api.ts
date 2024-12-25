@@ -6,7 +6,7 @@ export interface UserAccount {
   account: string
   account_type: 'block_chain' | 'email'
   current_account: boolean
-  connector: 'codatta_ton' | 'codatta_wallet' | 'codatta_email'
+  chain: string
   wallet_name?: string
 }
 

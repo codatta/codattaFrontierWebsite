@@ -135,7 +135,7 @@ function getUsername(info: UserInfo | null) {
   if (['email'].includes(currentAccount.account_type)) {
     return currentAccount.account
   } else if (['blockchain', 'wallet', 'block_chain'].includes(currentAccount.account_type)) {
-    if (['codatta_ton', 'ton'].includes(currentAccount.connector)) {
+    if (['-239', '-3'].includes(currentAccount.chain)) {
       return shortenAddress(toUserFriendlyAddress(currentAccount.account), 12)
     } else {
       return shortenAddress(currentAccount.account, 12)

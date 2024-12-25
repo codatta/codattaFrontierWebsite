@@ -182,6 +182,7 @@ function UserNameEditor() {
             className="h-full flex-1 bg-transparent outline-none"
             type="text"
             value={nickname}
+            maxLength={64}
             onChange={(e) => setNickname(e.target.value)}
           />
           <Button size="small" className="ml-auto" loading={loading} type="primary" onClick={handleUpdateUsername}>
@@ -210,7 +211,7 @@ function EmailAccountItem(props: { account: UserAccount; onEmailChangeClick: () 
     <div key={account.id} className="flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2">
       <Mail size={16}></Mail>
       <div className="truncate">{shortenAddress(account.account, 16)}</div>
-      <Edit size={24} className="ml-auto shrink-0 cursor-pointer p-1" onClick={props.onEmailChangeClick}></Edit>
+      {/* <Edit size={24} className="ml-auto shrink-0 cursor-pointer p-1" onClick={props.onEmailChangeClick}></Edit> */}
     </div>
   )
 }
@@ -221,7 +222,14 @@ function WalletAccountItem(props: { account: UserAccount; canUnbind: boolean | n
   const [loading, setLoading] = useState(false)
 
   const address = useMemo(() => {
-    return account.connector == 'codatta_ton' ? toUserFriendlyAddress(account.account) : account.account
+    if (['blockchain', 'wallet', 'block_chain'].includes(account.account_type)) {
+      if (['-239', '-3'].includes(account.chain)) {
+        return shortenAddress(toUserFriendlyAddress(account.account), 12)
+      } else {
+        return shortenAddress(account.account, 12)
+      }
+    }
+    return '-'
   }, [account])
 
   async function handleUnlinkAccount() {
@@ -318,7 +326,7 @@ function UserSecurity() {
       email: email,
       email_code: code
     })
-    message.success('Wallet bind success.')
+    message.success('Email bind success.')
     userStoreActions.getUserInfo()
     setShowWalletConnectModal(false)
   }
@@ -439,7 +447,7 @@ export default function SettingsAccount() {
             <h3 className="mb-4 text-sm">Avatar</h3>
             <UserAvatarEditor></UserAvatarEditor>
           </div>
-          <div>
+          <div className="max-w-[338px]">
             <h3 className="mb-4">Name</h3>
             <UserNameEditor></UserNameEditor>
           </div>
