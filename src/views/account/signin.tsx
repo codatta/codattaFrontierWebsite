@@ -31,7 +31,6 @@ export default function AccountSignin() {
   const channelInfo = useChannelStore()
 
   if (isLogin && from !== 'extension') {
-    console.log('redirect', redirectUrl)
     return <Navigate to={redirectUrl}></Navigate>
   }
 
@@ -39,7 +38,15 @@ export default function AccountSignin() {
     localStorage.setItem('token', res.old_token)
     localStorage.setItem('uid', res.user_id)
     localStorage.setItem('auth', res.token)
-    navigate(redirectUrl)
+
+    if (from === 'extension') {
+      const userInfo = await userStoreActions.getUserInfo()
+      navigate('/account/extension/signin', {
+        state: { new_user: res.new_user, inviter_code: userInfo.user_data.referee_code }
+      })
+    } else {
+      navigate(redirectUrl)
+    }
   }
 
   const config: CodattaSigninConfig = {

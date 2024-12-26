@@ -43,6 +43,7 @@ const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
 const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const DataProfile = lazy(() => import('@/views/data-profile'))
+const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 
 export default function Router() {
   return (
@@ -88,6 +89,7 @@ export default function Router() {
 
         <Route path="/account">
           <Route path="signin" element={<AccountSignin />} />
+          <Route path="extension/signin" element={<ExtensionSignin />} />
         </Route>
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
