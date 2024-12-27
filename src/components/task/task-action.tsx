@@ -67,12 +67,12 @@ const actionButton: Record<string, ActionButton> = {
       <Button
         disabled={props.task.locked}
         className={cn(
-          `relative h-[46px] min-w-[120px] overflow-hidden rounded-[36px] border-none bg-white text-gray hover:!bg-gray-700 hover:!text-gray`,
+          `relative h-auto min-w-[120px] overflow-hidden rounded-[36px] border-none bg-white py-3 text-gray hover:!bg-gray-700 hover:!text-gray`,
           btnLoading ? 'bg-gray-200 text-gray-500' : ''
         )}
         onClick={handleVerifyClick}
       >
-        Verify
+        {props.task.type === 'REDEEM' ? 'Redeem' : 'Verify'}
         <div
           className={cn(
             `leading-46px absolute left-[-100%] top-0 z-[1] h-[46px] w-full rounded-[36px] bg-transparent`,
@@ -215,5 +215,11 @@ const taskActionMap: Record<TaskType, Record<TaskStatus, ActionButton[]>> = {
     [TaskStatus.Pending]: [actionButton.Verify, actionButton.Execute],
     [TaskStatus.Finished]: [],
     [TaskStatus.Rewarded]: [actionButton.Finished]
+  },
+  [TaskType.Redeem]: {
+    [TaskStatus.NotStart]: [],
+    [TaskStatus.Pending]: [actionButton.Verify],
+    [TaskStatus.Finished]: [actionButton.Finished],
+    [TaskStatus.Rewarded]: []
   }
 }

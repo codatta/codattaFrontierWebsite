@@ -104,7 +104,8 @@ export enum TaskStatus {
 
 export enum TaskType {
   Manual = 'MANUAL',
-  Auto = 'AUTO'
+  Auto = 'AUTO',
+  Redeem = 'REDEEM'
 }
 
 export interface Task_New {
@@ -122,6 +123,7 @@ export interface Task_New {
   ext_info: null
   schema: string
   rewards: TaskReward[]
+  exhcange?: TaskReward[]
   locked: boolean
   how_to_unlock: string
   refresh_time: number

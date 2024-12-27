@@ -74,21 +74,23 @@ export default function Component() {
   const [messageApi, contextHolder] = message.useMessage()
 
   const onReward = (rewards: TaskReward[]) => {
-    messageApi.success({
-      content: (
-        <span className="font-medium text-[#020008E0]">
-          You have earned {rewards.map((reward) => reward.reward_value + ' ' + reward.reward_type).join(', ')}
-        </span>
-      ),
-      icon: (
-        <Avatar.Group>
-          {rewards.map((reward) => (
-            <Avatar shape="square" key={reward.reward_type} src={reward.reward_icon} className="!border-none" />
-          ))}
-        </Avatar.Group>
-      ),
-      className: `[&_.ant-message-custom-content]:(flex items-center gap-2) [&_.ant-message-notice-content]:(!bg-gradient-to-r from-#E9F0FFCC via-#FFF3FFCC via-30% to-#FFFFFFCC to-80% !px-6 !py-3)`
-    })
+    if (rewards) {
+      messageApi.success({
+        content: (
+          <span className="font-medium text-[#020008E0]">
+            You have earned {rewards.map((reward) => reward.reward_value + ' ' + reward.reward_type).join(', ')}
+          </span>
+        ),
+        icon: (
+          <Avatar.Group>
+            {rewards.map((reward) => (
+              <Avatar shape="square" key={reward.reward_type} src={reward.reward_icon} className="!border-none" />
+            ))}
+          </Avatar.Group>
+        ),
+        className: `[&_.ant-message-custom-content]:(flex items-center gap-2) [&_.ant-message-notice-content]:(!bg-gradient-to-r from-#E9F0FFCC via-#FFF3FFCC via-30% to-#FFFFFFCC to-80% !px-6 !py-3)`
+      })
+    }
   }
 
   const afterAction = async () => {
