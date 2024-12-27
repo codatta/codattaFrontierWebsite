@@ -31,6 +31,7 @@ export interface TaskDetail {
   }
   reward_info: readonly TaskRewardInfo[]
   status: string
+  txHashUrl: string
 }
 
 class frontier {

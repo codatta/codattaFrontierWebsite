@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Pagination, Spin } from 'antd'
 import { useSnapshot } from 'valtio'
+import { ArrowUpRight } from 'lucide-react'
 
 import arrowLeft from '@/assets/common/arrow-left.svg'
 
@@ -24,8 +25,18 @@ const CardList = () => {
               <div className="mb-6 break-all font-semibold">{item.name}</div>
               <div>{dayjs(item.create_time * 1000).format('DD MMM YYYY h:mm a')}</div>
             </div>
-            <div className="w-[88px] flex-none rounded-full bg-white/5 py-2 text-center text-xs text-[#8D8D93]">
-              {item.status}
+            <div className="flex w-[130px] flex-col items-center">
+              <div className="w-22 bg-gray-1 mb-2 flex-none rounded-full py-2 text-center text-xs text-[#8D8D93]">
+                {item.status}
+              </div>
+              {item.status === 'SUBMITTED' ? (
+                <a className="flex hover:text-primary" href={item.txHashUrl} target="_blank">
+                  <span className="text-xs">On-chain Success!</span>
+                  <ArrowUpRight strokeWidth={1.25} size={16} />
+                </a>
+              ) : (
+                <div>On-chain...</div>
+              )}
             </div>
           </div>
         ))}
