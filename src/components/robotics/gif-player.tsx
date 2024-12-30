@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Button, Slider, message } from 'antd'
 import { Frame, loadGifFrames } from '@/utils/gif'
 import FullscreenProgressBar from './fullscreen-progress-bar'
-import playIcon from '@/assets/robotics/play-circle.png'
+import playIcon from '@/assets/common/play-circle.png'
 import pauseIcon from '@/assets/robotics/pause-circle.png'
 import { cn } from '@udecode/cn'
 import { setFrameToLabel } from '@/stores/image-label-store'
@@ -115,20 +115,11 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
   }, [currentFrameIndex, frames])
 
   return (
-    <div className="items-cente box-content flex w-full flex-col text-white">
-      <Player
-        frames={frames}
-        frame={currentFrameIndex}
-        size={size}
-        onClick={handleTogglePlay}
-      ></Player>
+    <div className="box-content flex w-full flex-col items-center text-white">
+      <Player frames={frames} frame={currentFrameIndex} size={size} onClick={handleTogglePlay}></Player>
       <div className="mb-4 flex h-10 w-full items-center gap-4">
         <Button type="text" onClick={handleTogglePlay} shape="circle">
-          <object
-            data={isPlaying ? pauseIcon : playIcon}
-            type="image/png"
-            className="h-6 w-6"
-          />
+          <object data={isPlaying ? pauseIcon : playIcon} type="image/png" className="size-6" />
         </Button>
         <div className="min-w-[40px] text-center text-xs">
           {currentFrameIndex + 1}/{frames.length}
@@ -154,9 +145,8 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
         <div className="flex gap-2">
           <div
             className={cn(
-              'h-5 w-10 cursor-pointer rounded-[4px] bg-white bg-opacity-35 text-center text-xs leading-5 text-white text-opacity-40 transition-all',
-              speed === 1 &&
-                'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
+              'h-5 w-10 cursor-pointer rounded-[4px] bg-white bg-opacity-35 text-center text-xs leading-5 text-white/40 transition-all',
+              speed === 1 && 'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
             )}
             onClick={() => toggleSpeed(1)}
           >
@@ -166,8 +156,7 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
           <div
             className={cn(
               'h-5 w-10 cursor-pointer rounded-[4px] bg-white bg-opacity-35 text-center text-xs leading-5 text-white text-opacity-40 transition-all',
-              speed === 0.5 &&
-                'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
+              speed === 0.5 && 'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
             )}
             onClick={() => toggleSpeed(0.5)}
           >
@@ -177,8 +166,7 @@ const GifPlayer: React.FC<GifPlayerProps> = ({ onReady, src }) => {
           <div
             className={cn(
               'h-5 w-10 cursor-pointer rounded-[4px] bg-white bg-opacity-35 text-center text-xs leading-5 text-white text-opacity-40 transition-all',
-              speed === 0.2 &&
-                'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
+              speed === 0.2 && 'bg-[#875DFF] bg-opacity-100 text-white text-opacity-100'
             )}
             onClick={() => toggleSpeed(0.2)}
           >

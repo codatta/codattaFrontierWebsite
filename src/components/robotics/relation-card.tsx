@@ -57,9 +57,7 @@ export default function RelationsCard({
             >
               <AutoInput
                 autoComplete={false}
-                onChange={(val) =>
-                  handleDescriptionChange(val, `${name}:${input}`)
-                }
+                onChange={(val) => handleDescriptionChange(val, `${name}:${input}`)}
                 placeholder="Description Text"
                 maxLength={maxWords}
                 showCount={false}

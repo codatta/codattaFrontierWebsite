@@ -4,6 +4,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import prettierrRecommended from 'eslint-plugin-prettier/recommended'
 import noChinese from '@markof/eslint-plugin-no-chinese'
+import tailwind from 'eslint-plugin-tailwindcss'
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -11,8 +12,8 @@ export default tseslint.config(
     extends: [
       eslint.configs.recommended,
       prettierrRecommended,
-      noChinese.configs.recommended,
-      ...tseslint.configs.recommended
+      ...tseslint.configs.recommended,
+      noChinese.configs.recommended
     ],
     files: ['**/*.{ts,tsx,js,jsx,mjs,cjs}'],
     languageOptions: {
@@ -20,18 +21,15 @@ export default tseslint.config(
     },
     plugins: {
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh
+      'react-refresh': reactRefresh,
+      tailwindcss: tailwind,
+      noChinese: noChinese
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
-        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }
-      ],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true }
-      ]
+      'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+      ...tailwind.configs.recommended.rules
     }
   }
 )

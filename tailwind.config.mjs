@@ -7,12 +7,33 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
-      },
-      colors: {}
+      colors: {
+        primary: {
+          DEFAULT: '#875DFF'
+        },
+        success: {
+          DEFAULT: '#5DDD22'
+        },
+        error: {
+          DEFAULT: '#D92B2B'
+        },
+        gray: {
+          DEFAULT: '#1C1C26',
+          50: '#252532',
+          100: '#2E2E37',
+          200: '#404049',
+          300: '#606067',
+          400: '#77777D',
+          500: '#8D8D93',
+          600: '#A4A4A8',
+          700: '#BBBBBE',
+          800: '#D2D2D4',
+          900: '#E8E8E9'
+        }
+      }
+    },
+    fontFamily: {
+      mona: 'Mona Sans'
     }
   },
   plugins: [animatedPlugin, aspectRatioPlugin]

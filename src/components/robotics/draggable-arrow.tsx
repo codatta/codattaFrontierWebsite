@@ -24,9 +24,7 @@ const DraggableArrow: React.FC<Props> = ({
   onAngleChange
 }) => {
   const { rect, focusPointVisible } = useImageLabelStore()
-  const [mode, setMode] = useState<'default' | 'move' | 'rotate' | 'resize'>(
-    'default'
-  )
+  const [mode, setMode] = useState<'default' | 'move' | 'rotate' | 'resize'>('default')
   const groupRef = useRef<Konva.Group>(null)
   const stageRef = useRef<Konva.Stage>(null)
   const [arrowLength, setArrowLength] = useState<number>(MIN_ARROW_LENGTH)
@@ -49,33 +47,21 @@ const DraggableArrow: React.FC<Props> = ({
       const dx = pointerPos.x - absolutePosition.x
       const dy = pointerPos.y - absolutePosition.y
       const angle = Math.round((Math.atan2(dy, dx) * 180) / Math.PI)
-      const arrowLength = Math.max(
-        Math.sqrt(dx * dx + dy * dy),
-        MIN_ARROW_LENGTH
-      )
+      const arrowLength = Math.max(Math.sqrt(dx * dx + dy * dy), MIN_ARROW_LENGTH)
 
       setArrowLength(arrowLength)
       updateRect({ angle })
       onAngleChange?.(angle)
     } else if (mode === 'move') {
-      const x = Math.max(
-        0,
-        Math.min(1, Math.floor((pointerPos.x / width) * 100) / 100)
-      )
-      const y = Math.max(
-        0,
-        Math.min(1, Math.floor((pointerPos.y / height) * 100) / 100)
-      )
+      const x = Math.max(0, Math.min(1, Math.floor((pointerPos.x / width) * 100) / 100))
+      const y = Math.max(0, Math.min(1, Math.floor((pointerPos.y / height) * 100) / 100))
 
       updateRect({ x, y })
       onPositionChange?.(x, y)
     } else if (mode === 'resize') {
       const dx = pointerPos.x - absolutePosition.x
       const dy = pointerPos.y - absolutePosition.y
-      const radius = Math.max(
-        Math.round(Math.sqrt(dx * dx + dy * dy)),
-        MIN_RADIUS
-      )
+      const radius = Math.max(Math.round(Math.sqrt(dx * dx + dy * dy)), MIN_RADIUS)
 
       updateRect({ radius: Math.min(radius, 200) })
     }
@@ -116,11 +102,7 @@ const DraggableArrow: React.FC<Props> = ({
           offsetY={0}
         >
           {(mode === 'resize' || mode === 'default') && (
-            <ResizeRect
-              width={rect.radius * 2}
-              height={rect.radius * 2}
-              onClick={() => setMode('resize')}
-            />
+            <ResizeRect width={rect.radius * 2} height={rect.radius * 2} onClick={() => setMode('resize')} />
           )}
 
           <Circle
@@ -146,9 +128,7 @@ const DraggableArrow: React.FC<Props> = ({
           />
           <Circle radius={2} fill="#ffffff" opacity={1} />
           {mode === 'move' && <Text text="⬇️" fontSize={24} x={-44} y={-10} />}
-          {mode === 'rotate' && (
-            <Text text="🔄" fontSize={24} x={-44} y={-10} />
-          )}
+          {mode === 'rotate' && <Text text="🔄" fontSize={24} x={-44} y={-10} />}
           <Arrow
             points={[0, 0, arrowLength, 0]}
             pointerLength={20}
@@ -193,15 +173,7 @@ function ResizeRect({ width, height, onClick }: ResizeRectProps) {
   return (
     <Group>
       {/* Main square outline */}
-      <Rect
-        x={x}
-        y={y}
-        width={width + 2}
-        height={height + 2}
-        stroke="#ffffff"
-        strokeWidth={1}
-        dash={[5, 5]}
-      />
+      <Rect x={x} y={y} width={width + 2} height={height + 2} stroke="#ffffff" strokeWidth={1} dash={[5, 5]} />
 
       {/* Corner resize handles */}
       {[

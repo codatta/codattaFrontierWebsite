@@ -10,9 +10,7 @@ export default function CoordinateInput() {
       <div className="text-white">
         <h2 className="text-base">2. Make annotations on the image.</h2>
         <ul className="list-disc pl-4 text-gray-400">
-          <li>
-            Mark the contact area on the response image using the focus point.
-          </li>
+          <li>Mark the contact area on the response image using the focus point.</li>
           <li>Adjust the angle by moving the arrow.</li>
         </ul>
       </div>

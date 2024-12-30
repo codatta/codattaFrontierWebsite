@@ -42,9 +42,7 @@ export default function ImageLabel() {
 
   return (
     <div>
-      <p className="mb-3 text-sm">
-        Please complete the annotation task in the image below.
-      </p>
+      <p className="mb-3 text-sm">Please complete the annotation task in the image below.</p>
       <div className="relative w-full" ref={containerRef}>
         <canvas
           ref={canvasRef}

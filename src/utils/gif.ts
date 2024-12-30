@@ -7,10 +7,7 @@ export interface Frame {
   height: number
 }
 
-export async function loadGifFrames(
-  url: string,
-  onProgress?: (progress: number) => void
-): Promise<Frame[]> {
+export async function loadGifFrames(url: string, onProgress?: (progress: number) => void): Promise<Frame[]> {
   const response = await axios.get(url, {
     responseType: 'arraybuffer',
     onDownloadProgress: (progressEvent) => {
@@ -43,11 +40,7 @@ export function getGifFrameUrl(
   }
 
   // Calculate the scaling factor to fit the frame proportionally
-  const scale = Math.min(
-    1,
-    (options?.maxWidth || 320) / frame.width,
-    (options?.maxHeight || 240) / frame.height
-  )
+  const scale = Math.min(1, (options?.maxWidth || 320) / frame.width, (options?.maxHeight || 240) / frame.height)
   const scaledWidth = Math.round(frame.width * scale)
   const scaledHeight = Math.round(frame.height * scale)
 
