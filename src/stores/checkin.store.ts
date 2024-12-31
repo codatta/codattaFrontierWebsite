@@ -30,6 +30,22 @@ export async function reloadCheckin() {
   checkinStore.loading = false
 }
 
+export async function checkin() {
+  try {
+    checkinStore.loading = true
+    const res = await taskApi.updateCheckin()
+
+    checkinStore.loading = false
+    console.log('res', res)
+  } catch (e) {
+    checkinStore.loading = false
+    console.error('checkin error: ', e.message)
+    throw new Error(e.message)
+  }
+
+  await reloadCheckin()
+}
+
 export function toggleCheckinModal(show: boolean) {
   checkinStore.show = show
 }
@@ -37,5 +53,6 @@ export function toggleCheckinModal(show: boolean) {
 export const useCheckinStore = () => useSnapshot(checkinStore)
 
 export const checkinStoreActions = {
+  checkin,
   reloadCheckin
 }

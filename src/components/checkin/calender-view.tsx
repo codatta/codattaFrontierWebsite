@@ -10,6 +10,7 @@ import checkinNeonIcon from '@/assets/checkin/check-in-neon.svg'
 import CheckInHeadBg from '@/assets/checkin/check-in-bg.png'
 
 import taskApi from '@/apis/task.api'
+import { checkinStoreActions } from '@/stores/checkin.store'
 
 interface TCalendarCell {
   key: string
@@ -42,7 +43,7 @@ export default function CalenderView({ className = '' }: { className?: string })
   const handleCheckIn = async () => {
     setLoading(true)
     try {
-      await taskApi.updateCheckin()
+      await checkinStoreActions.checkin()
       await getCheckinHistory(selectedDate)
     } catch (err: unknown) {
       message.error(err instanceof Error ? err.message : 'Check in failed')
@@ -101,7 +102,6 @@ export default function CalenderView({ className = '' }: { className?: string })
     setDateArray(result)
   }
 
-  // Effects
   useEffect(() => {
     getCheckinHistory(selectedDate)
   }, [selectedDate])
