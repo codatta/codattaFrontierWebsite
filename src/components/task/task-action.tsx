@@ -86,7 +86,7 @@ const actionButton: Record<string, ActionButton> = {
           <>
             <div className="absolute left-0 top-0 h-[46px] w-full rounded-[36px] bg-gray-200 leading-[46px] text-gray-500"></div>
             <div className="absolute left-0 top-0 z-20 h-[46px] w-full rounded-[36px] bg-transparent leading-[46px] text-gray-500">
-              Verify
+              {props.task.type === 'REDEEM' ? 'Redeem' : 'Verify'}
             </div>
           </>
         )}
