@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
+import { Empty, List, Spin } from 'antd'
+import dayjs from 'dayjs'
 
 import { RewardStoreActions, useRewardStore } from '@/stores/reward.store'
-import { Button, Empty, List, Spin } from 'antd'
-import dayjs from 'dayjs'
-import { Link } from 'react-router-dom'
 
 export default function Reward() {
   const { rewards, total_count, loading } = useRewardStore()

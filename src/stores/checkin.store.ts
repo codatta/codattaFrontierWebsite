@@ -14,16 +14,16 @@ export const checkinStore = proxy<TCheckinStore>({
   days: 0,
   loading: false,
   done: false,
-  show: true
+  show: false
 })
 
 export async function reloadCheckin() {
   try {
     checkinStore.loading = true
-    const { check_in_days = 0, is_check_in = false } = await taskApi.getCheckinInfo()
+    const res = await taskApi.getCheckinInfo()
 
-    checkinStore.days = check_in_days
-    checkinStore.done = is_check_in
+    checkinStore.days = res.data?.check_in_days ?? 0
+    checkinStore.done = res.data?.is_check_in ?? false
   } catch (e) {
     console.error('getCheckinInfo: ', e.message)
   }
@@ -35,3 +35,7 @@ export function toggleCheckinModal(show: boolean) {
 }
 
 export const useCheckinStore = () => useSnapshot(checkinStore)
+
+export const checkinStoreActions = {
+  reloadCheckin
+}

@@ -1,23 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import userApi from '@/apis/user.api'
-import { useUserStore } from '@/stores/user.store'
+import ReputationRate from '@/components/common/reputation-rate'
+
+import { useUserStore, userStoreActions } from '@/stores/user.store'
 
 import defaultAvatar from '@/assets/home/default-avatar.png'
 import ImageChrown from '@/assets/home/chrown.png'
 import ImageLevel from '@/assets/home/level.png'
 import gridTextureImage from '@/assets/home/grid-texture.svg'
 
-import ReputationRate from '@/components/common/reputation-rate'
-
 export default function UserInfoSection() {
-  const { info, username } = useUserStore()
-  const [balance, setBalance] = useState(0)
-  const [reputation, setReputation] = useState('0')
+  const { info, username, reputation, points } = useUserStore()
 
   useEffect(() => {
-    userApi.getBalance().then(setBalance)
-    userApi.getReputation().then(setReputation)
+    userStoreActions.getUserInfo()
   }, [])
 
   return (
@@ -41,7 +37,7 @@ export default function UserInfoSection() {
           <div className="mb-2 flex items-center px-10 text-left text-sm">
             <img src={ImageChrown} className="mr-3 size-12" alt="" />
             <div>
-              <p className="font-zendots text-lg">{balance}</p>
+              <p className="font-zendots text-lg">{Math.round(+points || 0)}</p>
               <p className="text-gray-500">Reward</p>
             </div>
           </div>

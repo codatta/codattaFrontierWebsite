@@ -64,12 +64,9 @@ class TaskApi {
   //   return data
   // }
 
-  // TODO
   async getCheckinInfo() {
-    const { data } = await request.post<{
-      check_in_days: number
-      is_check_in: boolean
-    }>('/check-in/consult')
+    const { data } = await request.post<Response<{ check_in_days: number; is_check_in: boolean }>>('/check-in/consult')
+
     return data
   }
 
@@ -78,11 +75,17 @@ class TaskApi {
     return data
   }
 
-  async getCheckHistory(chain: string, year: number, month: number) {
-    const { data } = await request.post('/task/chain/check/history', {
-      chain,
-      year,
-      month
+  async getCheckinHistory(year: number, month: number) {
+    const { data } = await request.post<
+      Response<{
+        total_count: number
+        check_in_history: { check_in_day: string; check_in_month: string; check_in_date: string }[]
+      }>
+    >('/check-in/query', {
+      data: {
+        year,
+        month
+      }
     })
     return data
   }

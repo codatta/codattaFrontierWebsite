@@ -106,7 +106,7 @@ export interface UserStore {
   info: UserInfo | null
 }
 
-export const userStore = proxy<UserStore>({
+const userStore = proxy<UserStore>({
   info: {
     user_data: {
       user_name: '',
@@ -124,7 +124,10 @@ export const userStore = proxy<UserStore>({
 })
 
 const derived = derive({
-  username: (get) => getUsername(get(userStore).info)
+  username: (get) => getUsername(get(userStore).info),
+  reputation: (get) => get(userStore).info?.user_reputation ?? '',
+  points: (get) =>
+    get(userStore).info?.user_assets?.filter((asset) => asset.asset_type === 'POINTS')?.[0]?.balance?.amount ?? ''
 })
 
 function getUsername(info: UserInfo | null) {

@@ -11,20 +11,15 @@ import CheckInHeadBg from '@/assets/checkin/check-in-bg.png'
 
 import taskApi from '@/apis/task.api'
 
-// Types
-interface TCheckInType {
-  chain: string
-  icon: string
-  name: string
-}
-
 interface TCheckInHistoryItem {
   check_in_date: string
+  check_in_day: string
+  check_in_month: string
 }
 
 interface TCheckInHistoryResponse {
   history: TCheckInHistoryItem[]
-  check_count: number
+  total_count: number
 }
 
 interface TCalendarCell {
@@ -34,37 +29,17 @@ interface TCalendarCell {
   isToday?: boolean
 }
 
-// Constants
-const CHECK_IN_CHAINS: TCheckInType[] = [
-  { chain: 'Codatta', icon: 'https://static.codatta.io/static/favicon.svg', name: 'Codatta' }
-]
-
 export default function CalenderView({ className = '' }: { className?: string }) {
   // State
   const [dateArray, setDateArray] = useState<TCalendarCell[]>([])
   const [checkinHistory, setCheckinHistory] = useState<string[]>([])
   const [totalCheckinCount, setTotalCheckinCount] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
-  const [selectedTCheckInType, setSelectedTCheckInType] = useState<TCheckInType>(CHECK_IN_CHAINS[0])
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs().utc())
   const [calendarRows, setCalendarRows] = useState<number[]>([])
 
   // Computed
   const checkDisabled = useMemo(() => selectedDate.startOf('month') >= dayjs().startOf('month'), [selectedDate])
-
-  const CheckInMenu = useMemo(
-    () =>
-      CHECK_IN_CHAINS.map((item) => ({
-        key: item.chain,
-        label: (
-          <div className="flex items-center gap-2 py-1" onClick={() => setSelectedTCheckInType(item)}>
-            <img className="size-[22px] rounded-full" src={item.icon} alt={item.name} />
-            <span>{item.name}</span>
-          </div>
-        )
-      })),
-    []
-  )
 
   // Handlers
   const handleDateClick = (type: 'prev' | 'next') => {
@@ -76,28 +51,26 @@ export default function CalenderView({ className = '' }: { className?: string })
   }
 
   const handleCheckIn = async () => {
-    if (selectedTCheckInType.chain === 'Codatta') {
-      setLoading(true)
-      try {
-        await taskApi.updateCheckin()
-        await getCheckinHistory(selectedTCheckInType, selectedDate)
-      } catch (err: unknown) {
-        message.error(err instanceof Error ? err.message : 'Check in failed')
-      }
-      setLoading(false)
+    setLoading(true)
+    try {
+      await taskApi.updateCheckin()
+      await getCheckinHistory(selectedDate)
+    } catch (err: unknown) {
+      message.error(err instanceof Error ? err.message : 'Check in failed')
     }
+    setLoading(false)
   }
 
   // API Calls
-  const getCheckinHistory = async (TcheckInType: TCheckInType, date: Dayjs) => {
+  const getCheckinHistory = async (date: Dayjs) => {
     setLoading(true)
     try {
       const month = date.utc().month() + 1
       const year = date.utc().year()
-      const res = (await taskApi.getCheckHistory(TcheckInType.chain, year, month)) as TCheckInHistoryResponse
+      const res = await taskApi.getCheckinHistory(year, month)
 
-      setTotalCheckinCount(res.check_count)
-      setCheckinHistory(res.history.map((item) => item.check_in_date))
+      setTotalCheckinCount(res.data.total_count)
+      setCheckinHistory(res.data.check_in_history.map((item) => item.check_in_date))
     } catch (err: unknown) {
       message.error(err instanceof Error ? err.message : 'Failed to get checkin history')
     }
@@ -141,8 +114,8 @@ export default function CalenderView({ className = '' }: { className?: string })
 
   // Effects
   useEffect(() => {
-    getCheckinHistory(selectedTCheckInType, selectedDate)
-  }, [selectedTCheckInType, selectedDate])
+    getCheckinHistory(selectedDate)
+  }, [selectedDate])
 
   useEffect(() => {
     generateCalendarData(selectedDate, checkinHistory)
@@ -168,18 +141,6 @@ export default function CalenderView({ className = '' }: { className?: string })
                   onClick={() => handleDateClick('next')}
                 />
               </div>
-
-              {/* <Dropdown menu={{ items: CheckInMenu }} trigger={['click']}>
-                <div className="flex h-9 w-[160px] cursor-pointer items-center gap-2 rounded-[36px] bg-white px-3 py-[6px] text-base text-gray">
-                  <img
-                    className="size-[22px] rounded-full"
-                    src={selectedTCheckInType.icon}
-                    alt={selectedTCheckInType.name}
-                  />
-                  <span>{selectedTCheckInType.name}</span>
-                  <DownOutlined className="ml-auto" />
-                </div>
-              </Dropdown> */}
             </div>
           </div>
         </div>

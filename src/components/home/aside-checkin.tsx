@@ -6,13 +6,14 @@ import CheckInModal from '@/components/checkin/checkin-modal'
 
 import CheckSvg from '@/assets/icons/circle-check-big.svg'
 
-import { useCheckinStore, toggleCheckinModal } from '@/stores/checkin.store'
-
+import { useCheckinStore, toggleCheckinModal, checkinStoreActions } from '@/stores/checkin.store'
 
 export default function Checkin() {
   const { days, done, loading } = useCheckinStore()
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    checkinStoreActions.reloadCheckin()
+  }, [])
 
   return (
     <div className="px-6">
