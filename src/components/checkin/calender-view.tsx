@@ -11,17 +11,6 @@ import CheckInHeadBg from '@/assets/checkin/check-in-bg.png'
 
 import taskApi from '@/apis/task.api'
 
-interface TCheckInHistoryItem {
-  check_in_date: string
-  check_in_day: string
-  check_in_month: string
-}
-
-interface TCheckInHistoryResponse {
-  history: TCheckInHistoryItem[]
-  total_count: number
-}
-
 interface TCalendarCell {
   key: string
   value: number | null
