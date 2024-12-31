@@ -4,9 +4,10 @@ import { useEffect } from 'react'
 import TaskTarget from '@/components/common/task-target'
 import CheckInModal from '@/components/checkin/checkin-modal'
 
+import CheckSvg from '@/assets/icons/circle-check-big.svg'
+
 import { useCheckinStore, toggleCheckinModal } from '@/stores/checkin.store'
 
-import CheckSvg from '@/assets/icons/circle-check-big.svg'
 
 export default function Checkin() {
   const { days, done, loading } = useCheckinStore()

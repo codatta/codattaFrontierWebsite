@@ -52,9 +52,10 @@ export default function Router() {
         <Route index element={<Navigate to="/app" />} />
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
-        <Route path="/app" element={<AppLayout />}>
+        <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
           <Route index element={<Home />} />
-
+        </Route>
+        <Route path="/app" element={<AppLayout />}>
           <Route path="referral" element={<AppReferral />}></Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
           <Route path="notification" element={<AppNotification />}></Route>

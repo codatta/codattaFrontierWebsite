@@ -1,12 +1,15 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Layout } from 'antd'
+import { cn } from '@udecode/cn'
+
 import SideNav from '@/components/app/app-sider'
-import { channelStoreActions, useChannelStore } from '@/stores/channel.store'
-import { userStoreActions } from '@/stores/user.store'
 import AuthChecker from '@/components/app/auth-checker'
 
-export default function AppLayout() {
+import { userStoreActions } from '@/stores/user.store'
+import { channelStoreActions, useChannelStore } from '@/stores/channel.store'
+
+export default function AppLayout({ className }: { className?: string }) {
   const { relatedInfo } = useChannelStore()
 
   useEffect(() => {
@@ -19,7 +22,7 @@ export default function AppLayout() {
 
   return (
     <AuthChecker>
-      <Layout className="mx-auto h-screen max-w-[1168px] bg-transparent">
+      <Layout className={cn('mx-auto h-screen max-w-[1168px] bg-transparent', className)}>
         <Layout.Sider className="bg-transparent" breakpoint="lg" width={248}>
           <SideNav />
         </Layout.Sider>
