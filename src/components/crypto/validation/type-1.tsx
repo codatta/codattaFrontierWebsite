@@ -20,7 +20,7 @@ function RewardPoint(props: { point?: number; status: string; send_point?: numbe
   return (
     <div
       className={cn(
-        'rounded-4 bg-#875DFF/20 ml-2 h-[26px] flex-none px-2 py-[2px] text-[#875DFF]',
+        'ml-2 h-[26px] flex-none rounded-2xl bg-primary/20 px-2 py-[2px] text-[#875DFF]',
         status === 'Completed' && send_point < 1 && 'bg-[#404049] text-[#77777D]'
       )}
     >

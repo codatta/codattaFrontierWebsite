@@ -6,6 +6,7 @@ export interface TValidationDetail {
   validation_id: null
   user_id: string
   task_type: string
+  point: number
   basic_info: {
     address: string
     network: string

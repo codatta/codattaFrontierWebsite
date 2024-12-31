@@ -102,8 +102,7 @@ const Actions = ({
   const type = selectedItem?.task_type
   const evidence = validation?.basic_info?.evidence ? JSON.parse(validation?.basic_info?.evidence) : {}
   console.log(evidence, 'input tsx evidence print')
-  const showPoint =
-    selectedItem?.status === 'Completed' ? validation?.decision?.send_point : validation?.decision?.point || 0
+  const showPoint = selectedItem?.status === 'Completed' ? validation?.decision?.send_point : validation?.point || 0
   return (
     <div>
       <div className="p-4 pt-2">
