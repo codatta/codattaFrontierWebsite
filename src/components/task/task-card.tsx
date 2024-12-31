@@ -1,4 +1,4 @@
-import { TaskStatus, type TaskReward, type Task_New } from '@/api-v1/task.api'
+import { TaskStatus, type TaskReward, type TaskItem } from '@/api-v1/task.api'
 import ImageLocked from '@/assets/task/locked.png'
 import { useDuration } from '@/hooks/use-duration'
 import { cn } from '@udecode/cn'
@@ -16,8 +16,8 @@ import SandglassItem from '@/assets/task/sandglass-item.png'
 import SandglassActiveItem from '@/assets/task/sandglass-active-item.png'
 import CountDownIcon from '@/assets/task/countdown-icon.png'
 
-const TaskCard = ({ task, action, onTimeout }: { task: Task_New; action?: JSX.Element; onTimeout: () => void }) => {
-  const checkDisplayRightBg = (task: Task_New) => {
+const TaskCard = ({ task, action, onTimeout }: { task: TaskItem; action?: JSX.Element; onTimeout: () => void }) => {
+  const checkDisplayRightBg = (task: TaskItem) => {
     if (task.locked) return false
     if (task.max_count) return true
     if (task.start_time && task.expire_time) return true

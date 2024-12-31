@@ -1,4 +1,4 @@
-import taskApi, { TaskStatus, TaskType, type TaskReward, type Task_New } from '@/api-v1/task.api'
+import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -11,7 +11,7 @@ import { useState } from 'react'
 import { cn } from '@udecode/cn'
 
 interface TaskActionProps {
-  task: Task_New
+  task: TaskItem
   onReward?: (rewards: TaskReward[]) => void
   onPending?: () => void
 }
