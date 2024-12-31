@@ -42,8 +42,6 @@ export async function checkin() {
     console.error('checkin error: ', e.message)
     throw new Error(e.message)
   }
-
-  await reloadCheckin()
 }
 
 export function toggleCheckinModal(show: boolean) {

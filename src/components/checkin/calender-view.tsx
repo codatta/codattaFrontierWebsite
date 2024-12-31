@@ -49,6 +49,7 @@ export default function CalenderView({ className = '' }: { className?: string })
       message.error(err instanceof Error ? err.message : 'Check in failed')
     }
     setLoading(false)
+    await checkinStoreActions.reloadCheckin()
   }
 
   // API Calls
