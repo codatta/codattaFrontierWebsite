@@ -7,6 +7,15 @@
   -webkit-text-size-adjust: 100%;
 }
 
+@keyframes verifyAnimate {
+  0% {
+    width: 100%;
+  }
+  100% {
+    left: -20%;
+  }
+}
+
 /* @font-face {
   font-family: 'Inter';
   src: url('/font/inter.ttf') format('truetype');
