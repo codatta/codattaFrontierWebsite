@@ -64,27 +64,28 @@ class TaskApi {
   //   return data
   // }
 
-  // async getCheckinInfo() {
-  //   const { data } = await request.post<{
-  //     check_in_days: number
-  //     is_check_in: boolean
-  //   }>('/check-in/consult')
-  //   return data
-  // }
+  // TODO
+  async getCheckinInfo() {
+    const { data } = await request.post<{
+      check_in_days: number
+      is_check_in: boolean
+    }>('/check-in/consult')
+    return data
+  }
 
-  // async updateCheckin(params?: { chain: string; hash: string }) {
-  //   const { data } = await request.post<{ check_in_days: number }>('/check-in/check-in', params || {})
-  //   return data
-  // }
+  async updateCheckin(params?: { chain: string; hash: string }) {
+    const { data } = await request.post<{ check_in_days: number }>('/check-in/check-in', params || {})
+    return data
+  }
 
-  // async getCheckHistory(chain: string, year: number, month: number) {
-  //   const { data } = await request.post('/task/chain/check/history', {
-  //     chain,
-  //     year,
-  //     month
-  //   })
-  //   return data
-  // }
+  async getCheckHistory(chain: string, year: number, month: number) {
+    const { data } = await request.post('/task/chain/check/history', {
+      chain,
+      year,
+      month
+    })
+    return data
+  }
 }
 
 export default new TaskApi()

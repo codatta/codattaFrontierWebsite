@@ -26,7 +26,7 @@ const CardList = () => {
               <div>{dayjs(item.create_time * 1000).format('DD MMM YYYY h:mm a')}</div>
             </div>
             <div className="flex w-[130px] flex-col items-center">
-              <div className="w-22 bg-gray-1 mb-2 flex-none rounded-full py-2 text-center text-xs text-[#8D8D93]">
+              <div className="mb-2 w-[88px] flex-none rounded-full bg-white/5 py-2 text-center text-xs text-[#8D8D93]">
                 {item.status}
               </div>
               {item.status === 'SUBMITTED' ? (
