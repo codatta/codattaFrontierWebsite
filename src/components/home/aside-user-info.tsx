@@ -1,0 +1,58 @@
+import { useEffect, useState } from 'react'
+
+import userApi from '@/apis/user.api'
+import { useUserStore } from '@/stores/user.store'
+
+import ImageChrown from '@/assets/images/home/chrown.png'
+import ImageLevel from '@/assets/images/home/level.png'
+import gridTextureImage from '@/assets/images/home/grid-texture.svg'
+import ReputationRate from '@/components/common/reputation-rate'
+
+export default function UserInfoSection() {
+  const { info, username } = useUserStore()
+  const [balance, setBalance] = useState(0)
+  const [reputation, setReputation] = useState('0')
+
+  useEffect(() => {
+    userApi.getBalance().then(setBalance)
+    userApi.getReputation().then(setReputation)
+  }, [])
+
+  return (
+    <div className="relative py-6 text-center">
+      <div
+        className="absolute top-0 aspect-[1/1] w-full"
+        style={{
+          background: 'radial-gradient(at 0% 0%, #4C3F76 10%, #2E2E37 70%)'
+        }}
+      >
+        <object data={gridTextureImage} type="image/svg+xml"></object>
+      </div>
+      <div className="relative">
+        <div className="mb-2 flex justify-center">
+          {/* <img className="block size-20 rounded-full" src={info?.avatar_url} alt="" /> */}
+          <img className="block size-20 rounded-full" src={info?.user_data?.avatar} alt="" />
+        </div>
+        <div className="mb-8 text-[16px] font-bold">{username}</div>
+
+        <div className="px-10">
+          <div className="mb-4 flex items-center text-left text-sm">
+            <img src={ImageChrown} className="mr-3 size-12" alt="" />
+            <div>
+              <p className="font-zendots text-lg">{balance}</p>
+              <p className="text-gray-500">Reward</p>
+            </div>
+          </div>
+
+          <div className="flex items-center text-left text-sm">
+            <img src={ImageLevel} className="mr-3 size-12" alt="" />
+            <div>
+              <ReputationRate rate={reputation} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>
+              <p className="text-gray-500">Reputation</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

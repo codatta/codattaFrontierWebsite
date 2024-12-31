@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { Dropdown, message, Spin } from 'antd'
-import { DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'
+import { message, Spin } from 'antd'
+import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import dayjs, { Dayjs } from 'dayjs'
 import { cn } from '@udecode/cn'
 
@@ -169,7 +169,7 @@ export default function CalenderView({ className = '' }: { className?: string })
                 />
               </div>
 
-              <Dropdown menu={{ items: CheckInMenu }} trigger={['click']}>
+              {/* <Dropdown menu={{ items: CheckInMenu }} trigger={['click']}>
                 <div className="flex h-9 w-[160px] cursor-pointer items-center gap-2 rounded-[36px] bg-white px-3 py-[6px] text-base text-gray">
                   <img
                     className="size-[22px] rounded-full"
@@ -179,7 +179,7 @@ export default function CalenderView({ className = '' }: { className?: string })
                   <span>{selectedTCheckInType.name}</span>
                   <DownOutlined className="ml-auto" />
                 </div>
-              </Dropdown>
+              </Dropdown> */}
             </div>
           </div>
         </div>

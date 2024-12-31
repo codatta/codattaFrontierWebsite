@@ -86,6 +86,18 @@ class UserApi {
     const { data } = await this.request.post('/user/update/info', info)
     return data
   }
+
+  async getBalance() {
+    const {
+      data: { balance }
+    } = await request.post<{ balance: number }>('/user/token/info')
+    return balance ?? 0
+  }
+
+  async getReputation() {
+    const { data } = await request.post<{ reputation: string } | null>('/user/reputation/info')
+    return data?.reputation ?? '0'
+  }
 }
 
 export default new UserApi(request)
