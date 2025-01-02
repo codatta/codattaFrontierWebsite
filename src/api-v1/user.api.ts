@@ -27,11 +27,13 @@ class UserApi {
   }
 
   async getInviteRecords(pagination: PaginationParam = { page: 1, page_size: 20 }) {
-    const res = await request.post<{
-      total_count: number
-      total_reward: number
-      result: InviteRecord[]
-    }>('/user/inviter/entry', pagination)
+    const res = await request.post<
+      Response<{
+        total_count: number
+        total_reward: number
+        result: InviteRecord[]
+      }>
+    >('/user/inviter/entry', pagination)
     return res.data
   }
 

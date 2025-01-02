@@ -1,6 +1,6 @@
 import userApi, { InviteRecord } from '@/api-v1/user.api'
 import Empty from '@/components/common/empty'
-import { Button, Col, Row } from 'antd'
+import { Button, Col, message, Row } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
@@ -12,18 +12,22 @@ const Table = () => {
   const [list, setList] = useState<InviteRecord[]>([])
 
   async function getData() {
-    const data = await userApi.getInviteRecords()
-    const list: InviteRecord[] = (data?.result || []).map((item) => {
-      const date = dayjs(item.date)
-      item.date = date.format('YYYY-MM-DD')
-      return item
-    })
+    try {
+      const { data } = await userApi.getInviteRecords()
+      const list: InviteRecord[] = (data?.result || []).map((item) => {
+        const date = dayjs(item.date)
+        item.date = date.format('YYYY-MM-DD')
+        return item
+      })
 
-    setTotalReward(data?.total_reward ?? 0)
-    setList(list)
+      setTotalReward(data?.total_reward ?? 0)
+      setList(list)
 
-    if (list.length > defaultCount) {
-      setLoadingMore(true)
+      if (list.length > defaultCount) {
+        setLoadingMore(true)
+      }
+    } catch (err) {
+      message.error(err.message)
     }
   }
 
