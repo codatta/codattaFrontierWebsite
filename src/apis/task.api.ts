@@ -29,13 +29,13 @@ class TaskApi {
     return res.data
   }
 
-  // async receiveReward(taskInstanceId: string) {
-  //   return (
-  //     await request.post<Response<TaskReward[]>>('/task/reward', {
-  //       instance_id: taskInstanceId
-  //     })
-  //   ).data
-  // }
+  async receiveReward(taskInstanceId: string) {
+    return (
+      await request.post<Response<TaskReward[]>>('/task/reward', {
+        instance_id: taskInstanceId
+      })
+    ).data
+  }
 
   // async verify(taskId: string) {
   //   return (

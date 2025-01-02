@@ -1,4 +1,5 @@
 import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
+import taskApi2 from '@/apis/task.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -180,7 +181,7 @@ const actionButton: Record<string, ActionButton> = {
       setLoading(true)
       try {
         if (!props.task.instance_id) return
-        const res = await taskApi.receiveReward(props.task.instance_id)
+        const res = await taskApi2.receiveReward(props.task.instance_id)
         const receiveRewardRes = res.data
         props.onReward?.(receiveRewardRes)
       } catch (err: unknown) {

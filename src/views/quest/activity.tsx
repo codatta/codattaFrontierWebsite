@@ -1,4 +1,4 @@
-import taskApi, { TaskStatus, type Activity, type TaskReward, type TaskItem } from '@/api-v1/task.api'
+import taskApi, { TaskStatus, type Activity, type TaskReward, type TaskItem } from '@/apis/task.api'
 import TaskAction from '@/components/task/task-action'
 import TaskCard from '@/components/task/task-card'
 import TransitionEffect from '@/components/common/transition-effect'
