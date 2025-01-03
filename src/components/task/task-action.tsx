@@ -46,7 +46,6 @@ const actionButton: Record<string, ActionButton> = {
       ReactGA.event('verify_quest')
       try {
         const res = await taskApi.verify(props.task.task_id)
-        console.log(res, 'adlfkjasdklfjklasjdfklasdfklaslkjd')
         const verifyRes = res.data
         if (verifyRes?.verify_result === 'PASSED') {
           props.onReward?.(verifyRes.rewards)
