@@ -94,7 +94,7 @@ export default function Component() {
             ))}
           </Avatar.Group>
         ),
-        className: `[&_.ant-message-custom-content]:(flex items-center gap-2) [&_.ant-message-notice-content]:(!bg-gradient-to-r from-#E9F0FFCC via-#FFF3FFCC via-30% to-#FFFFFFCC to-80% !px-6 !py-3)`
+        className: `[&_.ant-message-custom-content]:flex [&_.ant-message-custom-content]:items-center [&_.ant-message-custom-content]:gap-2 [&_.ant-message-notice-content]:!bg-gradient-to-r [&_.ant-message-notice-content]:from-[#E9F0FFCC] [&_.ant-message-notice-content]:via-[#FFF3FFCC] [&_.ant-message-notice-content]:via-[30%] [&_.ant-message-notice-content]:to-[#FFFFFFCC] [&_.ant-message-notice-content]:to-[80%] [&_.ant-message-notice-content]:!px-6 [&_.ant-message-notice-content]!py-3`
       })
     } else if ('success' in rewards && !rewards.success) {
       messageApi.info(rewards.errorMessage)
