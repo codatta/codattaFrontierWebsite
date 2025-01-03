@@ -31,7 +31,7 @@ class TaskApi {
 
   async receiveReward(taskInstanceId: string) {
     return (
-      await request.post<Response<TaskReward[]>>('/task/reward', {
+      await request.post<Response<TaskReward[] | RewardErrorData>>('/task/reward', {
         instance_id: taskInstanceId
       })
     ).data
@@ -152,3 +152,5 @@ export interface TaskReward {
   reward_icon: string
   reward_value: number
 }
+
+export type RewardErrorData = Pick<Response<unknown>, 'errorCode' | 'errorMessage' | 'success'>
