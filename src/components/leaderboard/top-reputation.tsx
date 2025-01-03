@@ -103,7 +103,7 @@ export default function Component() {
               >
                 {user.email || truncateStr(user.user_id, { len: 10, ellipsis: '***' })}
               </div>
-              <ReputationRate gap={2} size={20} color="#FFA800E0" rate={user.reputation}></ReputationRate>
+              <ReputationRate gap={2} size={20} color="#FFA800E0" rate={user.reputation ?? 0}></ReputationRate>
             </li>
           ))
         )}
