@@ -74,7 +74,13 @@ export default function Component() {
   const [messageApi, contextHolder] = message.useMessage()
 
   const onReward = (rewards: TaskReward[]) => {
-    if (rewards) {
+    if (Object.prototype.toString.call(rewards) === '[object Object]') {
+      if (!rewards?.success && rewards?.errorMessage) {
+        messageApi.info(rewards?.errorMessage)
+      }
+      return
+    }
+    if (Object.prototype.toString.call(rewards) === '[object Array]') {
       messageApi.success({
         content: (
           <span className="font-medium text-[#020008E0]">
