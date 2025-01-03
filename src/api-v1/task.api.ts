@@ -42,7 +42,7 @@ class TaskApi {
       await request.post<
         Response<{
           verify_result: 'PASSED' | 'FAILED'
-          instance_id: Task_New['instance_id']
+          instance_id: TaskItem['instance_id']
           rewards: TaskReward[]
           msg?: string
         }>
@@ -108,7 +108,7 @@ export enum TaskType {
   Redeem = 'REDEEM'
 }
 
-export interface Task_New {
+export interface TaskItem {
   task_id: string
   name: string
   description: string
@@ -135,7 +135,7 @@ export interface Activity {
   sub_cate_name: string
   sub_cate_description: string
   help_info: { name: string; icon: string; link: string; content: string }[]
-  tasks: Task_New[]
+  tasks: TaskItem[]
 }
 
 export type ActivitySummary = Pick<Activity, 'sub_cate_id' | 'sub_cate_name' | 'sub_cate_description'> & {

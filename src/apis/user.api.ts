@@ -43,7 +43,7 @@ export interface OldUserInfo {
 }
 
 export interface UserInfo {
-  user_reputation: string
+  user_reputation: number | null
   user_data: {
     avatar: string
     referee_code: string

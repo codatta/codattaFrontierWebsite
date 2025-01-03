@@ -16,7 +16,7 @@ function RateItem(props: { value: number; bgColor?: string }) {
 }
 
 export default function ReputationRate(props: {
-  rate: string
+  rate: number
   count?: number
   gap?: number
   size?: number
@@ -29,7 +29,7 @@ export default function ReputationRate(props: {
   const [count, setCount] = useState(countValue || 5)
 
   useEffect(() => {
-    let tempRate = parseFloat(rateValue)
+    let tempRate = rateValue
     if (Number.isNaN(tempRate)) tempRate = 0
     if (tempRate < 0) tempRate = 0
     if (tempRate > 5) tempRate = 5

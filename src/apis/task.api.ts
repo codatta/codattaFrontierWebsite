@@ -29,13 +29,12 @@ class TaskApi {
     return res.data
   }
 
-  // async receiveReward(taskInstanceId: string) {
-  //   return (
-  //     await request.post<Response<TaskReward[]>>('/task/reward', {
-  //       instance_id: taskInstanceId
-  //     })
-  //   ).data
-  // }
+  async receiveReward(taskInstanceId: string) {
+    const res = await request.post<Response<TaskReward[] | RewardErrorData>>('/task/reward', {
+      instance_id: taskInstanceId
+    })
+    return res.data
+  }
 
   // async verify(taskId: string) {
   //   return (
@@ -156,3 +155,5 @@ export interface TaskReward {
   reward_icon: string
   reward_value: number
 }
+
+export type RewardErrorData = Pick<Response<unknown>, 'errorCode' | 'errorMessage' | 'success'>

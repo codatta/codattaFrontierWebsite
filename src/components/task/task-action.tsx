@@ -1,4 +1,5 @@
-import taskApi, { TaskStatus, TaskType, type TaskReward, type Task_New } from '@/api-v1/task.api'
+import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
+import taskApi2, { type RewardErrorData } from '@/apis/task.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -11,8 +12,8 @@ import { useState } from 'react'
 import { cn } from '@udecode/cn'
 
 interface TaskActionProps {
-  task: Task_New
-  onReward?: (rewards: TaskReward[]) => void
+  task: TaskItem
+  onReward?: (rewards: TaskReward[] | RewardErrorData) => void
   onPending?: () => void
 }
 
@@ -86,7 +87,7 @@ const actionButton: Record<string, ActionButton> = {
           <>
             <div className="absolute left-0 top-0 h-[46px] w-full rounded-[36px] bg-gray-200 leading-[46px] text-gray-500"></div>
             <div className="absolute left-0 top-0 z-20 h-[46px] w-full rounded-[36px] bg-transparent leading-[46px] text-gray-500">
-              Verify
+              {props.task.type === 'REDEEM' ? 'Redeem' : 'Verify'}
             </div>
           </>
         )}
@@ -180,7 +181,7 @@ const actionButton: Record<string, ActionButton> = {
       setLoading(true)
       try {
         if (!props.task.instance_id) return
-        const res = await taskApi.receiveReward(props.task.instance_id)
+        const res = await taskApi2.receiveReward(props.task.instance_id)
         const receiveRewardRes = res.data
         props.onReward?.(receiveRewardRes)
       } catch (err: unknown) {

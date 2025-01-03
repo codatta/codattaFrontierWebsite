@@ -20,7 +20,7 @@ function RewardPoint(props: { point?: number; status: string; send_point?: numbe
   return (
     <div
       className={cn(
-        'rounded-4 bg-#875DFF/20 ml-2 h-[26px] flex-none px-2 py-[2px] text-[#875DFF]',
+        'ml-2 h-[26px] flex-none rounded-2xl bg-primary/20 px-2 py-[2px] text-[#875DFF]',
         status === 'Completed' && send_point < 1 && 'bg-[#404049] text-[#77777D]'
       )}
     >
@@ -59,7 +59,7 @@ const Index = ({ data }: { data: TValidationItem }) => {
           <div className="mb-4 mt-3 flex">
             <div className="flex-auto text-base font-bold">
               {data.task_type === TaskType.SUBMISSION_HASH_ADDRESS
-                ? 'Does the transaction hash include the address?'
+                ? 'Does the address have any historical transcation data?'
                 : 'Whether the information in this submitted data is accurate?'}
             </div>
             {/* <div
@@ -83,12 +83,12 @@ const Index = ({ data }: { data: TValidationItem }) => {
                 )}
               </div>
             </div>
-            <div>
+            {/* <div>
               <span className="mt-3 text-[#84828E]">Entity:</span>
               <span className="ml-[6px] text-sm">
                 <Tooltip title={data.entity}>{data.entity || '-'}</Tooltip>
               </span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

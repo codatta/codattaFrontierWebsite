@@ -50,7 +50,7 @@ function ExtensionLogin() {
   async function extensionLogin() {
     setLoading(true)
     try {
-      const token = window.localStorage.getItem('auth')
+      const token = window.localStorage.getItem('token')
       const uid = window.localStorage.getItem('uid')
       const new_user = !!state?.new_user
       const inviter_code = state?.inviter_code
