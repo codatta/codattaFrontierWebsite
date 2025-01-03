@@ -114,7 +114,7 @@ export const userStore = proxy<UserStore>({
       referee_code: '',
       user_id: ''
     },
-    user_reputation: '',
+    user_reputation: 0,
     user_assets: [],
     accounts_data: []
   }
