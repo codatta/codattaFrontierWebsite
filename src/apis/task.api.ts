@@ -30,11 +30,10 @@ class TaskApi {
   }
 
   async receiveReward(taskInstanceId: string) {
-    return (
-      await request.post<Response<TaskReward[] | RewardErrorData>>('/task/reward', {
-        instance_id: taskInstanceId
-      })
-    ).data
+    const res = await request.post<Response<TaskReward[] | RewardErrorData>>('/task/reward', {
+      instance_id: taskInstanceId
+    })
+    return res.data
   }
 
   // async verify(taskId: string) {
