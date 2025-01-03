@@ -33,7 +33,7 @@ export default function Banner() {
       style={{ backgroundImage: `url(${ImageLogoGray})` }}
     >
       {/* {list.length !== 0 && */}
-      <Carousel
+      {/* <Carousel
         className="w-full bg-gray-100"
         autoplay={true}
         arrows={false}
@@ -53,7 +53,7 @@ export default function Banner() {
             </div>
           </div>
         ))}
-      </Carousel>
+      </Carousel> */}
       {/* } */}
     </div>
   )
