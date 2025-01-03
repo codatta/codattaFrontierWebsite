@@ -6,13 +6,13 @@ import Aside from '@/components/home/aside'
 
 export default function HomePage() {
   return (
-    <TransitionEffect className="relative flex gap-12 pb-4 text-sm">
-      <div className="flex-1">
+    <TransitionEffect className="relative text-sm">
+      <div className="pr-[350px]">
         <Banner />
         <Frontiers />
         <Explore />
       </div>
-      <Aside />
+      <Aside className="absolute right-0 top-0 h-full" />
     </TransitionEffect>
   )
 }

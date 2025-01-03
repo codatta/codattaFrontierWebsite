@@ -12,7 +12,7 @@ export default function Aside({ className }: TProps) {
   return (
     <div
       className={cn(
-        'relative w-[344px] flex-shrink-0 overflow-hidden rounded-2xl border border-transparent',
+        'relative w-[324px] flex-shrink-0 overflow-hidden rounded-2xl border border-y-0 border-transparent',
         className
       )}
       style={{
