@@ -125,7 +125,7 @@ const userStore = proxy<UserStore>({
 
 const derived = derive({
   username: (get) => getUsername(get(userStore).info),
-  reputation: (get) => get(userStore).info?.user_reputation ?? '',
+  reputation: (get) => get(userStore).info?.user_reputation ?? 0,
   points: (get) =>
     get(userStore).info?.user_assets?.filter((asset) => asset.asset_type === 'POINTS')?.[0]?.balance?.amount ?? ''
 })
