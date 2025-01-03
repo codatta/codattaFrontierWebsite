@@ -14,34 +14,36 @@ export default function Reward() {
   }, [])
 
   return (
-    <div className="relative mt-5 flex flex-1 flex-col justify-between p-4 text-white">
-      <Spin spinning={loading && !total_count} className="w-full">
-        <div className="text-sm">
-          <h3 className="text-base">Reward</h3>
+    <div className="relative mt-5 flex flex-1 flex-col p-4 text-white">
+      <div className="text-sm">
+        <h3 className="text-base">Reward</h3>
+        <Spin spinning={loading && !total_count} className="w-full">
           {rewards?.length > 0 ? (
-            <List
-              dataSource={rewards.slice()}
-              renderItem={(item) => (
-                <List.Item>
-                  <div className="flex w-full items-center justify-between gap-1.5 pb-4 pt-5 leading-5">
-                    <div className="text-base">{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
-                    <div className="ml-auto font-semibold text-primary">
-                      {parseInt(item.amount?.amount)} {item.amount?.currency}
+            <>
+              <List
+                dataSource={rewards.slice()}
+                renderItem={(item) => (
+                  <List.Item>
+                    <div className="flex w-full items-center justify-between gap-1.5 pb-4 pt-5 leading-5">
+                      <div className="text-base">{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
+                      <div className="ml-auto font-semibold text-primary">
+                        {parseInt(item.amount?.amount)} {item.amount?.currency}
+                      </div>
                     </div>
-                  </div>
-                </List.Item>
-              )}
-            />
+                  </List.Item>
+                )}
+              />
+              <Link to="/app/settings/reward" className="mx-auto mt-6 block text-center">
+                View More
+              </Link>
+            </>
           ) : (
-            <div className="flex h-[calc(100vh_-_300px)] items-center justify-center">
+            <div className="mt-36">
               <Empty />
             </div>
           )}
-        </div>
-      </Spin>
-      <Link to="/app/settings/reward" className="mx-auto">
-        View More
-      </Link>
+        </Spin>
+      </div>
     </div>
   )
 }
