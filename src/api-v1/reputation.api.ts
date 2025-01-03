@@ -22,7 +22,7 @@ const reputationApi = new ReputationApi()
 export default reputationApi
 
 export type UserContribution = SummaryUserInfo & { contribute: string }
-export type UserReputation = SummaryUserInfo & { reputation: string }
+export type UserReputation = SummaryUserInfo & { reputation: number | null }
 
 export enum ReputationType {
   Increase = 'INCREASE',

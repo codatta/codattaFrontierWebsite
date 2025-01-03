@@ -1,7 +1,5 @@
 import ReputationRate from '@/components/common/reputation-rate'
 import TransitionEffect from '@/components/common/transition-effect'
-
-import userApiV1 from '@/api-v1/user.api'
 import reputationApi, { type Reputation } from '@/api-v1/reputation.api'
 import IconDownOne from '@/assets/icons/settings/down-one.svg'
 import IconUpOne from '@/assets/icons/settings/up-one.svg'
@@ -9,6 +7,7 @@ import { Col, Row, List, Spin, Button, message } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import Empty from '@/components/common/empty'
+import { useUserStore } from '@/stores/user.store'
 
 function RecordItem(props: { record: Reputation }) {
   const { record } = props
@@ -95,20 +94,7 @@ function ReputationRecords() {
 }
 
 export default function SettingReputation() {
-  const [reputation, setReputation] = useState('0')
-  const [_rate, setRate] = useState<number>(0)
-
-  useEffect(() => {
-    userApiV1.getReputation().then((res) => {
-      setReputation(res)
-      let tempRate = parseFloat(res)
-      if (Number.isNaN(tempRate)) tempRate = 0
-      if (tempRate < 0) tempRate = 0
-      if (tempRate > 5) tempRate = 5
-
-      setRate(tempRate)
-    })
-  }, [])
+  const { info } = useUserStore()
 
   return (
     <TransitionEffect className="flex-auto px-6">
@@ -116,7 +102,11 @@ export default function SettingReputation() {
         <div className="mb-4 flex items-center gap-4">
           {/* <span className="text-20px font-600 leading-30px mr-1">L{rate}</span> */}
           <span>Reputation</span>
-          <ReputationRate rate={reputation} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>
+          <ReputationRate
+            rate={info?.user_reputation || 0}
+            size={24}
+            color={'rgba(255, 168, 0, 0.88)'}
+          ></ReputationRate>
         </div>
         {/* <div className="m-b-16px">
             <ReputationRate rate={reputation} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>

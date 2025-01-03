@@ -1,5 +1,6 @@
+import { proxy, useSnapshot } from 'valtio'
+
 import rewardsApi, { RewardsDesc } from '@/apis/rewards.api'
-import { proxy } from 'valtio'
 
 export interface RewardStore {
   rewards: RewardsDesc[]
@@ -8,12 +9,14 @@ export interface RewardStore {
   loading: boolean
 }
 
-export const rewardStore = proxy<RewardStore>({
+const rewardStore = proxy<RewardStore>({
   rewards: [],
   total_count: 0,
   pageSize: 5,
   loading: false
 })
+
+export const useRewardStore = () => useSnapshot(rewardStore)
 
 export async function reloadRewards(page: number = 1) {
   rewardStore.loading = true

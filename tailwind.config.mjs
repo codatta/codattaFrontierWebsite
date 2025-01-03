@@ -33,7 +33,8 @@ module.exports = {
       }
     },
     fontFamily: {
-      mona: 'Mona Sans'
+      mona: 'Mona Sans',
+      zendots: 'Zen Dots'
     }
   },
   plugins: [animatedPlugin, aspectRatioPlugin]

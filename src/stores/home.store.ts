@@ -1,29 +1,18 @@
 import homeApi, { type IAnnouncement } from '@/api-v1/home.api'
-import taskApi from '@/api-v1/task.api'
 import { proxy, useSnapshot } from 'valtio'
 
 export interface HomeStore {
   announcements: IAnnouncement[]
   // keyFeatures: Record<'validation' | 'submission' | 'hunting', IKeyFeatures>
-  checkin: {
-    days: number
-    done: boolean
-  }
-  showCheckIn: boolean
 }
 
 export const homeStore = proxy<HomeStore>({
-  announcements: [],
+  announcements: []
   // keyFeatures: {
   //   validation: null,
   //   submission: null,
   //   hunting: null,
-  // },
-  checkin: {
-    days: 0,
-    done: false
-  },
-  showCheckIn: false
+  // }
 })
 
 export async function reloadAnnoucements() {
@@ -46,32 +35,6 @@ export async function reloadAnnoucements() {
 //   return data
 // }
 
-export async function reloadCheckin() {
-  try {
-    const { check_in_days = 0, is_check_in = false } = await taskApi.getCheckinInfo()
-
-    homeStore.checkin.days = check_in_days
-    homeStore.checkin.done = is_check_in
-  } catch (e) {
-    console.error('getCheckinInfo: ', e.message)
-  }
-}
-
-export async function updateCheckin() {
-  const { check_in_days = 0 } = await taskApi.updateCheckin()
-
-  homeStore.checkin.days = check_in_days
-  homeStore.checkin.done = true
-}
-
-export async function showCheckInModal() {
-  homeStore.showCheckIn = true
-}
-
-export async function closeCheckInModal() {
-  homeStore.showCheckIn = false
-}
-
 const useHomeStore = () => {
   return useSnapshot(homeStore)
 }
@@ -79,9 +42,5 @@ const useHomeStore = () => {
 export default useHomeStore
 
 export const homeStoreActions = {
-  closeCheckInModal,
-  showCheckInModal,
-  updateCheckin,
-  reloadCheckin,
   reloadAnnoucements
 }

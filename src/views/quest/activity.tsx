@@ -1,4 +1,10 @@
-import taskApi, { TaskStatus, type Activity, type TaskReward, type TaskItem } from '@/api-v1/task.api'
+import taskApi, {
+  TaskStatus,
+  type Activity,
+  type TaskReward,
+  type RewardErrorData,
+  type TaskItem
+} from '@/apis/task.api'
 import TaskAction from '@/components/task/task-action'
 import TaskCard from '@/components/task/task-card'
 import TransitionEffect from '@/components/common/transition-effect'
@@ -73,8 +79,8 @@ export default function Component() {
 
   const [messageApi, contextHolder] = message.useMessage()
 
-  const onReward = (rewards: TaskReward[]) => {
-    if (rewards) {
+  const onReward = (rewards: RewardErrorData | TaskReward[]) => {
+    if (Array.isArray(rewards)) {
       messageApi.success({
         content: (
           <span className="font-medium text-[#020008E0]">
@@ -90,6 +96,9 @@ export default function Component() {
         ),
         className: `[&_.ant-message-custom-content]:(flex items-center gap-2) [&_.ant-message-notice-content]:(!bg-gradient-to-r from-#E9F0FFCC via-#FFF3FFCC via-30% to-#FFFFFFCC to-80% !px-6 !py-3)`
       })
+    } else if ('success' in rewards && !rewards.success) {
+      messageApi.info(rewards.errorMessage)
+      return
     }
   }
 

@@ -29,13 +29,12 @@ class TaskApi {
     return res.data
   }
 
-  // async receiveReward(taskInstanceId: string) {
-  //   return (
-  //     await request.post<Response<TaskReward[]>>('/task/reward', {
-  //       instance_id: taskInstanceId
-  //     })
-  //   ).data
-  // }
+  async receiveReward(taskInstanceId: string) {
+    const res = await request.post<Response<TaskReward[] | RewardErrorData>>('/task/reward', {
+      instance_id: taskInstanceId
+    })
+    return res.data
+  }
 
   // async verify(taskId: string) {
   //   return (
@@ -64,27 +63,31 @@ class TaskApi {
   //   return data
   // }
 
-  // async getCheckinInfo() {
-  //   const { data } = await request.post<{
-  //     check_in_days: number
-  //     is_check_in: boolean
-  //   }>('/check-in/consult')
-  //   return data
-  // }
+  async getCheckinInfo() {
+    const { data } = await request.post<Response<{ check_in_days: number; is_check_in: boolean }>>('/check-in/consult')
 
-  // async updateCheckin(params?: { chain: string; hash: string }) {
-  //   const { data } = await request.post<{ check_in_days: number }>('/check-in/check-in', params || {})
-  //   return data
-  // }
+    return data
+  }
 
-  // async getCheckHistory(chain: string, year: number, month: number) {
-  //   const { data } = await request.post('/task/chain/check/history', {
-  //     chain,
-  //     year,
-  //     month
-  //   })
-  //   return data
-  // }
+  async updateCheckin(params?: { chain: string; hash: string }) {
+    const { data } = await request.post<{ check_in_days: number }>('/check-in/check-in', params || {})
+    return data
+  }
+
+  async getCheckinHistory(year: number, month: number) {
+    const { data } = await request.post<
+      Response<{
+        total_count: number
+        check_in_history: { check_in_day: string; check_in_month: string; check_in_date: string }[]
+      }>
+    >('/check-in/query', {
+      data: {
+        year,
+        month
+      }
+    })
+    return data
+  }
 }
 
 export default new TaskApi()
@@ -152,3 +155,5 @@ export interface TaskReward {
   reward_icon: string
   reward_value: number
 }
+
+export type RewardErrorData = Pick<Response<unknown>, 'errorCode' | 'errorMessage' | 'success'>

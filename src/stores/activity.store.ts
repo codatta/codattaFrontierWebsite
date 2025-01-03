@@ -1,5 +1,5 @@
 import type { ActivityGroup, ActivitySummary } from '@/apis/task.api'
-import taskApi from '@/api-v1/task.api'
+import taskApi from '@/apis/task.api'
 import { proxy } from 'valtio'
 
 export interface ActivityStore {

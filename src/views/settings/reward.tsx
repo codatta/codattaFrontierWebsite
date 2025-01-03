@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useSnapshot } from 'valtio'
 import { Spin, List, Pagination } from 'antd'
 import Empty from '@/components/common/empty'
 import dayjs from 'dayjs'
 
-import { RewardStoreActions, rewardStore } from '@/stores/reward.store'
+import { RewardStoreActions, useRewardStore } from '@/stores/reward.store'
 import UserApi from '@/apis/user.api'
 
 export default function SettingsReward() {
-  const { rewards, total_count, loading, pageSize } = useSnapshot(rewardStore)
+  const { rewards, total_count, loading, pageSize } = useRewardStore()
   const [rewardDesc, setRewardDesc] = useState({
     amount: '',
     currency: ''
@@ -45,7 +44,6 @@ export default function SettingsReward() {
         <div>
           {rewards?.length > 0 ? (
             <List
-              // className="min-h-150"
               bordered
               dataSource={rewards.slice()}
               renderItem={(item) => (
