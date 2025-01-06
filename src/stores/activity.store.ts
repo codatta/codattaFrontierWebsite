@@ -29,5 +29,3 @@ export async function reloadActivities() {
   }
   return activity.groups
 }
-
-reloadActivities()
