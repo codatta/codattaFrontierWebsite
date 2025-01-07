@@ -82,11 +82,11 @@ function UserAvatarEditor() {
   }
 
   useEffect(() => {
-    console.log('avatar', avatar)
-    if (avatar) {
+    console.log('avatar', avatar, info?.user_data.avatar, '-')
+    if (avatar && avatar !== info?.user_data.avatar) {
       userStoreActions.updateUserInfo({ update_key: 'AVATAR', update_value: avatar })
     }
-  }, [avatar])
+  }, [avatar, info])
 
   return (
     <div className="flex items-start gap-6">
