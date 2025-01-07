@@ -51,12 +51,13 @@ function ExtensionLogin() {
     setLoading(true)
     try {
       const token = window.localStorage.getItem('token')
+      const auth = window.localStorage.getItem('auth')
       const uid = window.localStorage.getItem('uid')
       const new_user = !!state?.new_user
       const inviter_code = state?.inviter_code
       const res = await window.chrome.runtime.sendMessage(extensionId, {
         id: 'web-login',
-        params: { token, uid, showInviterCode: !inviter_code && new_user }
+        params: { token, auth, uid, showInviterCode: !inviter_code && new_user }
       })
       setResult(res === 'success')
     } catch (err) {
