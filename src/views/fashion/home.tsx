@@ -12,6 +12,12 @@ interface VideoInt {
   url?: string
 }
 
+const videos: { img: string; url: string }[] = [
+  {
+    img: 'https://static.codatta.io/static/images/fashion-20250108-114316.jpeg',
+    url: 'https://static.codatta.io/static/video/fashion-20250108-114324.mp4'
+  }
+]
 export default function FashionHome() {
   const navigate = useNavigate()
   const [video, setVideo] = useState<VideoInt>()
@@ -48,27 +54,27 @@ export default function FashionHome() {
           <div>
             <div className="mb-3 text-lg font-bold">How to earn rewards?</div>
             <div className="grid grid-cols-3 gap-4">
-              <div
-                className="relative min-w-20 cursor-pointer overflow-hidden rounded-2xl"
-                onClick={() =>
-                  setVideo({
-                    img: 'https://static.codatta.io/static/images/8c9e96dc2b3e4a2f1fe78d091fa0107284cbe40a.jpg',
-                    url: 'https://static.codatta.io/static/video/989de1cdce7f4cf745e7dfb2911ab5cdf23b07b5.mp4'
-                  })
-                }
-              >
-                <img
-                  src="https://static.codatta.io/static/images/8c9e96dc2b3e4a2f1fe78d091fa0107284cbe40a.jpg"
-                  alt=""
-                />
-                <div className="group absolute top-0 flex size-full items-center justify-center hover:bg-[#000000]/35">
-                  <img
-                    src={playCircle}
-                    alt=""
-                    className="size-9 transition-transform duration-200 group-hover:scale-110"
-                  />
+              {videos.map((video, index) => (
+                <div
+                  key={video.url + index}
+                  className="relative min-w-20 cursor-pointer overflow-hidden rounded-2xl"
+                  onClick={() =>
+                    setVideo({
+                      img: video.img,
+                      url: video.url
+                    })
+                  }
+                >
+                  <img src={video.img} alt="" />
+                  <div className="group absolute top-0 flex size-full items-center justify-center hover:bg-[#000000]/35">
+                    <img
+                      src={playCircle}
+                      alt=""
+                      className="size-9 transition-transform duration-200 group-hover:scale-110"
+                    />
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
           <div>
