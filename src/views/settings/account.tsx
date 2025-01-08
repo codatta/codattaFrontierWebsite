@@ -182,7 +182,7 @@ function UserNameEditor() {
             className="h-full flex-1 bg-transparent outline-none"
             type="text"
             value={nickname}
-            maxLength={64}
+            maxLength={12}
             onChange={(e) => setNickname(e.target.value)}
           />
           <Button size="small" className="ml-auto" loading={loading} type="primary" onClick={handleUpdateUsername}>
