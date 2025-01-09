@@ -17,5 +17,5 @@ export enum ReputationType {
 export interface Reputation {
   type: ReputationType
   memo: string
-  create_at: number
+  create_at: number // timestamp seconds
 }

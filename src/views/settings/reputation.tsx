@@ -29,7 +29,7 @@ function RecordItem(props: { record: Reputation }) {
         ) : null}
       </Col>
       <Col span={6} className="text-right text-gray-300">
-        {dayjs(record.create_at).format('YYYY-MM-DD HH:mm')}
+        {dayjs(record.create_at * 1000).format('YYYY-MM-DD HH:mm')}
       </Col>
     </Row>
   )
