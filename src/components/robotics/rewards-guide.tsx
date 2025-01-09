@@ -9,11 +9,11 @@ interface VideoInt {
 
 const videos: { img: string; url: string }[] = [
   {
-    img: 'https://static.codatta.io/static/images/robotics-l1-20250108-114213.jpeg',
+    img: 'https://static.codatta.io/static/images/robotics-l1-20250109-100820.jpeg',
     url: 'https://static.codatta.io/static/video/robotics-l1-20250108-114248.mp4'
   },
   {
-    img: 'https://static.codatta.io/static/images/robotics-l3-20250108-114236.jpeg',
+    img: 'https://static.codatta.io/static/images/robotics-l3-20250109-100839.jpeg',
     url: 'https://static.codatta.io/static/video/robotics-l3-20250108-114304.mp4'
   }
 ]
