@@ -47,7 +47,7 @@ const Table = () => {
       <div className="flex-1 leading-[40px]">
         <h4 className="text-base font-semibold">History</h4>
         <div>
-          <Row gutter={16} className="mt-[17px] h-[40px] text-sm font-medium leading-[40px]">
+          <Row gutter={16} className="!mx-0 mt-[17px] h-[40px] text-sm font-medium leading-[40px]">
             <Col span={14}>Name</Col>
             <Col span={4} className="flex w-24 flex-none items-center justify-center text-center">
               Reward
@@ -64,18 +64,20 @@ const Table = () => {
                 <Row
                   key={item.user_id}
                   gutter={16}
-                  className="flex w-full items-center border-b border-solid border-[#300040]/5 text-sm leading-[40px]"
+                  className="!mx-0 flex w-full items-center border-b border-solid border-[#300040]/5 text-sm leading-[40px]"
                 >
-                  <Col className="flex flex-1 flex-wrap">
+                  <Col span={14} className="flex flex-1 flex-wrap">
                     <span className="inline-block">{index + 1}.</span>
                     {item.email || item.address}
                   </Col>
-                  <Col className="flex w-24 flex-none items-center justify-center">
+                  <Col span={4} className="flex w-24 flex-none items-center justify-center">
                     <div className="h-[22px] rounded-2xl bg-primary/25 px-2 text-xs font-medium leading-[22px] text-primary">
                       {item.reward} points
                     </div>
                   </Col>
-                  <Col className="w-[164px] flex-none text-right">{dayjs(item.date).format('YYYY-MM-DD')}</Col>
+                  <Col span={6} className="w-[164px] flex-none text-right">
+                    {dayjs(item.date).format('YYYY-MM-DD')}
+                  </Col>
                 </Row>
               ))
             )}
