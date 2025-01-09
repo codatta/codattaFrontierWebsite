@@ -1,6 +1,6 @@
 import ReputationRate from '@/components/common/reputation-rate'
 import TransitionEffect from '@/components/common/transition-effect'
-import reputationApi, { type Reputation } from '@/api-v1/reputation.api'
+import reputationApi, { type Reputation } from '@/apis/reputation.api'
 import IconDownOne from '@/assets/icons/settings/down-one.svg'
 import IconUpOne from '@/assets/icons/settings/up-one.svg'
 import { Col, Row, List, Spin, Button, message } from 'antd'
