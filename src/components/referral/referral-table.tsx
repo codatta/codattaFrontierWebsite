@@ -56,7 +56,7 @@ const Table = () => {
               Time
             </Col>
           </Row>
-          <div className="max-h-[200px] overflow-y-auto pb-4">
+          <div className="no-scrollbar max-h-[200px] overflow-y-auto pb-4">
             {list.length === 0 ? (
               <Empty />
             ) : (
