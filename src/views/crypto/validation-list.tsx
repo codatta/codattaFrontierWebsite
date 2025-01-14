@@ -95,7 +95,7 @@ export default function Component() {
           <Button
             block
             shape="round"
-            className="flex items-center justify-between bg-inherit [&>span]:text-base"
+            className="bg-inherit [&>span]:text-base"
             style={{ height: 44 }}
             icon={sorts.pointSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
@@ -113,7 +113,7 @@ export default function Component() {
             block
             shape="round"
             style={{ height: 44 }}
-            className="flex items-center justify-between bg-inherit [&>span]:text-base"
+            className="bg-inherit [&>span]:text-base"
             icon={sorts.dateSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
             onClick={() => {
