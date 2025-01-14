@@ -49,7 +49,7 @@ const FilterFormBox = () => {
         block
         shape="round"
         style={{ height: 44 }}
-        className="flex justify-between bg-inherit [&>span]:text-base"
+        className="bg-inherit [&>span]:!self-center [&>span]:text-base"
         icon={<IconFilter size={14} />}
         iconPosition="end"
         onClick={() => setOpen(true)}
