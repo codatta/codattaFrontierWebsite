@@ -95,7 +95,7 @@ export default function Component() {
           <Button
             block
             shape="round"
-            className="flex justify-between bg-inherit [&>span]:text-base"
+            className="flex items-center justify-between bg-inherit [&>span]:text-base"
             style={{ height: 44 }}
             icon={sorts.pointSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
