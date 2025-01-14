@@ -113,7 +113,7 @@ export default function Component() {
             block
             shape="round"
             style={{ height: 44 }}
-            className="flex justify-between bg-inherit [&>span]:text-base"
+            className="flex items-center justify-between bg-inherit [&>span]:text-base"
             icon={sorts.dateSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
             onClick={() => {
