@@ -152,7 +152,9 @@ export default function SubmissionForm(props: {
           options={options.entities as { label: string; value: string }[]}
           placeholder="Represent the address owner (company, institution, organization, etc.)."
           onChange={(v) => handleEntityChange(v, form)}
-        />
+        >
+          <Input type="text" size="large" />
+        </AutoComplete>
       </Form.Item>
       {!!recentEntity.length && (
         <div className="-mt-4 mb-4 flex flex-wrap items-center gap-y-1">
