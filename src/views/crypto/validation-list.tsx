@@ -74,6 +74,16 @@ export default function Component() {
         <img src={arrowLeft} alt="" className="mr-1" />
         <span>Validation</span>
       </div>
+      <Button
+        type="primary"
+        className="w-full"
+        shape="round"
+        iconPosition="end"
+        style={{ height: 44 }}
+        icon={<CaretUpOutlined />}
+      >
+        Point
+      </Button>
 
       <div className="flex flex-wrap gap-4">
         <div ref={inProgress}>
@@ -93,6 +103,16 @@ export default function Component() {
         {/* <div className="flex gap-x-4"> */}
         <div className="w-28 md:flex-none">
           <Button
+            type="primary"
+            className="w-full"
+            shape="round"
+            iconPosition="end"
+            style={{ height: 44 }}
+            icon={<CaretUpOutlined />}
+          >
+            Point
+          </Button>
+          {/* <Button
             block
             shape="round"
             className="bg-inherit [&>span]:text-base"
@@ -106,7 +126,7 @@ export default function Component() {
             }}
           >
             Point
-          </Button>
+          </Button> */}
         </div>
         <div className="w-28 md:flex-none">
           <Button
