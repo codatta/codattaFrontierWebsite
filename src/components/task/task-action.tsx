@@ -9,7 +9,7 @@ import ReactGA from 'react-ga4'
 import { useNavigate } from 'react-router-dom'
 import Button3D from '../common/button-3d'
 import { questStoreActions, QUEST_TMA_TASK_IDS } from '@/stores/quest.store'
-import { userStoreActions } from '@/stores/user.store'
+import { userStoreActions, useUserStore } from '@/stores/user.store'
 import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
 
@@ -106,17 +106,11 @@ const actionButton: Record<string, ActionButton> = {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigate = useNavigate()
-
-    // const { info } = useUserStore()
-    // const xAccount = info?.social_account_info?.find(
-    //   (item) => item.channel === 'X'
-    // )
-    // const discordAccount = info?.social_account_info?.find(
-    //   (item) => item.channel === 'Discord'
-    // )
-    // const telegramAccount = info?.social_account_info?.find(
-    //   (item) => item.channel === 'Telegram'
-    // )
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { info } = useUserStore()
+    const xAccount = info?.social_account_info?.find((item) => item?.channel === 'X')
+    const discordAccount = info?.social_account_info?.find((item) => item?.channel === 'Discord')
+    const telegramAccount = info?.social_account_info?.find((item) => item?.channel === 'Telegram')
 
     async function handleLinkClick() {
       setLoading(true)
@@ -134,8 +128,7 @@ const actionButton: Record<string, ActionButton> = {
           await userStoreActions.linkTelegram()
         } else if (task_id == 'JOIN-DISCORD-TEAM' && !discordAccount) {
           await userStoreActions.linkDiscord()
-        }
-        if (task_id === 'PLUGIN-QUEST-SUBMISSION') {
+        } else if (task_id === 'PLUGIN-QUEST-SUBMISSION') {
           questStoreActions.showExtensionGuideModal()
         } else {
           if (isAppSchema) {
@@ -156,7 +149,11 @@ const actionButton: Record<string, ActionButton> = {
       if (QUEST_TMA_TASK_IDS.includes(task_id)) {
         questStoreActions.showTelegramGuideModal(schema)
       } else {
-        await _fn()
+        try {
+          await _fn()
+        } catch (error) {
+          setLoading(false)
+        }
       }
       setLoading(false)
     }

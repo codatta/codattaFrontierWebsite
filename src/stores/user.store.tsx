@@ -1,4 +1,3 @@
-// import accountApi from '@/api/account.api'
 import userApi, { UserInfo, UserUpdateParams } from '@/apis/user.api'
 import CustomAlert from '@/components/account/custom-alert'
 import { authRedirect } from '@/utils/auth-redirect'
@@ -116,9 +115,9 @@ const userStore = proxy<UserStore>({
     },
     user_reputation: 0,
     user_assets: [],
-    accounts_data: []
+    accounts_data: [],
+    social_account_info: []
   }
-  // social_account_info: [],
   // accounts: [],
   // username: '-'
 })
@@ -161,8 +160,8 @@ async function updateUserInfo(info: UserUpdateParams) {
 
 async function linkDiscord() {
   try {
-    const { link } = await userApi.getSocialAccountLinkUrl('Discord')
-    window.open(link, '_blank', 'width=600,height=600')
+    const { data } = await userApi.getSocialAccountLinkUrl('Discord')
+    window.open(data.link, '_blank', 'width=600,height=600')
   } catch (err) {
     showLinkError(err.message)
   }
@@ -170,33 +169,31 @@ async function linkDiscord() {
 
 async function linkX() {
   try {
-    const { link } = await userApi.getSocialAccountLinkUrl('X')
-    window.open(link, '_blank', 'width=600,height=600')
+    const { data } = await userApi.getSocialAccountLinkUrl('X')
+    window.open(data.link, '_blank', 'width=600,height=600')
   } catch (err) {
     showLinkError(err.message)
   }
 }
 
 async function linkTelegram() {
-  // const data = await new Promise<any>((resolve) => {
-  //   const BOT_ID = import.meta.env.VITE_TG_BOT_ID
-  //   window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: true }, (data: any) => resolve(data))
-  // })
-  // if (!data) return
-  // try {
-  //   const res = await userApi.linkSocialAccount('Telegram', data)
-  //   console.log(res)
-  //   showLinkSuccess(() => channel.postMessage('update'))
-  // } catch (err) {
-  //   showLinkError(err.message)
-  // }
+  const data = await new Promise((resolve) => {
+    const BOT_ID = import.meta.env.VITE_TG_BOT_ID
+    window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: true }, (data) => resolve(data))
+  })
+  if (!data) return
+  try {
+    const res = await userApi.linkSocialAccount('Telegram', data)
+    console.log(res)
+    showLinkSuccess(() => channel.postMessage('update'))
+  } catch (err) {
+    showLinkError(err.message)
+  }
 }
 
 async function getUserInfo() {
   const { data } = await userApi.getUserInfo()
   userStore.info = data
-  // userStore.social_account_info = data.social_account_info
-  // userStore.accounts = res.accounts
   return data
 }
 

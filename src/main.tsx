@@ -3,6 +3,7 @@ import { VITE_GA_TRACKING_ID } from '@/configs/config'
 import Router from '@/router'
 import { ConfigProvider } from 'antd'
 import { CodattaConnectContextProvider } from 'codatta-connect'
+import '@/lab/telegram.sdk.js'
 
 import AntdTheme from '@/styles/antd.theme'
 import '@/styles/tailwind.css'

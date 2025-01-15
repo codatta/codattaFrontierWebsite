@@ -58,6 +58,7 @@ export interface UserInfo {
     }
   }[]
   accounts_data: UserAccount[]
+  social_account_info: []
 }
 
 export interface UserUpdateParams {
@@ -97,13 +98,13 @@ class UserApi {
     return data
   }
 
-  // async linkSocialAccount(type: string, param) {
-  //   const { data } = await request.post('/user/sm/bind', {
-  //     type,
-  //     value: param
-  //   })
-  //   return data
-  // }
+  async linkSocialAccount(type: string, param) {
+    const { data } = await request.post('/user/sm/bind', {
+      type,
+      value: param
+    })
+    return data
+  }
 }
 
 export default new UserApi(request)
