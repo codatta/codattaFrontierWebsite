@@ -97,13 +97,13 @@ class UserApi {
     return data
   }
 
-  async linkSocialAccount(type: string, param: any) {
-    const { data } = await request.post('/user/sm/bind', {
-      type,
-      value: param
-    })
-    return data
-  }
+  // async linkSocialAccount(type: string, param) {
+  //   const { data } = await request.post('/user/sm/bind', {
+  //     type,
+  //     value: param
+  //   })
+  //   return data
+  // }
 }
 
 export default new UserApi(request)

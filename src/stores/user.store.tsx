@@ -83,7 +83,9 @@ function showLinkSuccess(callback?: () => void) {
 
 function closeLinkSuccess() {
   const modalDom = document.getElementById(userModalIdObj.successModal)
-  modalDom && document.body.removeChild(modalDom)
+  if (modalDom) {
+    document.body.removeChild(modalDom)
+  }
 }
 
 function showLinkError(message: string | React.ReactNode, callback?: () => void) {
@@ -95,7 +97,9 @@ function showLinkError(message: string | React.ReactNode, callback?: () => void)
 
 function closeLinkError() {
   const modalDom = document.getElementById(userModalIdObj.errorModal)
-  modalDom && document.body.removeChild(modalDom)
+  if (modalDom) {
+    document.body.removeChild(modalDom)
+  }
 }
 
 export interface UserStore {
@@ -159,7 +163,7 @@ async function linkDiscord() {
   try {
     const { link } = await userApi.getSocialAccountLinkUrl('Discord')
     window.open(link, '_blank', 'width=600,height=600')
-  } catch (err: any) {
+  } catch (err) {
     showLinkError(err.message)
   }
 }
@@ -168,24 +172,24 @@ async function linkX() {
   try {
     const { link } = await userApi.getSocialAccountLinkUrl('X')
     window.open(link, '_blank', 'width=600,height=600')
-  } catch (err: any) {
+  } catch (err) {
     showLinkError(err.message)
   }
 }
 
 async function linkTelegram() {
-  const data = await new Promise<any>((resolve) => {
-    const BOT_ID = import.meta.env.VITE_TG_BOT_ID
-    window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: true }, (data: any) => resolve(data))
-  })
-  if (!data) return
-  try {
-    const res = await userApi.linkSocialAccount('Telegram', data)
-    console.log(res)
-    showLinkSuccess(() => channel.postMessage('update'))
-  } catch (err: any) {
-    showLinkError(err.message)
-  }
+  // const data = await new Promise<any>((resolve) => {
+  //   const BOT_ID = import.meta.env.VITE_TG_BOT_ID
+  //   window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: true }, (data: any) => resolve(data))
+  // })
+  // if (!data) return
+  // try {
+  //   const res = await userApi.linkSocialAccount('Telegram', data)
+  //   console.log(res)
+  //   showLinkSuccess(() => channel.postMessage('update'))
+  // } catch (err) {
+  //   showLinkError(err.message)
+  // }
 }
 
 async function getUserInfo() {
