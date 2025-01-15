@@ -74,13 +74,12 @@ export default function Component() {
         <img src={arrowLeft} alt="" className="mr-1" />
         <span>Validation</span>
       </div>
-
       <div className="flex flex-wrap gap-4">
         <div ref={inProgress}>
           <Select
             defaultValue={status}
             style={{ width: 140, height: 44 }}
-            className="[&>.ant-select-selector]:rounded-[48px]"
+            className="[&>ant-select-selection-item]: text-center [&>.ant-select-selector]:rounded-[48px]"
             onChange={handleStatusChange}
             options={[
               // { value: 'NotStart', label: 'Not Start' },
@@ -95,7 +94,7 @@ export default function Component() {
           <Button
             block
             shape="round"
-            className="flex items-center justify-between bg-inherit [&>span]:text-base"
+            className="bg-inherit [&>span]:!self-center [&>span]:text-base"
             style={{ height: 44 }}
             icon={sorts.pointSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
@@ -113,7 +112,7 @@ export default function Component() {
             block
             shape="round"
             style={{ height: 44 }}
-            className="flex items-center justify-between bg-inherit [&>span]:text-base"
+            className="bg-inherit [&>span]:!self-center [&>span]:text-base"
             icon={sorts.dateSort === 'ASC' ? <CaretUpOutlined /> : <CaretDownOutlined />}
             iconPosition="end"
             onClick={() => {
