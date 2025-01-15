@@ -58,7 +58,12 @@ export interface UserInfo {
     }
   }[]
   accounts_data: UserAccount[]
-  social_account_info: []
+  social_account_info: {
+    channel: string
+    composure_time: null | string
+    name: string
+    status: number
+  }[]
 }
 
 export interface UserUpdateParams {
@@ -98,7 +103,7 @@ class UserApi {
     return data
   }
 
-  async linkSocialAccount(type: string, param) {
+  async linkSocialAccount(type: string, param: unknown) {
     const { data } = await request.post('/user/sm/bind', {
       type,
       value: param

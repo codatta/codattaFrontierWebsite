@@ -1,6 +1,5 @@
 import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
 import taskApi2, { type RewardErrorData } from '@/apis/task.api'
-import userApi from '@/apis/user.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -10,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import Button3D from '../common/button-3d'
 import { questStoreActions, QUEST_TMA_TASK_IDS } from '@/stores/quest.store'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { cn } from '@udecode/cn'
 
 interface TaskActionProps {
