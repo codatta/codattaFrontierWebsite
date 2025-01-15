@@ -86,6 +86,24 @@ class UserApi {
     const { data } = await this.request.post('/user/update/info', info)
     return data
   }
+
+  async getSocialAccountLinkUrl(type: string) {
+    const { data } = await request.post('/user/sm/connect', { type })
+    return data
+  }
+
+  async unlinkSocialAccount(type: string) {
+    const { data } = await request.post('/user/sm/unbind', { type })
+    return data
+  }
+
+  async linkSocialAccount(type: string, param: any) {
+    const { data } = await request.post('/user/sm/bind', {
+      type,
+      value: param
+    })
+    return data
+  }
 }
 
 export default new UserApi(request)

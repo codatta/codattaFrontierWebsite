@@ -1,5 +1,6 @@
 import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
 import taskApi2, { type RewardErrorData } from '@/apis/task.api'
+import userApi from '@/apis/user.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -8,7 +9,8 @@ import ReactGA from 'react-ga4'
 import { useNavigate } from 'react-router-dom'
 import Button3D from '../common/button-3d'
 import { questStoreActions, QUEST_TMA_TASK_IDS } from '@/stores/quest.store'
-import { useState } from 'react'
+import { userStoreActions } from '@/stores/user.store'
+import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
 
 interface TaskActionProps {
@@ -120,21 +122,19 @@ const actionButton: Record<string, ActionButton> = {
       setLoading(true)
       ReactGA.event('goto_quest', { customParams: JSON.stringify({ schema }) })
       const _fn = async () => {
-        // if (task_id == 'BIND-X-AUTH') {
-        //   await userStoreActions.linkX()
-        // } else if (task_id == 'BIND-TELEGRAM-AUTH') {
-        //   await userStoreActions.linkTelegram()
-        // } else if (task_id == 'BIND-DISCORD-AUTH') {
-        //   await userStoreActions.linkDiscord()
-        // } else if (
-        //   ['FOLLOW-X', 'MANTA-FOLLOW-X'].includes(task_id) &&
-        //   !xAccount
-        // ) {
-        //   await userStoreActions.linkX()
-        // } else if (task_id == 'JOIN-TELEGRAM-TEAM' && !telegramAccount) {
-        //   await userStoreActions.linkTelegram()
-        // } else if (task_id == 'JOIN-DISCORD-TEAM' && !discordAccount) {
-        //   await userStoreActions.linkDiscord()
+        if (task_id == 'BIND-X-AUTH') {
+          await userStoreActions.linkX()
+        } else if (task_id == 'BIND-TELEGRAM-AUTH') {
+          await userStoreActions.linkTelegram()
+        } else if (task_id == 'BIND-DISCORD-AUTH') {
+          await userStoreActions.linkDiscord()
+        } else if (['FOLLOW-X', 'MANTA-FOLLOW-X'].includes(task_id) && !xAccount) {
+          await userStoreActions.linkX()
+        } else if (task_id == 'JOIN-TELEGRAM-TEAM' && !telegramAccount) {
+          await userStoreActions.linkTelegram()
+        } else if (task_id == 'JOIN-DISCORD-TEAM' && !discordAccount) {
+          await userStoreActions.linkDiscord()
+        }
         if (task_id === 'PLUGIN-QUEST-SUBMISSION') {
           questStoreActions.showExtensionGuideModal()
         } else {
