@@ -79,7 +79,7 @@ export default function Component() {
           <Select
             defaultValue={status}
             style={{ width: 140, height: 44 }}
-            className="[&>.ant-select-selector]:rounded-[48px]"
+            className="[&>ant-select-selection-item]: text-center [&>.ant-select-selector]:rounded-[48px]"
             onChange={handleStatusChange}
             options={[
               // { value: 'NotStart', label: 'Not Start' },
