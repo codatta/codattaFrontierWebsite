@@ -183,7 +183,7 @@ async function linkTelegram() {
   })
   if (!data) return
   try {
-    const res = await userApi.linkSocialAccount('Telegram', data)
+    await userApi.linkSocialAccount('Telegram', data)
     showLinkSuccess(() => channel.postMessage('update'))
   } catch (err) {
     showLinkError(err.message)
