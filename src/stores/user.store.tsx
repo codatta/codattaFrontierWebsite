@@ -184,11 +184,15 @@ async function linkTelegram() {
   if (!data) return
   try {
     const res = await userApi.linkSocialAccount('Telegram', data)
-    console.log(res)
     showLinkSuccess(() => channel.postMessage('update'))
   } catch (err) {
     showLinkError(err.message)
   }
+}
+
+async function unlinkSocialAccount(type: string) {
+  const res = await userApi.unlinkSocialAccount(type)
+  console.log(res)
 }
 
 async function getUserInfo() {
@@ -216,6 +220,7 @@ export const userStoreActions = {
   linkDiscord,
   linkX,
   linkTelegram,
+  unlinkSocialAccount,
   updateUserInfo,
   getUserInfo,
   showLinkSuccess,

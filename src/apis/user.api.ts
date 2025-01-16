@@ -42,6 +42,13 @@ export interface OldUserInfo {
   }
 }
 
+export interface SocialAccountInfoItem {
+  channel: string
+  composure_time: null | string
+  name: string
+  status: number
+}
+
 export interface UserInfo {
   user_reputation: number | null
   user_data: {
@@ -58,12 +65,7 @@ export interface UserInfo {
     }
   }[]
   accounts_data: UserAccount[]
-  social_account_info: {
-    channel: string
-    composure_time: null | string
-    name: string
-    status: number
-  }[]
+  social_account_info: SocialAccountInfoItem[]
 }
 
 export interface UserUpdateParams {
@@ -77,11 +79,6 @@ class UserApi {
   async getUserInfo() {
     const res = await this.request.post<Response<UserInfo>>('/user/get/user_info')
     return res.data
-  }
-
-  async getDetail() {
-    const { data } = await request.get<OldUserInfo>('/user/details')
-    return data
   }
 
   async updateRelatedInfo(info: object) {
