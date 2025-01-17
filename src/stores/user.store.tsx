@@ -177,6 +177,7 @@ async function linkX() {
 }
 
 async function linkTelegram() {
+  console.log(import.meta.env.VITE_TG_BOT_ID)
   const data = await new Promise((resolve) => {
     const BOT_ID = import.meta.env.VITE_TG_BOT_ID
     window.Telegram.Login.auth({ bot_id: BOT_ID, request_access: true }, (data: unknown) => resolve(data))
