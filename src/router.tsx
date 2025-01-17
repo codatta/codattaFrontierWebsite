@@ -44,12 +44,14 @@ const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
+const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Navigate to="/app" />} />
+
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
@@ -91,6 +93,7 @@ export default function Router() {
         <Route path="/account">
           <Route path="signin" element={<AccountSignin />} />
           <Route path="extension/signin" element={<ExtensionSignin />} />
+          <Route path="social/link/:social_media" element={<SocialLinkLanding />}></Route>
         </Route>
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
@@ -102,10 +105,6 @@ export default function Router() {
             <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
           </Route>
         </Route>
-        <Route
-          path="/account/social/link/:social_media"
-          lazy={() => import('@/views/account/social-link-landing')}
-        ></Route>
       </Routes>
     </BrowserRouter>
   )

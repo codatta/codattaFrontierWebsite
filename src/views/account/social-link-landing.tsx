@@ -8,7 +8,7 @@ import { userStoreActions } from '@/stores/user.store'
 
 const channel = new BroadcastChannel('codatta:social-link')
 
-export function Component() {
+export default function Component() {
   const params = useParams()
   const socialMedia = params.social_media
   const query = querystring.parse(window.location.search)
