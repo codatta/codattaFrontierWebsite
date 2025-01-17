@@ -136,6 +136,24 @@ class AccountApi {
     const res = await this.request.post('/user/account/unbind', { account })
     return res.data
   }
+
+  async getSocialAccountLinkUrl(type: string) {
+    const { data } = await request.post('/user/sm/connect', { type })
+    return data
+  }
+
+  async unlinkSocialAccount(type: string) {
+    const { data } = await request.post('/user/sm/unbind', { type })
+    return data
+  }
+
+  async linkSocialAccount(type: string, param: unknown) {
+    const { data } = await request.post('/user/sm/bind', {
+      type,
+      value: param
+    })
+    return data
+  }
 }
 
 export default new AccountApi(request)

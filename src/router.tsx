@@ -91,6 +91,10 @@ export default function Router() {
         <Route path="/account">
           <Route path="signin" element={<AccountSignin />} />
           <Route path="extension/signin" element={<ExtensionSignin />} />
+          <Route
+            path="/account/social/link/:social_media"
+            lazy={() => import('@/views/account/social-link-landing')}
+          ></Route>
         </Route>
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
