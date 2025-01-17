@@ -36,18 +36,18 @@ class TaskApi {
     return res.data
   }
 
-  // async verify(taskId: string) {
-  //   return (
-  //     await request.post<
-  //       Response<{
-  //         verify_result: 'PASSED' | 'FAILED'
-  //         instance_id: Task_New['instance_id']
-  //         rewards: TaskReward[]
-  //         msg?: string
-  //       }>
-  //     >('/task/verify', { task_id: taskId })
-  //   ).data
-  // }
+  async verify(taskId: string) {
+    return (
+      await request.post<
+        Response<{
+          verify_result: 'PASSED' | 'FAILED'
+          instance_id: TaskItem['instance_id']
+          rewards: TaskReward[]
+          msg?: string
+        }>
+      >('/quest/verify', { task_id: taskId })
+    ).data
+  }
 
   // async getQuestDetail(questId: string) {
   //   const { data } = await request.post<Response<Quest[]>>('/quest/detail', {
