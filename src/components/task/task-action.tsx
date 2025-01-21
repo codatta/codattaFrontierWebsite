@@ -1,5 +1,4 @@
-import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
-import taskApi2, { type RewardErrorData } from '@/apis/task.api'
+import taskApi2, { TaskStatus, TaskType, type TaskReward, type TaskItem, type RewardErrorData } from '@/apis/task.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'

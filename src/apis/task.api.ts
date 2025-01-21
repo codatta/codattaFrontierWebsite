@@ -101,7 +101,8 @@ export enum TaskStatus {
 
 export enum TaskType {
   Manual = 'MANUAL',
-  Auto = 'AUTO'
+  Auto = 'AUTO',
+  Redeem = 'REDEEM'
 }
 
 export interface TaskItem {
