@@ -45,7 +45,7 @@ class TaskApi {
           rewards: TaskReward[]
           msg?: string
         }>
-      >('/quest/verify', { task_id: taskId })
+      >('/task/verify', { task_id: taskId })
     ).data
   }
 
@@ -56,12 +56,12 @@ class TaskApi {
   //   return data
   // }
 
-  // async finishTask(taskConfigId: string) {
-  //   const { data } = await request.post('/task/finish', {
-  //     task_config_id: taskConfigId
-  //   })
-  //   return data
-  // }
+  async finishTask(taskConfigId: string) {
+    const { data } = await request.post('/task/finish', {
+      task_config_id: taskConfigId
+    })
+    return data
+  }
 
   async getCheckinInfo() {
     const { data } = await request.post<Response<{ check_in_days: number; is_check_in: boolean }>>('/check-in/consult')

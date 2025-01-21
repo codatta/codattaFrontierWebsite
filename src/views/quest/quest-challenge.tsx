@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import QuestTrueFalse from '@/components/quest/quest-true-false'
 import QuestSelect from '@/components/quest/quest-select'
 import taskApi, { Quest } from '@/api-v1/task.api'
+import taskApi2 from '@/apis/task.api'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Spin, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -109,7 +110,7 @@ export default function Component() {
   async function handleFinish() {
     setLoading(true)
     try {
-      await taskApi.finishTask(taskId)
+      await taskApi2.finishTask(taskId)
       message.success('Congratulations! You have completed the quest.')
       navigate(-1)
     } catch (err) {

@@ -138,7 +138,7 @@ const actionButton: Record<string, ActionButton> = {
           setLoading(true)
           setTimeout(async () => {
             if (['FOLLOW-X', 'MANTA-FOLLOW-X', 'OKX_GIVEAWAY', 'XNY-BLOG-DOC', 'XNY-LITEPAPER'].includes(task_id)) {
-              await taskApi.finishTask(task_id)
+              await taskApi2.finishTask(task_id)
               await props.onPending?.()
               setLoading(false)
             }
