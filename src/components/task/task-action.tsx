@@ -1,5 +1,4 @@
-import taskApi, { TaskStatus, TaskType, type TaskReward, type TaskItem } from '@/api-v1/task.api'
-import taskApi2, { type RewardErrorData } from '@/apis/task.api'
+import taskApi2, { TaskStatus, TaskType, type TaskReward, type TaskItem, type RewardErrorData } from '@/apis/task.api'
 
 import { Button, Space, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
@@ -8,6 +7,7 @@ import ReactGA from 'react-ga4'
 import { useNavigate } from 'react-router-dom'
 import Button3D from '../common/button-3d'
 import { questStoreActions, QUEST_TMA_TASK_IDS } from '@/stores/quest.store'
+import { userStoreActions, useUserStore } from '@/stores/user.store'
 import { useState } from 'react'
 import { cn } from '@udecode/cn'
 
@@ -46,7 +46,7 @@ const actionButton: Record<string, ActionButton> = {
       if (btnLoading) return
       ReactGA.event('verify_quest')
       try {
-        const res = await taskApi.verify(props.task.task_id)
+        const res = await taskApi2.verify(props.task.task_id)
         const verifyRes = res.data
         if (verifyRes?.verify_result === 'PASSED') {
           props.onReward?.(verifyRes.rewards)
@@ -104,38 +104,29 @@ const actionButton: Record<string, ActionButton> = {
 
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigate = useNavigate()
-
-    // const { info } = useUserStore()
-    // const xAccount = info?.social_account_info?.find(
-    //   (item) => item.channel === 'X'
-    // )
-    // const discordAccount = info?.social_account_info?.find(
-    //   (item) => item.channel === 'Discord'
-    // )
-    // const telegramAccount = info?.social_account_info?.find(
-    //   (item) => item.channel === 'Telegram'
-    // )
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { info } = useUserStore()
+    const xAccount = info?.social_account_info?.find((item) => item?.channel === 'X')
+    const discordAccount = info?.social_account_info?.find((item) => item?.channel === 'Discord')
+    const telegramAccount = info?.social_account_info?.find((item) => item?.channel === 'Telegram')
 
     async function handleLinkClick() {
       setLoading(true)
       ReactGA.event('goto_quest', { customParams: JSON.stringify({ schema }) })
       const _fn = async () => {
-        // if (task_id == 'BIND-X-AUTH') {
-        //   await userStoreActions.linkX()
-        // } else if (task_id == 'BIND-TELEGRAM-AUTH') {
-        //   await userStoreActions.linkTelegram()
-        // } else if (task_id == 'BIND-DISCORD-AUTH') {
-        //   await userStoreActions.linkDiscord()
-        // } else if (
-        //   ['FOLLOW-X', 'MANTA-FOLLOW-X'].includes(task_id) &&
-        //   !xAccount
-        // ) {
-        //   await userStoreActions.linkX()
-        // } else if (task_id == 'JOIN-TELEGRAM-TEAM' && !telegramAccount) {
-        //   await userStoreActions.linkTelegram()
-        // } else if (task_id == 'JOIN-DISCORD-TEAM' && !discordAccount) {
-        //   await userStoreActions.linkDiscord()
-        if (task_id === 'PLUGIN-QUEST-SUBMISSION') {
+        if (task_id == 'BIND-X-AUTH') {
+          await userStoreActions.linkX()
+        } else if (task_id == 'BIND-TELEGRAM-AUTH') {
+          await userStoreActions.linkTelegram()
+        } else if (task_id == 'BIND-DISCORD-AUTH') {
+          await userStoreActions.linkDiscord()
+        } else if (['FOLLOW-X', 'MANTA-FOLLOW-X'].includes(task_id) && !xAccount) {
+          await userStoreActions.linkX()
+        } else if (task_id == 'JOIN-TELEGRAM-TEAM' && !telegramAccount) {
+          await userStoreActions.linkTelegram()
+        } else if (task_id == 'JOIN-DISCORD-TEAM' && !discordAccount) {
+          await userStoreActions.linkDiscord()
+        } else if (task_id === 'PLUGIN-QUEST-SUBMISSION') {
           questStoreActions.showExtensionGuideModal()
         } else {
           if (isAppSchema) {
@@ -146,7 +137,7 @@ const actionButton: Record<string, ActionButton> = {
           setLoading(true)
           setTimeout(async () => {
             if (['FOLLOW-X', 'MANTA-FOLLOW-X', 'OKX_GIVEAWAY', 'XNY-BLOG-DOC', 'XNY-LITEPAPER'].includes(task_id)) {
-              await taskApi.finishTask(task_id)
+              await taskApi2.finishTask(task_id)
               await props.onPending?.()
               setLoading(false)
             }
@@ -156,7 +147,11 @@ const actionButton: Record<string, ActionButton> = {
       if (QUEST_TMA_TASK_IDS.includes(task_id)) {
         questStoreActions.showTelegramGuideModal(schema)
       } else {
-        await _fn()
+        try {
+          await _fn()
+        } catch (error) {
+          setLoading(false)
+        }
       }
       setLoading(false)
     }

@@ -22,6 +22,7 @@ import { UserAccount } from '@/apis/user.api'
 import { toUserFriendlyAddress } from '@tonconnect/sdk'
 import accountApi from '@/apis/account.api'
 import { CodattaConnect, EmvWalletConnectInfo, TonWalletConnectInfo } from 'codatta-connect'
+import SocialLinkButtons from '@/components/account/social-link-buttons'
 
 async function canvasToBlob(canvas: HTMLCanvasElement) {
   return new Promise<Blob | null>((resolve) => {
@@ -455,6 +456,12 @@ export default function SettingsAccount() {
         <div className="mb-10">
           <h2 className="mb-4 text-base font-medium">Login & Secuity</h2>
           <UserSecurity></UserSecurity>
+        </div>
+        <div className="mb-10">
+          <div className="w-[338px]">
+            <h2 className="mb-4 text-base font-medium">Connect Account</h2>
+            <SocialLinkButtons />
+          </div>
         </div>
       </div>
     </TransitionEffect>

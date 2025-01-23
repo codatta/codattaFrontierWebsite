@@ -36,18 +36,18 @@ class TaskApi {
     return res.data
   }
 
-  // async verify(taskId: string) {
-  //   return (
-  //     await request.post<
-  //       Response<{
-  //         verify_result: 'PASSED' | 'FAILED'
-  //         instance_id: Task_New['instance_id']
-  //         rewards: TaskReward[]
-  //         msg?: string
-  //       }>
-  //     >('/task/verify', { task_id: taskId })
-  //   ).data
-  // }
+  async verify(taskId: string) {
+    return (
+      await request.post<
+        Response<{
+          verify_result: 'PASSED' | 'FAILED'
+          instance_id: TaskItem['instance_id']
+          rewards: TaskReward[]
+          msg?: string
+        }>
+      >('/task/verify', { task_id: taskId })
+    ).data
+  }
 
   // async getQuestDetail(questId: string) {
   //   const { data } = await request.post<Response<Quest[]>>('/quest/detail', {
@@ -56,12 +56,12 @@ class TaskApi {
   //   return data
   // }
 
-  // async finishTask(taskConfigId: string) {
-  //   const { data } = await request.post('/task/finish', {
-  //     task_config_id: taskConfigId
-  //   })
-  //   return data
-  // }
+  async finishTask(taskConfigId: string) {
+    const { data } = await request.post('/task/finish', {
+      task_config_id: taskConfigId
+    })
+    return data
+  }
 
   async getCheckinInfo() {
     const { data } = await request.post<Response<{ check_in_days: number; is_check_in: boolean }>>('/check-in/consult')
@@ -101,7 +101,8 @@ export enum TaskStatus {
 
 export enum TaskType {
   Manual = 'MANUAL',
-  Auto = 'AUTO'
+  Auto = 'AUTO',
+  Redeem = 'REDEEM'
 }
 
 export interface TaskItem {

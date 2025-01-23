@@ -42,6 +42,13 @@ export interface OldUserInfo {
   }
 }
 
+export interface SocialAccountInfoItem {
+  channel: string
+  composure_time: null | string
+  name: string
+  status: number
+}
+
 export interface UserInfo {
   user_reputation: number | null
   user_data: {
@@ -58,6 +65,7 @@ export interface UserInfo {
     }
   }[]
   accounts_data: UserAccount[]
+  social_account_info: SocialAccountInfoItem[]
 }
 
 export interface UserUpdateParams {
@@ -73,17 +81,30 @@ class UserApi {
     return res.data
   }
 
-  async getDetail() {
-    const { data } = await request.get<OldUserInfo>('/user/details')
-    return data
-  }
-
   async updateRelatedInfo(info: object) {
     return this.request.post('/user/update/related_info', info)
   }
 
   async updateUserInfo(info: UserUpdateParams) {
     const { data } = await this.request.post('/user/update/info', info)
+    return data
+  }
+
+  async getSocialAccountLinkUrl(type: string) {
+    const { data } = await request.post('/user/sm/connect', { type })
+    return data
+  }
+
+  async unlinkSocialAccount(type: string) {
+    const { data } = await request.post('/user/sm/unbind', { type })
+    return data
+  }
+
+  async linkSocialAccount(type: string, param: unknown) {
+    const { data } = await request.post('/user/sm/bind', {
+      type,
+      value: param
+    })
     return data
   }
 }

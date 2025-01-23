@@ -18,7 +18,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 
 import campaignApi, { Campaign, CampaignRevealed } from '@/api-v1/campaign.api'
-import userApi from '@/apis/user.api'
+import { userStoreActions } from '@/stores/user.store'
 
 const channel = new BroadcastChannel('codatta:social-link')
 const taskStatusSort: Record<TaskStatus, number> = {
@@ -70,7 +70,7 @@ export default function Component() {
     getActivity(categoryId)
     channel.onmessage = () => {
       getActivity(categoryId)
-      userApi.getDetail()
+      userStoreActions.getUserInfo()
     }
     return () => {
       channel.onmessage = null
