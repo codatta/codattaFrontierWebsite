@@ -1,10 +1,16 @@
 import TransitionEffect from '@/components/common/transition-effect'
 
 import { ArrowLeft } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 import GetRewardGuide from '@/components/robotics/rewards-guide'
 import TaskList from '@/components/robotics/task-list'
+import XIcon from '@/assets/crypto/x-logo.svg'
+// import TgIcon from '@/assets/crypto/tg-logo.svg'
+// import DiscordIcon from '@/assets/crypto/discord-logo.svg'
+// import UnknownIcon from '@/assets/crypto/unknown-logo.svg'
+import WebIcon from '@/assets/crypto/web-logo.svg'
+import DevInfoImage from '@/assets/robotics/dev-info-image.png'
 
 export default function Component() {
   const navigate = useNavigate()
@@ -19,8 +25,23 @@ export default function Component() {
         </div>
         {/* title */}
         <div className="mb-12">
-          <div className="mb-3 flex items-center justify-between">
+          <Link to="https://r6d9.ai/">
+            <img src={DevInfoImage} alt="" />
+          </Link>
+          <div className="mb-3 mt-6 flex items-center justify-between">
             <div className="text-xl font-bold">Robotics</div>
+            <div className="flex gap-3">
+              <Link to="https://r6d9.ai/">
+                <img className="cursor-pointer" src={WebIcon} alt="" />
+              </Link>
+              <Link to="https://x.com/Roboagent69">
+                <img className="cursor-pointer" src={XIcon} alt="" />
+              </Link>
+
+              {/* <img className="cursor-pointer" src={UnknownIcon} alt="" /> */}
+              {/* <img className="cursor-pointer" src={DiscordIcon} alt="" /> */}
+              {/* <img className="cursor-pointer" src={TgIcon} alt="" /> */}
+            </div>
           </div>
           <div className="text-white/55">
             Visual data annotation is essential for training large AI models in robotics, especially for object
