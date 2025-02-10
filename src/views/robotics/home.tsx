@@ -1,7 +1,7 @@
 import TransitionEffect from '@/components/common/transition-effect'
 
 import { ArrowLeft } from 'lucide-react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import GetRewardGuide from '@/components/robotics/rewards-guide'
 import TaskList from '@/components/robotics/task-list'
@@ -25,18 +25,18 @@ export default function Component() {
         </div>
         {/* title */}
         <div className="mb-12">
-          <Link to="https://r6d9.ai/">
+          <a href="https://r6d9.ai/" target="_blank">
             <img src={DevInfoImage} alt="" />
-          </Link>
+          </a>
           <div className="mb-3 mt-6 flex items-center justify-between">
             <div className="text-xl font-bold">Robotics</div>
             <div className="flex gap-3">
-              <Link to="https://r6d9.ai/">
+              <a href="https://r6d9.ai/" target="_blank">
                 <img className="cursor-pointer" src={WebIcon} alt="" />
-              </Link>
-              <Link to="https://x.com/Roboagent69">
+              </a>
+              <a href="https://x.com/Roboagent69" target="_blank">
                 <img className="cursor-pointer" src={XIcon} alt="" />
-              </Link>
+              </a>
 
               {/* <img className="cursor-pointer" src={UnknownIcon} alt="" /> */}
               {/* <img className="cursor-pointer" src={DiscordIcon} alt="" /> */}
