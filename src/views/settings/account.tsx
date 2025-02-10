@@ -35,7 +35,7 @@ async function canvasToBlob(canvas: HTMLCanvasElement) {
 function UserAvatarEditor() {
   const { info } = useUserStore()
 
-  const [avatar, setAvatar] = useState(info?.user_data.avatar || '')
+  const [avatar, setAvatar] = useState(info?.user_data?.avatar || '')
   const [showAvatarEditor, setShowAvatarEditor] = useState(false)
   const editor = useRef<AvatarEditor>(null)
   const [imageDataUrl, setImageDataUrl] = useState('')
@@ -83,8 +83,8 @@ function UserAvatarEditor() {
   }
 
   useEffect(() => {
-    console.log('avatar', avatar, info?.user_data.avatar, '-')
-    if (avatar && avatar !== info?.user_data.avatar) {
+    console.log('avatar', avatar, info?.user_data?.avatar, '-')
+    if (avatar && avatar !== info?.user_data?.avatar) {
       userStoreActions.updateUserInfo({ update_key: 'AVATAR', update_value: avatar })
     }
   }, [avatar, info])
@@ -92,10 +92,10 @@ function UserAvatarEditor() {
   return (
     <div className="flex items-start gap-6">
       <div className="block">
-        {info?.user_data.avatar ? (
-          <img className="block rounded-full" src={info?.user_data.avatar} height={80} width={80} />
+        {info?.user_data?.avatar ? (
+          <img className="block rounded-full" src={info?.user_data?.avatar} height={80} width={80} />
         ) : null}
-        {!info?.user_data.avatar ? (
+        {!info?.user_data?.avatar ? (
           <div className="flex size-[80px] items-center justify-center rounded-full border border-[rgba(48,0,64,0.06)] bg-[rgba(237,233,239,1)]">
             <UserCircleIcon size={40} className="text-[rgba(0,0,0,0.24)]"></UserCircleIcon>
           </div>
@@ -171,7 +171,7 @@ function UserNameEditor() {
   }
 
   useEffect(() => {
-    setNickname(info?.user_data.user_name)
+    setNickname(info?.user_data?.user_name)
   }, [info?.user_data])
 
   return (
@@ -195,7 +195,7 @@ function UserNameEditor() {
         </div>
       ) : (
         <>
-          <div>{info?.user_data.user_name}</div>
+          <div>{info?.user_data?.user_name}</div>
           <TaskTarget match={['target', 'username']} className="ml-auto cursor-pointer">
             <Edit size={24} className="p-1" onClick={() => setEdit(true)}></Edit>
           </TaskTarget>

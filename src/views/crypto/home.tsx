@@ -22,15 +22,6 @@ export default function CryptoHome() {
         <div className="mb-12">
           <div className="mb-3 flex items-center justify-between">
             <div className="text-xl font-bold">Crypto</div>
-            {/* <div>
-              <div className="flex gap-2">
-                <img src={goldCoin} alt="" className="h-10 w-10" />
-                <div>
-                  <div className="font-bold -mb-1 text-base">{balance}</div>
-                  <div className="text-gray-5 text-xs">Your Reward</div>
-                </div>
-              </div>
-            </div> */}
           </div>
           <div className="text-white/60">
             Collecting data on wallet addresses and transaction flows enhances transparency in the crypto ecosystem.
