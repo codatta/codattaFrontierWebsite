@@ -22,7 +22,7 @@ export default function AppUser() {
         className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 hover:text-white"
         to="/app/settings/account"
       >
-        <Avatar className="shrink-0" src={info?.user_data.avatar} size={24}></Avatar>
+        <Avatar className="shrink-0" src={info?.user_data?.avatar} size={24}></Avatar>
         <div className="hidden flex-1 truncate lg:block">{username}</div>
         <Tooltip title="Log out" className="hidden lg:block">
           <div className="py-2 pl-2" onClick={handleLogout}>

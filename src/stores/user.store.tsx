@@ -131,7 +131,7 @@ const derived = derive({
 
 function getUsername(info: UserInfo | null) {
   if (!info) return '-'
-  if (info.user_data.user_name) return info.user_data.user_name
+  if (info.user_data?.user_name) return info.user_data?.user_name
   const currentAccount = info.accounts_data.find((item) => item.current_account)
   if (!currentAccount) return '-'
   if (['email'].includes(currentAccount.account_type)) {
