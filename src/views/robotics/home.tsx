@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom'
 
 import GetRewardGuide from '@/components/robotics/rewards-guide'
 import TaskList from '@/components/robotics/task-list'
-import XIcon from '@/assets/crypto/x-logo.svg'
-// import TgIcon from '@/assets/crypto/tg-logo.svg'
-// import DiscordIcon from '@/assets/crypto/discord-logo.svg'
-// import UnknownIcon from '@/assets/crypto/unknown-logo.svg'
-import WebIcon from '@/assets/crypto/web-logo.svg'
+import XIcon from '@/assets/robotics/x-logo.svg'
+// import TgIcon from '@/assets/robotics/tg-logo.svg'
+// import DiscordIcon from '@/assets/robotics/discord-logo.svg'
+import DocIcon from '@/assets/robotics/doc-logo.svg'
+import WebIcon from '@/assets/robotics/web-logo.svg'
 import DevInfoImage from '@/assets/robotics/dev-info-image.png'
 
 export default function Component() {
@@ -38,9 +38,14 @@ export default function Component() {
                 <img className="cursor-pointer" src={XIcon} alt="" />
               </a>
 
-              {/* <img className="cursor-pointer" src={UnknownIcon} alt="" /> */}
-              {/* <img className="cursor-pointer" src={DiscordIcon} alt="" /> */}
-              {/* <img className="cursor-pointer" src={TgIcon} alt="" /> */}
+              <a
+                href="https://s.r6d9.ai/docs/R6D9_Your%20Agentic%20Copilot%2C%20from%20Virtual%20to%20Real.pdf"
+                download="Your_Agentic_Copilot.pdf"
+              >
+                <img className="cursor-pointer" src={DocIcon} alt="Download PDF" />
+              </a>
+              {/* <img className="cursor-pointer" src={DiscordIcon} alt="" />
+              <img className="cursor-pointer" src={TgIcon} alt="" /> */}
             </div>
           </div>
           <div className="text-white/55">
