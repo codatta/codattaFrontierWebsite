@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom'
 
 import GetRewardGuide from '@/components/robotics/rewards-guide'
 import TaskList from '@/components/robotics/task-list'
-import XIcon from '@/assets/crypto/x-logo.svg'
-// import TgIcon from '@/assets/crypto/tg-logo.svg'
-// import DiscordIcon from '@/assets/crypto/discord-logo.svg'
-// import UnknownIcon from '@/assets/crypto/unknown-logo.svg'
-import WebIcon from '@/assets/crypto/web-logo.svg'
+import XIcon from '@/assets/robotics/x-logo.svg'
+import TgIcon from '@/assets/robotics/tg-logo.svg'
+// import DiscordIcon from '@/assets/robotics/discord-logo.svg'
+import DocIcon from '@/assets/robotics/doc-logo.svg'
+import WebIcon from '@/assets/robotics/web-logo.svg'
 import DevInfoImage from '@/assets/robotics/dev-info-image.png'
 
 export default function Component() {
@@ -38,9 +38,13 @@ export default function Component() {
                 <img className="cursor-pointer" src={XIcon} alt="" />
               </a>
 
-              {/* <img className="cursor-pointer" src={UnknownIcon} alt="" /> */}
+              <a href="https://robox-lab.gitbook.io/r6d9-whitepaper" target="_blank">
+                <img className="cursor-pointer" src={DocIcon} alt="" />
+              </a>
               {/* <img className="cursor-pointer" src={DiscordIcon} alt="" /> */}
-              {/* <img className="cursor-pointer" src={TgIcon} alt="" /> */}
+              <a href="https://t.me/Roboagent69Channel" target="_blank">
+                <img className="cursor-pointer" src={TgIcon} alt="" />
+              </a>
             </div>
           </div>
           <div className="text-white/55">
