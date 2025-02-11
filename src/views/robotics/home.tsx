@@ -38,14 +38,11 @@ export default function Component() {
                 <img className="cursor-pointer" src={XIcon} alt="" />
               </a>
 
-              <a
-                href="https://s.r6d9.ai/docs/R6D9_Your%20Agentic%20Copilot%2C%20from%20Virtual%20to%20Real.pdf"
-                download="Your_Agentic_Copilot.pdf"
-              >
-                <img className="cursor-pointer" src={DocIcon} alt="Download PDF" />
+              <a href="https://robox-lab.gitbook.io/r6d9-whitepaper" target="_blank">
+                <img className="cursor-pointer" src={DocIcon} alt="" />
               </a>
               {/* <img className="cursor-pointer" src={DiscordIcon} alt="" /> */}
-              <a href="https://t.me/Roboagent69" target="_blank">
+              <a href="https://t.me/Roboagent69Channel" target="_blank">
                 <img className="cursor-pointer" src={TgIcon} alt="" />
               </a>
             </div>
