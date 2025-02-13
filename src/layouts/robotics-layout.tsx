@@ -6,7 +6,7 @@ export default function AppLayout() {
   return (
     <AuthChecker>
       <div className="relative min-h-screen bg-[#1c1c26]">
-        <PageHead />
+        <PageHead onBack={() => window.history.back()} />
         <Outlet />
       </div>
     </AuthChecker>

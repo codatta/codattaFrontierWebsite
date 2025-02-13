@@ -3,6 +3,16 @@ import { CodattaSignin } from 'codatta-connect'
 import { ILoginResponse } from 'codatta-connect/dist/api/account.api'
 import { CodattaSigninConfig } from 'codatta-connect/dist/providers/codatta-signin-context-provider'
 import { useChannelStore } from '@/stores/channel.store'
+import CodattaLogoWhite from '@/assets/common/logo-white.svg'
+
+function CodattaSigninHead() {
+  return (
+    <div>
+      <img src={CodattaLogoWhite} className="mb-3 h-8" alt="" />
+      <h1 className="mb-8 text-lg font-bold">Log in to Codatta</h1>
+    </div>
+  )
+}
 
 export function AuthModal(props: {
   onLogin?: (res: ILoginResponse) => void
@@ -11,8 +21,9 @@ export function AuthModal(props: {
   inviterCode?: string
   channel?: string
   open: boolean
+  closable?: boolean
 }) {
-  const { open } = props
+  const { open, closable = true } = props
   const channelInfo = useChannelStore()
   async function handleLogin(res: ILoginResponse) {
     localStorage.setItem('token', res.old_token)
@@ -34,7 +45,9 @@ export function AuthModal(props: {
 
   return (
     <Modal
+      closable={closable}
       open={open}
+      maskClosable={closable}
       onCancel={handleClose}
       onClose={handleClose}
       footer={null}
@@ -42,7 +55,7 @@ export function AuthModal(props: {
       centered
       styles={{ content: { padding: 0 } }}
     >
-      <CodattaSignin onLogin={handleLogin} config={config}></CodattaSignin>
+      <CodattaSignin onLogin={handleLogin} config={config} header={<CodattaSigninHead />}></CodattaSignin>
     </Modal>
   )
 }

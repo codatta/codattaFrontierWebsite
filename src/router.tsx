@@ -46,6 +46,8 @@ const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 
+const R6D9Airdrop = lazy(() => import('@/views/r6d9-airdrop'))
+
 export default function Router() {
   return (
     <BrowserRouter>
@@ -97,6 +99,7 @@ export default function Router() {
         </Route>
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
+        <Route path="/r6d9/airdrop" element={<R6D9Airdrop />} />
 
         <Route path="/frontier">
           <Route path="robotics" element={<RoboticsLayout />}>
