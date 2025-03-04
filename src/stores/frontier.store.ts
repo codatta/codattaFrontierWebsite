@@ -1,6 +1,8 @@
 import FrontierApi, { TaskDetail } from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
 import { proxy } from 'valtio'
+import { message } from 'antd'
+
 type FrontiersStore = {
   pageData: {
     list: TaskDetail[]
@@ -48,6 +50,7 @@ export const getFrontiers = debounce(async (params: { page: number; page_size: n
     frontiersStore.pageData.total = res.total_count
     frontiersStore.pageData.listLoading = false
   } catch (err) {
+    message.error(err.message)
     frontiersStore.pageData.list = []
     frontiersStore.pageData.total = 0
     frontiersStore.pageData.listLoading = false
