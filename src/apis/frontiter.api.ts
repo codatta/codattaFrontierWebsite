@@ -34,6 +34,16 @@ export interface TaskDetail {
   txHashUrl: string
 }
 
+export interface FrontierItem {
+  creator_id: string
+  description: string
+  frontier_id: string
+  logo_url: string
+  reputation_permission: number
+  status: string
+  title: string
+}
+
 class frontier {
   constructor(private request: AxiosInstance) {}
 
@@ -61,6 +71,11 @@ class frontier {
 
   async getSubmissionList(pagination: TPagination): Promise<PaginationResponse<TaskDetail[]>> {
     const res = await request.post(`/submission/list`, pagination)
+    return res.data
+  }
+
+  async getFrontiers(): Promise<Response<FrontierItem[]>> {
+    const res = await request.post('/frontier/list ')
     return res.data
   }
 }

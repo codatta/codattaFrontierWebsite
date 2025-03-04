@@ -1,4 +1,5 @@
 import homeApi, { type IAnnouncement } from '@/api-v1/home.api'
+import frontierApi from '@/apis/frontiter.api'
 import { proxy, useSnapshot } from 'valtio'
 
 export interface HomeStore {
@@ -19,6 +20,11 @@ export async function reloadAnnoucements() {
   const data = await homeApi.getAnnouncement()
   homeStore.announcements = data.data
 
+  return data
+}
+
+export async function getFrontiers() {
+  const data = await frontierApi.getFrontiers()
   return data
 }
 

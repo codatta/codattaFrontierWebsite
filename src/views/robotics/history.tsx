@@ -6,13 +6,14 @@ import { ArrowUpRight } from 'lucide-react'
 
 import arrowLeft from '@/assets/common/arrow-left.svg'
 
-import { roboticsStore, changeRoboticsHistoryFilter } from '@/stores/robotics-notstart.store'
+// import { roboticsStore, changeRoboticsHistoryFilter } from '@/stores/robotics-notstart.store'
+import { frontiersStore, changeFrontiersHistoryFilter } from '@/stores/frontier.store'
 import dayjs from 'dayjs'
 
 import CustomEmpty from '@/components/common/empty'
 
 const CardList = () => {
-  const { historyPageData } = useSnapshot(roboticsStore)
+  const { historyPageData } = useSnapshot(frontiersStore)
   return (
     <div className="mt-6 w-full">
       <div className="w-full">
@@ -55,14 +56,14 @@ export default function Component() {
 
   const {
     historyPageData: { page, page_size, total, listLoading }
-  } = useSnapshot(roboticsStore)
+  } = useSnapshot(frontiersStore)
 
   const handlePageChange = (page: number) => {
-    changeRoboticsHistoryFilter(page)
+    changeFrontiersHistoryFilter(page)
   }
 
   useEffect(() => {
-    changeRoboticsHistoryFilter(1)
+    changeFrontiersHistoryFilter(1)
   }, [])
 
   return (

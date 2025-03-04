@@ -1,43 +1,49 @@
 import { useEffect } from 'react'
 import { Pagination, Spin } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import AngleRight from '@/assets/crypto/angle-right.svg'
 
-import { roboticsStore, changeRoboticsFilter } from '@/stores/robotics-notstart.store'
+// import { roboticsStore, changeRoboticsFilter } from '@/stores/robotics-notstart.store'
+import { frontiersStore, changeFrontiersFilter } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
 import { TaskDetail } from '@/apis/frontiter.api'
 
-const RoboticsTaskList = () => {
+const RoboticsTaskList = ({ showHistory }: { showHistory: boolean }) => {
   const navigate = useNavigate()
+  const { frontier_id } = useParams()
+  const frontierId = frontier_id ?? 'ROBSTIC001'
 
   const {
     pageData: { page, page_size, total, list, listLoading }
-  } = useSnapshot(roboticsStore)
+  } = useSnapshot(frontiersStore)
 
   const goToForm = (data: TaskDetail) => {
     navigate(`/frontier/robotics/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
-    changeRoboticsFilter({ page: page })
+    changeFrontiersFilter({ page: page, frontier_id: frontierId })
   }
 
   useEffect(() => {
-    changeRoboticsFilter({ page, page_size })
+    changeFrontiersFilter({ page, page_size, frontier_id: frontierId })
   }, [page, page_size])
 
   return (
     <div>
-      <div className="mb-3 flex flex-1 items-center justify-between">
-        <div className="flex">
-          <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
+      {showHistory !== false && (
+        <div className="mb-3 flex flex-1 items-center justify-between">
+          <div className="flex">
+            <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
+          </div>
+          <div onClick={() => navigate(`/app/robotics/history`)} className="flex cursor-pointer items-center">
+            <div className="text-xs font-normal text-white/80">History</div>
+            <AngleRight size={14} />
+          </div>
         </div>
-        <div onClick={() => navigate(`/app/robotics/history`)} className="flex cursor-pointer items-center">
-          <div className="text-xs font-normal text-white/80">History</div>
-          <AngleRight size={14} />
-        </div>
-      </div>
+      )}
+
       <Spin spinning={listLoading}>
         <div className="mt-6">
           <div className="">

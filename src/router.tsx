@@ -33,6 +33,7 @@ const CryptoBountySubmit = lazy(() => import('@/views/crypto/bounty-submit'))
 const FashionHome = lazy(() => import('@/views/fashion/home'))
 const RoboticsHome = lazy(() => import('@/views/robotics/home'))
 const RoboticsHistory = lazy(() => import('@/views/robotics/history'))
+const FrontierHome = lazy(() => import('@/views/frontiers/home'))
 
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
 const Activity = lazy(() => import('@/views/quest/activity'))
@@ -63,6 +64,7 @@ export default function Router() {
           <Route path="notification" element={<AppNotification />}></Route>
           <Route path="fashion" element={<FashionHome />}></Route>
           <Route path="robotics" element={<RoboticsHome />}></Route>
+          <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
           <Route path="robotics/history" element={<RoboticsHistory />}></Route>
 
           <Route path="settings" element={<SettingsLayout />}>
