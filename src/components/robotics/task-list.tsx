@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Pagination, Spin } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
@@ -9,7 +9,9 @@ import { frontiersStore, changeFrontiersFilter } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
 import { TaskDetail } from '@/apis/frontiter.api'
 
-const RoboticsTaskList = ({ showHistory }: { showHistory: boolean }) => {
+const RoboticsTaskList: React.FC<{
+  showHistory?: boolean
+}> = ({ showHistory }) => {
   const navigate = useNavigate()
   const { frontier_id } = useParams()
   const frontierId = frontier_id ?? 'ROBSTIC001'

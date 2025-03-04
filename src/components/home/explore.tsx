@@ -38,11 +38,10 @@ const Frontiers = () => {
 
   useEffect(() => {
     getFrontiers().then((res) => {
-      console.log(res)
       setFrontiersArray(res.errorCode === 0 ? res.data || [] : [])
       setLoading(false)
     })
-  })
+  }, [])
 
   return (
     <div className="mt-6">
