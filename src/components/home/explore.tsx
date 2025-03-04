@@ -54,7 +54,9 @@ const Frontiers = () => {
                 key={item.frontier_id}
                 className="group relative aspect-[269/243] w-full cursor-pointer overflow-hidden rounded-2xl"
                 onClick={() => {
-                  navigate(`/app/frontier/${item.frontier_id}`, { state: { name: item.title, desc: item.description } })
+                  navigate(`/app/frontier/${item.frontier_id}`, {
+                    state: { name: item.title, desc: item.description.frontier_desc }
+                  })
                 }}
               >
                 <img
@@ -70,7 +72,7 @@ const Frontiers = () => {
                 >
                   <div>
                     <h2 className="mb-2 text-base font-bold">{item.title}</h2>
-                    <div className="line-clamp-2 text-[#A4A4A8]">{item.description}</div>
+                    <div className="line-clamp-2 text-[#A4A4A8]">{item.description.frontier_desc}</div>
                   </div>
                   <div className="flex h-8 w-[104px] flex-none cursor-pointer flex-row items-center justify-center rounded-full bg-primary">
                     <span>Start</span>

@@ -36,7 +36,9 @@ export interface TaskDetail {
 
 export interface FrontierItem {
   creator_id: string
-  description: string
+  description: {
+    frontier_desc: string
+  }
   frontier_id: string
   logo_url: string
   reputation_permission: number
