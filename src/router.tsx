@@ -65,7 +65,7 @@ export default function Router() {
           <Route path="fashion" element={<FashionHome />}></Route>
           <Route path="robotics" element={<RoboticsHome />}></Route>
           <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
-          <Route path="robotics/history" element={<RoboticsHistory />}></Route>
+          <Route path="robotics/history/:frontier_id" element={<RoboticsHistory />}></Route>
 
           <Route path="settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />

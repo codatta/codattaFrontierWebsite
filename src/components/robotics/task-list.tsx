@@ -9,12 +9,9 @@ import { frontiersStore, changeFrontiersFilter } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
 import { TaskDetail } from '@/apis/frontiter.api'
 
-const RoboticsTaskList: React.FC<{
-  showHistory?: boolean
-}> = ({ showHistory }) => {
+const RoboticsTaskList: React.FC = () => {
   const navigate = useNavigate()
-  const { frontier_id } = useParams()
-  const frontierId = frontier_id ?? 'ROBSTIC001'
+  const { frontier_id = 'ROBSTIC001' } = useParams()
 
   const {
     pageData: { page, page_size, total, list, listLoading }
@@ -25,26 +22,27 @@ const RoboticsTaskList: React.FC<{
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
-    changeFrontiersFilter({ page: page, frontier_id: frontierId })
+    changeFrontiersFilter({ page: page, frontier_id: frontier_id })
   }
 
   useEffect(() => {
-    changeFrontiersFilter({ page, page_size, frontier_id: frontierId })
+    changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size])
 
   return (
     <div>
-      {showHistory !== false && (
-        <div className="mb-3 flex flex-1 items-center justify-between">
-          <div className="flex">
-            <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
-          </div>
-          <div onClick={() => navigate(`/app/robotics/history`)} className="flex cursor-pointer items-center">
-            <div className="text-xs font-normal text-white/80">History</div>
-            <AngleRight size={14} />
-          </div>
+      <div className="mb-3 flex flex-1 items-center justify-between">
+        <div className="flex">
+          <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
         </div>
-      )}
+        <div
+          onClick={() => navigate(`/app/robotics/history/${frontier_id}`)}
+          className="flex cursor-pointer items-center"
+        >
+          <div className="text-xs font-normal text-white/80">History</div>
+          <AngleRight size={14} />
+        </div>
+      </div>
 
       <Spin spinning={listLoading}>
         <div className="mt-6">

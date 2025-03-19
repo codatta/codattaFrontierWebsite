@@ -77,11 +77,12 @@ export function changeFrontiersFilter(
   })
 }
 
-export const getFrontiersHistory = debounce(async (params: { page: number }) => {
+export const getFrontiersHistory = debounce(async (params: { page: number; frontier_id: string }) => {
   try {
     frontiersStore.historyPageData.listLoading = true
     const { page } = params
     const res = await FrontierApi.getSubmissionList({
+      frontier_id: params.frontier_id,
       page_size: frontiersStore.historyPageData.page_size,
       page_num: page
     })
@@ -96,10 +97,10 @@ export const getFrontiersHistory = debounce(async (params: { page: number }) => 
   }
 }, 500)
 
-export function changeFrontiersHistoryFilter(page: number) {
+export function changeFrontiersHistoryFilter(page: number, frontier_id: string) {
   frontiersStore.historyPageData.page = page
-
   getFrontiersHistory({
+    frontier_id,
     page
   })
 }

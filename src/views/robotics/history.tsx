@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Pagination, Spin } from 'antd'
 import { useSnapshot } from 'valtio'
 import { ArrowUpRight } from 'lucide-react'
@@ -53,17 +53,18 @@ const CardList = () => {
 
 export default function Component() {
   const navigate = useNavigate()
+  const { frontier_id } = useParams()
 
   const {
     historyPageData: { page, page_size, total, listLoading }
   } = useSnapshot(frontiersStore)
 
   const handlePageChange = (page: number) => {
-    changeFrontiersHistoryFilter(page)
+    changeFrontiersHistoryFilter(page, frontier_id!)
   }
 
   useEffect(() => {
-    changeFrontiersHistoryFilter(1)
+    changeFrontiersHistoryFilter(1, frontier_id!)
   }, [])
 
   return (
