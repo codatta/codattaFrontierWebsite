@@ -1,4 +1,4 @@
-import FrontierApi, { TaskDetail } from '@/apis/frontiter.api'
+import frontierApi, { TaskDetail } from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
 import { proxy } from 'valtio'
 import { message } from 'antd'
@@ -37,26 +37,29 @@ export const frontiersStore = proxy<FrontiersStore>({
   }
 })
 
-export const getFrontiers = debounce(async (params: { page: number; page_size: number; frontier_id: string }) => {
-  try {
-    frontiersStore.pageData.listLoading = true
-    const { page_size, page, frontier_id } = params
-    const res = await FrontierApi.getTaskList({
-      frontier_id,
-      page_size,
-      page_num: page
-    })
-    frontiersStore.pageData.list = res.data ?? []
-    frontiersStore.pageData.total = res.total_count
-    frontiersStore.pageData.listLoading = false
-  } catch (err) {
-    message.error(err.message)
-    frontiersStore.pageData.list = []
-    frontiersStore.pageData.total = 0
-    frontiersStore.pageData.listLoading = false
-    throw err
-  }
-}, 500)
+export const getFrontiersTaskList = debounce(
+  async (params: { page: number; page_size: number; frontier_id: string }) => {
+    try {
+      frontiersStore.pageData.listLoading = true
+      const { page_size, page, frontier_id } = params
+      const res = await frontierApi.getTaskList({
+        frontier_id,
+        page_size,
+        page_num: page
+      })
+      frontiersStore.pageData.list = res.data ?? []
+      frontiersStore.pageData.total = res.total_count
+      frontiersStore.pageData.listLoading = false
+    } catch (err) {
+      message.error(err.message)
+      frontiersStore.pageData.list = []
+      frontiersStore.pageData.total = 0
+      frontiersStore.pageData.listLoading = false
+      throw err
+    }
+  },
+  500
+)
 
 export function changeFrontiersFilter(
   data: Partial<FrontiersStore['pageData']> & {
@@ -70,7 +73,7 @@ export function changeFrontiersFilter(
   }
 
   frontiersStore.pageData = pageData
-  getFrontiers({
+  getFrontiersTaskList({
     frontier_id: pageData.frontier_id,
     page_size: pageData.page_size,
     page: pageData.page
@@ -81,7 +84,7 @@ export const getFrontiersHistory = debounce(async (params: { page: number; front
   try {
     frontiersStore.historyPageData.listLoading = true
     const { page } = params
-    const res = await FrontierApi.getSubmissionList({
+    const res = await frontierApi.getSubmissionList({
       frontier_id: params.frontier_id,
       page_size: frontiersStore.historyPageData.page_size,
       page_num: page
@@ -103,4 +106,9 @@ export function changeFrontiersHistoryFilter(page: number, frontier_id: string) 
     frontier_id,
     page
   })
+}
+
+export async function getFrontiers() {
+  const data = await frontierApi.getFrontiers()
+  return data
 }

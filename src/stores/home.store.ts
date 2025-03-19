@@ -23,11 +23,6 @@ export async function reloadAnnoucements() {
   return data
 }
 
-export async function getFrontiers() {
-  const data = await frontierApi.getFrontiers()
-  return data
-}
-
 // export async function reloadKeyFeatures() {
 //   const data = await homeApi.getKeyFeatures()
 //   const map = keyBy(data, 'name')

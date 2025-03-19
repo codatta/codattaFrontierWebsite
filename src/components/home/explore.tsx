@@ -1,7 +1,7 @@
 import calorieAi from '@/assets/home/calorie-ai.png'
 import vault from '@/assets/home/vault.png'
 import { useEffect, useState } from 'react'
-import { getFrontiers } from '@/stores/home.store'
+import { getFrontiers } from '@/stores/frontier.store'
 import { ExploreFrontierItem } from '@/apis/frontiter.api'
 import arrowRight from '@/assets/icons/arrow-right.svg'
 import { Spin } from 'antd'
