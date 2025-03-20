@@ -1,5 +1,4 @@
 import homeApi, { type IAnnouncement } from '@/api-v1/home.api'
-import frontierApi from '@/apis/frontiter.api'
 import { proxy, useSnapshot } from 'valtio'
 
 export interface HomeStore {
