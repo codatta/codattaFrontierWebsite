@@ -27,7 +27,7 @@ const RoboticsRewordGuide = ({ videos = defaultVideos }: { videos?: Array<VideoI
         {videos.map((video, index) => (
           <div
             key={video?.video_url ?? '' + index}
-            className="relative min-w-20 cursor-pointer overflow-hidden rounded-2xl"
+            className="relative h-[165px] w-[264px] min-w-20 cursor-pointer overflow-hidden rounded-2xl"
             onClick={() =>
               setVideo({
                 img: video?.image_url,
@@ -35,7 +35,7 @@ const RoboticsRewordGuide = ({ videos = defaultVideos }: { videos?: Array<VideoI
               })
             }
           >
-            <img className="h-[165px] w-[264px]" src={video.image_url} alt="" />
+            {video.image_url && <img className="h-[165px] w-[264px]" src={video.image_url} alt="" />}
             <div className="group absolute top-0 flex size-full items-center justify-center bg-[#000000]/15 transition-all hover:bg-[#000000]/35">
               <img src={playCircle} alt="" className="size-9 transition-transform duration-200 group-hover:scale-110" />
             </div>
