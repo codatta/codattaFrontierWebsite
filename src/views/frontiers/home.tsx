@@ -50,25 +50,27 @@ export default function Component() {
             <div className="mb-3 mt-6 flex items-center justify-between">
               <div className="text-xl font-bold">{frontierInfo?.name}</div>
               <div className="flex gap-3">
-                {frontierInfo?.media_link?.map((item) => {
-                  const icon =
-                    item.name === MediaName.DOC
-                      ? DocIcon
-                      : item.name === MediaName.WEBSITE
-                        ? WebIcon
-                        : item.name === MediaName.TWITTER
-                          ? XIcon
-                          : item.name === MediaName.TELEGRAM
-                            ? TgIcon
-                            : item.name === MediaName.DISCORD
-                              ? DiscordIcon
-                              : ''
-                  return (
-                    <a href={item.value} target="_blank">
-                      <img className="cursor-pointer" src={icon} alt="" />
-                    </a>
-                  )
-                })}
+                {frontierInfo?.media_link
+                  ?.filter((item) => item.value !== '')
+                  ?.map((item) => {
+                    const icon =
+                      item.name === MediaName.DOC
+                        ? DocIcon
+                        : item.name === MediaName.WEBSITE
+                          ? WebIcon
+                          : item.name === MediaName.TWITTER
+                            ? XIcon
+                            : item.name === MediaName.TELEGRAM
+                              ? TgIcon
+                              : item.name === MediaName.DISCORD
+                                ? DiscordIcon
+                                : ''
+                    return (
+                      <a href={item.value} target="_blank">
+                        <img className="cursor-pointer" src={icon} alt="" />
+                      </a>
+                    )
+                  })}
               </div>
             </div>
             <div className="text-white/55">{frontierInfo?.description}</div>
