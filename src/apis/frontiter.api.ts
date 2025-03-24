@@ -34,6 +34,46 @@ export interface TaskDetail {
   txHashUrl: string
 }
 
+export interface ExploreFrontierItem {
+  creator_id: string
+  description: {
+    frontier_desc: string
+  }
+  frontier_id: string
+  logo_url: string
+  reputation_permission: number
+  status: string
+  title: string
+}
+
+export enum MediaName {
+  TWITTER = 'x',
+  TELEGRAM = 'telegram',
+  DISCORD = 'discord',
+  WEBSITE = 'website',
+  DOC = 'doc'
+}
+export interface VideoItem {
+  desc?: string
+  image_url?: string
+  video_url?: string
+}
+
+export interface FrontierItemType {
+  id?: number
+  name: string
+  description: string
+  logo_url: string
+  banner?: string
+  media_link?: Array<{
+    name: MediaName
+    value: string
+  }>
+  videos?: Array<VideoItem>
+  reputation_permission?: number
+  frontier_id?: string
+}
+
 class frontier {
   constructor(private request: AxiosInstance) {}
 
@@ -59,8 +99,23 @@ class frontier {
     return res.data
   }
 
-  async getSubmissionList(pagination: TPagination): Promise<PaginationResponse<TaskDetail[]>> {
-    const res = await request.post(`/submission/list`, pagination)
+  async getSubmissionList(
+    data: TPagination & {
+      frontier_id?: string
+    }
+  ): Promise<PaginationResponse<TaskDetail[]>> {
+    const res = await request.post(`/submission/list`, data)
+    return res.data
+  }
+
+  async getFrontiers(): Promise<Response<ExploreFrontierItem[]>> {
+    const res = await request.post('/frontier/list ')
+    return res.data
+  }
+
+  async getFrontierInfo(frontier_id: string): Promise<Response<FrontierItemType>> {
+    const res = await request.get(`/frontier/info?frontier_id=${frontier_id}`)
+    console.log(res)
     return res.data
   }
 }

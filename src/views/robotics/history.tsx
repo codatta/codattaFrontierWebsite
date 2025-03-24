@@ -1,18 +1,19 @@
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Pagination, Spin } from 'antd'
 import { useSnapshot } from 'valtio'
 import { ArrowUpRight } from 'lucide-react'
 
 import arrowLeft from '@/assets/common/arrow-left.svg'
 
-import { roboticsStore, changeRoboticsHistoryFilter } from '@/stores/robotics-notstart.store'
+// import { roboticsStore, changeRoboticsHistoryFilter } from '@/stores/robotics-notstart.store'
+import { frontiersStore, changeFrontiersHistoryFilter } from '@/stores/frontier.store'
 import dayjs from 'dayjs'
 
 import CustomEmpty from '@/components/common/empty'
 
 const CardList = () => {
-  const { historyPageData } = useSnapshot(roboticsStore)
+  const { historyPageData } = useSnapshot(frontiersStore)
   return (
     <div className="mt-6 w-full">
       <div className="w-full">
@@ -52,17 +53,18 @@ const CardList = () => {
 
 export default function Component() {
   const navigate = useNavigate()
+  const { frontier_id } = useParams()
 
   const {
     historyPageData: { page, page_size, total, listLoading }
-  } = useSnapshot(roboticsStore)
+  } = useSnapshot(frontiersStore)
 
   const handlePageChange = (page: number) => {
-    changeRoboticsHistoryFilter(page)
+    changeFrontiersHistoryFilter(page, frontier_id!)
   }
 
   useEffect(() => {
-    changeRoboticsHistoryFilter(1)
+    changeFrontiersHistoryFilter(1, frontier_id!)
   }, [])
 
   return (

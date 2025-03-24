@@ -1,30 +1,32 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Pagination, Spin } from 'antd'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import AngleRight from '@/assets/crypto/angle-right.svg'
 
-import { roboticsStore, changeRoboticsFilter } from '@/stores/robotics-notstart.store'
+// import { roboticsStore, changeRoboticsFilter } from '@/stores/robotics-notstart.store'
+import { frontiersStore, changeFrontiersFilter } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
 import { TaskDetail } from '@/apis/frontiter.api'
 
-const RoboticsTaskList = () => {
+const RoboticsTaskList: React.FC = () => {
   const navigate = useNavigate()
+  const { frontier_id = 'ROBSTIC001' } = useParams()
 
   const {
     pageData: { page, page_size, total, list, listLoading }
-  } = useSnapshot(roboticsStore)
+  } = useSnapshot(frontiersStore)
 
   const goToForm = (data: TaskDetail) => {
     navigate(`/frontier/robotics/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
-    changeRoboticsFilter({ page: page })
+    changeFrontiersFilter({ page: page, frontier_id: frontier_id })
   }
 
   useEffect(() => {
-    changeRoboticsFilter({ page, page_size })
+    changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size])
 
   return (
@@ -33,11 +35,15 @@ const RoboticsTaskList = () => {
         <div className="flex">
           <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
         </div>
-        <div onClick={() => navigate(`/app/robotics/history`)} className="flex cursor-pointer items-center">
+        <div
+          onClick={() => navigate(`/app/robotics/history/${frontier_id}`)}
+          className="flex cursor-pointer items-center"
+        >
           <div className="text-xs font-normal text-white/80">History</div>
           <AngleRight size={14} />
         </div>
       </div>
+
       <Spin spinning={listLoading}>
         <div className="mt-6">
           <div className="">
