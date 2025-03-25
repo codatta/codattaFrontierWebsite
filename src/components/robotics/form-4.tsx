@@ -58,7 +58,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
     if (!isJpgOrPngOrGif) {
       message.error('You can only upload JPG/PNG/GIF/WebP files!')
     }
-    const isLt10M = file.size / 1024 / 1024 < 10
+    const isLt10M = file.size / 1024 / 1024 <= 10
     if (!isLt10M) {
       message.error('Image must be smaller than 10MB!')
     }
