@@ -46,7 +46,9 @@ export default function Component() {
             <h1>Back</h1>
           </div>
           <div className="mb-12">
-            {frontierInfo?.banner && <img src={frontierInfo?.banner} alt="" />}
+            <div className="overflow-hidden rounded-lg">
+              {frontierInfo?.banner && <img src={frontierInfo?.banner} alt="" />}
+            </div>
             <div className="mb-3 mt-6 flex items-center justify-between">
               <div className="text-xl font-bold">{frontierInfo?.name}</div>
               <div className="flex gap-3">
