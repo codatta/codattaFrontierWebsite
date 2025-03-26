@@ -1,4 +1,4 @@
-import { Button, Form, message, Upload, Input, Modal } from 'antd'
+import { Button, Form, message, Upload, Input, Modal, Radio } from 'antd'
 import { useState, ReactNode } from 'react'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
@@ -124,7 +124,14 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
     <div className="flex-1">
       <h2 className="mb-4 pr-6 text-xl font-semibold text-white">R6D9 Data Collection Platform</h2>
 
-      <Form name="form4" layout="vertical" className="flex flex-col gap-6" form={form} requiredMark={FormRequireMask}>
+      <Form
+        name="form4"
+        layout="vertical"
+        className="flex flex-col gap-6"
+        form={form}
+        requiredMark={FormRequireMask}
+        initialValues={{ satisfaction: true }}
+      >
         <div className="rounded-2xl bg-[#252532] p-6">
           <Form.Item
             label="R6D9 Images"
@@ -195,9 +202,30 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
               className="rounded-lg border border-solid border-[#FFFFFF1F] bg-transparent"
             />
           </Form.Item>
-          <div className="flex justify-end">
+
+          <Form.Item
+            label="Satisfaction with R6D9 Execution"
+            name="satisfaction"
+            rules={[
+              {
+                required: true,
+                message: 'Please select your satisfaction status'
+              }
+            ]}
+          >
+            <Radio.Group>
+              <Radio value={true} className="w-[100px] text-white">
+                Yes
+              </Radio>
+              <Radio value={false} className="w-[100px] text-white">
+                No
+              </Radio>
+            </Radio.Group>
+          </Form.Item>
+
+          <div className="flex justify-center">
             <Button
-              className="w-[160px] rounded-full bg-primary"
+              className="h-[42px] w-[240px] rounded-full bg-primary"
               type="primary"
               onClick={handleSubmit}
               loading={isSubmitting}
