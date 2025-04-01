@@ -30,7 +30,7 @@ export default function Component() {
           </a>
           <div className="mb-3 mt-6 flex items-center justify-between">
             <div className="text-xl font-bold">Robotics</div>
-            <div className="flex gap-3">
+            {/* <div className="flex gap-3">
               <a href="https://r6d9.ai/" target="_blank">
                 <img className="cursor-pointer" src={WebIcon} alt="" />
               </a>
@@ -41,11 +41,10 @@ export default function Component() {
               <a href="https://robox-lab.gitbook.io/r6d9-whitepaper" target="_blank">
                 <img className="cursor-pointer" src={DocIcon} alt="" />
               </a>
-              {/* <img className="cursor-pointer" src={DiscordIcon} alt="" /> */}
               <a href="https://t.me/Roboagent69Channel" target="_blank">
                 <img className="cursor-pointer" src={TgIcon} alt="" />
               </a>
-            </div>
+            </div> */}
           </div>
           <div className="text-white/55">
             Visual data annotation is essential for training large AI models in robotics, especially for object
