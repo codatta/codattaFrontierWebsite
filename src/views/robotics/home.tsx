@@ -5,11 +5,11 @@ import { useNavigate } from 'react-router-dom'
 
 import GetRewardGuide from '@/components/robotics/rewards-guide'
 import TaskList from '@/components/robotics/task-list'
-import XIcon from '@/assets/robotics/x-logo.svg'
-import TgIcon from '@/assets/robotics/tg-logo.svg'
+// import XIcon from '@/assets/robotics/x-logo.svg'
+// import TgIcon from '@/assets/robotics/tg-logo.svg'
 // import DiscordIcon from '@/assets/robotics/discord-logo.svg'
-import DocIcon from '@/assets/robotics/doc-logo.svg'
-import WebIcon from '@/assets/robotics/web-logo.svg'
+// import DocIcon from '@/assets/robotics/doc-logo.svg'
+// import WebIcon from '@/assets/robotics/web-logo.svg'
 import DevInfoImage from '@/assets/robotics/dev-info-image.png'
 
 export default function Component() {
