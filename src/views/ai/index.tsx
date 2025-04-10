@@ -215,7 +215,6 @@ export default function ComparePage() {
     setShowFeedback(false)
     setDisableChat(true)
     setTaskId(null)
-    setModelInfo(null)
     setShowModelName(true)
   }
 
