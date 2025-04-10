@@ -47,7 +47,7 @@ const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
-const AIComparePage = lazy(() => import('@/views/ai/backup1'))
+const AIComparePage = lazy(() => import('@/views/ai'))
 
 export default function Router() {
   return (

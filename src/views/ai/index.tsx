@@ -66,6 +66,7 @@ export default function ComparePage() {
   const [isComposing, setIsComposing] = useState(false)
   const sseclient = useRef<SSEClient | null>(null)
   const [disableChat, setDisableChat] = useState(false)
+  const [showModelName, setShowModelName] = useState(false)
   const [modelInfo, setModelInfo] = useState<{
     model_a: string
     model_b: string
@@ -105,6 +106,18 @@ export default function ComparePage() {
           sseclient.current = null
           setIsStreaming(false)
           console.log(isStreaming)
+          setHistoryA((prev) => {
+            const newHistory = [...prev]
+            const tail = newHistory[newHistory.length - 1]
+            tail.status = 'done'
+            return newHistory
+          })
+          setHistoryB((prev) => {
+            const newHistory = [...prev]
+            const tail = newHistory[newHistory.length - 1]
+            tail.status = 'done'
+            return newHistory
+          })
           return
         }
         if (_data.model === 'model_a') {
@@ -203,8 +216,7 @@ export default function ComparePage() {
     setDisableChat(true)
     setTaskId(null)
     setModelInfo(null)
-    console.log(modelInfo)
-    // TODO show model
+    setShowModelName(true)
   }
 
   const handleWindowKeyDown = useCallback(
@@ -286,16 +298,26 @@ export default function ComparePage() {
       <div className="mt-6 items-start rounded-xl border border-[#FFFFFF1F] p-4">
         <div className="flex h-[700px] w-full gap-4">
           <div className="relative w-[calc(50%-8px)] flex-1 rounded-xl border border-[#FFFFFF1F] p-3">
-            <div className="absolute left-0 top-0 z-10 rounded-br-xl rounded-tl-xl border border-l-0 border-t-0 border-white/10 p-2">
+            <div className="absolute left-0 top-0 z-10 rounded-br-xl rounded-tl-xl border border-l-0 border-t-0 border-white/10 bg-primary p-2">
               Model A
             </div>
             {hisotryA.length > 0 && <ChatHistory history={hisotryA} onCopyFn={onCopyFn} />}
+            {showModelName && (
+              <div className="absolute bottom-0 left-0 z-10 rounded-bl-xl rounded-tr-xl border border-b-0 border-l-0 border-white/10 bg-primary p-2 font-bold">
+                Model A: {modelInfo?.model_a}
+              </div>
+            )}
           </div>
           <div className="relative w-[calc(50%-8px)] flex-1 rounded-xl border border-[#FFFFFF1F] p-3">
-            <div className="absolute left-0 top-0 z-10 rounded-br-xl rounded-tl-xl border border-l-0 border-t-0 border-white/10 p-2">
+            <div className="absolute left-0 top-0 z-10 rounded-br-xl rounded-tl-xl border border-l-0 border-t-0 border-white/10 bg-primary p-2">
               Model B
             </div>
             {hisotryB.length > 0 && <ChatHistory history={hisotryB} onCopyFn={onCopyFn} />}
+            {showModelName && (
+              <div className="absolute bottom-0 left-0 z-10 rounded-bl-xl rounded-tr-xl border border-b-0 border-l-0 border-white/10 bg-primary p-2 font-bold">
+                Model B: {modelInfo?.model_b}
+              </div>
+            )}
           </div>
         </div>
         {showFeedback && (
