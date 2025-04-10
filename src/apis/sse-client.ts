@@ -28,6 +28,7 @@ export class SSEClient {
   private options: SSEClientOptions
 
   constructor(options: SSEClientOptions) {
+    console.log(this.state)
     this.options = {
       retryInterval: 3000,
       ...options
