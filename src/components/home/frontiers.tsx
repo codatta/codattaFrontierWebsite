@@ -1,11 +1,9 @@
-import { useState } from 'react'
 import crypto from '@/assets/home/crypto.png'
 import arrowRight from '@/assets/icons/arrow-right.svg'
 import { useNavigate } from 'react-router-dom'
 import fashion from '@/assets/home/fashion.png'
 import medical from '@/assets/home/medical.png'
 import robotics from '@/assets/home/robotics.png'
-import InformedConsentForm from '@/components/robotics/label-annotation/informed-consent'
 
 interface FrontierItem {
   name: string
@@ -16,9 +14,6 @@ interface FrontierItem {
 
 const Frontiers = () => {
   const navigate = useNavigate()
-  console.log(localStorage.getItem('frontier-consent') === 'true')
-  const [show, setShow] = useState(false)
-  const [currentFrontier, setCurrentFrontier] = useState<FrontierItem | null>(null)
   const frontiersList: Array<FrontierItem> = [
     {
       name: 'Crypto',
@@ -46,17 +41,6 @@ const Frontiers = () => {
     }
   ]
 
-  function onClickFrontiers(item: (typeof frontiersList)[0]) {
-    if (localStorage.getItem('frontier-consent') === 'true') {
-      item.active()
-      return
-    } else {
-      localStorage.setItem('frontier-consent', 'true')
-      setShow(true)
-      setCurrentFrontier(item)
-    }
-  }
-
   return (
     <div className="mt-12">
       <h2 className="mb-3 text-lg font-bold">Recent Frontiers</h2>
@@ -65,7 +49,7 @@ const Frontiers = () => {
           <div
             key={item.name}
             className="group relative aspect-[269/243] w-full cursor-pointer overflow-hidden rounded-2xl"
-            onClick={() => onClickFrontiers(item)}
+            onClick={() => item.active()}
           >
             <img src={item.img} alt="" className="size-full object-cover transition-all group-hover:scale-[1.2]" />
             <div
@@ -86,15 +70,6 @@ const Frontiers = () => {
           </div>
         ))}
       </div>
-      <InformedConsentForm
-        isOpen={show}
-        onClose={() => setShow(false)}
-        onSubmit={() => {
-          localStorage.setItem('frontier-consent', 'true')
-          setShow(false)
-          currentFrontier?.active()
-        }}
-      />
     </div>
   )
 }

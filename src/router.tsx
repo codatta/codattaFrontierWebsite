@@ -102,13 +102,15 @@ export default function Router() {
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
 
+        <Route path="/frontier/robotics/CMU_TPL_000001/:taskId" element={<FormType5 templateId="CMU_TPL_000001" />} />
+
         <Route path="/frontier">
           <Route path="robotics" element={<RoboticsLayout />}>
             <Route path="ROBOTICS_TPL_000001/:taskId" element={<FormType1 templateId="ROBOTICS_TPL_000001" />} />
             <Route path="ROBOTICS_TPL_000002/:taskId" element={<FormType2 templateId="ROBOTICS_TPL_000002" />} />
             <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
             <Route path="R6D9_TPL_000001/:taskId" element={<FormType4 templateId="R6D9_TPL_000001" />} />
-            <Route path="VIDEO_LABEL_TPL_000001/:taskId" element={<FormType5 templateId="VIDEO_LABEL_TPL_000001" />} />
+            {/* <Route path="CMU_TPL_000001/:taskId" element={<FormType5 templateId="CMU_TPL_000001" />} /> */}
           </Route>
         </Route>
       </Routes>

@@ -51,8 +51,8 @@ const InformedConsentForm: React.FC<InformedConsentFormProps> = ({ isOpen, onClo
               USD) that the participants will be paid.
             </p>
             <p className="text-gray-700">
-              Participants will be asked to compare and evaluate video clips based on a text query (e.g., "How do I cut
-              a mango?"). In order to complete the task, the participants should be familiar with basic website usage
+              Participants will be asked to compare and evaluate video clips based on a text query (e.g., “How do I cut
+              a mango?”). In order to complete the task, the participants should be familiar with basic website usage
               (e.g., playing a video, entering text).
             </p>
           </div>
@@ -64,9 +64,139 @@ const InformedConsentForm: React.FC<InformedConsentFormProps> = ({ isOpen, onClo
               After providing consent, participants will be redirected to Co-datta.io to complete the task.
             </p>
             <p className="text-gray-700">
-              To perform the video evaluation task, participants will be shown a text query (e.g., "How do you slice a
-              mango?") and two videos that attempt to address the query. Participants will be asked which video is
-              better at addressing the query and why. Participants may be asked to complete multiple such evaluations.
+              To perform the video evaluation task, participants will be shown a text query (e.g., “How do you slice a
+              mango?”) and two videos that attempt to address the query. Participants will be asked which video is
+              better at addressing the query, and briefly include a written reasoning for their choice. Then, based on
+              the participant’s previous response, the participant will be asked a series of questions with respect to
+              the video they preferred.
+            </p>
+            <p className="text-gray-700">
+              After each annotation, participants will be informed of the reward points they earned for their
+              contribution. We do not require the participant to perform a specific number of annotations. Instead, we
+              ask the participants to complete their annotations before [insert date].
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Participant Requirements</h3>
+            <p className="text-gray-700">
+              Participation in this study is limited to individuals age 18 and older. Participants should be familiar
+              with basic website usage (e.g., navigating a website, uploading photos) and interacting with chatbots.
+            </p>
+          </div>
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Risks</h3>
+            <p className="text-gray-700">
+              The risks and discomfort associated with participation in this study are no greater than those Ordinarily
+              encountered in daily life or during other online activities. To protect the participants’ privacy, we
+              advise the participants to upload pictures ONLY containing food (i.e., no faces or identifiable
+              information in the background).
+            </p>
+            <p className="text-gray-700">
+              There is a small risk of a breach of confidentiality, as we collect participants’ Codatta ids, Prolific
+              ids, or MTurk ids. However, we will minimize this risk by translating these personal identifiers to a
+              code, and by ensuring that the papers that have these personal identifiers are stored securely, and will
+              not be shared with anyone outside of Carnegie Mellon University.
+            </p>
+          </div>
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Benefits</h3>
+            <p className="text-gray-700">
+              There may be no personal benefit from your participation in the study but the knowledge received may be of
+              value to humanity. Participants may contribute towards building better deep learning models for food
+              science and investigating better compensation for data annotators.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Compensation & Costs</h3>
+            <p className="text-gray-700">
+              Participants will be awarded with Codatta reward points, which reflects a dollar amount that the
+              participants will be paid. We will adjust the base amount the participant will be paid to meet at least
+              the U.S. federal minimum wage (and be up to $15 USD per hour), prorated for the length per task. There
+              will be no cost to you if you participate in this study.
+            </p>
+          </div>
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Confidentiality</h3>
+            <p className="text-gray-700">
+              By participating in the study, you understand and agree that Carnegie Mellon may be required to disclose
+              your consent form, data and other personally identifiable information as required by law, regulation,
+              subpoena or court order. Otherwise, your confidentiality will be maintained in the following manner:
+            </p>
+            <p className="text-gray-700">
+              Your data and consent form will be kept separate. Your research data will be stored in a secure location
+              on Carnegie Mellon property. By participating, you understand and agree that the data and information
+              gathered during this study may be used by Carnegie Mellon and published and/or disclosed by Carnegie
+              Mellon to others outside of Carnegie Mellon. However, your name, address, contact information and other
+              direct personal identifiers will not be mentioned in any such publication or dissemination of the research
+              data and/or results by Carnegie Mellon. Note that per regulation all research data must be kept for a
+              minimum of 3 years.
+            </p>
+            <p className="text-gray-700">
+              The researchers will take the following steps to protect participants’ identities during this study: (1)
+              Each participant will be assigned a number; (2) The researchers will record any data collected during the
+              study by number, not by name; (3) Any original recordings or data files will be stored in a secured
+              location accessed only by authorized researchers.{' '}
+            </p>
+            <p className="text-gray-700">
+              Mturk, Prolific, and Codatta are not owned by CMU. The company will have access to the research data that
+              you produce and any identifiable information that you share with them while using their product. Please
+              note that Carnegie Mellon does not control the Terms and Conditions of the companies or how they will use
+              any information that they collect.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Future Use of Information</h3>
+            <p className="text-gray-700">
+              In the future, once we have removed all identifiable information from your data (information), we may use
+              the data for our future research studies, or we may distribute the data to other investigators for their
+              research studies. We would do this without getting additional informed consent from you. Sharing of data
+              with other researchers will only be done in such a manner that you will not be identified.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Rights</h3>
+            <p className="text-gray-700">
+              Your participation is voluntary. You are free to stop your participation at any point. Refusal to
+              participate or withdrawal of your consent or discontinued participation in the study will not result in
+              any penalty or loss of benefits or rights to which you might otherwise be entitled. The Principal
+              Investigator may at his/her discretion remove you from the study for any of a number of reasons. In such
+              an event, you will not suffer any penalty or loss of benefits or rights which you might otherwise be
+              entitled.
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">
+              Right to Ask Questions & Contact Information
+            </h3>
+            <p className="text-gray-700">
+              If you have any questions about this study, you should feel free to ask them now. If you have questions
+              later, desire additional information, or wish to withdraw your participation please contact the Principal
+              Investigator by mail, phone or e-mail in accordance with the contact information listed on the first page
+              of this consent.
+            </p>
+            <p className="text-gray-700">
+              If you have questions pertaining to your rights as a research participant; or to report concerns to this
+              study, you should contact the Office of Research Integrity and Compliance at Carnegie Mellon University.
+              Email: irb-review@andrew.cmu.edu . Phone: 412-268-4721.
+            </p>
+          </div>
+          <div className="mb-2">
+            <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Voluntary Consent</h3>
+            <p className="text-gray-700">
+              Your participation in this research is voluntary. You may discontinue participation at any time during the
+              research activity. You may print a copy of this consent form for your records.
+            </p>
+            <p className="text-gray-700">
+              By continuing to the web interface of this study, you agree that the above information has been explained
+              to you and all your current questions have been answered. In addition, by continuing on the web interface,
+              you confirm that you are age 18 or older, and you agree to participate in this research study. You are
+              encouraged to ask questions about any aspect of this research study during the course of the study and in
+              the future.
             </p>
           </div>
         </div>

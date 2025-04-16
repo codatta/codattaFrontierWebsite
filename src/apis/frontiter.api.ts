@@ -26,9 +26,11 @@ export interface TaskDetail {
     gif_resource: string
     template_id: string
   }
-  data_requirements: {
-    [key: string]: unknown
-  }
+  data_requirements:
+    | CMUDataRequirements
+    | {
+        [key: string]: unknown
+      }
   reward_info: readonly TaskRewardInfo[]
   status: string
   txHashUrl: string
@@ -44,6 +46,11 @@ export interface ExploreFrontierItem {
   reputation_permission: number
   status: string
   title: string
+  template_ext?: {
+    template_id: string
+    gif_resource?: string
+    open_cum_dialog?: number
+  }
 }
 
 export enum MediaName {
@@ -72,6 +79,23 @@ export interface FrontierItemType {
   videos?: Array<VideoItem>
   reputation_permission?: number
   frontier_id?: string
+}
+
+export interface CMUDataRequirements {
+  part1: {
+    videos: Array<VideoItem>
+  }
+  part2: {
+    videos: Array<VideoItem>
+    questions: Array<{
+      title: string
+      options: Array<{
+        value: string
+        label: string
+        content: string
+      }>
+    }>
+  }
 }
 
 class frontier {

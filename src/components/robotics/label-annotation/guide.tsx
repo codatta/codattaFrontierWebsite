@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import PlayCircle from '@/assets/robotics/play-circle.svg'
 import InformationLine from '@/assets/robotics/information-line.svg'
@@ -12,6 +12,18 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
   const [dontShowAgain, setDontShowAgain] = useState(false)
   const [countdown, setCountdown] = useState(10)
   const [buttonEnabled, setButtonEnabled] = useState(false)
+  const videoRef1 = useRef<HTMLVideoElement>(null)
+  const videoRef2 = useRef<HTMLVideoElement>(null)
+  const videoRef3 = useRef<HTMLVideoElement>(null)
+
+  function onCloseGuide() {
+    if (dontShowAgain) {
+      localStorage.setItem('task-guide-showed', 'true')
+      onClose()
+      return
+    }
+    onClose()
+  }
 
   useEffect(() => {
     if (isOpen) {
@@ -33,7 +45,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
 
   return (
     <div className="fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-[#1C1C26B8]">
-      <div className="relative w-[800px] rounded-2xl bg-[#252532] text-white shadow-xl">
+      <div className="relative w-[840px] rounded-2xl bg-[#252532] text-white shadow-xl">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[#FFFFFF1F] px-6 pb-3 pt-6">
           <div className="flex flex-col gap-1">
@@ -57,25 +69,69 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
               <div className="flex gap-3">
                 {/* Video A */}
                 <div className="relative h-[128px] w-[160px] overflow-hidden rounded-xl bg-black">
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <img src={PlayCircle} alt="" />
+                  <div
+                    className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                    onClick={() => {
+                      if (videoRef1.current) {
+                        videoRef1.current.play()
+                      }
+                    }}
+                  >
+                    <img src={PlayCircle} alt="Play video" />
                   </div>
-                  <img
-                    src="https://via.placeholder.com/200x160"
-                    alt="Mango cut pattern"
+                  <video
+                    ref={videoRef1}
+                    width="100%"
+                    poster=""
                     className="size-full object-cover"
-                  />
+                    onPlay={() => {
+                      const playButton = videoRef1.current?.parentElement?.querySelector('div')
+                      if (playButton) {
+                        playButton.style.display = 'none'
+                      }
+                    }}
+                    onPause={() => {
+                      const playButton = videoRef1.current?.parentElement?.querySelector('div')
+                      if (playButton) {
+                        playButton.style.display = 'flex'
+                      }
+                    }}
+                  >
+                    <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                  </video>
                 </div>
                 {/* Video B */}
                 <div className="relative h-[128px] w-[160px] overflow-hidden rounded-xl bg-black">
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <img src={PlayCircle} alt="" />
+                  <div
+                    className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                    onClick={() => {
+                      if (videoRef2.current) {
+                        videoRef2.current.play()
+                      }
+                    }}
+                  >
+                    <img src={PlayCircle} alt="Play video" />
                   </div>
-                  <img
-                    src="https://via.placeholder.com/200x160"
-                    alt="Mango slicing technique"
+                  <video
+                    ref={videoRef2}
+                    width="100%"
+                    poster=""
                     className="size-full object-cover"
-                  />
+                    onPlay={() => {
+                      const playButton = videoRef2.current?.parentElement?.querySelector('div')
+                      if (playButton) {
+                        playButton.style.display = 'none'
+                      }
+                    }}
+                    onPause={() => {
+                      const playButton = videoRef2.current?.parentElement?.querySelector('div')
+                      if (playButton) {
+                        playButton.style.display = 'flex'
+                      }
+                    }}
+                  >
+                    <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                  </video>
                 </div>
               </div>
               {/* Question */}
@@ -85,15 +141,15 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                 </h4>
                 <div className="mb-3 flex gap-8">
                   <label className="flex items-center gap-2">
-                    <input type="radio" name="videoChoice" className="size-4 accent-[#8A5AEE]" />
+                    <input type="radio" name="videoChoice1" className="size-4 accent-[#8A5AEE]" />
                     <span className="text-sm leading-[17px] text-white">Video A</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="radio" name="videoChoice" className="size-4 accent-[#8A5AEE]" />
+                    <input type="radio" name="videoChoice1" className="size-4 accent-[#8A5AEE]" />
                     <span className="text-sm leading-[17px] text-white">Video B</span>
                   </label>
                   <label className="flex items-center gap-2">
-                    <input type="radio" name="videoChoice" className="size-4 accent-[#8A5AEE]" />
+                    <input type="radio" name="videoChoice1" className="size-4 accent-[#8A5AEE]" />
                     <span className="text-sm leading-[17px] text-white">Neutral</span>
                   </label>
                 </div>
@@ -115,14 +171,36 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
             </div>
             <div className="flex rounded-lg bg-[rgb(46,46,57)] p-4">
               <div className="relative h-[148px] w-[185px] overflow-hidden rounded-xl bg-black">
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <img src={PlayCircle} alt="" />
+                <div
+                  className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+                  onClick={() => {
+                    if (videoRef3.current) {
+                      videoRef3.current.play()
+                    }
+                  }}
+                >
+                  <img src={PlayCircle} alt="Play video" />
                 </div>
-                <img
-                  src="https://via.placeholder.com/200x160"
-                  alt="Mango cut pattern"
+                <video
+                  ref={videoRef3}
+                  width="100%"
+                  poster=""
                   className="size-full object-cover"
-                />
+                  onPlay={() => {
+                    const playButton = videoRef3.current?.parentElement?.querySelector('div')
+                    if (playButton) {
+                      playButton.style.display = 'none'
+                    }
+                  }}
+                  onPause={() => {
+                    const playButton = videoRef3.current?.parentElement?.querySelector('div')
+                    if (playButton) {
+                      playButton.style.display = 'flex'
+                    }
+                  }}
+                >
+                  <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                </video>
               </div>
 
               {/* Question */}
@@ -183,7 +261,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
           <button
             className={`rounded-[36px] px-6 py-3 text-sm font-medium ${buttonEnabled ? 'cursor-pointer bg-[#8A5AEE] text-white' : 'cursor-not-allowed bg-[#8A5AEE]/50 text-white/70'}`}
             disabled={!buttonEnabled}
-            onClick={onClose}
+            onClick={onCloseGuide}
           >
             I Understand {countdown > 0 ? `(${countdown}s)` : ''}
           </button>
