@@ -2,17 +2,18 @@ import { Button, Radio, Checkbox } from 'antd'
 import { useEffect, useState } from 'react'
 import PlayCircle from '@/assets/robotics/play-circle.svg'
 import InformationLine from '@/assets/robotics/information-line.svg'
-import { TaskDetail } from '@/apis/frontiter.api'
+import { CMUDataRequirements } from '@/apis/frontiter.api'
 import VideoModal from '@/components/robotics/video-modal'
 import LightbulbLine from '@/assets/robotics/lightbulb-line.svg'
 
 interface Form5ComponentProps {
-  data_requirements: TaskDetail['data_requirements']
+  data_requirements: CMUDataRequirements
   onShowGuide: () => void
   onSubmit: (data: object) => Promise<unknown>
 }
 
 export default function Form5Component({ data_requirements, onShowGuide, onSubmit }: Form5ComponentProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [videoWatched, setVideoWatched] = useState(false)
   const [step, setStep] = useState(1)
   const [currentVideo, setCurrentVideo] = useState<{ img: string; url: string } | null>(null)
@@ -20,18 +21,26 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
     aVsBStatus: string
     reason: string
   }>({
-    aVsBStatus: 'A',
+    aVsBStatus: '',
     reason: ''
   })
   const [part2Form, setPart2Form] = useState<Array<string>>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (currentQuestionIndex >= data_requirements?.part2?.questions?.length - 1) {
-      onSubmit({
+      setIsSubmitting(true)
+      await onSubmit({
         part1: part1Form,
         part2: part2Form
       })
+      setPart1Form({
+        aVsBStatus: 'A',
+        reason: ''
+      })
+      setPart2Form([])
+      setCurrentQuestionIndex(0)
+      setIsSubmitting(false)
       return
     }
     setCurrentQuestionIndex((prev) => prev + 1)
@@ -63,7 +72,7 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
             </div>
             <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">How to slice a mango?</h3>
             <div className="mb-6 flex gap-4">
-              {(data_requirements as TaskDetail['data_requirements'])?.part1?.videos?.map((video, index) => (
+              {data_requirements?.part1?.videos?.map((video, index) => (
                 <div
                   key={index}
                   className="relative overflow-hidden rounded-xl"
@@ -109,7 +118,7 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
                       onChange={(e) => setPart1Form({ ...part1Form, aVsBStatus: e.target.value })}
                       className="flex gap-4"
                     >
-                      <Radio value="1" className="leading-[17px] text-white">
+                      <Radio value="A" className="leading-[17px] text-white">
                         Video A
                       </Radio>
                       <Radio value="B" className="leading-[17px] text-white">
@@ -174,7 +183,7 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
               </div>
               <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">How to slice a mango?</h3>
               <div className="flex items-center gap-4">
-                {(data_requirements as TaskDetail['data_requirements'])?.part2?.videos?.map((video, index) => (
+                {data_requirements?.part2?.videos?.map((video, index) => (
                   <div
                     key={index}
                     className="relative h-[180px] w-[268px] overflow-hidden rounded-xl"
@@ -226,6 +235,7 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
               <Button
                 type="primary"
                 className="h-10 w-[240px] rounded-lg bg-[#8A5AEE] text-white"
+                loading={isSubmitting}
                 onClick={handleSubmit}
               >
                 {currentQuestionIndex + 1 >= (data_requirements?.part2?.questions?.length || 0) ? 'Submit' : 'Next'}

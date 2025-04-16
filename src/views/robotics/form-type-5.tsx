@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { message } from 'antd'
 
-import frontiterApi, { TaskDetail } from '@/apis/frontiter.api'
+import frontiterApi, { CMUDataRequirements } from '@/apis/frontiter.api'
 import Form5Component from '@/components/robotics/form-5'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import PageError from '@/components/robotics/page-error'
@@ -17,7 +17,7 @@ export default function FormType5(props: { templateId: string }) {
   const [modalShow, setModalShow] = useState(false)
   const [error, setError] = useState()
   const [rewardPoints, setRewardPoints] = useState(0)
-  const [data_requirements, setDataRequirements] = useState<TaskDetail['data_requirements'] | null>(null)
+  const [data_requirements, setDataRequirements] = useState<CMUDataRequirements | null>(null)
   const [showGuide, setShowGuide] = useState(localStorage.getItem('task-guide-showed') !== 'true')
 
   async function getTaskDetail(taskId: string, templateId: string) {
@@ -27,7 +27,7 @@ export default function FormType5(props: { templateId: string }) {
       if (res.data.data_display.template_id !== templateId) {
         throw new Error('Template not match!')
       }
-      setDataRequirements(res.data.data_requirements as TaskDetail['data_requirements'])
+      setDataRequirements(res.data.data_requirements as CMUDataRequirements)
       const totalRewards = res.data.reward_info
         .filter((item) => {
           return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
