@@ -48,12 +48,15 @@ const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
+const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Navigate to="/app" />} />
+
+        <Route path="arena" element={<ChatbotArenaPage />}></Route>
 
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />

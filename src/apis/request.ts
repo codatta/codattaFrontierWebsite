@@ -17,7 +17,7 @@ function authRequestInterceptor(config: InternalAxiosRequestConfig) {
 }
 
 function baseResponseInterceptor(res: AxiosResponse) {
-  if (res.data?.success !== true) {
+  if (res.data?.success !== true || res.data?.errorCode !== 0) {
     const error = new AxiosError(res.data?.errorMessage, res.data?.errorCode, res.config, res.request, res)
     return Promise.reject(error)
   } else {
