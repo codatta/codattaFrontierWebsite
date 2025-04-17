@@ -29,7 +29,6 @@ export default function ComparePage() {
     model_b: string
   } | null>(null)
   const [isStreaming, setIsStreaming] = useState(false)
-  const [newRound, setNewRound] = useState(false)
   const [notificationApi, contextHolder] = notification.useNotification()
 
   const feedbackArray = [
@@ -222,7 +221,6 @@ export default function ComparePage() {
     setTaskId(null)
     setShowFeedback(false)
     setModelInfo(null)
-    setNewRound(false)
     setShowChatBox(true)
   }
 
