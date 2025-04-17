@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'ax
 import cookies from 'js-cookie'
 
 const request = axios.create({
-  baseURL: '/api/v2',
+  baseURL: '/api',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json'

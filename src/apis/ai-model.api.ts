@@ -1,8 +1,6 @@
 import { AxiosInstance } from 'axios'
 import request from './request'
 
-request.defaults.baseURL = '/api'
-
 interface Response<T> {
   data: T
   success: true

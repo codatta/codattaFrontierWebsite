@@ -20,17 +20,17 @@ export interface Quest {
 
 class TaskApi {
   async getActivities() {
-    const res = await request.post<Response<ActivityGroup[]>>('/task/categories')
+    const res = await request.post<Response<ActivityGroup[]>>('/v2/task/categories')
     return res.data
   }
 
   async getActivity(activityId: Activity['sub_cate_id'] = '') {
-    const res = await request.post<Response<Activity>>('/task/sub_categories', { sub_cate_id: activityId })
+    const res = await request.post<Response<Activity>>('/v2/task/sub_categories', { sub_cate_id: activityId })
     return res.data
   }
 
   async receiveReward(taskInstanceId: string) {
-    const res = await request.post<Response<TaskReward[] | RewardErrorData>>('/task/reward', {
+    const res = await request.post<Response<TaskReward[] | RewardErrorData>>('/v2/task/reward', {
       instance_id: taskInstanceId
     })
     return res.data
@@ -45,7 +45,7 @@ class TaskApi {
           rewards: TaskReward[]
           msg?: string
         }>
-      >('/task/verify', { task_id: taskId })
+      >('/v2/task/verify', { task_id: taskId })
     ).data
   }
 
@@ -57,20 +57,21 @@ class TaskApi {
   // }
 
   async finishTask(taskConfigId: string) {
-    const { data } = await request.post('/task/finish', {
+    const { data } = await request.post('/v2/task/finish', {
       task_config_id: taskConfigId
     })
     return data
   }
 
   async getCheckinInfo() {
-    const { data } = await request.post<Response<{ check_in_days: number; is_check_in: boolean }>>('/check-in/consult')
+    const { data } =
+      await request.post<Response<{ check_in_days: number; is_check_in: boolean }>>('/v2/check-in/consult')
 
     return data
   }
 
   async updateCheckin(params?: { chain: string; hash: string }) {
-    const { data } = await request.post<{ check_in_days: number }>('/check-in/check-in', params || {})
+    const { data } = await request.post<{ check_in_days: number }>('/v2/check-in/check-in', params || {})
     return data
   }
 
@@ -80,7 +81,7 @@ class TaskApi {
         total_count: number
         check_in_history: { check_in_day: string; check_in_month: string; check_in_date: string }[]
       }>
-    >('/check-in/query', {
+    >('/v2/check-in/query', {
       data: {
         year,
         month

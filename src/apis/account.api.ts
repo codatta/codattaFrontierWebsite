@@ -93,62 +93,62 @@ class AccountApi {
   constructor(private request: AxiosInstance) {}
 
   public async getNonce(props: { account_type: TAccountType }) {
-    const { data } = await this.request.post<{ data: string }>(`/user/nonce`, props)
+    const { data } = await this.request.post<{ data: string }>(`/v2/user/nonce`, props)
     return data.data
   }
 
   public async getEmailCode(props: { account_type: TAccountType; email: string }) {
-    const { data } = await this.request.post<{ data: string }>(`/user/get_code`, props)
+    const { data } = await this.request.post<{ data: string }>(`/v2/user/get_code`, props)
     return data.data
   }
 
   public async emailLogin(props: IEmailLoginParams) {
-    const res = await this.request.post<{ data: ILoginResponse }>(`/user/login`, props)
+    const res = await this.request.post<{ data: ILoginResponse }>(`/v2/user/login`, props)
     return res.data
   }
 
   public async walletLogin(props: IWalletLoginParams) {
-    const res = await this.request.post<{ data: ILoginResponse }>(`/user/login`, props)
+    const res = await this.request.post<{ data: ILoginResponse }>(`/v2/user/login`, props)
     return res.data
   }
 
   public async tonLogin(props: ITonLoginParams) {
-    const res = await this.request.post<{ data: ILoginResponse }>(`/user/login`, props)
+    const res = await this.request.post<{ data: ILoginResponse }>(`/v2/user/login`, props)
     return res.data
   }
 
   public async bindEmail(props: IEmailConnectParams) {
-    const res = await this.request.post('/user/account/bind', props)
+    const res = await this.request.post('/v2/user/account/bind', props)
     return res.data
   }
 
   public async bindTonWallet(props: ITonConnectParams) {
-    const res = await this.request.post('/user/account/bind', props)
+    const res = await this.request.post('/v2/user/account/bind', props)
     return res.data
   }
 
   public async bindEvmWallet(props: IWalletConnectParams) {
-    const res = await this.request.post('/user/account/bind', props)
+    const res = await this.request.post('/v2/user/account/bind', props)
     return res.data
   }
 
   public async unbindAccount(account: string) {
-    const res = await this.request.post('/user/account/unbind', { account })
+    const res = await this.request.post('/v2/user/account/unbind', { account })
     return res.data
   }
 
   async getSocialAccountLinkUrl(type: string) {
-    const { data } = await request.post('/user/sm/connect', { type })
+    const { data } = await request.post('/v2/user/sm/connect', { type })
     return data
   }
 
   async unlinkSocialAccount(type: string) {
-    const { data } = await request.post('/user/sm/unbind', { type })
+    const { data } = await request.post('/v2/user/sm/unbind', { type })
     return data
   }
 
   async linkSocialAccount(type: string, param: unknown) {
-    const { data } = await request.post('/user/sm/bind', {
+    const { data } = await request.post('/v2/user/sm/bind', {
       type,
       value: param
     })

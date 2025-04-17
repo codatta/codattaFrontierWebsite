@@ -55,9 +55,7 @@ export default function Router() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Navigate to="/app" />} />
-
-        <Route path="arena" element={<ChatbotArenaPage />}></Route>
-
+        <Route path="/arena" element={<ChatbotArenaPage />}></Route>
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
