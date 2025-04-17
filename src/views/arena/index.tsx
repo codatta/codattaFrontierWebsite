@@ -280,10 +280,9 @@ export default function ComparePage() {
   return (
     <div className="min-h-screen bg-[#1a1a1f] text-white">
       <PageHead>
-        {info?.user_data && (
+        {info?.user_data.avatar && (
           <div className="flex items-center">
             <img src={info?.user_data.avatar || ''} alt="" className="size-8" />
-            <span className="text-white">{info?.user_data.user_name || ''}</span>
           </div>
         )}
       </PageHead>
