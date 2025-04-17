@@ -7,7 +7,7 @@ import HowItWorksImg from '@/assets/chatbot/chatbot-arena.png'
 import { ArrowUp } from 'lucide-react'
 import { AuthModal } from '@/components/account/auth-modal'
 import PageHead from '@/components/common/page-head'
-import accountApi from '@/apis/account.api'
+// import accountApi from '@/apis/account.api'
 import userApi from '@/apis/user.api'
 
 export default function ComparePage() {
@@ -240,7 +240,7 @@ export default function ComparePage() {
   }
 
   async function getUserInfo() {
-    const res = await userApi.getUserInfo()
+    // const res = await userApi.getUserInfo()
     // setUserInfo(res.data)
   }
 
