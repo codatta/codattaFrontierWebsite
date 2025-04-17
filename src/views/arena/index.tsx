@@ -7,6 +7,8 @@ import HowItWorksImg from '@/assets/chatbot/chatbot-arena.png'
 import { ArrowUp } from 'lucide-react'
 import { AuthModal } from '@/components/account/auth-modal'
 import PageHead from '@/components/common/page-head'
+import accountApi from '@/apis/account.api'
+import userApi from '@/apis/user.api'
 
 export default function ComparePage() {
   const [input, setInput] = useState('')
@@ -237,8 +239,14 @@ export default function ComparePage() {
     }
   }
 
+  async function getUserInfo() {
+    const res = await userApi.getUserInfo()
+    // setUserInfo(res.data)
+  }
+
   function onLogin() {
     setShowLoginModal(false)
+    getUserInfo()
   }
 
   useEffect(() => {
@@ -273,7 +281,7 @@ export default function ComparePage() {
       <PageHead />
       {/* Header */}
       <div className="container mx-auto px-4 py-8">
-        <h1 className="mb-2 text-center text-[32px] font-bold">⚔️ Codatta Chatbot</h1>
+        <h1 className="mb-2 text-center text-[32px] font-bold">⚔️ Codatta Arena</h1>
         <p className="text-center text-sm text-white/90">Compare AI ChatBots Anonymously, Logged on Chain</p>
 
         {/* How It Works Section */}
@@ -303,7 +311,7 @@ export default function ComparePage() {
                   <ChatHistory messages={historyA} />
                 ) : (
                   <div className="flex h-[300px] items-center justify-center text-center text-gray-400">
-                    <p>Welcome to Codatta Chatbot Data! Here you can compare responses from two different AI models.</p>
+                    <p>Welcome to Codatta Arena! Here you can compare responses from two different AI models.</p>
                   </div>
                 )}
               </div>
@@ -314,7 +322,7 @@ export default function ComparePage() {
                   <ChatHistory messages={historyB} />
                 ) : (
                   <div className="flex h-[300px] items-center justify-center text-center text-gray-400">
-                    <p>Welcome to Codatta Chatbot Data! Here you can compare responses from two different AI models.</p>
+                    <p>Welcome to Codatta Arena! Here you can compare responses from two different AI models.</p>
                   </div>
                 )}
               </div>

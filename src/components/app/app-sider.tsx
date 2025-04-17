@@ -8,6 +8,7 @@ import ImageLogo from '@/assets/images/logo-white.png'
 import IconHome from '@/assets/icons/app-nav/home.svg'
 import IconQuest from '@/assets/icons/app-nav/quest.svg'
 import IconEcosystem from '@/assets/icons/app-nav/ecosystem.svg'
+import IconArena from '@/assets/icons/app-nav/arena.svg'
 import IconReferral from '@/assets/icons/app-nav/referral.svg'
 import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
@@ -112,6 +113,11 @@ const menuItems: MenuItem[] = [
     label: <QuestLabel />
   },
   {
+    icon: <IconArena color={'white'} size={24} />,
+    key: '/arena',
+    label: 'Arena'
+  },
+  {
     icon: <IconReferral color={'white'} size={24} />,
     key: '/app/referral',
     label: 'Referral'
@@ -121,6 +127,7 @@ const menuItems: MenuItem[] = [
     key: '/app/leaderboard',
     label: 'Leaderboard'
   },
+
   {
     icon: <IconGitbook color="white" />,
     key: 'https://docs.codatta.io/codatta',
