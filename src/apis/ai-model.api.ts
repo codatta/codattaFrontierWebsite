@@ -33,7 +33,9 @@ class AIModelRequest {
   }
 
   async submitFeedback(data: { evaluate: EvaluateValue; task_id: string | null }) {
-    const res = await this.request.post<Response<{ status: number; message: string }>>('/ct/model/evaluate', data)
+    const res = await this.request.post<
+      Response<{ status: number; message: string; model_a: string; model_b: string }>
+    >('/ct/model/evaluate', data)
     return res.data
   }
 }

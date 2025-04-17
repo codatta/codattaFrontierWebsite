@@ -47,7 +47,7 @@ const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
-const AIComparePage = lazy(() => import('@/views/ai'))
+const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 
 export default function Router() {
   return (
@@ -55,11 +55,12 @@ export default function Router() {
       <Routes>
         <Route index element={<Navigate to="/app" />} />
 
+        <Route path="arena" element={<ChatbotArenaPage />}></Route>
+
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
           <Route index element={<Home />} />
-          <Route path="ai" element={<AIComparePage />}></Route>
         </Route>
         <Route path="/app" element={<AppLayout />}>
           <Route path="referral" element={<AppReferral />}></Route>

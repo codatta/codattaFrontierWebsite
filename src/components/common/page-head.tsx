@@ -5,7 +5,7 @@ export default function PageHead() {
   return (
     <div className="flex h-[84px] items-center justify-between border-b border-white/10 px-6 py-4">
       <div
-        className="flex cursor-pointer items-center gap-2 text-white"
+        className="flex w-[80px] cursor-pointer items-center gap-2 text-white"
         onClick={() => {
           window.history.back()
         }}
@@ -13,7 +13,7 @@ export default function PageHead() {
         <ArrowLeft className="text-white"></ArrowLeft> Back
       </div>
       <object data={LogoWhiteSvgImage} type="image/svg+xml" className="h-8"></object>
-      <div></div>
+      <div className="w-[80px]"></div>
     </div>
   )
 }
