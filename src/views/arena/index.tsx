@@ -116,7 +116,7 @@ export default function ComparePage() {
       if (!input.trim() || sendLoading) return
       const token = localStorage.getItem('token')
 
-      if (!token && historyA.length > 0) {
+      if (!token && historyA.length >= 4) {
         setShowLoginModal(true)
         return
       }
