@@ -217,6 +217,12 @@ export default function ComparePage() {
   )
 
   const handleNewRound = () => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setShowLoginModal(true)
+      return
+    }
+
     setHistoryA([])
     setHistoryB([])
     setTaskId(null)
@@ -227,6 +233,12 @@ export default function ComparePage() {
 
   const handleRegenerate = () => {
     if (!task_id || historyA.length === 0 || historyB.length === 0) return
+
+    const token = localStorage.getItem('token')
+    if (!token) {
+      setShowLoginModal(true)
+      return
+    }
 
     const lastUserMessage = historyA.find((item) => item.role === 'user')
     console.log(lastUserMessage, 'lastUserMessage')
@@ -389,7 +401,7 @@ export default function ComparePage() {
             <button
               className="flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white shadow-none transition-all hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-white"
               onClick={handleRegenerate}
-              disabled={!showChatBox}
+              disabled={!showChatBox || !task_id || historyA.length === 0 || historyB.length === 0}
             >
               🔁 Regenerate
             </button>
