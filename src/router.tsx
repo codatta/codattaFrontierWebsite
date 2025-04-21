@@ -4,6 +4,7 @@ import { lazy } from 'react'
 import RoboticsLayout from '@/layouts/robotics-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
+import ArenaLayout from '@/layouts/arena-layout'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -13,6 +14,7 @@ const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 const FormType4 = lazy(() => import('@/views/robotics/form-type-4'))
+const FormType5 = lazy(() => import('@/views/robotics/form-type-5'))
 
 // settings
 const SettingAccount = lazy(() => import('@/views/settings/account'))
@@ -47,13 +49,18 @@ const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
+const ChatbotArenaPage = lazy(() => import('@/views/arena'))
+const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Navigate to="/app" />} />
-
+        <Route path="/arena" element={<ArenaLayout />}>
+          <Route index element={<ChatbotArenaPage />} />
+          <Route path="model/list" element={<ModelListPage />} />
+        </Route>
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
@@ -101,12 +108,15 @@ export default function Router() {
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
 
+        <Route path="/frontier/robotics/CMU_TPL_000001/:taskId" element={<FormType5 templateId="CMU_TPL_000001" />} />
+
         <Route path="/frontier">
           <Route path="robotics" element={<RoboticsLayout />}>
             <Route path="ROBOTICS_TPL_000001/:taskId" element={<FormType1 templateId="ROBOTICS_TPL_000001" />} />
             <Route path="ROBOTICS_TPL_000002/:taskId" element={<FormType2 templateId="ROBOTICS_TPL_000002" />} />
             <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
             <Route path="R6D9_TPL_000001/:taskId" element={<FormType4 templateId="R6D9_TPL_000001" />} />
+            {/* <Route path="CMU_TPL_000001/:taskId" element={<FormType5 templateId="CMU_TPL_000001" />} /> */}
           </Route>
         </Route>
       </Routes>

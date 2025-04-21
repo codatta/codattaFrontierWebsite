@@ -2,7 +2,10 @@ import request, { PaginationParam, PaginationResponse } from './request'
 
 class ReputationApi {
   async getReputations(pagination: PaginationParam) {
-    const res = await request.post<PaginationResponse<Reputation[]>>('/customer/asset/reputation/entries', pagination)
+    const res = await request.post<PaginationResponse<Reputation[]>>(
+      '/v2/customer/asset/reputation/entries',
+      pagination
+    )
     return res.data
   }
 }

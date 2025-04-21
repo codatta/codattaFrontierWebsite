@@ -26,9 +26,11 @@ export interface TaskDetail {
     gif_resource: string
     template_id: string
   }
-  data_requirements: {
-    [key: string]: unknown
-  }
+  data_requirements:
+    | CMUDataRequirements
+    | {
+        [key: string]: unknown
+      }
   reward_info: readonly TaskRewardInfo[]
   status: string
   txHashUrl: string
@@ -44,6 +46,11 @@ export interface ExploreFrontierItem {
   reputation_permission: number
   status: string
   title: string
+  template_ext?: {
+    template_id: string
+    gif_resource?: string
+    open_cum_dialog?: number
+  }
 }
 
 export enum MediaName {
@@ -74,16 +81,33 @@ export interface FrontierItemType {
   frontier_id?: string
 }
 
+export interface CMUDataRequirements {
+  part1: {
+    videos: Array<VideoItem>
+  }
+  part2: {
+    videos: Array<VideoItem>
+    questions: Array<{
+      title: string
+      options: Array<{
+        value: string
+        label: string
+        content: string
+      }>
+    }>
+  }
+}
+
 class frontier {
   constructor(private request: AxiosInstance) {}
 
   async getTaskDetail(taskId: string) {
-    const res = await this.request.post<Response<TaskDetail>>('/frontier/task/detail', { task_id: taskId })
+    const res = await this.request.post<Response<TaskDetail>>('/v2/frontier/task/detail', { task_id: taskId })
     return res.data
   }
 
   async submitTask(taskId: string, data: object) {
-    const res = await this.request.post<Response<null>>('/frontier/task/submit', {
+    const res = await this.request.post<Response<null>>('/v2/frontier/task/submit', {
       task_id: taskId,
       data_submission: data
     })
@@ -95,7 +119,7 @@ class frontier {
     page_num: number
     page_size: number
   }): Promise<PaginationResponse<TaskDetail[]>> {
-    const res = await request.post(`/frontier/task/list`, params)
+    const res = await this.request.post('/v2/frontier/task/list', params)
     return res.data
   }
 
@@ -104,17 +128,17 @@ class frontier {
       frontier_id?: string
     }
   ): Promise<PaginationResponse<TaskDetail[]>> {
-    const res = await request.post(`/submission/list`, data)
+    const res = await this.request.post('/v2/submission/list', data)
     return res.data
   }
 
   async getFrontiers(): Promise<Response<ExploreFrontierItem[]>> {
-    const res = await request.post('/frontier/list ')
+    const res = await this.request.post('/v2/frontier/list ')
     return res.data
   }
 
   async getFrontierInfo(frontier_id: string): Promise<Response<FrontierItemType>> {
-    const res = await request.get(`/frontier/info?frontier_id=${frontier_id}`)
+    const res = await this.request.get(`/v2/frontier/info?frontier_id=${frontier_id}`)
     console.log(res)
     return res.data
   }

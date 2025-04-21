@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import request, { type Response } from './request'
+import request, { type Response } from '@/apis/request'
 
 export interface UserAccount {
   id: string
@@ -77,31 +77,32 @@ class UserApi {
   constructor(private request: AxiosInstance) {}
 
   async getUserInfo() {
-    const res = await this.request.post<Response<UserInfo>>('/user/get/user_info')
+    console.log(this.request.defaults)
+    const res = await this.request.post<Response<UserInfo>>('/v2/user/get/user_info')
     return res.data
   }
 
   async updateRelatedInfo(info: object) {
-    return this.request.post('/user/update/related_info', info)
+    return this.request.post('/v2/user/update/related_info', info)
   }
 
   async updateUserInfo(info: UserUpdateParams) {
-    const { data } = await this.request.post('/user/update/info', info)
+    const { data } = await this.request.post('/v2/user/update/info', info)
     return data
   }
 
   async getSocialAccountLinkUrl(type: string) {
-    const { data } = await request.post('/user/sm/connect', { type })
+    const { data } = await request.post('/v2/user/sm/connect', { type })
     return data
   }
 
   async unlinkSocialAccount(type: string) {
-    const { data } = await request.post('/user/sm/unbind', { type })
+    const { data } = await request.post('/v2/user/sm/unbind', { type })
     return data
   }
 
   async linkSocialAccount(type: string, param: unknown) {
-    const { data } = await request.post('/user/sm/bind', {
+    const { data } = await request.post('/v2/user/sm/bind', {
       type,
       value: param
     })

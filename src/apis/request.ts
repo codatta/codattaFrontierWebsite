@@ -3,7 +3,7 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'ax
 import cookies from 'js-cookie'
 
 const request = axios.create({
-  baseURL: '/api/v2',
+  baseURL: '/api',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json'
@@ -12,12 +12,12 @@ const request = axios.create({
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const token = cookies.get('auth') || localStorage.getItem('auth')
-  config.headers['token'] = `${token}`
+  if (token) config.headers['token'] = `${token}`
   return config
 }
 
 function baseResponseInterceptor(res: AxiosResponse) {
-  if (res.data?.success !== true) {
+  if (res.data?.success !== true || res.data?.errorCode !== 0) {
     const error = new AxiosError(res.data?.errorMessage, res.data?.errorCode, res.config, res.request, res)
     return Promise.reject(error)
   } else {

@@ -1,6 +1,6 @@
 // import { TourMock } from '@/api/tour-mock'
 // import { updateUserInfo } from '@/store/user.store'
-import request, { type PaginationParam, PaginationResponse, Response } from './request'
+import request, { type PaginationParam, PaginationResponse, Response } from '@/api-v1/request'
 
 class UserApi {
   async getInfo() {

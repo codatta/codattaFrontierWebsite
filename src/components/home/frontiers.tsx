@@ -5,9 +5,16 @@ import fashion from '@/assets/home/fashion.png'
 import medical from '@/assets/home/medical.png'
 import robotics from '@/assets/home/robotics.png'
 
+interface FrontierItem {
+  name: string
+  img: string
+  desc: string
+  active: () => void
+}
+
 const Frontiers = () => {
   const navigate = useNavigate()
-  const frontiersList = [
+  const frontiersList: Array<FrontierItem> = [
     {
       name: 'Crypto',
       img: crypto,
@@ -42,7 +49,7 @@ const Frontiers = () => {
           <div
             key={item.name}
             className="group relative aspect-[269/243] w-full cursor-pointer overflow-hidden rounded-2xl"
-            onClick={item.active}
+            onClick={() => item.active()}
           >
             <img src={item.img} alt="" className="size-full object-cover transition-all group-hover:scale-[1.2]" />
             <div
