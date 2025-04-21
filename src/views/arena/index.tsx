@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState, useRef } from 'react'
 import { message, notification, Spin } from 'antd'
-import { useUserStore, userStoreActions } from '@/stores/user.store'
+import { userStoreActions } from '@/stores/user.store'
 import aiModelRequest, { EvaluateValue } from '@/apis/ai-model.api'
 import { SSEClient } from '@/apis/sse-client'
-import ChatHistory, { ChatMessage } from '@/components/chat-bot/history'
+import ChatHistory, { ChatMessage } from '@/components/arena/chat-history'
 import HowItWorksImg from '@/assets/chatbot/chatbot-arena.png'
 import { ArrowUp } from 'lucide-react'
 import { AuthModal } from '@/components/account/auth-modal'
-import PageHead from '@/components/common/page-head'
+// import PageHead from '@/components/common/page-head'
 
 export default function ComparePage() {
   const [input, setInput] = useState('')
@@ -24,7 +24,6 @@ export default function ComparePage() {
   const sseclient = useRef<SSEClient | null>(null)
   const [disableChat, setDisableChat] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
-  const { info } = useUserStore()
 
   const [modelInfo, setModelInfo] = useState<{
     model_a: string
@@ -260,8 +259,6 @@ export default function ComparePage() {
   }, [inputFocused, handleWindowKeyDown])
 
   useEffect(() => {
-    userStoreActions.getUserInfo()
-
     const textarea = inputRef.current
     if (!textarea) return
 
@@ -278,14 +275,7 @@ export default function ComparePage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#1a1a1f] text-white">
-      <PageHead>
-        {info?.user_data.avatar && (
-          <div className="flex items-center">
-            <img src={info?.user_data.avatar || ''} alt="" className="size-8" />
-          </div>
-        )}
-      </PageHead>
+    <div className="min-h-screen text-white">
       {/* Header */}
       <div className="container mx-auto px-4 py-8">
         <h1 className="mb-2 text-center text-[32px] font-bold">⚔️ Codatta Arena</h1>

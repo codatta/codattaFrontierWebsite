@@ -4,6 +4,7 @@ import { lazy } from 'react'
 import RoboticsLayout from '@/layouts/robotics-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
+import ArenaLayout from '@/layouts/arena-layout'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -49,13 +50,17 @@ const DataProfile = lazy(() => import('@/views/data-profile'))
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 const ChatbotArenaPage = lazy(() => import('@/views/arena'))
+const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
         <Route index element={<Navigate to="/app" />} />
-        <Route path="/arena" element={<ChatbotArenaPage />}></Route>
+        <Route path="/arena" element={<ArenaLayout />}>
+          <Route index element={<ChatbotArenaPage />} />
+          <Route path="model/list" element={<ModelListPage />} />
+        </Route>
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>

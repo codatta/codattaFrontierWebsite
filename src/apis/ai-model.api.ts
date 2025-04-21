@@ -15,6 +15,13 @@ export enum EvaluateValue {
   D = 4
 }
 
+export interface AIModelItem {
+  name: string
+  show_name: string
+  description: string
+  org: string
+}
+
 class AIModelRequest {
   constructor(private request: AxiosInstance) {}
 
@@ -34,6 +41,11 @@ class AIModelRequest {
     const res = await this.request.post<
       Response<{ status: number; message: string; model_a: string; model_b: string }>
     >('/ct/model/evaluate', data)
+    return res.data
+  }
+
+  async getModelList() {
+    const res = await this.request.get<Response<AIModelItem[]>>('/ct/model/list')
     return res.data
   }
 }
