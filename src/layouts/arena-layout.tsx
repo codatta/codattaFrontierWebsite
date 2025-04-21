@@ -5,10 +5,12 @@ import { userStoreActions, useUserStore } from '@/stores/user.store'
 import PageHead from '@/components/common/page-head'
 import { arenaStoreActions } from '@/stores/arena.store'
 import ArenaNav from '@/components/arena/arena-nav'
+import cookies from 'js-cookie'
 
 export default function ArenaLayout() {
   useEffect(() => {
-    userStoreActions.getUserInfo()
+    const token = cookies.get('auth') || localStorage.getItem('auth')
+    if (token) userStoreActions.getUserInfo()
     arenaStoreActions.getModelList()
   }, [])
 

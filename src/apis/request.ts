@@ -12,7 +12,7 @@ const request = axios.create({
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const token = cookies.get('auth') || localStorage.getItem('auth')
-  config.headers['token'] = `${token}`
+  if (token) config.headers['token'] = `${token}`
   return config
 }
 
