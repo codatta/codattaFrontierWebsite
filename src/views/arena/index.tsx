@@ -169,7 +169,7 @@ export default function ComparePage() {
         setDisableChat(false)
       }
     },
-    [sendLoading]
+    [sendLoading, task_id]
   )
 
   const onPostFeedback = async (evaluation: EvaluateValue, taskId: string | null) => {
