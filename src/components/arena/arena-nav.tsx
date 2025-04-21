@@ -1,6 +1,17 @@
+import { useArenaStore } from '@/stores/arena.store'
 import { cn } from '@udecode/cn'
 import { ReactNode, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+
+function ModelListNav() {
+  const { modelList } = useArenaStore()
+  return (
+    <span>
+      Model List
+      {modelList.length > 0 && <span> ({modelList.length})</span>}
+    </span>
+  )
+}
 
 interface MenuItem {
   icon?: ReactNode
@@ -17,7 +28,7 @@ const menuItems: MenuItem[] = [
   },
   {
     // icon: <IconQuest color={'white'} size={24} />,
-    label: 'Model List',
+    label: <ModelListNav></ModelListNav>,
     key: '/arena/model/list'
   }
 ]
