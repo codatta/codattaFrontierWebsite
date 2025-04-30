@@ -16,6 +16,9 @@ const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
 const CMULayout = lazy(() => import('@/views/cmu-video-labeling/cmu-layout'))
+// const FormType4 = lazy(() => import('@/views/robotics/form-type-4'))
+// const FormType5 = lazy(() => import('@/views/robotics/form-type-5'))
+const FormType6 = lazy(() => import('@/views/robotics/form-type-6'))
 
 // settings
 const SettingAccount = lazy(() => import('@/views/settings/account'))
@@ -125,6 +128,9 @@ export default function Router() {
             <Route path="ROBOTICS_TPL_000001/:taskId" element={<FormType1 templateId="ROBOTICS_TPL_000001" />} />
             <Route path="ROBOTICS_TPL_000002/:taskId" element={<FormType2 templateId="ROBOTICS_TPL_000002" />} />
             <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
+            {/* <Route path="R6D9_TPL_000001/:taskId" element={<FormType4 templateId="R6D9_TPL_000001" />} /> */}
+            {/* <Route path="CMU_TPL_000001/:taskId" element={<FormType5 templateId="CMU_TPL_000001" />} /> */}
+            <Route path="FOOD_TPL_000001/:taskId" element={<FormType6 templateId="FOOD_TPL_000001" />} />
           </Route>
         </Route>
         <Route path="*" element={<NotFoundPage />} />
