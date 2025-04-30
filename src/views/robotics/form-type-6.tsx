@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { message } from 'antd'
 
 import frontiterApi from '@/apis/frontiter.api'
-import Form4 from '@/components/robotics/form-6'
+import Form6 from '@/components/robotics/form-6'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import PageError from '@/components/robotics/page-error'
 
@@ -57,7 +57,7 @@ export default function FoodScienceSubmitPage(props: { templateId: string }) {
   return (
     <div className="no-scrollbar mx-auto flex h-[calc(100vh-84px)] max-w-[1272px] flex-1 flex-col gap-10 overflow-scroll p-6 text-white lg:flex-row">
       {error && <PageError error={error}></PageError>}
-      {!error && <Form4 onSubmit={submitTaskData} />}
+      {!error && <Form6 onSubmit={submitTaskData} />}
 
       <SubmitSuccessModal points={rewardPoints} open={modalShow} onClose={() => window.history.back()} />
     </div>
