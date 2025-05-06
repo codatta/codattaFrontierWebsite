@@ -13,7 +13,9 @@ const Home = lazy(() => import('@/views/home'))
 const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
-const FormType5 = lazy(() => import('@/views/robotics/form-type-5'))
+const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
+const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
+const CMULayout = lazy(() => import('@/views/cmu-video-labeling/cmu-layout'))
 
 // settings
 const SettingAccount = lazy(() => import('@/views/settings/account'))
@@ -50,6 +52,9 @@ const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 const ModelListPage = lazy(() => import('@/views/arena/model-list'))
+// const MCPArenaPage = lazy(() => import('@/views/arena/mcp-arena'))
+
+const NotFoundPage = lazy(() => import('@/views/not-found'))
 
 export default function Router() {
   return (
@@ -59,6 +64,7 @@ export default function Router() {
         <Route path="/arena" element={<ArenaLayout />}>
           <Route index element={<ChatbotArenaPage />} />
           <Route path="model/list" element={<ModelListPage />} />
+          {/* <Route path="mcp" element={<MCPArenaPage />} /> */}
         </Route>
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
@@ -107,7 +113,10 @@ export default function Router() {
 
         <Route path="/referral/:code" element={<ReferralLanding />} />
 
-        <Route path="/frontier/robotics/CMU_TPL_000001/:taskId" element={<FormType5 templateId="CMU_TPL_000001" />} />
+        <Route path="/frontier/project/CMU_TPL_000001/:taskId" element={<CMULayout />}>
+          <Route index element={<CMUVideoLabelingTaskList />} />
+          <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
+        </Route>
 
         <Route path="/frontier">
           <Route path="robotics" element={<RoboticsLayout />}>
@@ -116,6 +125,7 @@ export default function Router() {
             <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
           </Route>
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )

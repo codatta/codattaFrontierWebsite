@@ -1,5 +1,5 @@
 import TransitionEffect from '@/components/common/transition-effect'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 import PageHead from '@/components/common/page-head'
@@ -15,12 +15,13 @@ export default function ArenaLayout() {
   }, [])
 
   const { info } = useUserStore()
+  const navigate = useNavigate()
 
   return (
     <TransitionEffect className="bg-[#1a1a1f]">
       <PageHead>
         {info?.user_data.avatar && (
-          <div className="flex items-center">
+          <div className="flex cursor-pointer items-center" onClick={() => navigate('/app/settings/account')}>
             <img src={info?.user_data.avatar || ''} alt="" className="size-8 rounded-full" />
           </div>
         )}
