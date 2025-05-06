@@ -85,7 +85,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       }
       return file
     })
-    setFileList(updatedFileList)
     const imageUrls = updatedFileList
       .filter((file) => file.status === 'done')
       .map((file) => ({
@@ -94,6 +93,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
         name: file.response?.name
       }))
     form.setFieldsValue({ images: imageUrls })
+    setFileList(updatedFileList)
   }
 
   const uploadMedia: UploadProps['customRequest'] = async (options: UploadRequestOption) => {
@@ -152,16 +152,16 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
                 beforeUpload={beforeUpload}
                 className={cn(
                   'text-center transition-all',
-                  '[&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-1 [&_.ant-upload-list-picture-card]:!gap-4',
+                  '[&_.ant-upload-list-item-container]:!h-[180px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-1 [&_.ant-upload-list-picture-card]:!gap-4 [&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
                   fileList.length > 0
-                    ? '[&_.ant-upload-list-item-container]:!h-[180px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-picture-card]:!grid-cols-3 [&_.ant-upload-select]:!col-span-1 [&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full'
-                    : '[&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full'
+                    ? '[&_.ant-upload-list-picture-card]:!grid-cols-3 [&_.ant-upload-select]:!col-span-1'
+                    : ''
                 )}
-                maxCount={3}
+                // maxCount={3}
                 accept=".jpg,.png,.gif,.webp"
                 customRequest={uploadMedia}
               >
-                {fileList.length >= 5 ? null : uploadButton}
+                {fileList.length >= 3 ? null : uploadButton}
               </Upload>
             </div>
           </Form.Item>
