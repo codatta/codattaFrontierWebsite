@@ -10,7 +10,6 @@ import TaskList from '@/components/robotics/task-list'
 // import DiscordIcon from '@/assets/robotics/discord-logo.svg'
 // import DocIcon from '@/assets/robotics/doc-logo.svg'
 // import WebIcon from '@/assets/robotics/web-logo.svg'
-import DevInfoImage from '@/assets/robotics/dev-info-image.png'
 
 export default function Component() {
   const navigate = useNavigate()
@@ -25,26 +24,8 @@ export default function Component() {
         </div>
         {/* title */}
         <div className="mb-12">
-          <a href="https://r6d9.ai/" target="_blank">
-            <img src={DevInfoImage} alt="" />
-          </a>
           <div className="mb-3 mt-6 flex items-center justify-between">
             <div className="text-xl font-bold">Robotics</div>
-            {/* <div className="flex gap-3">
-              <a href="https://r6d9.ai/" target="_blank">
-                <img className="cursor-pointer" src={WebIcon} alt="" />
-              </a>
-              <a href="https://x.com/Roboagent69" target="_blank">
-                <img className="cursor-pointer" src={XIcon} alt="" />
-              </a>
-
-              <a href="https://robox-lab.gitbook.io/r6d9-whitepaper" target="_blank">
-                <img className="cursor-pointer" src={DocIcon} alt="" />
-              </a>
-              <a href="https://t.me/Roboagent69Channel" target="_blank">
-                <img className="cursor-pointer" src={TgIcon} alt="" />
-              </a>
-            </div> */}
           </div>
           <div className="text-white/55">
             Visual data annotation is essential for training large AI models in robotics, especially for object
