@@ -126,7 +126,7 @@ const NotFoundPage: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <h2 className="text-2xl font-medium text-gray-200">Lost in Digital Space</h2>
+          <h2 className="text-2xl font-medium text-white">Lost in Data Space</h2>
           <p className="max-w-md text-gray-400">
             You seem to have entered a non-existent dimension. Our system cannot find the page you requested.
           </p>

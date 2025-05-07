@@ -18,7 +18,11 @@ const RoboticsTaskList: React.FC = () => {
   } = useSnapshot(frontiersStore)
 
   const goToForm = (data: TaskDetail) => {
-    navigate(`/frontier/robotics/${data.data_display.template_id}/${data.task_id}`)
+    if (data.data_display.template_id === 'CMU_TPL_000001') {
+      navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+    } else {
+      navigate(`/frontier/robotics/${data.data_display.template_id}/${data.task_id}`)
+    }
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {

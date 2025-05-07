@@ -1,10 +1,9 @@
 import { Button, Radio, Checkbox } from 'antd'
 import { useEffect, useState } from 'react'
-import PlayCircle from '@/assets/robotics/play-circle.svg'
 import InformationLine from '@/assets/robotics/information-line.svg'
 import { CMUDataRequirements } from '@/apis/frontiter.api'
-import VideoModal from '@/components/robotics/video-modal'
 import LightbulbLine from '@/assets/robotics/lightbulb-line.svg'
+import VideoPlayer from '@/components/cmu/video-player'
 
 interface Form5ComponentProps {
   data_requirements: CMUDataRequirements
@@ -12,44 +11,54 @@ interface Form5ComponentProps {
   onSubmit: (data: object) => Promise<unknown>
 }
 
+interface Part1FormData {
+  aVsBStatus: string
+  reason: string
+}
+
 export default function Form5Component({ data_requirements, onShowGuide, onSubmit }: Form5ComponentProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [videoWatched, setVideoWatched] = useState(false)
   const [step, setStep] = useState(1)
-  const [currentVideo, setCurrentVideo] = useState<{ img: string; url: string } | null>(null)
-  const [part1Form, setPart1Form] = useState<{
-    aVsBStatus: string
-    reason: string
-  }>({
+  const [part1Form, setPart1Form] = useState<Part1FormData>({
     aVsBStatus: '',
     reason: ''
   })
-  const [part2Form, setPart2Form] = useState<Array<string>>([])
+  const [part2Form, setPart2Form] = useState<string[]>([])
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 
   const handleSubmit = async () => {
-    if (currentQuestionIndex >= data_requirements?.part2?.questions?.length - 1) {
+    const isLastQuestion = currentQuestionIndex >= (data_requirements?.part2?.questions?.length || 0) - 1
+    if (isLastQuestion) {
       setIsSubmitting(true)
-      await onSubmit({
-        part1: part1Form,
-        part2: part2Form
-      })
-      setPart1Form({
-        aVsBStatus: 'A',
-        reason: ''
-      })
-      setPart2Form([])
-      setCurrentQuestionIndex(0)
-      setIsSubmitting(false)
+      try {
+        console.log('submit', part1Form, part2Form)
+        await onSubmit({
+          part1: part1Form,
+          part2: part2Form
+        })
+        // Reset form after successful submission
+        setPart1Form({
+          aVsBStatus: '',
+          reason: ''
+        })
+        setPart2Form([])
+        setCurrentQuestionIndex(0)
+        setStep(1)
+      } finally {
+        setIsSubmitting(false)
+      }
       return
     }
+    // Move to next question if not the last one
     setCurrentQuestionIndex((prev) => prev + 1)
   }
 
+  // Initialize part2Form array based on the number of questions
   useEffect(() => {
-    const length = data_requirements?.part2?.questions?.length
-    if (length > 0) {
-      setPart2Form(new Array(length).fill(''))
+    const questionsCount = data_requirements?.part2?.questions?.length || 0
+    if (questionsCount > 0) {
+      setPart2Form(new Array(questionsCount).fill(''))
     }
   }, [data_requirements])
 
@@ -70,23 +79,11 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
             <div className="mb-3 inline-block rounded-xl bg-[rgb(48,44,73)] px-2 text-sm font-semibold leading-[22px] text-[#875DFF]">
               Question
             </div>
-            <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">How to slice a mango?</h3>
-            <div className="mb-6 flex gap-4">
+            <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">{data_requirements.queryText}</h3>
+            <div className="mb-6 grid grid-cols-2 gap-4">
               {data_requirements?.part1?.videos?.map((video, index) => (
-                <div
-                  key={index}
-                  className="relative overflow-hidden rounded-xl"
-                  onClick={() => {
-                    setCurrentVideo({
-                      img: video?.image_url || '',
-                      url: video?.video_url || ''
-                    })
-                  }}
-                >
-                  <img src={video?.image_url} alt="Mango cut pattern" className="h-[180px] w-[240px] object-cover" />
-                  <div className="absolute left-0 top-0 flex size-full items-center justify-center bg-black/30">
-                    <img src={PlayCircle} alt="" />
-                  </div>
+                <div key={`video-${index}`} className="w-full">
+                  <VideoPlayer className="w-full rounded-xl" videoUrl={video.video_url} />
                 </div>
               ))}
             </div>
@@ -168,7 +165,7 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
             <div className="mb-3 w-full">
               <div className="w-full rounded-xl border-2 border-primary bg-transparent">
                 <div
-                  className="h-1 rounded-xl rounded-r-none bg-primary"
+                  className="h-1 rounded-xl rounded-r-none bg-primary transition-all"
                   style={{
                     width: `${((currentQuestionIndex + 1) / (data_requirements?.part2?.questions?.length || 1)) * 100}%`
                   }}
@@ -181,18 +178,13 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
               <div className="mb-3 inline-block rounded-xl bg-[rgb(48,44,73)] px-2 text-sm font-semibold leading-[22px] text-[#875DFF]">
                 Question
               </div>
-              <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">How to slice a mango?</h3>
-              <div className="flex items-center gap-4">
-                {data_requirements?.part2?.videos?.map((video, index) => (
-                  <div
-                    key={index}
-                    className="relative h-[180px] w-[268px] overflow-hidden rounded-xl"
-                    onClick={() => setCurrentVideo({ img: video.image_url || '', url: video.video_url || '' })}
-                  >
-                    <img src={video.image_url} alt="Mango slicing technique" className="size-full object-cover" />
-                    <div className="absolute left-0 top-0 flex size-full items-center justify-center bg-black/30">
-                      <img src={PlayCircle} alt="Play button" />
-                    </div>
+              <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">
+                {data_requirements?.part2?.questions?.[currentQuestionIndex]?.title || data_requirements.queryText}
+              </h3>
+              <div className="grid grid-cols-2 items-center gap-4">
+                {data_requirements?.part2?.videos?.map((video) => (
+                  <div key={video.video_id}>
+                    <VideoPlayer className="rounded-xl" videoUrl={video.video_url}></VideoPlayer>
                   </div>
                 ))}
               </div>
@@ -202,22 +194,15 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
                 <h4 className="text-base font-medium text-white">
                   {data_requirements?.part2?.questions?.[currentQuestionIndex]?.title}
                 </h4>
-                {/* <h4 className="text-base font-medium text-white">Rate the video's process completeness</h4>
-                <p className="text-sm text-gray-400">
-                  Evaluate how completely the video shows all steps of the process.
-                </p> */}
               </div>
               <div className="flex flex-col gap-3">
                 <Radio.Group
                   className="flex flex-col gap-3"
-                  onChange={(e) =>
-                    setPart2Form((prev) => {
-                      console.log(e.target.value)
-                      return prev.map((_, i) => {
-                        return i === currentQuestionIndex ? e.target.value : _
-                      })
-                    })
-                  }
+                  onChange={(e) => {
+                    setPart2Form((prev) =>
+                      prev.map((value, i) => (i === currentQuestionIndex ? e.target.value : value))
+                    )
+                  }}
                   value={part2Form[currentQuestionIndex]}
                 >
                   {data_requirements?.part2?.questions?.[currentQuestionIndex]?.options?.map((option, index) => (
@@ -234,7 +219,8 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
               </Button>
               <Button
                 type="primary"
-                className="h-10 w-[240px] rounded-lg bg-[#8A5AEE] text-white"
+                className="w-[240px] rounded-lg bg-[#8A5AEE] text-white"
+                size="large"
                 loading={isSubmitting}
                 onClick={handleSubmit}
               >
@@ -244,7 +230,6 @@ export default function Form5Component({ data_requirements, onShowGuide, onSubmi
           </div>
         </div>
       )}
-      <VideoModal onClose={() => setCurrentVideo(null)} video={currentVideo!} />
     </div>
   )
 }

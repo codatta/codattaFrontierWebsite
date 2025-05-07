@@ -63,7 +63,7 @@ export interface VideoItem {
   video_id: string
   desc?: string
   image_url?: string
-  video_url?: string
+  video_url: string
 }
 
 export interface FrontierItemType {
@@ -145,23 +145,23 @@ class frontier {
             part1: {
               videos: [
                 {
-                  video_id: 'rea_011',
-                  image_url: 'https://xxx.bbb.ccc/aa',
-                  video_url: 'https://xxx.bbb.ccc/aa'
+                  video_id: 'CV_q00A_02',
+                  video_url: 'https://static.codatta.io/cmu/videos/CV_q00A_02.mp4'
+                  // video_url: 'https://xxx.bbb.ccc/aa'
                 },
                 {
-                  video_id: 'rea_012',
-                  image_url: 'https://xxx.bbb.ccc/aa',
-                  video_url: 'https://xxx.bbb.ccc/aa'
+                  video_id: 'CV_q01A_00',
+                  video_url: 'https://static.codatta.io/cmu/videos/CV_q01A_00.mp4'
+                  // video_url: 'https://xxx.bbb.ccc/aa'
                 }
               ]
             },
             part2: {
               videos: [
                 {
-                  video_id: 'rea_011',
-                  image_url: 'https://xxx.bbb.ccc/aa',
-                  video_url: 'https://xxx.bbb.ccc/aa'
+                  video_id: 'CV_q00A_02',
+                  // image_url: 'https://xxx.bbb.ccc/aa',
+                  video_url: 'https://static.codatta.io/cmu/videos/CV_q00A_02.mp4'
                 }
               ],
               questions: [
@@ -175,6 +175,16 @@ class frontier {
                     },
                     {
                       value: '2',
+                      label: 'jhjakdfjlj',
+                      content: 'alksdjfalksjdflakjdfs'
+                    },
+                    {
+                      value: '3',
+                      label: 'jhjakdfjlj',
+                      content: 'alksdjfalksjdflakjdfs'
+                    },
+                    {
+                      value: '4',
                       label: 'jhjakdfjlj',
                       content: 'alksdjfalksjdflakjdfs'
                     }

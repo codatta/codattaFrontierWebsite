@@ -1,7 +1,7 @@
 import TransitionEffect from '@/components/common/transition-effect'
 
 import { ArrowLeft } from 'lucide-react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import TaskList from '@/components/robotics/task-list'
 import { useEffect, useState } from 'react'
@@ -16,25 +16,22 @@ import { Spin } from 'antd'
 
 export default function Component() {
   const navigate = useNavigate()
-  const { state } = useLocation()
   const { frontier_id } = useParams()
   const [frontierInfo, setFrontierInfo] = useState<FrontierItemType | null>(null)
   const [loading, setLoading] = useState(true)
-  console.log(state, frontier_id)
+
+  async function getFrontierInfo(frontier_id: string) {
+    setLoading(true)
+    const res = await frontierApi.getFrontierInfo(frontier_id)
+    if (res.errorCode === 0) {
+      setFrontierInfo(res.data)
+    }
+    setLoading(false)
+  }
 
   useEffect(() => {
     if (!frontier_id) return
-    frontierApi
-      .getFrontierInfo(frontier_id)
-      .then((res) => {
-        console.log(res)
-        if (res.errorCode === 0) {
-          setFrontierInfo(res.data)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    getFrontierInfo(frontier_id)
   }, [frontier_id])
 
   return (
@@ -55,18 +52,14 @@ export default function Component() {
                 {frontierInfo?.media_link
                   ?.filter((item) => item.value !== '')
                   ?.map((item) => {
-                    const icon =
-                      item.name === MediaName.DOC
-                        ? DocIcon
-                        : item.name === MediaName.WEBSITE
-                          ? WebIcon
-                          : item.name === MediaName.TWITTER
-                            ? XIcon
-                            : item.name === MediaName.TELEGRAM
-                              ? TgIcon
-                              : item.name === MediaName.DISCORD
-                                ? DiscordIcon
-                                : ''
+                    const mediaIconMap = {
+                      [MediaName.DOC]: DocIcon,
+                      [MediaName.WEBSITE]: WebIcon,
+                      [MediaName.TWITTER]: XIcon,
+                      [MediaName.TELEGRAM]: TgIcon,
+                      [MediaName.DISCORD]: DiscordIcon
+                    }
+                    const icon = mediaIconMap[item.name] || ''
                     return (
                       <a href={item.value} target="_blank">
                         <img className="cursor-pointer" src={icon} alt="" />
