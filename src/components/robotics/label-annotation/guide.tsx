@@ -97,7 +97,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                       }
                     }}
                   >
-                    <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                    <source src="https://static.codatta.io/cmu/videos/CV_q30A_00.mp4" type="video/mp4" />
                   </video>
                 </div>
                 {/* Video B */}
@@ -130,7 +130,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                       }
                     }}
                   >
-                    <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                    <source src="https://static.codatta.io/cmu/videos/CV_q30A_01.mp4" type="video/mp4" />
                   </video>
                 </div>
               </div>
@@ -199,7 +199,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                     }
                   }}
                 >
-                  <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                  <source src="https://static.codatta.io/cmu/videos/CV_q30A_01.mp4" type="video/mp4" />
                 </video>
               </div>
 
