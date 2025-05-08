@@ -8,7 +8,7 @@ export default function MCPArenaPage() {
   const [inputValue, setInputValue] = useState('')
 
   const [servers, setServers] = useState<IMCPServer[]>([])
-  const [scrolled, setScrolled] = useState(false)
+  // const [scrolled, setScrolled] = useState(false)
   const [messageApi, contextHolder] = message.useMessage()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -64,11 +64,11 @@ export default function MCPArenaPage() {
   }
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 30)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    // const handleScroll = () => {
+    //   setScrolled(window.scrollY > 30)
+    // }
+    // window.addEventListener('scroll', handleScroll)
+    // return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (

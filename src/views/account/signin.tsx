@@ -35,7 +35,7 @@ export default function AccountSignin() {
   }
 
   async function handleLogin(res: ILoginResponse) {
-    localStorage.setItem('token', res.old_token)
+    localStorage.setItem('token', res.old_token || '')
     localStorage.setItem('uid', res.user_id)
     localStorage.setItem('auth', res.token)
 

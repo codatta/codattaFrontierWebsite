@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import frontiterApi, { CMUDataRequirements } from '@/apis/frontiter.api'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
@@ -16,7 +16,7 @@ export default function CMUVideoLabeling(props: { templateId: string }) {
   const { questId, taskId } = useParams()
   const [question, setQuestion] = useState<CMUDataRequirements>()
   const [modalShow, setModalShow] = useState(false)
-  const [rewardPoints, setRewardPoints] = useState(200)
+  const [rewardPoints, _setRewardPoints] = useState(200)
   const [showGuide, setShowGuide] = useState(localStorage.getItem('task-guide-showed') !== 'true')
   const cmuStore = useCMUStore()
   const [part1Data, setPart1Data] = useState<Part1FormData>()

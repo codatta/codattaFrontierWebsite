@@ -4,7 +4,7 @@ import frontiterApi, { CMUDataRequirements } from '@/apis/frontiter.api'
 
 type TCMUStore = {
   taskList: CMUDataRequirements[]
-  taskStatus: number
+  taskStatus: number | string
 }
 
 export const cmuStore = proxy<TCMUStore>({

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 
 const NotFoundPage: React.FC = () => {
   const navigate = useNavigate()
-  const [countdown, setCountdown] = useState(10)
+  const [countdown] = useState(10)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const containerRef = useRef<HTMLDivElement>(null)
   const gridItemsRef = useRef<Array<HTMLDivElement | null>>([])
@@ -29,7 +29,7 @@ const NotFoundPage: React.FC = () => {
   useEffect(() => {
     if (!containerRef.current) return
 
-    gridItemsRef.current.forEach((item, index) => {
+    gridItemsRef.current.forEach((item, _index) => {
       if (!item) return
 
       const rect = containerRef.current!.getBoundingClientRect()

@@ -11,11 +11,13 @@ interface VideoInt {
 const defaultVideos: VideoItem[] = [
   {
     image_url: 'https://static.codatta.io/static/images/robotics-l1-20250109-100820.jpeg',
-    video_url: 'https://static.codatta.io/static/video/Robotics-L1-20250108-114248_v2.mp4'
+    video_url: 'https://static.codatta.io/static/video/Robotics-L1-20250108-114248_v2.mp4',
+    video_id: 'Robotics-L1-20250108-114248_v2'
   },
   {
     image_url: 'https://static.codatta.io/static/images/robotics-l3-20250109-100839.jpeg',
-    video_url: 'https://static.codatta.io/static/video/Robotics-L3-20250108-114304_v2.mp4'
+    video_url: 'https://static.codatta.io/static/video/Robotics-L3-20250108-114304_v2.mp4',
+    video_id: 'Robotics-L3-20250108-114304_v2'
   }
 ]
 const RoboticsRewordGuide = ({ videos = defaultVideos }: { videos?: Array<VideoItem> }) => {

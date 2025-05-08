@@ -8,9 +8,9 @@ import TaskTimesUp from '@/assets/cmu-video-labeling/task-timesup.svg'
 import { cmuStoreActions, useCMUStore } from '@/stores/cmu.store'
 import USDRewardIcon from '@/assets/cmu-video-labeling/usd-reward-icon.png'
 
-function CMUTaskItem(props: { task: CMUDataRequirements }) {
+function CMUTaskItem(props: { task: unknown }) {
   const navigate = useNavigate()
-  const { task } = props
+  const task = JSON.parse(JSON.stringify(props.task)) as CMUDataRequirements
 
   async function handleTaskClick(item: CMUDataRequirements) {
     console.log(item, 'handleTaskClick')
@@ -79,13 +79,17 @@ export default function CMUVideoTaskList() {
     if (cmuStore.taskStatus === 3) setShowChangeGroup(true)
   }, [cmuStore.taskStatus])
 
+  function handleClaimRewardClick() {
+    window.open('https://forms.gle/VQ7pPtCRKMWYDxmPA')
+  }
+
   return (
     <div className="w-full">
       <div className="mb-3 flex w-full items-center justify-between">
         <h1 className="text-lg font-bold">Video Annotation</h1>
         <div className="flex items-center gap-3">
           Task {finishedTaskCount} of {cmuStore.taskList.length}
-          <Button shape="round" size="large" type="primary" disabled={!canClaimReward}>
+          <Button shape="round" size="large" type="primary" disabled={!canClaimReward} onClick={handleClaimRewardClick}>
             Claim Reward
           </Button>
         </div>
