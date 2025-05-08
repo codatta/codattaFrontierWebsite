@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import AngleRight from '@/assets/crypto/angle-right.svg'
 
-// import { roboticsStore, changeRoboticsFilter } from '@/stores/robotics-notstart.store'
 import { frontiersStore, changeFrontiersFilter } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
 import { TaskDetail } from '@/apis/frontiter.api'
@@ -31,7 +30,7 @@ const RoboticsTaskList: React.FC = () => {
 
   useEffect(() => {
     changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
-  }, [page, page_size])
+  }, [page, page_size, frontier_id])
 
   return (
     <div>

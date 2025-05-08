@@ -1,33 +1,44 @@
-import frontiterApi, { CMUDataRequirements } from '@/apis/frontiter.api'
-import { Button, Modal } from 'antd'
+import { CMUDataRequirements } from '@/apis/frontiter.api'
+import { Button, Modal, Spin } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Check, Info } from 'lucide-react'
 import TaskRefresh from '@/assets/cmu-video-labeling/task-refresh.svg'
 import TaskTimesUp from '@/assets/cmu-video-labeling/task-timesup.svg'
+import { cmuStoreActions, useCMUStore } from '@/stores/cmu.store'
+import USDRewardIcon from '@/assets/cmu-video-labeling/usd-reward-icon.png'
 
 function CMUTaskItem(props: { task: CMUDataRequirements }) {
   const navigate = useNavigate()
   const { task } = props
 
   async function handleTaskClick(item: CMUDataRequirements) {
-    navigate(`/frontier/project/CMU_TPL_000001/7227058050400100824/quest/${item.num}`, {
-      state: item
-    })
+    console.log(item, 'handleTaskClick')
+
+    if (item.status === 2) return
+    navigate(`/frontier/project/CMU_TPL_000001/7227058050400100824/quest/${item.num}`)
   }
 
   return (
-    <div
-      className="flex items-center justify-between rounded-2xl border border-white/10 p-6"
-      key={task.num}
-      onClick={() => handleTaskClick(task)}
-    >
-      <span>{task.queryText}</span>
-      <div className="flex min-w-[160px] shrink-0 justify-end">
+    <div className="flex items-center justify-start gap-4 rounded-2xl border border-white/10 p-6" key={task.num}>
+      <div className="flex flex-col items-center">
+        <img
+          src="https://static.codatta.io/static/images/23910bf5647f1d35fa92e6b1688f5869e8335f16.png"
+          alt=""
+          className="size-12"
+        />
+        <span className="text-xs">200</span>
+      </div>
+      <div className="flex flex-col items-center">
+        <img src={USDRewardIcon} alt="" className="size-12" />
+        <span className="text-xs">1</span>
+      </div>
+      <span>{task.querytext}</span>
+      <div className="ml-auto flex min-w-[160px] shrink-0 justify-end">
         {task.status === 2 ? (
           <span>Finished</span>
         ) : (
-          <Button shape="round" size="large" type="primary" className="w-[120px]">
+          <Button onClick={() => handleTaskClick(task)} shape="round" size="large" type="primary" className="w-[120px]">
             Submit
           </Button>
         )}
@@ -37,36 +48,43 @@ function CMUTaskItem(props: { task: CMUDataRequirements }) {
 }
 
 export default function CMUVideoTaskList() {
-  const [taskList, setTaskList] = useState<CMUDataRequirements[]>([])
-  const [taskStatus, setTaskStatus] = useState<number | undefined>()
   const [showNoMoreQuestions, setShowNoMoreQuestions] = useState<boolean>(false)
-  const [showChangeGroup, setShowChangeGroup] = useState<boolean>(true)
+  const [showChangeGroup, setShowChangeGroup] = useState<boolean>(false)
   const { taskId } = useParams()
+  const cmuStore = useCMUStore()
+  const [loading, setLoading] = useState<boolean>(false)
+
+  const finishedTaskCount = useMemo(
+    () => cmuStore.taskList.filter((item) => item.status === 2).length,
+    [cmuStore.taskList]
+  )
+  const canClaimReward = useMemo(
+    () => finishedTaskCount === cmuStore.taskList.length && finishedTaskCount > 0,
+    [finishedTaskCount, cmuStore.taskList]
+  )
 
   async function getTaskList(taskId: string) {
-    const res = await frontiterApi.getTaskDetail(taskId)
-    setTaskList(res.data.questions || [])
-    setTaskStatus(res.data.question_status)
+    setLoading(true)
+    await cmuStoreActions.getTaskList(taskId)
+    setLoading(false)
   }
 
-  const finishedTaskCount = useMemo(() => taskList.filter((item) => item.status === 2).length, [taskList])
-  const canClaimReward = useMemo(() => finishedTaskCount === taskList.length, [finishedTaskCount, taskList])
-
   useEffect(() => {
-    getTaskList(taskId!)
+    if (!taskId) return
+    getTaskList(taskId)
   }, [taskId])
 
   useEffect(() => {
-    if (taskStatus === 2) setShowNoMoreQuestions(true)
-    if (taskStatus === 3) setShowChangeGroup(true)
-  }, [taskStatus])
+    if (cmuStore.taskStatus === 2) setShowNoMoreQuestions(true)
+    if (cmuStore.taskStatus === 3) setShowChangeGroup(true)
+  }, [cmuStore.taskStatus])
 
   return (
     <div className="w-full">
       <div className="mb-3 flex w-full items-center justify-between">
         <h1 className="text-lg font-bold">Video Annotation</h1>
         <div className="flex items-center gap-3">
-          Task {finishedTaskCount} of {taskList.length}
+          Task {finishedTaskCount} of {cmuStore.taskList.length}
           <Button shape="round" size="large" type="primary" disabled={!canClaimReward}>
             Claim Reward
           </Button>
@@ -82,12 +100,14 @@ export default function CMUVideoTaskList() {
       </div>
 
       <div>
-        <h1 className="mb-3 text-lg font-bold">Multiple Tasks</h1>
-        <div className="flex flex-col gap-3">
-          {taskList.map((item) => (
-            <CMUTaskItem key={item.num} task={item} />
-          ))}
-        </div>
+        <Spin spinning={loading}>
+          <h1 className="mb-3 text-lg font-bold">Multiple Tasks</h1>
+          <div className="flex flex-col gap-3">
+            {cmuStore.taskList.map((item) => (
+              <CMUTaskItem key={item.num} task={item} />
+            ))}
+          </div>
+        </Spin>
       </div>
 
       <Modal open={showChangeGroup} onCancel={() => setShowChangeGroup(false)} closable={false} footer={null} centered>

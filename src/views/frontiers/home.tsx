@@ -36,12 +36,12 @@ export default function Component() {
 
   return (
     <TransitionEffect>
-      <Spin spinning={loading}>
-        <div className="">
-          <div className="mb-6 flex items-center gap-2">
-            <ArrowLeft size={14} onClick={() => navigate(-1)} className="cursor-pointer" />
-            <h1>Back</h1>
-          </div>
+      <div className="">
+        <div className="mb-6 flex items-center gap-2">
+          <ArrowLeft size={14} onClick={() => navigate(-1)} className="cursor-pointer" />
+          <h1>Back</h1>
+        </div>
+        <Spin spinning={loading}>
           <div className="mb-12">
             <div className="overflow-hidden rounded-lg">
               {frontierInfo?.banner && <img src={frontierInfo?.banner} alt="" />}
@@ -70,12 +70,14 @@ export default function Component() {
             </div>
             <div className="text-white/55">{frontierInfo?.description}</div>
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="mb-6">
             <GetRewardGuide videos={frontierInfo?.videos ?? []} />
-            <TaskList />
           </div>
+        </Spin>
+        <div>
+          <TaskList />
         </div>
-      </Spin>
+      </div>
     </TransitionEffect>
   )
 }
