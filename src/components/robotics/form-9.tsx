@@ -1,4 +1,4 @@
-import { Button, Form, message, Upload, Input, Modal } from 'antd'
+import { Button, Form, message, Upload, Input, Modal, Select } from 'antd'
 import { useState, ReactNode } from 'react'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
@@ -6,6 +6,7 @@ import { cn } from '@udecode/cn'
 import imagePlus from '@/assets/icons/image-plus.svg'
 import commonApi from '@/api-v1/common.api'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
+import langs from '@/components/common/langs'
 
 const { TextArea } = Input
 
@@ -23,7 +24,7 @@ const uploadButton = (
   <div className="flex size-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] bg-transparent hover:border-blue-500">
     <img src={imagePlus} alt="Upload" />
     <div className="mt-3 flex text-sm text-white">
-      Upload clear food-related images (up to 3). Ensure subjects are prominent and well-lit.
+      Upload a clear recording of the entered text (only one file allowed), size must not exceed 20MB.
     </div>
   </div>
 )
@@ -53,18 +54,18 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
   }
 
   const beforeUpload = (file: RcFile) => {
+    console.log(file.type)
     const isJpgOrPngOrGif =
-      file.type === 'image/jpg' ||
-      file.type === 'image/jpeg' ||
-      file.type === 'image/png' ||
-      file.type === 'image/gif' ||
-      file.type === 'image/webp'
+      file.type === 'audio/mpeg' ||
+      file.type === 'audio/wav' ||
+      file.type === 'audio/mp4' ||
+      file.type === 'audio/x-m4a'
     if (!isJpgOrPngOrGif) {
-      message.error('Image format not supported. Please upload JPG, PNG, GIF, or WebP.')
+      message.error('You can only upload mp3/m4a/wav files!')
     }
-    const isLt10M = file.size / 1024 / 1024 <= 10
+    const isLt10M = file.size / 1024 / 1024 <= 20
     if (!isLt10M) {
-      message.error('File size exceeds limit. Please upload an image smaller than 10MB.')
+      message.error('File must be smaller than 10MB!')
     }
     return isJpgOrPngOrGif && isLt10M
   }
@@ -89,15 +90,15 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       }
       return file
     })
-    const imageUrls = updatedFileList
+    setFileList(updatedFileList)
+    const fileUrls = updatedFileList
       .filter((file) => file.status === 'done')
       .map((file) => ({
         uid: file.uid,
         url: file.response?.url,
         name: file.response?.name
       }))
-    form.setFieldsValue({ images: imageUrls })
-    setFileList(updatedFileList)
+    form.setFieldsValue({ speech_audio: fileUrls })
   }
 
   const uploadMedia: UploadProps['customRequest'] = async (options: UploadRequestOption) => {
@@ -126,7 +127,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
 
   return (
     <div className="flex-1">
-      <h2 className="mb-4 pr-6 text-xl font-semibold text-white">FoodScience Data Collection Platform</h2>
+      <h2 className="mb-4 pr-6 text-xl font-semibold text-white">Speech Data Collection Platform</h2>
 
       <Form
         name="form4"
@@ -138,56 +139,71 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       >
         <div className="rounded-2xl bg-[#252532] p-6">
           <Form.Item
-            label="Images"
-            name="images"
+            label="Speech Language"
+            name="language"
             rules={[
               {
                 required: true,
-                message: 'Please upload at least one image'
+                message: 'Please select the language for reading.'
+              }
+            ]}
+          >
+            <Select
+              showSearch
+              allowClear
+              filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+              placeholder="Please select the language for reading."
+              options={langs}
+            >
+              {/* <Select.Option value="demo">Demo</Select.Option> */}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Speech Audio"
+            name="speech_audio"
+            rules={[
+              {
+                required: true,
+                message: 'Please upload at least one audio'
               }
             ]}
           >
             <div>
               <Upload
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
                 onChange={handleChange}
                 beforeUpload={beforeUpload}
                 className={cn(
-                  'text-center transition-all',
-                  '[&_.ant-upload-list-item-container]:!h-[180px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-1 [&_.ant-upload-list-picture-card]:!gap-4 [&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
+                  'text-left transition-all [&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
                   fileList.length > 0
-                    ? '[&_.ant-upload-list-picture-card]:!grid-cols-3 [&_.ant-upload-select]:!col-span-1'
+                    ? '[&_.ant-upload-list-item-container]:!col-start-1 [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-text]:!grid [&_.ant-upload-list-text]:!grid-cols-3'
                     : ''
                 )}
-                // maxCount={3}
-                accept=".jpg,.png,.gif,.webp"
+                accept=".wav,.mp3,.m4a"
                 customRequest={uploadMedia}
               >
-                {fileList.length >= 3 ? null : uploadButton}
+                {fileList.length === 0 && uploadButton}
               </Upload>
             </div>
           </Form.Item>
           <Form.Item
-            label="Food Description"
-            name="food_description"
+            label="Speech Text"
+            name="speech_text"
             rules={[
               {
                 required: true,
-                message: 'Please enter food description.'
+                message: 'Please enter the text to be read aloud, up to 400 characters, matching the selected language.'
               },
               {
-                max: 1000,
-                message: 'Text cannot exceed 1000 characters'
+                max: 400,
+                message: 'Text cannot exceed 400 characters'
               }
             ]}
           >
             <TextArea
-              placeholder="Describe the food name, key ingredients, flavor profile, and calorie information if available."
+              placeholder="Enter speech text here..."
               showCount
-              maxLength={1000}
-              autoSize={{ minRows: 3, maxRows: 6 }}
+              maxLength={400}
+              autoSize={{ minRows: 3, maxRows: 4 }}
               className="resize-none rounded-lg border border-solid border-[#FFFFFF1F] bg-transparent"
             />
           </Form.Item>

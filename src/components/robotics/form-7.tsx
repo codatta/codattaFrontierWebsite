@@ -1,11 +1,12 @@
 import { Button, Form, message, Upload, Input, Modal } from 'antd'
 import { useState, ReactNode } from 'react'
-import type { RcFile } from 'antd/es/upload'
-import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
 import { cn } from '@udecode/cn'
 import imagePlus from '@/assets/icons/image-plus.svg'
 import commonApi from '@/api-v1/common.api'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
+import type { RcFile } from 'antd/es/upload'
+import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
+// import type { GetProp, UploadFile, UploadProps } from 'antd'
 
 const { TextArea } = Input
 
@@ -23,7 +24,7 @@ const uploadButton = (
   <div className="flex size-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] bg-transparent hover:border-blue-500">
     <img src={imagePlus} alt="Upload" />
     <div className="mt-3 flex text-sm text-white">
-      Upload clear food-related images (up to 3). Ensure subjects are prominent and well-lit.
+      Upload an NFT image (only one image allowed). Ensure the image is clear and without watermark.
     </div>
   </div>
 )
@@ -96,7 +97,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
         url: file.response?.url,
         name: file.response?.name
       }))
-    form.setFieldsValue({ images: imageUrls })
+    form.setFieldsValue({ nft_image: imageUrls })
     setFileList(updatedFileList)
   }
 
@@ -126,7 +127,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
 
   return (
     <div className="flex-1">
-      <h2 className="mb-4 pr-6 text-xl font-semibold text-white">FoodScience Data Collection Platform</h2>
+      <h2 className="mb-4 pr-6 text-xl font-semibold text-white">NFT Data Collection Platform</h2>
 
       <Form
         name="form4"
@@ -138,8 +139,8 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       >
         <div className="rounded-2xl bg-[#252532] p-6">
           <Form.Item
-            label="Images"
-            name="images"
+            label="NFT Image"
+            name="nft_image"
             rules={[
               {
                 required: true,
@@ -156,26 +157,25 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
                 beforeUpload={beforeUpload}
                 className={cn(
                   'text-center transition-all',
-                  '[&_.ant-upload-list-item-container]:!h-[180px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-1 [&_.ant-upload-list-picture-card]:!gap-4 [&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
+                  '[&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
                   fileList.length > 0
-                    ? '[&_.ant-upload-list-picture-card]:!grid-cols-3 [&_.ant-upload-select]:!col-span-1'
+                    ? '[&_.ant-upload-list-item-container]:!h-[180px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-item-image]:!absolute [&_.ant-upload-list-item-image]:!left-1/2 [&_.ant-upload-list-item-image]:!top-1/2 [&_.ant-upload-list-item-image]:!h-full [&_.ant-upload-list-item-image]:!w-auto [&_.ant-upload-list-item-image]:!-translate-x-1/2 [&_.ant-upload-list-item-image]:!-translate-y-1/2 [&_.ant-upload-list-item-thumbnail]:!relative [&_.ant-upload-list-item-thumbnail]:!size-full [&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-3'
                     : ''
                 )}
-                // maxCount={3}
-                accept=".jpg,.png,.gif,.webp"
+                accept=".jpg,.png,.gif,.webp,.jpeg"
                 customRequest={uploadMedia}
               >
-                {fileList.length >= 3 ? null : uploadButton}
+                {fileList.length < 1 && uploadButton}
               </Upload>
             </div>
           </Form.Item>
           <Form.Item
-            label="Food Description"
-            name="food_description"
+            label="NFT Description"
+            name="nft_description"
             rules={[
               {
                 required: true,
-                message: 'Please enter food description.'
+                message: 'Please enter nft description.'
               },
               {
                 max: 1000,
@@ -184,10 +184,10 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
             ]}
           >
             <TextArea
-              placeholder="Describe the food name, key ingredients, flavor profile, and calorie information if available."
+              placeholder="Describe the content, style, lines, colors, and other features of the NFT. Provide as much detail as possible to aid in AI recognition and classification."
               showCount
               maxLength={1000}
-              autoSize={{ minRows: 3, maxRows: 6 }}
+              autoSize={{ minRows: 4, maxRows: 4 }}
               className="resize-none rounded-lg border border-solid border-[#FFFFFF1F] bg-transparent"
             />
           </Form.Item>
