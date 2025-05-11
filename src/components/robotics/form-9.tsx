@@ -1,4 +1,4 @@
-import { Button, Form, message, Upload, Input, Modal, Select } from 'antd'
+import { Button, Form, message, Upload, Input, Select } from 'antd'
 import { useState, ReactNode } from 'react'
 import type { RcFile } from 'antd/es/upload'
 import type { UploadFile, UploadProps } from 'antd/es/upload/interface'
@@ -34,9 +34,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [fileList, setFileList] = useState<UploadFile[]>([])
-  const [previewOpen, setPreviewOpen] = useState(false)
-  const [previewImage, setPreviewImage] = useState('')
-  const [previewTitle, setPreviewTitle] = useState('')
 
   const handleSubmit = async () => {
     setIsSubmitting(true)
@@ -68,15 +65,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       message.error('File must be smaller than 10MB!')
     }
     return isJpgOrPngOrGif && isLt10M
-  }
-
-  const handlePreview = async (file: UploadFile) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as RcFile)
-    }
-    setPreviewImage(file.url || (file.preview as string))
-    setPreviewOpen(true)
-    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1))
   }
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
@@ -220,9 +208,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
           </div>
         </div>
       </Form>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-        <img alt="Preview" className="w-full" src={previewImage} />
-      </Modal>
     </div>
   )
 }
