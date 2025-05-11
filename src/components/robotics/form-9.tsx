@@ -103,16 +103,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
     )
   }
 
-  const getBase64 = (file: RcFile): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = (error) => reject(error)
-    })
-
-  const handleCancel = () => setPreviewOpen(false)
-
   return (
     <div className="flex-1">
       <h2 className="mb-4 pr-6 text-xl font-semibold text-white">Speech Data Collection Platform</h2>
