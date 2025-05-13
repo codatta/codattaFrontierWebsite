@@ -11,7 +11,7 @@ function Progress(props: { total: number; current: number; title: string }) {
   return (
     <div>
       <p className="mb-4 text-sm text-white">
-        {title}: Question {current + 1} of {total}
+        <strong>{title}:</strong> Question {current + 1} of {total}
       </p>
       <div className="mb-3 w-full">
         <div className="w-full rounded-xl border-2 border-primary bg-transparent">

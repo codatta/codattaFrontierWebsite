@@ -31,12 +31,12 @@ function CMUTaskItem(props: { task: unknown }) {
       </div>
       <div className="flex flex-col items-center">
         <img src={USDRewardIcon} alt="" className="size-12" />
-        <span className="text-xs">1</span>
+        <span className="text-xs">$1</span>
       </div>
       <span>{task.querytext}</span>
       <div className="ml-auto flex min-w-[160px] shrink-0 justify-end">
         {task.status === 2 ? (
-          <span>Finished</span>
+          <button className="w-[120px] rounded-full bg-white/5 py-3 text-center text-sm text-white/40">Finished</button>
         ) : (
           <Button onClick={() => handleTaskClick(task)} shape="round" size="large" type="primary" className="w-[120px]">
             Submit
@@ -97,9 +97,9 @@ export default function CMUVideoTaskList() {
       <div className="mb-6 flex items-start gap-3 rounded-2xl bg-white/5 p-3">
         <Info className="shrink-0 text-white" size={24} />
         <span className="text-white">
-          Complete all 20 tasks to receive your cash reward in a single payment. Finish all questions as soon as
-          possible - if someone else completes this set first, we'll give you a fresh new set to work on (as long as
-          tasks remain available).
+          Complete all {cmuStore.taskList.length} tasks to receive your cash reward in a single payment. <br />
+          Finish all questions as soon as possible - if someone else completes this set first, we'll give you a fresh
+          new set to work on (as long as tasks remain available).
         </span>
       </div>
 

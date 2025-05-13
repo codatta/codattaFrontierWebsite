@@ -31,7 +31,7 @@ export default function SubmitSuccessModal(props: {
               </p>
               <p className="mb-6 text-center text-sm font-thin leading-[22px] text-gray-700">
                 <span>The points has been issued to your account automatically.</span> <br />
-                <span>You can claim your tokens immediately or claim all your tokens</span> <br /> in the settings.
+                <span>ou can claim your cash rewards at once after all tasks been completed.</span>
               </p>
             </div>
           </div>

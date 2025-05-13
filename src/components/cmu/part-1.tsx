@@ -37,9 +37,7 @@ export default function CMUVideoLabelingPart1(props: {
         <h3 className="mb-6 text-2xl font-bold leading-[36px] text-white">{data_requirements.querytext}</h3>
         <div className="mb-6 grid grid-cols-2 gap-4">
           {data_requirements?.part1?.videos?.map((video, index) => (
-            <div key={`video-${index}`} className="w-full">
-              <VideoPlayer className="w-full rounded-xl" videoUrl={video.video_url} />
-            </div>
+            <VideoPlayer key={`video-${index}`} className="h-full rounded-xl bg-black" videoUrl={video.video_url} />
           ))}
         </div>
         <div className="flex items-start gap-2 text-sm text-gray-700">
@@ -83,15 +81,16 @@ export default function CMUVideoLabelingPart1(props: {
                 <input
                   placeholder="Why is the video you selected a better choice?"
                   value={part1Form.reason}
+                  maxLength={512}
                   onChange={(e) => setPart1Form({ ...part1Form, reason: e.target.value })}
                   className="w-full rounded-lg border border-[#FFFFFF1F] bg-transparent p-3 text-white"
                 />
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-700">
+            {/* <div className="flex items-center gap-2 text-sm text-gray-700">
               <img src={InformationLine} alt="" />
               <p>No right or wrong answer-be honest!</p>
-            </div>
+            </div> */}
           </>
         )}
       </div>

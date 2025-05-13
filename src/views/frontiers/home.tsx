@@ -3,7 +3,7 @@ import TransitionEffect from '@/components/common/transition-effect'
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import TaskList from '@/components/robotics/task-list'
+import FrontierTaskList from '@/components/robotics/task-list'
 import { useEffect, useState } from 'react'
 import frontierApi, { FrontierItemType, MediaName } from '@/apis/frontiter.api'
 import XIcon from '@/assets/robotics/x-logo.svg'
@@ -75,7 +75,7 @@ export default function Component() {
           </div>
         </Spin>
         <div>
-          <TaskList />
+          <FrontierTaskList />
         </div>
       </div>
     </TransitionEffect>

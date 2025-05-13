@@ -33,7 +33,40 @@ const InformedConsentForm: React.FC<InformedConsentFormProps> = ({ isOpen, onClo
 
         {/* Scrollable Content */}
         <div className="h-[366px] overflow-y-auto p-6">
+          <div className="mb-2">
+            <strong className="mb-6">Study Title: Data Pricing Study (STUDY2024_00000503)</strong>
+          </div>
+
+          <div className="mb-2">
+            <strong className="mb-2 block">Principal Investigator(s): </strong>
+            <p className="text-gray-700">
+              Cathy Jiao, Language Technologies Institute, PhD Student, cljiao@andrew.cmu.edu
+              <br />
+              Luyang Zhang, Heinz College, PhD Student, luyangz@andrew.cmu.edu <br />
+              Luoqi Chen, Language Technologies Institute, Masters Student, luoqic@andrew.cmu.edu
+            </p>
+          </div>
+
+          <div className="mb-2">
+            <strong className="mb-2 block">Faculty Advisor(s):</strong>
+            <p className="text-gray-700">
+              Chenyan Xiong, Language Technologies Institute, Associate Professor, cx@andrew.cmu.edu
+              <br /> Beibei L, Heinz College, Professor, beibeili@andrew.cmu.edu
+              <br /> Sherry Wu, Assistant Professor, Language Technologies Institute and Human Computer Interaction
+              Institute, sherryw@cs.cmu.edu
+            </p>
+          </div>
+
           {/* Purpose */}
+          <div className="mb-2">
+            <p className="text-gray-700">
+              <strong className="text-white">Sponsor(s):</strong> None. This research is funded by Prof. Xiong's
+              discretionary funds.
+            </p>
+          </div>
+
+          <hr className="my-6 border-[#FFFFFF1F]" />
+
           <div className="mb-2">
             <h3 className="mb-2 text-sm font-semibold leading-[22px] text-[#FFFFFF]">Purpose of this Study</h3>
             <p className="text-gray-700">
@@ -137,7 +170,7 @@ const InformedConsentForm: React.FC<InformedConsentFormProps> = ({ isOpen, onClo
               The researchers will take the following steps to protect participants’ identities during this study: (1)
               Each participant will be assigned a number; (2) The researchers will record any data collected during the
               study by number, not by name; (3) Any original recordings or data files will be stored in a secured
-              location accessed only by authorized researchers.{' '}
+              location accessed only by authorized researchers.
             </p>
             <p className="text-gray-700">
               Mturk, Prolific, and Codatta are not owned by CMU. The company will have access to the research data that

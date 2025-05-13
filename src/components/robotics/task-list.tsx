@@ -60,14 +60,16 @@ const RoboticsTaskList: React.FC = () => {
                 className="mb-3 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-6 transition-all hover:border-primary hover:shadow-primary"
               >
                 <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
-                  <div className="flex w-full flex-none items-center justify-start gap-4 md:w-auto">
-                    {item.reward_info?.map((reward) => (
-                      <div className="flex items-center text-center md:flex-col">
-                        <img src={reward.reward_icon} alt="" className="size-12" />
-                        <span>{reward.reward_value}</span>
-                      </div>
-                    ))}
-                  </div>
+                  {item.data_display.template_id !== 'CMU_TPL_000001' && (
+                    <div className="flex w-full flex-none items-center justify-start gap-4 md:w-auto">
+                      {item.reward_info?.map((reward) => (
+                        <div className="flex items-center text-center md:flex-col">
+                          <img src={reward.reward_icon} alt="" className="size-12" />
+                          <span>{reward.reward_value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="order-first flex-auto break-all font-semibold md:order-last">{item.name}</div>
                 </div>
                 <div className="w-[88px] shrink-0 cursor-pointer rounded-full bg-[#875DFF] py-2 text-center text-xs text-[#FFFFFF]">
@@ -82,19 +84,21 @@ const RoboticsTaskList: React.FC = () => {
             </div>
           )}
         </div>
-        <div>
-          <div className="mt-auto flex items-center">
-            <span className="text-sm">Total {total}</span>
-            <Pagination
-              showSizeChanger={false}
-              onChange={handlePageChange}
-              className="ml-auto py-5"
-              total={total}
-              pageSize={page_size}
-              current={page}
-            ></Pagination>
+        {total > page_size && (
+          <div>
+            <div className="mt-auto flex items-center">
+              <span className="text-sm">Total {total}</span>
+              <Pagination
+                showSizeChanger={false}
+                onChange={handlePageChange}
+                className="ml-auto py-5"
+                total={total}
+                pageSize={page_size}
+                current={page}
+              ></Pagination>
+            </div>
           </div>
-        </div>
+        )}
       </Spin>
     </div>
   )

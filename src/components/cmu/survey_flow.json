@@ -1,7 +1,7 @@
 [
   {
     "section_text": "Quality of video's visual effect",
-    "question_text": "[visual quality] The visual quality (sharpness, resolution) was good enough to see details clearly.",
+    "question_text": "The visual quality (sharpness, resolution) was good enough to see details clearly.",
     "options":[
       {"key":"option_1", "value":"1 = Very low quality \u2013 Blurry, pixelated, hard to watch."},
       {"key":"option_2", "value":"2 = Somewhat low quality \u2013 Somewhat visible, but poor resolution."},
@@ -12,7 +12,7 @@
   },
   {
     "section_text": "Quality of video's visual effect",
-    "question_text": "[Visual realism] The video looks realistic \u2014 the people, objects, and movements appear natural and believable.",
+    "question_text": "The video looks realistic \u2014 the people, objects, and movements appear natural and believable.",
     "options":[
       {"key":"option_1", "value":"1 = Very fake \u2013 Obvious distortions like warped hands, jerky motion, or uncanny faces."},
       {"key":"option_2", "value":"2 = Fake-looking \u2013 Multiple elements feel off or computer-generated."},
@@ -23,7 +23,7 @@
   },
   {
     "section_text": "Quality of video's visual effect",
-    "question_text": "[Realisticness of transition] The video makes sense in terms of time and continuity \u2014 it doesn\u2019t feel like it jumps abruptly or unnaturally.",
+    "question_text": "The video makes sense in terms of time and continuity \u2014 it doesn\u2019t feel like it jumps abruptly or unnaturally.",
     "options":[
       {"key":"option_1", "value":"1 = Very jarring \u2013 Abrupt cuts or time skips that break the illusion of continuity."},
       {"key":"option_2", "value":"2 = Somewhat jumpy \u2013 Some confusing or unrealistic jumps."},
@@ -34,7 +34,7 @@
   },
   {
     "section_text": "Utility of the video instruction",
-    "question_text": "[relevance] The video is about the task I asked for in the instruction.",
+    "question_text": "The video is about the task I asked for in the instruction.",
     "options":[
       {"key":"option_1", "value":"1 = Completely wrong \u2013 This is a totally unrelated task (e.g., asked for mango slicing, got paper cutting)."},
       {"key":"option_2", "value":"2 = Mostly wrong \u2013 It matched some secondary keywords in my instruction, but clearly not the task the query asked for (e.g., shows peeling a mango, but no slicing)."},
@@ -45,7 +45,7 @@
   },
   {
     "section_text": "Utility of the video instruction",
-    "question_text": "[video information precision / relevance] The video stayed focused on the task without unnecessary content.",
+    "question_text": "The video stayed focused on the task without unnecessary content.",
     "options":[
       {"key":"option_1", "value":"1 = Very unfocused \u2013 Lots of unrelated or distracting content."},
       {"key":"option_2", "value":"2 = Somewhat unfocused \u2013 Some extra material that isn\u2019t useful."},
@@ -56,7 +56,7 @@
   },
   {
     "section_text": "Utility of the video instruction",
-    "question_text": "[Per step quality] The main action (e.g., slicing, assembling) actually happens on screen.",
+    "question_text": "The main action (e.g., slicing, assembling) actually happens on screen.",
     "options":[
       {"key":"option_1", "value":"1 = No action shown \u2013 Just a still object or already completed task."},
       {"key":"option_2", "value":"2 = Very little action \u2013 The person / object moves, but the main task is skipped."},
@@ -67,7 +67,7 @@
   },
   {
     "section_text": "Utility of the video instruction",
-    "question_text": "[Utility] I feel confident I can correctly do the task after watching this video.",
+    "question_text": "I feel confident I can correctly do the task after watching this video.",
     "options":[
       {"key":"option_1", "value":"1 = Not at all \u2013 I would need to search elsewhere to understand."},
       {"key":"option_2", "value":"2 = Slightly confident \u2013 I might attempt it, but I\u2019d probably mess up."},
