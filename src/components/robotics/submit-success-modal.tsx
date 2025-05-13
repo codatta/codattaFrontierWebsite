@@ -27,11 +27,13 @@ export default function SubmitSuccessModal(props: {
             <div className="flex flex-col items-center gap-3">
               <h1 className="text-2xl font-bold text-primary">Congratulations!</h1>
               <p className="text-sm font-thin leading-[22px] text-white">
-                You have earned <span className="font-semibold">{points} points & 1 USD!</span>
+                You have earned <span className="font-semibold">{points} Points & 1 USD!</span>
               </p>
               <p className="mb-6 text-center text-sm font-thin leading-[22px] text-gray-700">
-                <span>The points has been issued to your account automatically.</span> <br />
-                <span>You can claim your cash rewards at once after all tasks been completed.</span>
+                <span>
+                  The points will be issued to your account automatically and the cash rewards will be able to claim
+                  once you complete all tasks.
+                </span>
               </p>
             </div>
           </div>
