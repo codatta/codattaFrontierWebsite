@@ -106,7 +106,7 @@ const InformedConsentForm: React.FC<InformedConsentFormProps> = ({ isOpen, onClo
             <p className="text-gray-700">
               After each annotation, participants will be informed of the reward points they earned for their
               contribution. We do not require the participant to perform a specific number of annotations. Instead, we
-              ask the participants to complete their annotations before [insert date].
+              ask participants complete all assigned annotations to receive rewards.
             </p>
           </div>
 
