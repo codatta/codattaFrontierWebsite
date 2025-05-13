@@ -30,14 +30,18 @@ const CardList = () => {
               <div className="mb-2 w-[88px] flex-none rounded-full bg-white/5 py-2 text-center text-xs text-[#8D8D93]">
                 {item.status}
               </div>
-              {item.status === 'SUBMITTED' ? (
-                <a className="flex hover:text-primary" href={item.txHashUrl} target="_blank">
-                  <span className="text-xs">On-chain Success!</span>
-                  <ArrowUpRight strokeWidth={1.25} size={16} />
-                </a>
-              ) : (
-                <div>On-chain...</div>
-              )}
+              {item.data_submission?.['templateId'] !== 'CMU_TPL_000001' ? (
+                <>
+                  {item.status === 'SUBMITTED' ? (
+                    <a className="flex hover:text-primary" href={item.txHashUrl} target="_blank">
+                      <span className="text-xs">On-chain Success!</span>
+                      <ArrowUpRight strokeWidth={1.25} size={16} />
+                    </a>
+                  ) : (
+                    <div>On-chain...</div>
+                  )}
+                </>
+              ) : null}
             </div>
           </div>
         ))}

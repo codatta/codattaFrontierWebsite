@@ -1,9 +1,9 @@
 import TransitionEffect from '@/components/common/transition-effect'
 
 import { ArrowLeft } from 'lucide-react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
-import TaskList from '@/components/robotics/task-list'
+import FrontierTaskList from '@/components/robotics/task-list'
 import { useEffect, useState } from 'react'
 import frontierApi, { FrontierItemType, MediaName } from '@/apis/frontiter.api'
 import XIcon from '@/assets/robotics/x-logo.svg'
@@ -16,35 +16,32 @@ import { Spin } from 'antd'
 
 export default function Component() {
   const navigate = useNavigate()
-  const { state } = useLocation()
   const { frontier_id } = useParams()
   const [frontierInfo, setFrontierInfo] = useState<FrontierItemType | null>(null)
   const [loading, setLoading] = useState(true)
-  console.log(state, frontier_id)
+
+  async function getFrontierInfo(frontier_id: string) {
+    setLoading(true)
+    const res = await frontierApi.getFrontierInfo(frontier_id)
+    if (res.errorCode === 0) {
+      setFrontierInfo(res.data)
+    }
+    setLoading(false)
+  }
 
   useEffect(() => {
     if (!frontier_id) return
-    frontierApi
-      .getFrontierInfo(frontier_id)
-      .then((res) => {
-        console.log(res)
-        if (res.errorCode === 0) {
-          setFrontierInfo(res.data)
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    getFrontierInfo(frontier_id)
   }, [frontier_id])
 
   return (
     <TransitionEffect>
-      <Spin spinning={loading}>
-        <div className="">
-          <div className="mb-6 flex items-center gap-2">
-            <ArrowLeft size={14} onClick={() => navigate(-1)} className="cursor-pointer" />
-            <h1>Back</h1>
-          </div>
+      <div className="">
+        <div className="mb-6 flex items-center gap-2">
+          <ArrowLeft size={14} onClick={() => navigate(-1)} className="cursor-pointer" />
+          <h1>Back</h1>
+        </div>
+        <Spin spinning={loading}>
           <div className="mb-12">
             <div className="overflow-hidden rounded-lg">
               {frontierInfo?.banner && <img src={frontierInfo?.banner} alt="" />}
@@ -55,18 +52,14 @@ export default function Component() {
                 {frontierInfo?.media_link
                   ?.filter((item) => item.value !== '')
                   ?.map((item) => {
-                    const icon =
-                      item.name === MediaName.DOC
-                        ? DocIcon
-                        : item.name === MediaName.WEBSITE
-                          ? WebIcon
-                          : item.name === MediaName.TWITTER
-                            ? XIcon
-                            : item.name === MediaName.TELEGRAM
-                              ? TgIcon
-                              : item.name === MediaName.DISCORD
-                                ? DiscordIcon
-                                : ''
+                    const mediaIconMap = {
+                      [MediaName.DOC]: DocIcon,
+                      [MediaName.WEBSITE]: WebIcon,
+                      [MediaName.TWITTER]: XIcon,
+                      [MediaName.TELEGRAM]: TgIcon,
+                      [MediaName.DISCORD]: DiscordIcon
+                    }
+                    const icon = mediaIconMap[item.name] || ''
                     return (
                       <a href={item.value} target="_blank">
                         <img className="cursor-pointer" src={icon} alt="" />
@@ -77,12 +70,14 @@ export default function Component() {
             </div>
             <div className="text-white/55">{frontierInfo?.description}</div>
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="mb-6">
             <GetRewardGuide videos={frontierInfo?.videos ?? []} />
-            <TaskList />
           </div>
+        </Spin>
+        <div>
+          <FrontierTaskList />
         </div>
-      </Spin>
+      </div>
     </TransitionEffect>
   )
 }

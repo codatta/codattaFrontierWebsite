@@ -1,0 +1,80 @@
+[
+  {
+    "section_text": "Quality of video's visual effect",
+    "question_text": "The visual quality (sharpness, resolution) was good enough to see details clearly.",
+    "options":[
+      {"key":"option_1", "value":"1 = Very low quality \u2013 Blurry, pixelated, hard to watch."},
+      {"key":"option_2", "value":"2 = Somewhat low quality \u2013 Somewhat visible, but poor resolution."},
+      {"key":"option_3", "value":"3 = Acceptable \u2013 Not great, but I could see most of what I needed."},
+      {"key":"option_4", "value":"4 = High quality \u2013 Just a tiny bit of room for improvement."},
+      {"key":"option_5", "value":"5 = Perfect \u2013 Crystal clear, very sharp visuals."}
+    ]
+  },
+  {
+    "section_text": "Quality of video's visual effect",
+    "question_text": "The video looks realistic \u2014 the people, objects, and movements appear natural and believable.",
+    "options":[
+      {"key":"option_1", "value":"1 = Very fake \u2013 Obvious distortions like warped hands, jerky motion, or uncanny faces."},
+      {"key":"option_2", "value":"2 = Fake-looking \u2013 Multiple elements feel off or computer-generated."},
+      {"key":"option_3", "value":"3 = Somewhat realistic \u2013 Mostly fine, but with one or two noticeably odd visuals."},
+      {"key":"option_4", "value":"4 = Realistic \u2013 Everything looks mostly natural."},
+      {"key":"option_5", "value":"5 = Highly realistic \u2013 Nothing looks off; the visuals are convincingly human and real."}
+    ]
+  },
+  {
+    "section_text": "Quality of video's visual effect",
+    "question_text": "The video makes sense in terms of time and continuity \u2014 it doesn\u2019t feel like it jumps abruptly or unnaturally.",
+    "options":[
+      {"key":"option_1", "value":"1 = Very jarring \u2013 Abrupt cuts or time skips that break the illusion of continuity."},
+      {"key":"option_2", "value":"2 = Somewhat jumpy \u2013 Some confusing or unrealistic jumps."},
+      {"key":"option_3", "value":"3 = Neutral \u2013 Not smooth, but not distracting either."},
+      {"key":"option_4", "value":"4 = Smooth \u2013 Transitions are mostly natural and continuous."},
+      {"key":"option_5", "value":"5 = Seamless \u2013 Very natural and realistic time progression."}
+    ]
+  },
+  {
+    "section_text": "Utility of the video instruction",
+    "question_text": "The video is about the task I asked for in the instruction.",
+    "options":[
+      {"key":"option_1", "value":"1 = Completely wrong \u2013 This is a totally unrelated task (e.g., asked for mango slicing, got paper cutting)."},
+      {"key":"option_2", "value":"2 = Mostly wrong \u2013 It matched some secondary keywords in my instruction, but clearly not the task the query asked for (e.g., shows peeling a mango, but no slicing)."},
+      {"key":"option_3", "value":"3 = Somewhat correct \u2013 Related category, but not quite right (e.g., indeed slicing some fruit but not mango)."},
+      {"key":"option_4", "value":"4 = Mostly correct \u2013 The video is very close to what the query asked for, with minor errors."},
+      {"key":"option_5", "value":"5 = Perfect match \u2013 This video fully aligns with the request."}
+    ]
+  },
+  {
+    "section_text": "Utility of the video instruction",
+    "question_text": "The video stayed focused on the task without unnecessary content.",
+    "options":[
+      {"key":"option_1", "value":"1 = Very unfocused \u2013 Lots of unrelated or distracting content."},
+      {"key":"option_2", "value":"2 = Somewhat unfocused \u2013 Some extra material that isn\u2019t useful."},
+      {"key":"option_3", "value":"3 = Mostly focused \u2013 A little fluff, but nothing that really gets in the way."},
+      {"key":"option_4", "value":"4 = Well-focused \u2013 Almost everything contributes to the goal."},
+      {"key":"option_5", "value":"5 = Highly precise \u2013 No wasted time, everything is relevant."}
+    ]
+  },
+  {
+    "section_text": "Utility of the video instruction",
+    "question_text": "The main action (e.g., slicing, assembling) actually happens on screen.",
+    "options":[
+      {"key":"option_1", "value":"1 = No action shown \u2013 Just a still object or already completed task."},
+      {"key":"option_2", "value":"2 = Very little action \u2013 The person / object moves, but the main task is skipped."},
+      {"key":"option_3", "value":"3 = Some action, but incomplete \u2013 Shows part of the action, but it\u2019s unclear or unfinished."},
+      {"key":"option_4", "value":"4 = Mostly executed \u2013 The action is shown, but could be clearer."},
+      {"key":"option_5", "value":"5 = Fully executed \u2013 The full action is clearly demonstrated."}
+    ]
+  },
+  {
+    "section_text": "Utility of the video instruction",
+    "question_text": "I feel confident I can correctly do the task after watching this video.",
+    "options":[
+      {"key":"option_1", "value":"1 = Not at all \u2013 I would need to search elsewhere to understand."},
+      {"key":"option_2", "value":"2 = Slightly confident \u2013 I might attempt it, but I\u2019d probably mess up."},
+      {"key":"option_3", "value":"3 = Somewhat confident \u2013 I could try it, but I might need to get extra help."},
+      {"key":"option_4", "value":"4 = Mostly confident \u2013 I can follow along and expect decent results."},
+      {"key":"option_5", "value":"5 = Completely confident \u2013 I could successfully perform the task right away."},
+      {"key":"option_6", "value":"Not Applicable = The query is not task-related -- i.e. the query asks for an explanation."}
+    ]
+  }
+]

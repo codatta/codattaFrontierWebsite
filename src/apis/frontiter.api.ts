@@ -26,13 +26,12 @@ export interface TaskDetail {
     gif_resource: string
     template_id: string
   }
-  data_requirements:
-    | CMUDataRequirements
-    | {
-        [key: string]: unknown
-      }
+  questions?: CMUDataRequirements[]
+  data_submission?: { [key: string]: unknown }
+  question_status?: number // 1: available, 2: no more questions, 3. need to change question group
+  data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
-  status: string
+  status: number | string
   txHashUrl: string
 }
 
@@ -60,10 +59,12 @@ export enum MediaName {
   WEBSITE = 'website',
   DOC = 'doc'
 }
+
 export interface VideoItem {
+  video_id: string
   desc?: string
   image_url?: string
-  video_url?: string
+  video_url: string
 }
 
 export interface FrontierItemType {
@@ -82,13 +83,18 @@ export interface FrontierItemType {
 }
 
 export interface CMUDataRequirements {
+  num: string
+  querytext: string
+  status: number // 2: finished, other: not finished
   part1: {
+    select?: string
     videos: Array<VideoItem>
   }
   part2: {
     videos: Array<VideoItem>
     questions: Array<{
       title: string
+      select?: string
       options: Array<{
         value: string
         label: string

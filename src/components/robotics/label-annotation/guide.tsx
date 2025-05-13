@@ -62,8 +62,8 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
-              <span className="text-base font-bold leading-[24px] text-white">Part 1</span>
-              <span className="text-sm leading-[20px] text-gray-700">(Compare 2 videos side-by-side.)</span>
+              <span className="text-base font-bold leading-[24px] text-white">Part 1:</span>
+              <span className="text-sm font-bold leading-[24px] text-white">Compare 2 videos side-by-side.</span>
             </div>
             <div className="flex gap-6 rounded-lg bg-[rgb(46,46,57)] p-4">
               <div className="flex gap-3">
@@ -97,7 +97,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                       }
                     }}
                   >
-                    <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                    <source src="https://static.codatta.io/cmu/videos/CV_q30A_00.mp4" type="video/mp4" />
                   </video>
                 </div>
                 {/* Video B */}
@@ -130,16 +130,16 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                       }
                     }}
                   >
-                    <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                    <source src="https://static.codatta.io/cmu/videos/CV_q30A_01.mp4" type="video/mp4" />
                   </video>
                 </div>
               </div>
               {/* Question */}
               <div className="flex-1">
-                <h4 className="mb-5 w-[194px] text-sm font-semibold leading-[22px] text-white">
+                <h4 className="mb-8 text-sm font-semibold leading-[22px] text-white">
                   Which video better answers the given question?
                 </h4>
-                <div className="mb-3 flex gap-8">
+                <div className="mb-6 flex gap-8">
                   <label className="flex items-center gap-2">
                     <input type="radio" name="videoChoice1" className="size-4 accent-[#8A5AEE]" />
                     <span className="text-sm leading-[17px] text-white">Video A</span>
@@ -166,8 +166,9 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
           </div>
           <div className="flex flex-col gap-2">
             <div className="flex gap-3">
-              <span className="text-base font-bold leading-[24px] text-white">Part 2</span>
-              <span className="text-sm leading-[20px] text-gray-700">(Rate simple videos (1-5 scale).)</span>
+              <span className="text-base font-bold leading-[24px] text-white">Part 2:</span>
+              <span className="text-sm font-bold leading-[24px] text-white">Multiple questions follow</span>
+              <span className="text-sm leading-[24px] text-gray-700">(Rate simple videos (1-5 scale).)</span>
             </div>
             <div className="flex rounded-lg bg-[rgb(46,46,57)] p-4">
               <div className="relative h-[148px] w-[185px] overflow-hidden rounded-xl bg-black">
@@ -199,7 +200,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
                     }
                   }}
                 >
-                  <source src="https://via.placeholder.com/200x160" type="video/mp4" />
+                  <source src="https://static.codatta.io/cmu/videos/CV_q30A_01.mp4" type="video/mp4" />
                 </video>
               </div>
 

@@ -15,7 +15,7 @@ export function AuthModal(props: {
   const { open } = props
   const channelInfo = useChannelStore()
   async function handleLogin(res: ILoginResponse) {
-    localStorage.setItem('token', res.old_token)
+    localStorage.setItem('token', res.old_token || '')
     localStorage.setItem('uid', res.user_id)
     localStorage.setItem('auth', res.token)
     props.onLogin?.(res)
