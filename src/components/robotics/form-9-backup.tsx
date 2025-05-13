@@ -8,6 +8,7 @@ import commonApi from '@/api-v1/common.api'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import langs from '@/components/common/langs'
 import AudioIcon from '@/assets/robotics/audio-icon.svg'
+import { Trash2, Eye } from 'lucide-react'
 
 const { TextArea } = Input
 
@@ -79,6 +80,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       }
       return file
     })
+    console.log(updatedFileList)
     setFileList(updatedFileList)
     const fileUrls = updatedFileList
       .filter((file) => file.status === 'done')
@@ -107,7 +109,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
   return (
     <div className="flex-1">
       <h2 className="mb-4 pr-6 text-xl font-semibold text-white">Speech Data Collection Platform</h2>
-
       <Form
         name="form4"
         layout="vertical"
@@ -148,29 +149,42 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
             ]}
           >
             <div>
-              <Upload
-                onChange={handleChange}
-                beforeUpload={beforeUpload}
-                className={cn(
-                  'text-left transition-all [&_.ant-upload-select]:!h-[142px] [&_.ant-upload-select]:!w-full',
-                  fileList.length > 0
-                    ? '[&_.ant-upload-list-item-container]:!col-start-1 [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-item]:!flex [&_.ant-upload-list-item]:!justify-center [&_.ant-upload-list-item]:!px-5 [&_.ant-upload-list-item]:!pb-5 [&_.ant-upload-list-item]:!pt-[60px] [&_.ant-upload-list-text]:!grid [&_.ant-upload-list-text]:!grid-cols-3'
-                    : ''
-                )}
-                accept=".wav,.mp3,.m4a"
-                customRequest={uploadMedia}
-                // listType="picture-card"
-                showUploadList={{
-                  extra: () => (
-                    <span className="absolute left-1/2 top-[16px] -translate-x-1/2">
-                      <img src={AudioIcon} alt="" />
-                    </span>
-                  ),
-                  showRemoveIcon: true
-                }}
-              >
-                {fileList.length === 0 && uploadButton}
-              </Upload>
+              {fileList.length === 0 || fileList[0].status !== 'done' ? (
+                <Upload
+                  onChange={handleChange}
+                  beforeUpload={beforeUpload}
+                  className={cn(
+                    'text-left transition-all [&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
+                    fileList.length > 0
+                      ? '[&_.ant-upload-list-item-container]:!col-start-1 [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-text]:!grid [&_.ant-upload-list-text]:!grid-cols-3'
+                      : ''
+                  )}
+                  accept=".wav,.mp3,.m4a"
+                  // listType="picture-card"
+                  // showUploadList={{
+                  //   extra: ({ size = 0 }) => (
+                  //     <span style={{ color: '#cccccc' }}>({(size / 1024 / 1024).toFixed(2)}MB)</span>
+                  //   ),
+                  //   showRemoveIcon: true
+                  // }}
+                  customRequest={uploadMedia}
+                >
+                  {fileList.length === 0 && uploadButton}
+                </Upload>
+              ) : fileList[0].status === 'done' ? (
+                <div className="group relative flex w-[33.3%] flex-col items-center gap-1 rounded-xl bg-[#00000029] px-[20px] py-[22px]">
+                  <img src={AudioIcon} className="size-6" alt="" />
+                  <p className="w-full truncate text-center"> {fileList[0].name}</p>
+                  <div className="absolute inset-0 flex size-full items-center justify-center bg-black/45 opacity-0 transition-all group-hover:opacity-100">
+                    <Button ghost type="text" onClick={() => setFileList([])}>
+                      <Trash2 className="cursor-pointer"></Trash2>
+                    </Button>
+                    <a href={fileList[0].url} target="_blank">
+                      <Eye className="cursor-pointer"></Eye>
+                    </a>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </Form.Item>
           <Form.Item

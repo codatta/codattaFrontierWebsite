@@ -85,7 +85,7 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
       if (file.status === 'done' && file.response) {
         return {
           ...file,
-          url: file.response.file_path
+          url: file.response.url
         }
       }
       return file
@@ -157,9 +157,9 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
                 beforeUpload={beforeUpload}
                 className={cn(
                   'text-center transition-all',
-                  '[&_.ant-upload-select]:!h-[180px] [&_.ant-upload-select]:!w-full',
+                  '[&_.ant-upload-select]:!h-[142px] [&_.ant-upload-select]:!w-full',
                   fileList.length > 0
-                    ? '[&_.ant-upload-list-item-container]:!h-[180px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-item-image]:!absolute [&_.ant-upload-list-item-image]:!left-1/2 [&_.ant-upload-list-item-image]:!top-1/2 [&_.ant-upload-list-item-image]:!h-full [&_.ant-upload-list-item-image]:!w-auto [&_.ant-upload-list-item-image]:!-translate-x-1/2 [&_.ant-upload-list-item-image]:!-translate-y-1/2 [&_.ant-upload-list-item-thumbnail]:!relative [&_.ant-upload-list-item-thumbnail]:!size-full [&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-3'
+                    ? '[&_.ant-upload-list-item-container]:!h-[142px] [&_.ant-upload-list-item-container]:!w-full [&_.ant-upload-list-item-image]:!absolute [&_.ant-upload-list-item-image]:!left-1/2 [&_.ant-upload-list-item-image]:!top-1/2 [&_.ant-upload-list-item-image]:!h-full [&_.ant-upload-list-item-image]:!w-auto [&_.ant-upload-list-item-image]:!-translate-x-1/2 [&_.ant-upload-list-item-image]:!-translate-y-1/2 [&_.ant-upload-list-item-thumbnail]:!relative [&_.ant-upload-list-item-thumbnail]:!size-full [&_.ant-upload-list-picture-card]:!grid [&_.ant-upload-list-picture-card]:!grid-cols-3'
                     : ''
                 )}
                 accept=".jpg,.png,.gif,.webp,.jpeg"
