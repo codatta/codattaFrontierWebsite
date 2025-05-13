@@ -8,15 +8,16 @@ import TaskTimesUp from '@/assets/cmu-video-labeling/task-timesup.svg'
 import { cmuStoreActions, useCMUStore } from '@/stores/cmu.store'
 import USDRewardIcon from '@/assets/cmu-video-labeling/usd-reward-icon.png'
 
-function CMUTaskItem(props: { task: unknown }) {
+function CMUTaskItem(props: { task: unknown; taskId: string }) {
   const navigate = useNavigate()
   const task = JSON.parse(JSON.stringify(props.task)) as CMUDataRequirements
+  const { taskId } = props
 
   async function handleTaskClick(item: CMUDataRequirements) {
     console.log(item, 'handleTaskClick')
 
     if (item.status === 2) return
-    navigate(`/frontier/project/CMU_TPL_000001/7227058050400100824/quest/${item.num}`)
+    navigate(`/frontier/project/CMU_TPL_000001/${taskId}/quest/${item.num}`)
   }
 
   return (
@@ -108,7 +109,7 @@ export default function CMUVideoTaskList() {
           <h1 className="mb-3 text-lg font-bold">Multiple Tasks</h1>
           <div className="flex flex-col gap-3">
             {cmuStore.taskList.map((item) => (
-              <CMUTaskItem key={item.num} task={item} />
+              <CMUTaskItem key={item.num} task={item} taskId={taskId || ''} />
             ))}
           </div>
         </Spin>
