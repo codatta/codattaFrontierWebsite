@@ -27,6 +27,7 @@ export interface TaskDetail {
     template_id: string
   }
   questions?: CMUDataRequirements[]
+  data_submission?: { [key: string]: unknown }
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
