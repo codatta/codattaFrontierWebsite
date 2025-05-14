@@ -44,7 +44,7 @@ const Frontiers = () => {
   return (
     <div className="mt-12">
       <h2 className="mb-3 text-lg font-bold">Recent Frontiers</h2>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
         {frontiersList.map((item) => (
           <div
             key={item.name}

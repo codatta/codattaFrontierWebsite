@@ -20,10 +20,10 @@ const RoboticsTaskList: React.FC = () => {
     // Create a mutable copy of the readonly object to avoid TypeScript errors
     const mutableData = JSON.parse(JSON.stringify(data)) as TaskDetail
 
-    if (mutableData.data_display.template_id === 'CMU_TPL_000001') {
-      navigate(`/frontier/project/${mutableData.data_display.template_id}/${mutableData.task_id}`)
-    } else {
+    if (mutableData.data_display.template_id.includes('ROBOTICS_TPL')) {
       navigate(`/frontier/robotics/${mutableData.data_display.template_id}/${mutableData.task_id}`)
+    } else {
+      navigate(`/frontier/project/${mutableData.data_display.template_id}/${mutableData.task_id}`)
     }
   }
 
