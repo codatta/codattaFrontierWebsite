@@ -25,7 +25,6 @@ export async function getModelList() {
 export async function getLeaderboard() {
   const res = await aiModelApi.getLeaderboard()
   arenaStore.leaderboard = res.data.models.map((item, index) => {
-    console.log(item, index)
     return {
       ...item,
       rank: index + 1
