@@ -22,6 +22,21 @@ export interface AIModelItem {
   org: string
 }
 
+export interface LeaderboardItem {
+  name: string
+  show_name: string
+  image_url: string
+  link: string
+  arena_score: number
+  ci: string
+  votes: number
+  correct_rate: number
+  org: string
+  org_name: string
+  license: string
+  rank?: number
+}
+
 class AIModelRequest {
   constructor(private request: AxiosInstance) {}
 
@@ -46,6 +61,14 @@ class AIModelRequest {
 
   async getModelList() {
     const res = await this.request.get<Response<AIModelItem[]>>('/ct/model/list')
+    return res.data
+  }
+
+  async getLeaderboard() {
+    const res =
+      await this.request.get<
+        Response<{ models: LeaderboardItem[]; total: number; total_votes: number; update_time: string }>
+      >('/ct/model/leaderboard')
     return res.data
   }
 }
