@@ -4,9 +4,10 @@ interface VideoPlayerProps {
   videoUrl: string
   posterUrl?: string
   className?: string
+  controls?: boolean
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, posterUrl, className = 'w-full' }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, posterUrl, className = 'w-full', controls = true }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [thumbnailUrl, setThumbnailUrl] = useState<string | undefined>(posterUrl)
 
@@ -40,7 +41,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, posterUrl, classNam
   }, [videoUrl, posterUrl])
 
   return (
-    <video ref={videoRef} controls className={className} poster={thumbnailUrl}>
+    <video ref={videoRef} controls={controls} className={className} poster={thumbnailUrl}>
       <source src={videoUrl} type="video/mp4" />
       您的浏览器不支持视频标签。
     </video>
