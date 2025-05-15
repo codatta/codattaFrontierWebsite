@@ -7,6 +7,7 @@ import TaskRefresh from '@/assets/cmu-video-labeling/task-refresh.svg'
 import TaskTimesUp from '@/assets/cmu-video-labeling/task-timesup.svg'
 import { cmuStoreActions, useCMUStore } from '@/stores/cmu.store'
 import USDRewardIcon from '@/assets/cmu-video-labeling/usd-reward-icon.png'
+import InformedConsentForm from '@/components/robotics/label-annotation/informed-consent'
 
 function CMUTaskItem(props: { task: unknown; taskId: string }) {
   const navigate = useNavigate()
@@ -54,6 +55,9 @@ export default function CMUVideoTaskList() {
   const { taskId } = useParams()
   const cmuStore = useCMUStore()
   const [loading, setLoading] = useState<boolean>(false)
+  const informedConsentShowed = localStorage.getItem('informed-consent-showed') === 'true'
+  const [showInformedConsent, setShowInformedConsent] = useState(!informedConsentShowed)
+  const navigate = useNavigate()
 
   const finishedTaskCount = useMemo(
     () => cmuStore.taskList.filter((item) => item.status === 2).length,
@@ -72,8 +76,9 @@ export default function CMUVideoTaskList() {
 
   useEffect(() => {
     if (!taskId) return
+    if (!informedConsentShowed) return
     getTaskList(taskId)
-  }, [taskId])
+  }, [taskId, informedConsentShowed])
 
   useEffect(() => {
     if (cmuStore.taskStatus === 2) setShowNoMoreQuestions(true)
@@ -81,7 +86,19 @@ export default function CMUVideoTaskList() {
   }, [cmuStore.taskStatus])
 
   function handleClaimRewardClick() {
-    window.open('https://forms.gle/VQ7pPtCRKMWYDxmPA')
+    window.open(
+      'https://docs.google.com/forms/d/e/1FAIpQLSfMx80d8SDQ42fzFxs7YuZI45sqMHz_PQ3GKXTRsHhQLA0tUA/viewform?usp=dialog'
+    )
+  }
+
+  function handleInformedConsentSubmit() {
+    setShowInformedConsent(false)
+    localStorage.setItem('informed-consent-showed', 'true')
+    if (taskId) getTaskList(taskId)
+  }
+
+  function handleCloseInformedConsent() {
+    navigate(-1)
   }
 
   return (
@@ -173,6 +190,12 @@ export default function CMUVideoTaskList() {
           </div>
         </div>
       </Modal>
+
+      <InformedConsentForm
+        isOpen={showInformedConsent}
+        onClose={handleCloseInformedConsent}
+        onSubmit={handleInformedConsentSubmit}
+      />
     </div>
   )
 }

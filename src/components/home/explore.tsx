@@ -6,14 +6,11 @@ import { ExploreFrontierItem } from '@/apis/frontiter.api'
 import arrowRight from '@/assets/icons/arrow-right.svg'
 import { Spin } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import InformedConsentForm from '@/components/robotics/label-annotation/informed-consent'
 
 const Frontiers = () => {
   const navigate = useNavigate()
   const [frontiersArray, setFrontiersArray] = useState<Array<ExploreFrontierItem>>([])
   const [loading, setLoading] = useState(true)
-  const [show, setShow] = useState(false)
-  const [currentFrontier, setCurrentFrontier] = useState<ExploreFrontierItem | null>(null)
   const explorelist = [
     // {
     //   title: 'Robotics',
@@ -56,18 +53,7 @@ const Frontiers = () => {
               <div
                 key={item.frontier_id}
                 className="group relative aspect-[269/243] w-full cursor-pointer overflow-hidden rounded-2xl"
-                onClick={() => {
-                  if (item.template_ext?.open_cum_dialog === 1) {
-                    setCurrentFrontier(item)
-                    if (localStorage.getItem('informed-consent-showed') !== 'true') {
-                      setShow(true)
-                    } else {
-                      navigate(`/app/frontier/${item.frontier_id}`)
-                    }
-                  } else {
-                    navigate(`/app/frontier/${item.frontier_id}`)
-                  }
-                }}
+                onClick={() => navigate(`/app/frontier/${item.frontier_id}`)}
               >
                 <img
                   src={item.logo_url}
@@ -113,15 +99,6 @@ const Frontiers = () => {
           </div>
         )}
       </Spin>
-      <InformedConsentForm
-        isOpen={show}
-        onClose={() => setShow(false)}
-        onSubmit={() => {
-          setShow(false)
-          localStorage.setItem('informed-consent-showed', 'true')
-          navigate(`/app/frontier/${currentFrontier?.frontier_id}`)
-        }}
-      />
     </div>
   )
 }
