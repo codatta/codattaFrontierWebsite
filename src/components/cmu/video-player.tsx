@@ -37,7 +37,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, posterUrl, classNam
     }
 
     tempVideo.load()
-    tempVideo.currentTime = 0.1
+    tempVideo.currentTime = 0.01
   }, [videoUrl, posterUrl])
 
   return (
