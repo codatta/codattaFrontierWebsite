@@ -20,10 +20,10 @@ const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/t
 const CMULayout = lazy(() => import('@/views/cmu-video-labeling/cmu-layout'))
 
 // other frontier
-const FormType6 = lazy(() => import('@/views/frontiers/form-type-6'))
-const FormType7 = lazy(() => import('@/views/frontiers/form-type-7'))
-const FormType8 = lazy(() => import('@/views/frontiers/form-type-8'))
-const FormType9 = lazy(() => import('@/views/frontiers/form-type-9'))
+const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
+const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
+const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
+const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 
 // settings
 const SettingAccount = lazy(() => import('@/views/settings/account'))
@@ -128,10 +128,10 @@ export default function Router() {
         </Route>
 
         <Route path="/frontier/project" element={<FrontierLayout />}>
-          <Route path="FOOD_TPL_000001/:taskId" element={<FormType6 templateId="FOOD_TPL_000001" />} />
-          <Route path="NFT_TPL_000001/:taskId" element={<FormType7 templateId="NFT_TPL_000001" />} />
-          <Route path="OOTD_TPL_000001/:taskId" element={<FormType8 templateId="OOTD_TPL_000001" />} />
-          <Route path="SPEECH_TPL_000001/:taskId" element={<FormType9 templateId="SPEECH_TPL_000001" />} />
+          <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
+          <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
+          <Route path="OOTD_TPL_000001/:taskId" element={<OOTDTemplate templateId="OOTD_TPL_000001" />} />
+          <Route path="SPEECH_TPL_000001/:taskId" element={<SpeechTemplate templateId="SPEECH_TPL_000001" />} />
         </Route>
 
         <Route path="/frontier/robotics" element={<FrontierLayout />}>

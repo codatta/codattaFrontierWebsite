@@ -198,8 +198,6 @@ export default function Component({ onSubmit }: { onSubmit: (data: object) => Pr
 
   return (
     <div className="flex-1">
-      <h2 className="mb-4 pr-6 text-xl font-semibold text-white">NFT Data Collection Platform</h2>
-
       <Form
         name="form4"
         layout="vertical"
