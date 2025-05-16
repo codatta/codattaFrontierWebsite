@@ -1,7 +1,7 @@
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 
-import RoboticsLayout from '@/layouts/robotics-layout'
+import FrontierLayout from '@/layouts/frontier-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
@@ -13,9 +13,17 @@ const Home = lazy(() => import('@/views/home'))
 const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
+
+// cmu
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
 const CMULayout = lazy(() => import('@/views/cmu-video-labeling/cmu-layout'))
+
+// other frontier
+const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
+const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
+const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
+const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 
 // settings
 const SettingAccount = lazy(() => import('@/views/settings/account'))
@@ -52,6 +60,7 @@ const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 const ModelListPage = lazy(() => import('@/views/arena/model-list'))
+const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
 // const MCPArenaPage = lazy(() => import('@/views/arena/mcp-arena'))
 
 const NotFoundPage = lazy(() => import('@/views/not-found'))
@@ -63,8 +72,8 @@ export default function Router() {
         <Route index element={<Navigate to="/app" />} />
         <Route path="/arena" element={<ArenaLayout />}>
           <Route index element={<ChatbotArenaPage />} />
+          <Route path="leaderboard" element={<ChatBotArenaLeaderboardPage />} />
           <Route path="model/list" element={<ModelListPage />} />
-          {/* <Route path="mcp" element={<MCPArenaPage />} /> */}
         </Route>
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
@@ -118,12 +127,17 @@ export default function Router() {
           <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
         </Route>
 
-        <Route path="/frontier">
-          <Route path="robotics" element={<RoboticsLayout />}>
-            <Route path="ROBOTICS_TPL_000001/:taskId" element={<FormType1 templateId="ROBOTICS_TPL_000001" />} />
-            <Route path="ROBOTICS_TPL_000002/:taskId" element={<FormType2 templateId="ROBOTICS_TPL_000002" />} />
-            <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
-          </Route>
+        <Route path="/frontier/project" element={<FrontierLayout />}>
+          <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
+          <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
+          <Route path="OOTD_TPL_000001/:taskId" element={<OOTDTemplate templateId="OOTD_TPL_000001" />} />
+          <Route path="SPEECH_TPL_000001/:taskId" element={<SpeechTemplate templateId="SPEECH_TPL_000001" />} />
+        </Route>
+
+        <Route path="/frontier/robotics" element={<FrontierLayout />}>
+          <Route path="ROBOTICS_TPL_000001/:taskId" element={<FormType1 templateId="ROBOTICS_TPL_000001" />} />
+          <Route path="ROBOTICS_TPL_000002/:taskId" element={<FormType2 templateId="ROBOTICS_TPL_000002" />} />
+          <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

@@ -4,7 +4,7 @@ export default function ModelList() {
   const { modelList } = useArenaStore()
 
   return (
-    <div className="py-8">
+    <div>
       <h1 className="mb-2 text-3xl font-bold">Model List</h1>
       <p className="mb-10 text-base text-white/60">Explore our collection of AI models</p>
       <table>

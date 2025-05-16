@@ -48,7 +48,7 @@ const Frontiers = () => {
       <Spin spinning={loading}>
         <h2 className="mb-3 text-lg font-bold">{frontiersArray.length > 0 ? 'More Frontiers' : 'Explore More'}</h2>
         {frontiersArray.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
             {frontiersArray.map((item) => (
               <div
                 key={item.frontier_id}
