@@ -1,9 +1,10 @@
-import frontierApi, { TaskDetail } from '@/apis/frontiter.api'
+import frontierApi, { FrontierListItem, TaskDetail } from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
-import { proxy } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
 import { message } from 'antd'
 
-type FrontiersStore = {
+type FrontierStore = {
+  frontierList: FrontierListItem[]
   pageData: {
     list: TaskDetail[]
     total: number
@@ -20,7 +21,8 @@ type FrontiersStore = {
   }
 }
 
-export const frontiersStore = proxy<FrontiersStore>({
+export const frontiersStore = proxy<FrontierStore>({
+  frontierList: [],
   pageData: {
     list: [],
     total: 0,
@@ -37,32 +39,29 @@ export const frontiersStore = proxy<FrontiersStore>({
   }
 })
 
-export const getFrontiersTaskList = debounce(
-  async (params: { page: number; page_size: number; frontier_id: string }) => {
-    try {
-      frontiersStore.pageData.listLoading = true
-      const { page_size, page, frontier_id } = params
-      const res = await frontierApi.getTaskList({
-        frontier_id,
-        page_size,
-        page_num: page
-      })
-      frontiersStore.pageData.list = res.data ?? []
-      frontiersStore.pageData.total = res.total_count
-      frontiersStore.pageData.listLoading = false
-    } catch (err) {
-      message.error(err.message)
-      frontiersStore.pageData.list = []
-      frontiersStore.pageData.total = 0
-      frontiersStore.pageData.listLoading = false
-      throw err
-    }
-  },
-  500
-)
+const getFrontiersTaskList = debounce(async (params: { page: number; page_size: number; frontier_id: string }) => {
+  try {
+    frontiersStore.pageData.listLoading = true
+    const { page_size, page, frontier_id } = params
+    const res = await frontierApi.getTaskList({
+      frontier_id,
+      page_size,
+      page_num: page
+    })
+    frontiersStore.pageData.list = res.data ?? []
+    frontiersStore.pageData.total = res.total_count
+    frontiersStore.pageData.listLoading = false
+  } catch (err) {
+    message.error(err.message)
+    frontiersStore.pageData.list = []
+    frontiersStore.pageData.total = 0
+    frontiersStore.pageData.listLoading = false
+    throw err
+  }
+}, 500)
 
-export function changeFrontiersFilter(
-  data: Partial<FrontiersStore['pageData']> & {
+function changeFrontiersFilter(
+  data: Partial<FrontierStore['pageData']> & {
     frontier_id: string
   }
 ) {
@@ -80,7 +79,7 @@ export function changeFrontiersFilter(
   })
 }
 
-export const getFrontiersHistory = debounce(async (params: { page: number; frontier_id: string }) => {
+const getFrontiersHistory = debounce(async (params: { page: number; frontier_id: string }) => {
   try {
     frontiersStore.historyPageData.listLoading = true
     const { page } = params
@@ -100,7 +99,7 @@ export const getFrontiersHistory = debounce(async (params: { page: number; front
   }
 }, 500)
 
-export function changeFrontiersHistoryFilter(page: number, frontier_id: string) {
+function changeFrontiersHistoryFilter(page: number, frontier_id: string) {
   frontiersStore.historyPageData.page = page
   getFrontiersHistory({
     frontier_id,
@@ -108,7 +107,18 @@ export function changeFrontiersHistoryFilter(page: number, frontier_id: string) 
   })
 }
 
-export async function getFrontiers() {
-  const data = await frontierApi.getFrontiers()
-  return data
+async function getFrontierList() {
+  const res = await frontierApi.getFrontiers()
+  frontiersStore.frontierList = res.data || []
+  return res.data
+}
+
+export function useFrontierStore() {
+  return useSnapshot(frontiersStore)
+}
+
+export const frontierStoreActions = {
+  getFrontierList,
+  changeFrontiersFilter,
+  changeFrontiersHistoryFilter
 }

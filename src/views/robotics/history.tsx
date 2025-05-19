@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'lucide-react'
 import arrowLeft from '@/assets/common/arrow-left.svg'
 
 // import { roboticsStore, changeRoboticsHistoryFilter } from '@/stores/robotics-notstart.store'
-import { frontiersStore, changeFrontiersHistoryFilter } from '@/stores/frontier.store'
+import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import dayjs from 'dayjs'
 
 import CustomEmpty from '@/components/common/empty'
@@ -64,12 +64,12 @@ export default function Component() {
   } = useSnapshot(frontiersStore)
 
   const handlePageChange = (page: number) => {
-    changeFrontiersHistoryFilter(page, frontier_id!)
+    frontierStoreActions.changeFrontiersHistoryFilter(page, frontier_id!)
   }
 
   useEffect(() => {
-    changeFrontiersHistoryFilter(1, frontier_id!)
-  }, [])
+    frontierStoreActions.changeFrontiersHistoryFilter(1, frontier_id!)
+  }, [frontier_id])
 
   return (
     <div className=" ">

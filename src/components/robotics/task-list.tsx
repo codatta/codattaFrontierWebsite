@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import AngleRight from '@/assets/crypto/angle-right.svg'
 
-import { frontiersStore, changeFrontiersFilter } from '@/stores/frontier.store'
+import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
 import { TaskDetail } from '@/apis/frontiter.api'
 
@@ -28,11 +28,11 @@ const RoboticsTaskList: React.FC = () => {
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
-    changeFrontiersFilter({ page: page, frontier_id: frontier_id })
+    frontierStoreActions.changeFrontiersFilter({ page: page, frontier_id: frontier_id })
   }
 
   useEffect(() => {
-    changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
+    frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size, frontier_id])
 
   return (
@@ -42,7 +42,7 @@ const RoboticsTaskList: React.FC = () => {
           <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
         </div>
         <div
-          onClick={() => navigate(`/app/robotics/history/${frontier_id}`)}
+          onClick={() => navigate(`/app/frontier/${frontier_id}/history`)}
           className="flex cursor-pointer items-center"
         >
           <div className="text-xs font-normal text-white/80">History</div>

@@ -1,6 +1,6 @@
 import TransitionEffect from '@/components/common/transition-effect'
 import Banner from '@/components/home/banner'
-import Explore from '@/components/home/explore'
+// import Explore from '@/components/home/explore'
 import Frontiers from '@/components/home/frontiers'
 import Aside from '@/components/home/aside'
 
@@ -10,7 +10,7 @@ export default function HomePage() {
       <div className="pr-[350px]">
         <Banner />
         <Frontiers />
-        <Explore />
+        {/* <Explore /> */}
       </div>
       <Aside className="absolute right-0 top-0 h-full" />
     </TransitionEffect>

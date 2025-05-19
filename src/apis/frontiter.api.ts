@@ -35,7 +35,7 @@ export interface TaskDetail {
   txHashUrl: string
 }
 
-export interface ExploreFrontierItem {
+export interface FrontierListItem {
   creator_id: string
   description: {
     frontier_desc: string
@@ -138,7 +138,7 @@ class frontier {
     return res.data
   }
 
-  async getFrontiers(): Promise<Response<ExploreFrontierItem[]>> {
+  async getFrontiers(): Promise<Response<FrontierListItem[]>> {
     const res = await this.request.post('/v2/frontier/list ')
     return res.data
   }

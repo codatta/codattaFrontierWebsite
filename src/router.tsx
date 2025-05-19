@@ -1,6 +1,7 @@
 import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
 import { lazy } from 'react'
 
+// layouts
 import FrontierLayout from '@/layouts/frontier-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
@@ -8,22 +9,14 @@ import ArenaLayout from '@/layouts/arena-layout'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
+const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
+const AppNotification = lazy(() => import('@/views/notification'))
+const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
+const AppReferral = lazy(() => import('@/views/referral'))
 
-// robotics
-const FormType1 = lazy(() => import('@/views/robotics/form-type-1'))
-const FormType2 = lazy(() => import('@/views/robotics/form-type-2'))
-const FormType3 = lazy(() => import('@/views/robotics/form-type-3'))
-
-// cmu
-const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
-const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
-const CMULayout = lazy(() => import('@/views/cmu-video-labeling/cmu-layout'))
-
-// other frontier
-const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
-const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
-const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
-const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
+// quest
+const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
+const Activity = lazy(() => import('@/views/quest/activity'))
 
 // settings
 const SettingAccount = lazy(() => import('@/views/settings/account'))
@@ -32,7 +25,10 @@ const SettingReputation = lazy(() => import('@/views/settings/reputation'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
+const ReferralLanding = lazy(() => import('@/views/referral-landing'))
+const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 
+// crypto
 const CryptoHome = lazy(() => import('@/views/crypto/home'))
 const CryptoValidationList = lazy(() => import('@/views/crypto/validation-list'))
 const CryptoSubmissionSubmit = lazy(() => import('@/views/crypto/submission-submit'))
@@ -42,27 +38,38 @@ const CryptoBountyList = lazy(() => import('@/views/crypto/bounty-list'))
 const CryptoBountyDetail = lazy(() => import('@/views/crypto/bounty-detail'))
 const CryptoBountySubmit = lazy(() => import('@/views/crypto/bounty-submit'))
 
+// frontiers
+const FrontierHome = lazy(() => import('@/views/frontiers/home'))
 const FashionHome = lazy(() => import('@/views/fashion/home'))
 const RoboticsHome = lazy(() => import('@/views/robotics/home'))
 const RoboticsHistory = lazy(() => import('@/views/robotics/history'))
-const FrontierHome = lazy(() => import('@/views/frontiers/home'))
+const RoboticsFormType1 = lazy(() => import('@/views/robotics/form-type-1'))
+const RoboticsFormType2 = lazy(() => import('@/views/robotics/form-type-2'))
+const RoboticsFormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
-const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
-const Activity = lazy(() => import('@/views/quest/activity'))
+// frontiers templates
+const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
+const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
+const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
+const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 
-const ReferralLanding = lazy(() => import('@/views/referral-landing'))
-const AppReferral = lazy(() => import('@/views/referral'))
-const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
-const AppNotification = lazy(() => import('@/views/notification'))
-const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
+// cmu video labeling
+const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
+const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
+const CMULayout = lazy(() => import('@/views/cmu-video-labeling/cmu-layout'))
+
+// data profile
 const DataProfile = lazy(() => import('@/views/data-profile'))
+
+// codatta clip
 const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
-const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
+
+// arena
 const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
-// const MCPArenaPage = lazy(() => import('@/views/arena/mcp-arena'))
 
+// not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
 
 export default function Router() {
@@ -84,10 +91,10 @@ export default function Router() {
           <Route path="referral" element={<AppReferral />}></Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
           <Route path="notification" element={<AppNotification />}></Route>
-          <Route path="fashion" element={<FashionHome />}></Route>
-          <Route path="robotics" element={<RoboticsHome />}></Route>
+          <Route path="frontier/fashion" element={<FashionHome />}></Route>
+          <Route path="frontier/robotics" element={<RoboticsHome />}></Route>
           <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
-          <Route path="robotics/history/:frontier_id" element={<RoboticsHistory />}></Route>
+          <Route path="frontier/:frontier_id/history" element={<RoboticsHistory />}></Route>
 
           <Route path="settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
@@ -135,9 +142,9 @@ export default function Router() {
         </Route>
 
         <Route path="/frontier/robotics" element={<FrontierLayout />}>
-          <Route path="ROBOTICS_TPL_000001/:taskId" element={<FormType1 templateId="ROBOTICS_TPL_000001" />} />
-          <Route path="ROBOTICS_TPL_000002/:taskId" element={<FormType2 templateId="ROBOTICS_TPL_000002" />} />
-          <Route path="ROBOTICS_TPL_000003/:taskId" element={<FormType3 templateId="ROBOTICS_TPL_000003" />} />
+          <Route path="ROBOTICS_TPL_000001/:taskId" element={<RoboticsFormType1 templateId="ROBOTICS_TPL_000001" />} />
+          <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
+          <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
