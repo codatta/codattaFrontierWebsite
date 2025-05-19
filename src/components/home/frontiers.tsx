@@ -97,7 +97,7 @@ const Frontiers = () => {
       <h2 className="mb-3 text-lg font-bold">Recent Frontiers</h2>
       <Spin spinning={loading}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-          {frontiers.map((item, index) => (
+          {frontiers.map((item) => (
             <div
               key={item.title}
               className="group relative aspect-[269/243] w-full cursor-pointer overflow-hidden rounded-2xl"

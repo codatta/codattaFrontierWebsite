@@ -14,7 +14,7 @@ export default function Reward() {
   }, [])
 
   return (
-    <div className="relative mt-5 flex flex-1 flex-col p-4 text-white">
+    <div className="relative mt-5 flex flex-1 flex-col p-6 text-white">
       <div className="text-sm">
         <h3 className="text-base">Reward</h3>
         <Spin spinning={loading && !total_count} className="w-full">
@@ -25,7 +25,7 @@ export default function Reward() {
                 renderItem={(item) => (
                   <List.Item>
                     <div className="flex w-full items-center justify-between gap-1.5 pb-4 pt-5 leading-5">
-                      <div className="text-base">{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
+                      <div className="text-sm">{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
                       <div className="ml-auto font-semibold text-primary">
                         {parseInt(item.amount?.amount)} {item.amount?.currency}
                       </div>

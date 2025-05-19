@@ -6,8 +6,8 @@ import Aside from '@/components/home/aside'
 
 export default function HomePage() {
   return (
-    <TransitionEffect className="relative text-sm">
-      <div className="pr-[350px]">
+    <TransitionEffect className="relative min-h-full text-sm">
+      <div className="pr-[324px]">
         <Banner />
         <Frontiers />
         {/* <Explore /> */}
