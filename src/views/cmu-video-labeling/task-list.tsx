@@ -101,6 +101,11 @@ export default function CMUVideoTaskList() {
     navigate(-1)
   }
 
+  function handleNoMoreQuestionsClose() {
+    setShowNoMoreQuestions(false)
+    navigate(-1)
+  }
+
   return (
     <div className="w-full">
       <div className="mb-3 flex w-full items-center justify-between">
@@ -156,7 +161,7 @@ export default function CMUVideoTaskList() {
 
       <Modal
         open={showNoMoreQuestions}
-        onCancel={() => setShowNoMoreQuestions(false)}
+        onCancel={handleNoMoreQuestionsClose}
         closable={false}
         footer={null}
         centered
@@ -183,7 +188,7 @@ export default function CMUVideoTaskList() {
               size="large"
               shape="round"
               className="w-[120px]"
-              onClick={() => setShowNoMoreQuestions(false)}
+              onClick={handleNoMoreQuestionsClose}
             >
               Got it
             </Button>
