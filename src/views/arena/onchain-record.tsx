@@ -122,7 +122,8 @@ export default function ArenaOnChainList() {
                   <td className="p-4">{dayjs(item.chain_time).format('YYYY/MM/DD HH:mm:ss')}</td>
                   <td className="p-4">{item.user_id}</td>
                   <td className="flex items-center gap-2 p-4">
-                    {shorttenTxHash(item.tx_hash)} <Copy size={16} onClick={() => handleCopy(item.tx_hash)}></Copy>
+                    {shorttenTxHash(item.tx_hash)}{' '}
+                    <Copy size={16} onClick={() => handleCopy(item.tx_hash)} className="cursor-pointer"></Copy>
                   </td>
                   <td className="p-4">{item.block_number}</td>
                   <td className="p-4">
