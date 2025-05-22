@@ -104,7 +104,8 @@ export default function Leaderboard() {
       <div className="mb-8 text-center text-sm text-white/40">
         <p className="mb-2">
           Codatta Arena is an open benchmarking platform designed for conversational AI models, allowing users to assess
-          real-world performance across various application scenarios.
+          real-world performance across various application scenarios. All votes are immutably recorded on-chain for
+          full transparency and auditability.
         </p>
         <p>
           From basic interactions to data analysis and code generation, Codatta Arena provides a comprehensive
