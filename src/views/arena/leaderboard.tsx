@@ -5,6 +5,7 @@ import BronzeImage from '@/assets/chatbot/bronze-medal.png'
 import SilverImage from '@/assets/chatbot/silver-medal.png'
 import GoldImage from '@/assets/chatbot/gold-medal.png'
 import { arenaStoreActions, useArenaStore } from '@/stores/arena.store'
+import { Link } from 'react-router-dom'
 
 interface SortIconProps {
   active: boolean
@@ -32,7 +33,6 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(false)
   const [sortField, setSortField] = useState<string>('arena_score')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
-
   const { leaderboard, leaderboardSummary } = useArenaStore()
 
   async function fetchLeaderboard() {
@@ -94,6 +94,9 @@ export default function Leaderboard() {
         <div>
           🗳️ Total verified votes: <strong>{leaderboardSummary.total_votes}</strong>
         </div>
+        <Link to="/arena/onchain/list" className="underline transition-all hover:text-primary">
+          🗳️ Total On-chain Votes: <strong>{leaderboardSummary.total_chain_votes}</strong>
+        </Link>
         <div>
           📅 Last Updated: <strong>{leaderboardSummary.update_time}</strong>
         </div>

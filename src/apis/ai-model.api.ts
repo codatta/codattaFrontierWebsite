@@ -3,8 +3,20 @@ import request from './request'
 
 interface Response<T> {
   data: T
-  success: true
-  errorCode: 0
+  success: boolean
+  errorCode: number
+  errorMessage: string
+}
+
+interface PaginationResponse<T> {
+  data: {
+    count: number
+    pageNo: number
+    pageSize: number
+    list: T
+  }
+  success: boolean
+  errorCode: number
   errorMessage: string
 }
 
@@ -37,6 +49,15 @@ export interface LeaderboardItem {
   rank?: number
 }
 
+export interface OnChainRecord {
+  id: number
+  user_id: string
+  tx_hash: string
+  block_number: string
+  chain_time: string
+  chan_link: string
+}
+
 class AIModelRequest {
   constructor(private request: AxiosInstance) {}
 
@@ -65,10 +86,27 @@ class AIModelRequest {
   }
 
   async getLeaderboard() {
-    const res =
-      await this.request.get<
-        Response<{ models: LeaderboardItem[]; total: number; total_votes: number; update_time: string }>
-      >('/ct/model/leaderboard')
+    const res = await this.request.get<
+      Response<{
+        models: LeaderboardItem[]
+        total: number
+        total_votes: number
+        update_time: string
+        total_chain_votes: number
+      }>
+    >('/ct/model/leaderboard')
+    return res.data
+  }
+
+  async getOnChainRecord(page: number, userId?: string, sortField?: string, sortDirection?: string) {
+    const res = await this.request.post<PaginationResponse<OnChainRecord[]>>('/ct/model/chain/records', {
+      page_no: page,
+      page_size: 20,
+      user_id: userId,
+      order_type: sortDirection,
+      order_column: sortField
+    })
+
     return res.data
   }
 }

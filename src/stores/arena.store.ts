@@ -7,14 +7,14 @@ type ArenaStore = {
   modelList: AIModelItem[]
   loadingModelList: boolean
   leaderboard: LeaderboardItem[]
-  leaderboardSummary: { total: number; total_votes: number; update_time: string }
+  leaderboardSummary: { total: number; total_votes: number; update_time: string; total_chain_votes: number }
 }
 
 export const arenaStore = proxy<ArenaStore>({
   modelList: [],
   loadingModelList: false,
   leaderboard: [],
-  leaderboardSummary: { total: 0, total_votes: 0, update_time: '' }
+  leaderboardSummary: { total: 0, total_votes: 0, update_time: '', total_chain_votes: 0 }
 })
 
 export async function getModelList() {
@@ -33,6 +33,7 @@ export async function getLeaderboard() {
   arenaStore.leaderboardSummary.total = res.data.total
   arenaStore.leaderboardSummary.total_votes = res.data.total_votes
   arenaStore.leaderboardSummary.update_time = res.data.update_time
+  arenaStore.leaderboardSummary.total_chain_votes = res.data.total_chain_votes
 }
 
 export const useArenaStore = () => useSnapshot(arenaStore)

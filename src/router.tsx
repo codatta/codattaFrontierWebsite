@@ -68,6 +68,7 @@ const ExtensionSignin = lazy(() => import('@/views/account/extension-signin'))
 const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
+const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
 
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
@@ -81,6 +82,7 @@ export default function Router() {
           <Route index element={<ChatbotArenaPage />} />
           <Route path="leaderboard" element={<ChatBotArenaLeaderboardPage />} />
           <Route path="model/list" element={<ModelListPage />} />
+          <Route path="onchain/list" element={<ArenaOnChainList />} />
         </Route>
         <Route path="/data-profile/:network/:address" element={<DataProfile />} />
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
