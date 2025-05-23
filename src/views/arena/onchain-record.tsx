@@ -79,7 +79,7 @@ export default function ArenaOnChainList() {
 
   return (
     <div>
-      <div className="mb-6 flex">
+      {/* <div className="mb-6 flex">
         <div className="w-[360px] rounded-full border border-white/10">
           <Input
             variant="borderless"
@@ -92,7 +92,7 @@ export default function ArenaOnChainList() {
             onKeyDown={handleInputKeyDown}
           ></Input>
         </div>
-      </div>
+      </div> */}
       <Spin spinning={loading}>
         <div className="overflow-hidden rounded-lg border border-white/5 bg-[#1e1e29] px-2 text-sm text-white">
           <table className="w-full">
@@ -104,9 +104,9 @@ export default function ArenaOnChainList() {
                     <SortIcon active={sortField === 'chain_time'} direction={sortDirection} />
                   </div>
                 </th>
-                <th className="cursor-pointer p-4 text-left">
+                {/* <th className="cursor-pointer p-4 text-left">
                   <div className="flex items-center gap-1">User ID</div>
-                </th>
+                </th> */}
                 <th className="cursor-pointer px-4 py-3 text-left">
                   <div className="flex items-center gap-1">Transaction Hash</div>
                 </th>
@@ -120,7 +120,7 @@ export default function ArenaOnChainList() {
               {list.map((item) => (
                 <tr key={item.id} className="transition-all hover:bg-white/5">
                   <td className="p-4">{dayjs(item.chain_time).format('YYYY/MM/DD HH:mm:ss')}</td>
-                  <td className="p-4">{item.user_id}</td>
+                  {/* <td className="p-4">{item.user_id}</td> */}
                   <td className="flex items-center gap-2 p-4">
                     {shorttenTxHash(item.tx_hash)}{' '}
                     <Copy size={16} onClick={() => handleCopy(item.tx_hash)} className="cursor-pointer"></Copy>
