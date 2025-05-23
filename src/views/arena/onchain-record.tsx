@@ -1,7 +1,7 @@
 import aiModelApi, { OnChainRecord } from '@/apis/ai-model.api'
-import { Input, message, Pagination, Spin } from 'antd'
-import { Copy, Link, Search } from 'lucide-react'
-import { KeyboardEventHandler, useEffect, useState } from 'react'
+import { message, Pagination, Spin } from 'antd'
+import { Copy, Link } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 
 interface SortIconProps {
@@ -31,7 +31,7 @@ export default function ArenaOnChainList() {
   const [list, setList] = useState<OnChainRecord[]>([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const [userId, setUserId] = useState<string>()
+  const [userId, _setUserId] = useState<string>()
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [sortField, setSortField] = useState<string>('chain_time')
 
@@ -65,12 +65,12 @@ export default function ArenaOnChainList() {
     }
   }
 
-  const handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
-    if (e.key === 'Enter') {
-      const input = e.target as HTMLInputElement
-      setUserId(input.value)
-    }
-  }
+  // const handleInputKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+  //   if (e.key === 'Enter') {
+  //     const input = e.target as HTMLInputElement
+  //     setUserId(input.value)
+  //   }
+  // }
 
   function handleCopy(str: string) {
     navigator.clipboard.writeText(str)
