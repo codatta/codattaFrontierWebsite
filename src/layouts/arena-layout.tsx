@@ -12,7 +12,6 @@ export default function ArenaLayout() {
     const token = cookies.get('auth') || localStorage.getItem('auth')
     if (token) userStoreActions.getUserInfo()
     arenaStoreActions.getModelList()
-    userStoreActions.getUserInfo()
   }, [])
 
   return (
