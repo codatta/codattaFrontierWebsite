@@ -1,6 +1,6 @@
 import arrowRight from '@/assets/icons/arrow-right.svg'
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FrontierListItem } from '@/apis/frontiter.api'
 import { frontierStoreActions, useFrontierStore } from '@/stores/frontier.store'
 import { message, Spin } from 'antd'
