@@ -13,6 +13,7 @@ const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
 const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const AppReferral = lazy(() => import('@/views/referral'))
+const NewJourney = lazy(() => import('@/views/new-journey'))
 
 // quest
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
@@ -88,9 +89,10 @@ export default function Router() {
         <Route path="/app/data/profile/:network/:address" element={<DataProfile />} />
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
           <Route index element={<Home />} />
+          <Route path="referral" element={<AppReferral />}></Route>
+          <Route path="journey" element={<NewJourney />} />
         </Route>
         <Route path="/app" element={<AppLayout />}>
-          <Route path="referral" element={<AppReferral />}></Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
           <Route path="notification" element={<AppNotification />}></Route>
           <Route path="frontier/fashion" element={<FashionHome />}></Route>

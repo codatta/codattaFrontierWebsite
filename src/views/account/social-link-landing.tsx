@@ -63,7 +63,7 @@ export default function Component() {
   }, [socialMedia])
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6">
+    <div className="flex size-full flex-col items-center justify-center gap-3 p-6">
       <header className="boder-b border-gray-6 mb-4 flex w-full justify-center p-4">
         <img src={ImageLogo} className="h-24px" alt="" />
       </header>

@@ -1,5 +1,5 @@
-import Telegram from '@/assets/referral/icon-telegram.svg'
-import Twitter from '@/assets/referral/icon-twitter.svg'
+import Telegram from '@/assets/referral/tg-icon.svg'
+import Twitter from '@/assets/referral/x-icon.svg'
 import { cn } from '@udecode/cn'
 import { useState } from 'react'
 
@@ -19,14 +19,14 @@ const supportList = new Map<Social, { url: (content: ShareContent) => string; ic
     Social.Twitter,
     {
       url: ({ text, link }) => `https://twitter.com/intent/post?text=${text}&url=${encodeURIComponent(link!)}`,
-      icon: (size = 14) => <Twitter size={size ?? 14} fill="#000" color="#fff" />
+      icon: () => <img src={Twitter} alt="" />
     }
   ],
   [
     Social.Telegram,
     {
       url: ({ text, link }) => `https://t.me/share/url?text=${text}&url=${encodeURIComponent(link!)}`,
-      icon: (size = 14) => <Telegram size={(size ?? 14) + 2} fill="#30A7DE" />
+      icon: () => <img src={Telegram} alt="" />
     }
   ]
 ])
@@ -35,7 +35,6 @@ interface SocialShareProps {
   className?: string
   content?: (name: Social) => ShareContent
   socials?: Social[]
-  size?: number
   onShare?: (name: Social) => void
   itemWrapper?: (child: JSX.Element) => JSX.Element
   request?: (name: Social) => Promise<ShareContent>
@@ -50,7 +49,6 @@ export default function SocialShare(props: SocialShareProps) {
       {socials.map((socialName) => (
         <SocialItem
           key={socialName}
-          size={props.size!}
           socialName={socialName}
           itemWrapper={itemWrapper}
           onShare={props.onShare}
@@ -63,7 +61,6 @@ export default function SocialShare(props: SocialShareProps) {
 }
 function SocialItem(props: {
   socialName: Social
-  size: number
   content?: (name: Social) => ShareContent
   socials?: Social[]
   onShare?: (name: Social) => void
@@ -107,12 +104,12 @@ function SocialItem(props: {
       {props.itemWrapper?.(
         <a
           title={`Share to ${socialName}`}
-          className={cn('cursor-pointer')}
+          className="block rounded-md bg-white/5 p-2"
           onClick={() => {
             handleClick()
           }}
         >
-          {social?.icon(props.size)}
+          <div className="flex size-4 items-center justify-center">{social?.icon()}</div>
         </a>
       )}
     </li>

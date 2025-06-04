@@ -151,10 +151,10 @@ const NotFoundPage: React.FC = () => {
       </div>
 
       {/* Digital space decorative elements */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
-      <div className="absolute bottom-0 left-0 top-0 w-px bg-gradient-to-b from-transparent via-purple-500/50 to-transparent"></div>
-      <div className="absolute bottom-0 right-0 top-0 w-px bg-gradient-to-b from-transparent via-purple-500/50 to-transparent"></div>
-      <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+      <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
+      <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-purple-500/50 to-transparent"></div>
+      <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-purple-500/50 to-transparent"></div>
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
     </div>
   )
 }

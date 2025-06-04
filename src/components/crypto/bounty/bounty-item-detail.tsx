@@ -3,7 +3,7 @@ import { Flex, Image, Tooltip } from 'antd'
 import { useCallback, useEffect, useState } from 'react'
 import SubmissionProgress from '@/components/crypto/submission/submission-progress'
 import Copy from '@/components/common/copy'
-import { VALIDATION_TIPS } from '@/configs/config'
+import { VALIDATION_TIPS } from '@/config/config'
 import { Atom, FileText, ImageIcon, Link } from 'lucide-react'
 import { TEvidence, TValidationDetail } from '@/api-v1/validation.api'
 
