@@ -22,7 +22,7 @@ const MAINNET = defineChain({
   rpcUrls: { default: { http: ['https://rpc-testnet.gokite.ai'] } }
 })
 
-const CONTRACT_ADDRESS_TESTNET = '0x71468F2241B44344d8Dc8F90281d39E8d1F0eE64'
+const CONTRACT_ADDRESS_TESTNET = '0xBD763639297123AB22Ff19Fe08BbD3361a53E8E1'
 const CONTRACT_ADDRESS_MAINNET = ''
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
