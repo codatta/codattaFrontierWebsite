@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { referralStoreActions, useReferralStore } from '@/stores/referral.store'
 import userApi from '@/apis/user.api'
 import { cn } from '@udecode/cn'
 import { InviteProgressItem } from '@/apis/user.api'
 import checkinNeonIcon from '@/assets/checkin/check-in-neon.svg'
 import claimIcon from '@/assets/referral/claim-icon.png'
-import { Avatar, message, Modal, Spin } from 'antd'
+import { message, Modal, Spin } from 'antd'
 import { createPublicClient, http } from 'viem'
 
 import PointRewardIcon from '@/assets/referral/point-reward.png'
@@ -115,7 +115,7 @@ export default function ReferralProgress() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [showLeftGradient, setShowLeftGradient] = useState(false)
   const [showRightGradient, setShowRightGradient] = useState(true)
-  const [messageApi, contextHolder] = message.useMessage()
+  const [_messageApi, contextHolder] = message.useMessage()
   const [levelClaiming, setLevelClaiming] = useState(false)
   const [showWalletConnect, setShowWalletConnect] = useState(false)
   const [showContractCallView, setShowContractCallView] = useState(false)
@@ -125,19 +125,19 @@ export default function ReferralProgress() {
 
   const { lastUsedWallet } = useCodattaConnectContext()
 
-  function showRewardMessage(icon: string, message: string) {
-    messageApi.success({
-      content: <span className="text-[#020008E0]">{message}</span>,
-      icon: (
-        <Avatar.Group>
-          {referralProgress.map((item) => (
-            <Avatar shape="square" key={item.reward_type} src={icon} className="!border-none" />
-          ))}
-        </Avatar.Group>
-      ),
-      className: `[&_.ant-message-custom-content]:flex [&_.ant-message-custom-content]:items-center [&_.ant-message-custom-content]:gap-2 [&_.ant-message-notice-content]:!bg-gradient-to-r [&_.ant-message-notice-content]:from-[#E9F0FFCC] [&_.ant-message-notice-content]:via-[#FFF3FFCC] [&_.ant-message-notice-content]:via-[30%] [&_.ant-message-notice-content]:to-[#FFFFFFCC] [&_.ant-message-notice-content]:to-[80%] [&_.ant-message-notice-content]:!px-6 [&_.ant-message-notice-content]!py-3`
-    })
-  }
+  // function showRewardMessage(icon: string, message: string) {
+  //   messageApi.success({
+  //     content: <span className="text-[#020008E0]">{message}</span>,
+  //     icon: (
+  //       <Avatar.Group>
+  //         {referralProgress.map((item) => (
+  //           <Avatar shape="square" key={item.reward_type} src={icon} className="!border-none" />
+  //         ))}
+  //       </Avatar.Group>
+  //     ),
+  //     className: `[&_.ant-message-custom-content]:flex [&_.ant-message-custom-content]:items-center [&_.ant-message-custom-content]:gap-2 [&_.ant-message-notice-content]:!bg-gradient-to-r [&_.ant-message-notice-content]:from-[#E9F0FFCC] [&_.ant-message-notice-content]:via-[#FFF3FFCC] [&_.ant-message-notice-content]:via-[30%] [&_.ant-message-notice-content]:to-[#FFFFFFCC] [&_.ant-message-notice-content]:to-[80%] [&_.ant-message-notice-content]:!px-6 [&_.ant-message-notice-content]!py-3`
+  //   })
+  // }
 
   useEffect(() => {
     referralStoreActions.getReferralProgress()

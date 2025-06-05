@@ -1,4 +1,4 @@
-import { message, Button, Modal } from 'antd'
+import { message, Button } from 'antd'
 import { useMemo } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import ReactGA from 'react-ga4'
@@ -11,7 +11,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { cn } from '@udecode/cn'
 
 const ReferralInvite = (props: { className?: string }) => {
-  const [messageApi, contextHolder] = message.useMessage()
+  const [messageApi] = message.useMessage()
   const { info } = useUserStore()
   const onCopied = () => {
     messageApi.success({
