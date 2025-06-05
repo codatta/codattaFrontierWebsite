@@ -88,7 +88,7 @@ function ReferralNftRewardItem(props: {
       </div>
       <div className="flex flex-col items-center gap-2">
         <span>Referral {index + 1}</span>
-        {item.claim_status !== 1 ? (
+        {item.claim_status === 2 && (
           <div className="flex size-[60px] items-center justify-center">
             <img
               src={checkinNeonIcon}
@@ -96,8 +96,20 @@ function ReferralNftRewardItem(props: {
               alt=""
             />
           </div>
-        ) : (
+        )}
+
+        {item.claim_status === 1 && (
           <img onClick={() => props.onClaim(item)} className="size-[60px] cursor-pointer" src={claimIcon} alt="claim" />
+        )}
+
+        {item.claim_status === 0 && (
+          <div className="flex size-[60px] items-center justify-center">
+            <img
+              className="size-12 rounded-full border border-white/5 bg-[#353540] p-[14px]"
+              src={LockImage}
+              alt="locked"
+            />
+          </div>
         )}
       </div>
     </div>
