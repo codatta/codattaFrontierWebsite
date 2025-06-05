@@ -31,7 +31,7 @@ export interface TaskDetail {
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
-  status: number | string
+  status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
 }
 

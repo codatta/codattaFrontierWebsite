@@ -23,6 +23,8 @@ const Activity = lazy(() => import('@/views/quest/activity'))
 const SettingAccount = lazy(() => import('@/views/settings/account'))
 const SettingReward = lazy(() => import('@/views/settings/reward'))
 const SettingReputation = lazy(() => import('@/views/settings/reputation'))
+const SettingUserNFT = lazy(() => import('@/views/settings/user-nft'))
+// const SettingUserSBT = lazy(() => import('@/views/settings/user-sbt'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
@@ -42,14 +44,14 @@ const CryptoBountySubmit = lazy(() => import('@/views/crypto/bounty-submit'))
 // frontiers
 const FrontierHome = lazy(() => import('@/views/frontiers/home'))
 const FashionHome = lazy(() => import('@/views/fashion/home'))
-const RoboticsHome = lazy(() => import('@/views/robotics/home'))
-const RoboticsHistory = lazy(() => import('@/views/robotics/history'))
+const FrontierHistory = lazy(() => import('@/views/frontiers/history'))
 const RoboticsFormType1 = lazy(() => import('@/views/robotics/form-type-1'))
 const RoboticsFormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const RoboticsFormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
 // frontiers templates
 const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
+const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
@@ -91,20 +93,23 @@ export default function Router() {
           <Route index element={<Home />} />
           <Route path="referral" element={<AppReferral />}></Route>
           <Route path="journey" element={<NewJourney />} />
-        </Route>
-        <Route path="/app" element={<AppLayout />}>
-          <Route path="leaderboard" element={<AppLeaderboard />}></Route>
-          <Route path="notification" element={<AppNotification />}></Route>
-          <Route path="frontier/fashion" element={<FashionHome />}></Route>
-          <Route path="frontier/robotics" element={<RoboticsHome />}></Route>
-          <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
-          <Route path="frontier/:frontier_id/history" element={<RoboticsHistory />}></Route>
 
           <Route path="settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
             <Route path="reward" element={<SettingReward />} />
             <Route path="reputation" element={<SettingReputation />} />
+            <Route path="nft" element={<SettingUserNFT />} />
+            {/* <Route path="sbt" element={<SettingUserSBT />} /> */}
           </Route>
+
+          <Route path="quest">
+            <Route index element={<ActivityGroup />} />
+            <Route path=":categoryId" element={<Activity />} />
+          </Route>
+          <Route path="notification" element={<AppNotification />}></Route>
+          <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
+          <Route path="frontier/:frontier_id/history" element={<FrontierHistory />}></Route>
+          <Route path="frontier/fashion" element={<FashionHome />}></Route>
 
           <Route path="crypto">
             <Route index element={<CryptoHome />} />
@@ -116,11 +121,7 @@ export default function Router() {
             <Route path="bounty/:id/submit" element={<CryptoBountySubmit />}></Route>
             <Route path="bounty/list" element={<CryptoBountyList />} />
           </Route>
-
-          <Route path="quest">
-            <Route index element={<ActivityGroup />} />
-            <Route path=":categoryId" element={<Activity />} />
-          </Route>
+          <Route path="leaderboard" element={<AppLeaderboard />}></Route>
         </Route>
 
         <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
@@ -140,16 +141,20 @@ export default function Router() {
 
         <Route path="/frontier/project" element={<FrontierLayout />}>
           <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
+          <Route path="FOOD_TPL_000002/:taskId" element={<FoodTpl000002 templateId="FOOD_TPL_000002" />} />
           <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
           <Route path="OOTD_TPL_000001/:taskId" element={<OOTDTemplate templateId="OOTD_TPL_000001" />} />
           <Route path="SPEECH_TPL_000001/:taskId" element={<SpeechTemplate templateId="SPEECH_TPL_000001" />} />
-        </Route>
-
-        <Route path="/frontier/robotics" element={<FrontierLayout />}>
           <Route path="ROBOTICS_TPL_000001/:taskId" element={<RoboticsFormType1 templateId="ROBOTICS_TPL_000001" />} />
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
         </Route>
+
+        {/* <Route
+          path="/frontier/project/FOOD_TPL_000002/:taskId"
+          element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
+        /> */}
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

@@ -13,7 +13,7 @@ import IconReferral from '@/assets/icons/app-nav/referral.svg'
 import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
-// import IconJourney from '@/assets/icons/app-nav/journey.svg'
+import IconJourney from '@/assets/icons/app-nav/journey.svg'
 
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -41,7 +41,10 @@ function AppNavItem(props: { item: MenuItem; selectedKeys: string[]; onClick: (i
   }
 
   return (
-    <div style={style} className="group relative">
+    <div
+      style={style}
+      className={cn('group relative', ['/arena', '/app/leaderboard'].includes(key) ? 'hidden md:block' : '')}
+    >
       <div className="py-0.5 pl-4 pr-2 lg:pr-0" onClick={() => handleClick(item)}>
         <div
           className={cn(
@@ -136,7 +139,7 @@ const menuItems: MenuItem[] = [
 
   {
     icon: <IconGitbook color="white" />,
-    key: 'https://docs.codatta.io/codatta',
+    key: 'https://docs.xny.ai/xny/codatta',
     label: (
       <div className="flex items-center justify-between">
         <span>Documentation</span>

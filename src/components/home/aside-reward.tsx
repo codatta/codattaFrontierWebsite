@@ -14,7 +14,7 @@ export default function Reward() {
   }, [])
 
   return (
-    <div className="relative mt-5 flex flex-1 flex-col p-6 text-white">
+    <div className="relative mt-5 hidden flex-1 flex-col p-6 text-white md:flex">
       <div className="text-sm">
         <h3 className="text-base">Reward</h3>
         <Spin spinning={loading && !total_count} className="w-full">

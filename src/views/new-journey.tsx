@@ -7,12 +7,22 @@ import JourneyReferral from '@/components/journey/journey-referral'
 export default function UserJourney() {
   return (
     <TransitionEffect className="box-border flex flex-col text-sm font-semibold">
-      <div>
+      <div className="mb-10">
+        <h2 className="mb-6 text-2xl font-bold">New Journey</h2>
         <JourneyLevels />
-        <JourneyPoints />
+      </div>
+      <div className="mb-10">
+        <h2 className="mb-6 text-2xl font-bold">Quests</h2>
         <JourneyQuest />
+      </div>
+      <div>
+        <h2 className="mb-1 text-2xl font-bold">Referral</h2>
+        <p className="mb-6 text-sm text-gray-500">
+          Once your valid referral count is reached, you'll earnthe event tier.
+        </p>
         <JourneyReferral />
       </div>
+      <JourneyPoints />
     </TransitionEffect>
   )
 }

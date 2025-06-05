@@ -7,12 +7,14 @@ import Aside from '@/components/home/aside'
 export default function HomePage() {
   return (
     <TransitionEffect className="relative min-h-full text-sm">
-      <div className="pr-[324px]">
+      <div className="flex flex-col gap-6 md:pr-[324px]">
+        <div className="block md:hidden">
+          <Aside></Aside>
+        </div>
         <Banner />
         <Frontiers />
-        {/* <Explore /> */}
       </div>
-      <Aside className="absolute right-0 top-0 h-full" />
+      <Aside className="absolute right-0 top-0 hidden h-full md:block" />
     </TransitionEffect>
   )
 }

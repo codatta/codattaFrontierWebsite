@@ -1,13 +1,9 @@
 import { proxy } from 'valtio'
 import { useSnapshot } from 'valtio'
-// import userApi from '@/apis/user.api'
-
-interface ILevel {
-  points: number
-}
+import userApi, { JourneyLevelItem } from '@/apis/user.api'
 
 type TJourneyStore = {
-  levels: ILevel[]
+  levels: JourneyLevelItem[]
 }
 
 export const journeyStore = proxy<TJourneyStore>({
@@ -16,7 +12,10 @@ export const journeyStore = proxy<TJourneyStore>({
 
 export const useJourneyStore = () => useSnapshot(journeyStore)
 
-async function getNewJourneyLevels() {}
+async function getNewJourneyLevels() {
+  const res = await userApi.getNewJourneyLevels()
+  journeyStore.levels = res
+}
 
 async function getNewJourneyQuests() {}
 
@@ -29,4 +28,8 @@ export const journeyStoreActions = {
   getNewJourneyQuests,
   getNewJourneyReferral,
   getNewJourneyPoints
+}
+
+export function useNewJourneyStore() {
+  return useSnapshot(journeyStore)
 }

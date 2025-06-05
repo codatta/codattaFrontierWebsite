@@ -19,12 +19,7 @@ const RoboticsTaskList: React.FC = () => {
   const goToForm = (data: unknown) => {
     // Create a mutable copy of the readonly object to avoid TypeScript errors
     const mutableData = JSON.parse(JSON.stringify(data)) as TaskDetail
-
-    if (mutableData.data_display.template_id.includes('ROBOTICS_TPL')) {
-      navigate(`/frontier/robotics/${mutableData.data_display.template_id}/${mutableData.task_id}`)
-    } else {
-      navigate(`/frontier/project/${mutableData.data_display.template_id}/${mutableData.task_id}`)
-    }
+    navigate(`/frontier/project/${mutableData.data_display.template_id}/${mutableData.task_id}`)
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
@@ -57,14 +52,14 @@ const RoboticsTaskList: React.FC = () => {
               <div
                 onClick={() => goToForm(item)}
                 key={item.task_id}
-                className="mb-3 flex cursor-pointer items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-6 transition-all hover:border-primary hover:shadow-primary"
+                className="mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
               >
                 <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
                   {item.data_display.template_id !== 'CMU_TPL_000001' && (
                     <div className="flex w-full flex-none items-center justify-start gap-4 md:w-auto">
                       {item.reward_info?.map((reward) => (
                         <div className="flex items-center text-center md:flex-col">
-                          <img src={reward.reward_icon} alt="" className="size-12" />
+                          <img src={reward.reward_icon} alt="" className="size-8 md:size-12" />
                           <span>{reward.reward_value}</span>
                         </div>
                       ))}
@@ -87,7 +82,7 @@ const RoboticsTaskList: React.FC = () => {
         {total > page_size && (
           <div>
             <div className="mt-auto flex items-center">
-              <span className="text-sm">Total {total}</span>
+              <span className="hidden text-sm md:block">Total {total}</span>
               <Pagination
                 showSizeChanger={false}
                 onChange={handlePageChange}

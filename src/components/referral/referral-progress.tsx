@@ -88,7 +88,7 @@ function ReferralNftRewardItem(props: {
       </div>
       <div className="flex flex-col items-center gap-2">
         <span>Referral {index + 1}</span>
-        {item.claim_status !== 1 ? (
+        {item.claim_status === 2 && (
           <div className="flex size-[60px] items-center justify-center">
             <img
               src={checkinNeonIcon}
@@ -96,8 +96,20 @@ function ReferralNftRewardItem(props: {
               alt=""
             />
           </div>
-        ) : (
+        )}
+
+        {item.claim_status === 1 && (
           <img onClick={() => props.onClaim(item)} className="size-[60px] cursor-pointer" src={claimIcon} alt="claim" />
+        )}
+
+        {item.claim_status === 0 && (
+          <div className="flex size-[60px] items-center justify-center">
+            <img
+              className="size-12 rounded-full border border-white/5 bg-[#353540] p-[14px]"
+              src={LockImage}
+              alt="locked"
+            />
+          </div>
         )}
       </div>
     </div>
@@ -119,23 +131,31 @@ export default function ReferralProgress() {
 
   const { lastUsedWallet } = useCodattaConnectContext()
 
-  // function showRewardMessage(icon: string, message: string) {
-  //   messageApi.success({
-  //     content: <span className="text-[#020008E0]">{message}</span>,
-  //     icon: (
-  //       <Avatar.Group>
-  //         {referralProgress.map((item) => (
-  //           <Avatar shape="square" key={item.reward_type} src={icon} className="!border-none" />
-  //         ))}
-  //       </Avatar.Group>
-  //     ),
-  //     className: `[&_.ant-message-custom-content]:flex [&_.ant-message-custom-content]:items-center [&_.ant-message-custom-content]:gap-2 [&_.ant-message-notice-content]:!bg-gradient-to-r [&_.ant-message-notice-content]:from-[#E9F0FFCC] [&_.ant-message-notice-content]:via-[#FFF3FFCC] [&_.ant-message-notice-content]:via-[30%] [&_.ant-message-notice-content]:to-[#FFFFFFCC] [&_.ant-message-notice-content]:to-[80%] [&_.ant-message-notice-content]:!px-6 [&_.ant-message-notice-content]!py-3`
-  //   })
-  // }
-
   useEffect(() => {
     referralStoreActions.getReferralProgress()
   }, [])
+
+  useEffect(() => {
+    if (referralProgress.length > 0 && scrollContainerRef.current) {
+      const firstClaimableIndex = referralProgress.findIndex((item) => item.claim_status === 1)
+
+      if (firstClaimableIndex !== -1) {
+        setTimeout(() => {
+          if (scrollContainerRef.current) {
+            const containerWidth = scrollContainerRef.current.clientWidth
+            const itemWidth = 155 + 40
+            const targetPosition = firstClaimableIndex * itemWidth
+            const scrollPosition = targetPosition - containerWidth / 3 + itemWidth / 2
+
+            scrollContainerRef.current.scrollTo({
+              left: Math.max(0, scrollPosition),
+              behavior: 'smooth'
+            })
+          }
+        }, 100)
+      }
+    }
+  }, [referralProgress])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,13 +166,22 @@ export default function ReferralProgress() {
       }
     }
 
+    const handleWheel = (e: WheelEvent) => {
+      if (scrollContainerRef.current && e.deltaY !== 0) {
+        e.preventDefault()
+        scrollContainerRef.current.scrollLeft += e.deltaY
+      }
+    }
+
     const scrollContainer = scrollContainerRef.current
     if (scrollContainer) {
       scrollContainer.addEventListener('scroll', handleScroll)
+      scrollContainer.addEventListener('wheel', handleWheel, { passive: false })
       handleScroll()
 
       return () => {
         scrollContainer.removeEventListener('scroll', handleScroll)
+        scrollContainer.removeEventListener('wheel', handleWheel)
       }
     }
   }, [referralProgress])
@@ -242,7 +271,10 @@ export default function ReferralProgress() {
 
       {/* Scrollable container */}
       <Spin spinning={levelClaiming}>
-        <div ref={scrollContainerRef} className="no-scrollbar overflow-x-scroll p-6">
+        <div
+          ref={scrollContainerRef}
+          className="no-scrollbar cursor-grab select-none overflow-scroll p-6 active:cursor-grabbing"
+        >
           <div className="absolute left-0 top-[84px] h-[2px] w-full px-10">
             <div className="h-full bg-primary/80"></div>
           </div>

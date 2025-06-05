@@ -19,7 +19,7 @@ const Index = () => {
           <AngleRight size={14} />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
         <div onClick={() => navigate(`/app/crypto/submission/submit?category=personal-data`)} className="h-full">
           <div className="flex h-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-transparent bg-[#252532] transition-all hover:border-primary hover:shadow-primary">
             <div className="p-4 pb-3">

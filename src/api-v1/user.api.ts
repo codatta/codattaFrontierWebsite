@@ -34,6 +34,7 @@ class UserApi {
         result: InviteRecord[]
       }>
     >('/user/inviter/entry', pagination)
+
     return res.data
   }
 

@@ -81,7 +81,7 @@ export default function SubmissionItemDetail(props: { submissionId: string }) {
               </span>
             ) : null}
           </h3>
-          <div className="rounded-xl bg-gray-200 px-4 pb-3 pt-4">
+          <div className="rounded-xl bg-white/5 px-4 pb-3 pt-4">
             {submission?.reward && (
               <SubmissionProgress reward={submission?.reward} tooltipTitle="Estimated completion time" />
             )}
@@ -89,7 +89,7 @@ export default function SubmissionItemDetail(props: { submissionId: string }) {
         </div>
         <div>
           <h3 className="mb-2 font-medium">Evidence</h3>
-          <div className="rounded-xl bg-gray-200 p-4 text-white">
+          <div className="rounded-xl bg-white/5 p-4 text-white">
             {submission?.basic_info && <SubmissionBasicInfo basicInfo={submission?.basic_info} />}
             {evidences.map((item: TEvidence) => {
               return (

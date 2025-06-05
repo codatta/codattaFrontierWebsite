@@ -30,7 +30,11 @@ export default function RadioCard({
         initialValue=""
         rules={[{ required: true, message: 'Please select one option.' }]}
       >
-        <Radio.Group onChange={handleRadioChange} className="grid grid-cols-3 gap-4" size="small">
+        <Radio.Group
+          onChange={handleRadioChange}
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3"
+          size="small"
+        >
           {options.map((option) => (
             <Radio key={option.value} value={option.value} className="mx-0 text-sm text-white">
               {option.label || option.value}

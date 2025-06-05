@@ -17,13 +17,14 @@ import SandglassActiveItem from '@/assets/task/sandglass-active-item.png'
 import CountDownIcon from '@/assets/task/countdown-icon.png'
 
 const TaskCard = ({ task, action, onTimeout }: { task: TaskItem; action?: JSX.Element; onTimeout: () => void }) => {
-  const checkDisplayRightBg = (task: TaskItem) => {
+  const checkDisplayRightBg = useMemo(() => {
     if (task.locked) return false
     if (task.max_count) return true
     if (task.start_time && task.expire_time) return true
     if (task.refresh_time) return true
     return false
-  }
+  }, [task])
+
   return (
     <Flex
       gap={12}
@@ -37,35 +38,20 @@ const TaskCard = ({ task, action, onTimeout }: { task: TaskItem; action?: JSX.El
         padding: task.status === TaskStatus.Finished ? '1px' : '0'
       }}
     >
-      <div className={cn('w-full rounded-3xl bg-gray-100 p-6', task.locked && 'bg-gray-200')}>
-        <div className="flex w-full items-end gap-6">
-          <div className="flex max-w-[65%] flex-col gap-2">
-            {task.locked ? (
-              <div className="w-[48px] shrink-0">
-                <img src={ImageLocked} alt="locked" />
-              </div>
-            ) : (
-              <Flex align="center" gap={12}>
-                {task.rewards?.map((reward, index) => (
-                  <RewardTag key={`${index}-${reward.reward_type}`} reward={reward} />
-                ))}
-              </Flex>
+      <div className={cn('w-full overflow-hidden rounded-3xl bg-gray-100', task.locked && 'bg-gray-200')}>
+        {checkDisplayRightBg && (
+          <div
+            className={cn(
+              'right-0 top-0 px-6 py-3 sm:absolute sm:h-[76px] sm:w-[329px] sm:pl-[48px] sm:pr-3 sm:pt-[11px]',
+              'bg-[length:0%_0%] sm:bg-[length:100%_100%]',
+              'bg-primary sm:bg-transparent'
             )}
-            <h2 className="mt-2 text-xl font-bold">{task.name}</h2>
-            <p className="mb-3 line-clamp-2 leading-normal text-gray-500">{task.description}</p>
-          </div>
-          <div className="flex flex-1 justify-end">{action}</div>
-        </div>
-        <div
-          className="absolute right-0 top-0 h-[76px] w-[329px] pl-[48px] pr-3 pt-[11px]"
-          style={{
-            backgroundImage: checkDisplayRightBg(task)
-              ? `url(${TaskStatus.Rewarded === task.status ? QuestRightDisabledBg : QuestRightBgIcon})`
-              : '',
-            backgroundSize: '100%'
-          }}
-        >
-          {!task.locked && (
+            style={{
+              backgroundImage: checkDisplayRightBg
+                ? `url(${TaskStatus.Rewarded === task.status ? QuestRightDisabledBg : QuestRightBgIcon})`
+                : ''
+            }}
+          >
             <Flex gap={8}>
               {task.refresh_time && (
                 <CountDownPie refresh_time={task.refresh_time} duration={task.duration} onTimeout={onTimeout} />
@@ -84,7 +70,26 @@ const TaskCard = ({ task, action, onTimeout }: { task: TaskItem; action?: JSX.El
                 />
               )}
             </Flex>
-          )}
+          </div>
+        )}
+
+        <div className="block w-full items-end gap-6 p-6 md:flex">
+          <div className="flex flex-col gap-2 md:max-w-[65%]">
+            {task.locked ? (
+              <div className="w-[48px] shrink-0">
+                <img src={ImageLocked} alt="locked" />
+              </div>
+            ) : (
+              <Flex align="center" gap={12}>
+                {task.rewards?.map((reward, index) => (
+                  <RewardTag key={`${index}-${reward.reward_type}`} reward={reward} />
+                ))}
+              </Flex>
+            )}
+            <h2 className="mt-2 text-xl font-bold">{task.name}</h2>
+            <p className="mb-3 line-clamp-2 leading-normal text-gray-500">{task.description}</p>
+          </div>
+          <div className="flex flex-1 justify-end">{action}</div>
         </div>
       </div>
     </Flex>

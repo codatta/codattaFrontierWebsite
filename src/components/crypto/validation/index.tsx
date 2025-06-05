@@ -44,7 +44,7 @@ const TopBox = () => {
 
   const groups = useMemo(() => {
     if (topData.list) {
-      const newGroups = splitArray<TValidationItem>(topData.list as [], 3)
+      const newGroups = splitArray<TValidationItem>(topData.list as [], 6)
       return newGroups
     } else {
       return []

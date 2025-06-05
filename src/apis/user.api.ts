@@ -115,6 +115,14 @@ export interface InviteNFTClaimParams {
   address?: string
 }
 
+export interface JourneyLevelItem {
+  levelId: number
+  reward_type: 'score' | 'reputation' | 'nft'
+  reward_value: number | string
+  soul_id?: number
+  status: number
+}
+
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -181,10 +189,112 @@ class UserApi {
     return data
   }
 
-  async getNewJourneyInfo() {
-    // const { data } = await request.get<Response<InviteDetail>>('/v2/invite/detail')
-    // return data
+  async getNewJourneyLevels() {
+    const data: JourneyLevelItem[] = [
+      {
+        levelId: 1,
+        reward_type: 'score',
+        reward_value: 100,
+        status: 1
+      },
+      {
+        levelId: 1,
+        reward_type: 'reputation',
+        reward_value: 100,
+        status: 0
+      },
+      {
+        levelId: 1,
+        reward_type: 'nft',
+        reward_value: 'nft_1',
+        soul_id: 2,
+        status: 2
+      },
+      {
+        levelId: 1,
+        reward_type: 'score',
+        reward_value: 100,
+        status: 1
+      },
+      {
+        levelId: 1,
+        reward_type: 'reputation',
+        reward_value: 100,
+        status: 0
+      },
+      {
+        levelId: 1,
+        reward_type: 'nft',
+        reward_value: 'nft_1',
+        soul_id: 2,
+        status: 2
+      },
+      {
+        levelId: 1,
+        reward_type: 'score',
+        reward_value: 100,
+        status: 1
+      },
+      {
+        levelId: 1,
+        reward_type: 'reputation',
+        reward_value: 100,
+        status: 0
+      },
+      {
+        levelId: 1,
+        reward_type: 'nft',
+        reward_value: 'nft_1',
+        soul_id: 2,
+        status: 2
+      },
+      {
+        levelId: 1,
+        reward_type: 'score',
+        reward_value: 100,
+        status: 1
+      },
+      {
+        levelId: 1,
+        reward_type: 'reputation',
+        reward_value: 100,
+        status: 0
+      },
+      {
+        levelId: 1,
+        reward_type: 'nft',
+        reward_value: 'nft_1',
+        soul_id: 2,
+        status: 2
+      },
+      {
+        levelId: 1,
+        reward_type: 'score',
+        reward_value: 100,
+        status: 1
+      },
+      {
+        levelId: 1,
+        reward_type: 'reputation',
+        reward_value: 100,
+        status: 0
+      },
+      {
+        levelId: 1,
+        reward_type: 'nft',
+        reward_value: 'nft_1',
+        soul_id: 2,
+        status: 2
+      }
+    ]
+    return data
   }
+
+  async getNewJourneyQuests() {}
+
+  async getNewJourneyReferral() {}
+
+  async getNewJourneyPoints() {}
 }
 
 export default new UserApi(request)
