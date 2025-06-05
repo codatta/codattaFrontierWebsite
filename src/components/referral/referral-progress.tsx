@@ -43,25 +43,19 @@ function ReferralPointRewardItem(props: {
             <img
               src={checkinNeonIcon}
               className="size-12 rounded-full border border-white/5 bg-[#353540] p-1.5"
-              alt=""
+              alt="claimed"
             />
           </div>
         )}
         {item.claim_status === 1 && (
-          <img
-            onClick={() => props.onClaim(item)}
-            className="size-[60px] cursor-pointer"
-            src={claimIcon}
-            alt="Check in"
-          />
+          <img onClick={() => props.onClaim(item)} className="size-[60px] cursor-pointer" src={claimIcon} alt="claim" />
         )}
         {item.claim_status === 0 && (
           <div className="flex size-[60px] items-center justify-center">
             <img
-              onClick={() => props.onClaim(item)}
               className="size-12 rounded-full border border-white/5 bg-[#353540] p-[14px]"
               src={LockImage}
-              alt="Check in"
+              alt="locked"
             />
           </div>
         )}
