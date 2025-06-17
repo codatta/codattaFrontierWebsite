@@ -81,11 +81,11 @@ const DarkSelect: React.FC<DarkSelectProps> = ({
       setTempValue(selectedValue)
       setSearchText('')
       setIsOpen(true)
-      if (searchable) {
-        setTimeout(() => {
-          searchInputRef.current?.focus()
-        }, 300)
-      }
+      // if (searchable) {
+      //   setTimeout(() => {
+      //     searchInputRef.current?.focus()
+      //   }, 300)
+      // }
     }
   }
 

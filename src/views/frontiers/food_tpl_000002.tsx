@@ -1,23 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Plus, Check, X } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import MobileSelect, { SelectOption } from '@/components/mobile-ui/select'
-import { countryList } from '@/components/frontier/country-list'
+import { regionList } from '@/components/frontier/region-list'
 import frontiterApi, { TaskDetail } from '@/apis/frontiter.api'
 import { message, Spin } from 'antd'
 import TaskPendingImg from '@/assets/images/task-pending.svg'
 import TaskRefusedImg from '@/assets/images/task-reject.svg'
 import { useParams } from 'react-router-dom'
 import commonApi from '@/api-v1/common.api'
+import { calculateFileHash } from '@/utils/file-hash'
 
 interface FoodFormData {
-  images: File[]
+  images: { url: string; hash: string }[]
   foodName: string
   foodCategory: string
   brand: string
   region: string
   quantity: string
-  isHighCalories: boolean
 }
 
 const FoodForm: React.FC<{
@@ -29,8 +28,7 @@ const FoodForm: React.FC<{
     foodCategory: '',
     brand: '',
     region: '',
-    quantity: '',
-    isHighCalories: true
+    quantity: ''
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof FoodFormData, string>>>({})
@@ -123,8 +121,7 @@ const FoodForm: React.FC<{
         foodCategory: '',
         brand: '',
         region: '',
-        quantity: '',
-        isHighCalories: true
+        quantity: ''
       })
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
@@ -138,13 +135,30 @@ const FoodForm: React.FC<{
   }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUploading(true)
     const files = e.target.files
-    if (files && files.length > 0) {
-      const imageFile = Array.from(files)[0]
+    if (!files?.length) return
+
+    // image file size check
+    const imageFile = Array.from(files)[0]
+    if (imageFile.size > 20 * 1024 * 1024) {
+      message.error('Image size must be less than 20MB')
+      return
+    }
+
+    // image file type check
+    if (!imageFile.type.startsWith('image/')) {
+      message.error('Please upload an image file')
+      return
+    }
+
+    setUploading(true)
+    try {
+      const hash = await calculateFileHash(imageFile)
       const res = await commonApi.uploadFile(imageFile)
-      updateFormData('images', [res.file_path])
+      updateFormData('images', [{ url: res.file_path, hash: hash }])
       setImageFile(imageFile)
+    } catch (error) {
+      message.error(error.message)
     }
     setUploading(false)
   }
@@ -161,8 +175,8 @@ const FoodForm: React.FC<{
     return URL.createObjectURL(file)
   }
 
-  async function getLastSubmission() {
-    const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: 'ROBSTIC001' })
+  async function getLastSubmission(frontierId: string) {
+    const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
     const lastSubmission = res.data[0]
     setLastSubmission(lastSubmission)
   }
@@ -173,6 +187,7 @@ const FoodForm: React.FC<{
     if (data_display.template_id !== templateId) {
       throw new Error('Template not match!')
     }
+    return res.data
   }
 
   async function activeUserAction() {
@@ -188,7 +203,8 @@ const FoodForm: React.FC<{
     setLoading(true)
     try {
       if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
-      await Promise.all([checkTaskBasicInfo(taskId, templateId), getLastSubmission()])
+      const taskDetail = await checkTaskBasicInfo(taskId, templateId)
+      await getLastSubmission(taskDetail.frontier_id)
     } catch (err) {
       message.error(err.message)
     }
@@ -229,9 +245,8 @@ const FoodForm: React.FC<{
                       <Plus className="size-8" />
                     </button>
                     <div className="flex-1 text-sm leading-relaxed text-gray-400">
-                      Upload clear food-related images (up to 1).
-                      <br />
-                      Ensure subjects are prominent and well-lit.
+                      Upload clear food-related images (up to 1). Ensure subjects are prominent and well-lit. Supported
+                      formats: JPG, PNG, JPEG, WEBP, GIF, WebP, Max size: 20MB
                     </div>
                   </div>
                 ) : (
@@ -336,7 +351,7 @@ const FoodForm: React.FC<{
                 Region<span className="text-red-400">*</span>
               </label>
               <MobileSelect
-                options={countryList}
+                options={regionList}
                 value={formData.region}
                 placeholder="Select"
                 title="Region"
@@ -370,7 +385,7 @@ const FoodForm: React.FC<{
             </div>
 
             {/* Is it high in calories */}
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-300">Is it high in calories?</label>
               <div className="flex space-x-3">
                 <button
@@ -415,7 +430,7 @@ const FoodForm: React.FC<{
                   </div>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Submit Button */}
             <div className="pt-4">

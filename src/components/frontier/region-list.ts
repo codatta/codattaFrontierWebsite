@@ -1,4 +1,4 @@
-export const countryList = [
+export const regionList = [
   { value: 'GLO', label: 'Global' },
   { value: 'AF', label: 'Afghanistan' },
   { value: 'AL', label: 'Albania' },
