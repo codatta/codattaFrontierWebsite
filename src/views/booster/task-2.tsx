@@ -1,3 +1,9 @@
+import Header from '@/components/booster/header'
+
 export default function Component() {
-  return <div>task-2</div>
+  return (
+    <div>
+      <Header title="Task 2" />
+    </div>
+  )
 }
