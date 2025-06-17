@@ -310,10 +310,10 @@ const FoodForm: React.FC<{
                 value={formData.foodCategory}
                 placeholder="Select"
                 title="Food Category"
+                height={300}
                 onChange={(value) => {
                   updateFormData('foodCategory', value)
                 }}
-                height={300}
               />
               {errors.foodCategory && <p className="text-sm text-red-400">{errors.foodCategory}</p>}
             </div>
@@ -360,10 +360,10 @@ const FoodForm: React.FC<{
                   value={formData.quantity}
                   placeholder="Select"
                   title="Quantity of food"
+                  height={300}
                   onChange={(value) => {
                     updateFormData('quantity', value)
                   }}
-                  height={300}
                 />
               </div>
               {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}

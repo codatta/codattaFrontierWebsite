@@ -219,7 +219,7 @@ const DarkSelect: React.FC<DarkSelectProps> = ({
               <div
                 className="overflow-y-auto"
                 style={{
-                  maxHeight: searchable
+                  height: searchable
                     ? `calc(${typeof height === 'number' ? `${height}px` : height} - 80px)`
                     : `calc(${typeof height === 'number' ? `${height}px` : height} - 0px)`
                 }}
