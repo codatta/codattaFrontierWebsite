@@ -13,7 +13,7 @@ import IconReferral from '@/assets/icons/app-nav/referral.svg'
 import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
-import IconJourney from '@/assets/icons/app-nav/journey.svg'
+// import IconJourney from '@/assets/icons/app-nav/journey.svg'
 
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'

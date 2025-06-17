@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Plus, ChevronDown, Check, X } from 'lucide-react'
+import { Plus, Check, X } from 'lucide-react'
 import MobileSelect, { SelectOption } from '@/components/mobile-ui/select'
 import { countryList } from '@/components/frontier/country-list'
 import frontiterApi, { TaskDetail } from '@/apis/frontiter.api'

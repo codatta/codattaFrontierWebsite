@@ -1,6 +1,6 @@
 import userApi, { InviteRecord } from '@/api-v1/user.api'
 import Empty from '@/components/common/empty'
-import { Button, Col, message, Row } from 'antd'
+import { Button, message } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
@@ -56,7 +56,7 @@ const Table = () => {
             {list.length === 0 ? (
               <Empty />
             ) : (
-              (loadingMore ? list.slice(0, defaultCount) : list).map((item, index) => (
+              (loadingMore ? list.slice(0, defaultCount) : list).map((item) => (
                 <div
                   key={item.user_id}
                   className="mb-4 flex items-center gap-4 border-b border-solid border-[#300040]/5 text-sm"

@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { referralStoreActions, useReferralStore } from '@/stores/referral.store'
 import userApi, { JourneyLevelItem } from '@/apis/user.api'
 import { cn } from '@udecode/cn'
 import { InviteProgressItem } from '@/apis/user.api'
@@ -11,7 +10,7 @@ import { createPublicClient, http } from 'viem'
 import PointRewardIcon from '@/assets/journey/point-icon.png'
 import CodattaKnowledgeNavigatorIcon from '@/assets/journey/codatta-knowledge-navigator.png'
 import CodattaFrontierConquerorIcon from '@/assets/journey/codatta-frontier-conqueror.png'
-import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext, WalletItem } from 'codatta-connect'
+import { CodattaConnect, EmvWalletConnectInfo, WalletItem } from 'codatta-connect'
 import ContractCallView from '../common/wallet/contract-call-view'
 import journeyContract from '@/contracts/codatta-new-journey.abi'
 import WalletConfirmView from '../common/wallet/wallet-confirm-view'
@@ -82,14 +81,14 @@ export default function ReferralProgress() {
   const [showLeftGradient, setShowLeftGradient] = useState(false)
   const [showRightGradient, setShowRightGradient] = useState(true)
   const [_messageApi, contextHolder] = message.useMessage()
-  const [levelClaiming, setLevelClaiming] = useState(false)
+  const [levelClaiming, _setLevelClaiming] = useState(false)
   const [showWalletConnect, setShowWalletConnect] = useState(false)
   const [showContractCallView, setShowContractCallView] = useState(false)
   const [connectedWalletItem, setConnectedWalletItem] = useState<WalletItem>()
   const [showWalletConfirmView, setShowWalletConfirmView] = useState(false)
-  const [selectedInviteItem, setSelectedInviteItem] = useState<InviteProgressItem>()
+  const [selectedInviteItem, _setSelectedInviteItem] = useState<InviteProgressItem>()
 
-  const { lastUsedWallet } = useCodattaConnectContext()
+  // const { lastUsedWallet } = useCodattaConnectContext()
 
   useEffect(() => {
     journeyStoreActions.getNewJourneyLevels()
@@ -146,25 +145,25 @@ export default function ReferralProgress() {
     }
   }, [levels])
 
-  async function onPointsClaim(item: InviteProgressItem) {
-    setLevelClaiming(true)
-    try {
-      await userApi.claimInviteReward({ invite_id: item.invite_id })
-      referralStoreActions.getReferralProgress()
-    } catch (error) {
-      message.error(error.message)
-    }
-    setLevelClaiming(false)
-  }
+  // async function onPointsClaim(item: InviteProgressItem) {
+  //   setLevelClaiming(true)
+  //   try {
+  //     await userApi.claimInviteReward({ invite_id: item.invite_id })
+  //     referralStoreActions.getReferralProgress()
+  //   } catch (error) {
+  //     message.error(error.message)
+  //   }
+  //   setLevelClaiming(false)
+  // }
 
-  async function onNftClaim(item: InviteProgressItem) {
-    setSelectedInviteItem(item)
-    if (!lastUsedWallet) setShowWalletConnect(true)
-    else {
-      setConnectedWalletItem(lastUsedWallet)
-      setShowWalletConfirmView(true)
-    }
-  }
+  // async function onNftClaim(item: InviteProgressItem) {
+  //   setSelectedInviteItem(item)
+  //   if (!lastUsedWallet) setShowWalletConnect(true)
+  //   else {
+  //     setConnectedWalletItem(lastUsedWallet)
+  //     setShowWalletConfirmView(true)
+  //   }
+  // }
 
   async function handleConnect(connectInfo: EmvWalletConnectInfo) {
     setConnectedWalletItem(connectInfo.wallet)

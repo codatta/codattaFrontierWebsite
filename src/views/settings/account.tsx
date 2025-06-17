@@ -416,7 +416,6 @@ function UserSecurity() {
       <Modal
         open={showWalletConnectModal}
         onCancel={() => setShowWalletConnectModal(false)}
-        onClose={() => setShowWalletConnectModal(false)}
         footer={null}
         width={463}
         centered
