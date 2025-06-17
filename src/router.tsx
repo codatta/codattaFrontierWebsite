@@ -141,7 +141,6 @@ export default function Router() {
 
         <Route path="/frontier/project" element={<FrontierLayout />}>
           <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
-          <Route path="FOOD_TPL_000002/:taskId" element={<FoodTpl000002 templateId="FOOD_TPL_000002" />} />
           <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
           <Route path="OOTD_TPL_000001/:taskId" element={<OOTDTemplate templateId="OOTD_TPL_000001" />} />
           <Route path="SPEECH_TPL_000001/:taskId" element={<SpeechTemplate templateId="SPEECH_TPL_000001" />} />
@@ -149,6 +148,10 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
         </Route>
+        <Route
+          path="/frontier/project/FOOD_TPL_000002/:taskId"
+          element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
+        />
 
         {/* <Route
           path="/frontier/project/FOOD_TPL_000002/:taskId"

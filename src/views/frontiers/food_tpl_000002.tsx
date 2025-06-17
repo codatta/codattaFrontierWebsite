@@ -9,6 +9,7 @@ import TaskRefusedImg from '@/assets/images/task-reject.svg'
 import { useParams } from 'react-router-dom'
 import commonApi from '@/api-v1/common.api'
 import { calculateFileHash } from '@/utils/file-hash'
+import AuthChecker from '@/components/app/auth-checker'
 
 interface FoodFormData {
   images: { url: string; hash: string }[]
@@ -201,13 +202,14 @@ const FoodForm: React.FC<{
 
   async function checkTaskStatus() {
     setLoading(true)
-    try {
-      if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
-      const taskDetail = await checkTaskBasicInfo(taskId, templateId)
-      await getLastSubmission(taskDetail.frontier_id)
-    } catch (err) {
-      message.error(err.message)
-    }
+    // try {
+    //   if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
+    //   const taskDetail = await checkTaskBasicInfo(taskId, templateId)
+    //   await getLastSubmission(taskDetail.frontier_id)
+    // } catch (err) {
+    //   message.error(err.message)
+    // }
+    setShowView('PENDING')
     setLoading(false)
   }
 
@@ -216,176 +218,181 @@ const FoodForm: React.FC<{
   }, [])
 
   return (
-    <Spin spinning={loading} className="min-h-screen">
-      {showView === 'FORM' && (
-        <div className="min-h-screen p-4 pb-8 text-white">
-          <div className="mx-auto max-w-md space-y-6">
-            {/* Images Upload */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-white">
-                Images<span className="text-red-400">*</span>
-              </label>
-              <Spin spinning={uploading}>
-                {formData.images.length === 0 ? (
-                  <div className="flex items-start gap-3 rounded-xl bg-white/5 p-3">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`flex size-24 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/15 ${
-                        errors.images ? 'border border-red-500' : ''
-                      }`}
-                    >
-                      <Plus className="size-8" />
-                    </button>
-                    <div className="flex-1 text-sm leading-relaxed text-gray-400">
-                      Upload clear food-related images (up to 1). Ensure subjects are prominent and well-lit. Supported
-                      formats: JPG, PNG, JPEG, WEBP, GIF, WebP, Max size: 20MB
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {/* {formData.images.map((file, index) => ( */}
-                    <div className="flex w-full items-center gap-3 rounded-xl bg-white/5 p-3">
-                      <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
-                        <img src={createImagePreview(imageFile!)} className="size-full object-cover" />
-                      </div>
-
-                      <div className="flex w-full items-center justify-between">
-                        <div className="w-full text-sm text-white">
-                          <div className="mb-1 line-clamp-2 max-w-[180px] font-medium">{imageFile!.name}</div>
-                          <div className="text-xs text-gray-400">{(imageFile!.size / 1024 / 1024).toFixed(2)} MB</div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => removeImage()}
-                          className="group rounded-full p-2 transition-colors hover:bg-white/10"
-                        >
-                          <X className="size-5 text-gray-400 group-hover:text-red-400" />
-                        </button>
-                      </div>
-                    </div>
-                    {/* ))} */}
-
-                    {formData.images.length < 1 && (
+    <AuthChecker>
+      <Spin spinning={loading} className="min-h-screen">
+        <div className="mb-4 px-6 py-4 text-center text-base font-bold">Food Image Data Collection & Annotation</div>
+        {showView === 'FORM' && (
+          <div className="min-h-screen p-4 pb-8 text-white">
+            <div className="mx-auto max-w-md space-y-6">
+              {/* Images Upload */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-white">
+                  Food Image<span className="text-red-400">*</span>
+                </label>
+                <Spin spinning={uploading}>
+                  {formData.images.length === 0 ? (
+                    <div className="flex items-start gap-3 rounded-xl bg-white/5 p-3">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="w-full rounded-lg border-2 border-dashed border-white/20 py-3 text-sm text-gray-400 transition-colors hover:border-white/30"
+                        className={`flex size-24 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/15 ${
+                          errors.images ? 'border border-red-500' : ''
+                        }`}
                       >
-                        + Add more images
+                        <Plus className="size-8" />
                       </button>
-                    )}
+                      <div className="flex-1 text-sm leading-relaxed">
+                        Please upload a high-quality food image with clear visibility and optimal lighting conditions.
+                        <br />
+                        <span className="text-xs text-gray-500">
+                          Supported formats: JPEG, PNG, WEBP, GIF • Maximum file size: 20MB
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {/* {formData.images.map((file, index) => ( */}
+                      <div className="flex w-full items-center gap-3 rounded-xl bg-white/5 p-3">
+                        <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
+                          <img src={createImagePreview(imageFile!)} className="size-full object-cover" />
+                        </div>
 
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                    />
-                  </div>
-                )}
-              </Spin>
+                        <div className="flex w-full items-center justify-between">
+                          <div className="w-full text-sm text-white">
+                            <div className="mb-1 line-clamp-2 max-w-[180px] font-medium">{imageFile!.name}</div>
+                            <div className="text-xs text-gray-400">{(imageFile!.size / 1024 / 1024).toFixed(2)} MB</div>
+                          </div>
 
-              {errors.images && <p className="text-sm text-red-400">{errors.images}</p>}
-            </div>
+                          <button
+                            type="button"
+                            onClick={() => removeImage()}
+                            className="group rounded-full p-2 transition-colors hover:bg-white/10"
+                          >
+                            <X className="size-5 text-gray-400 group-hover:text-red-400" />
+                          </button>
+                        </div>
+                      </div>
+                      {/* ))} */}
 
-            {/* Food Name */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium">
-                Food Name<span className="text-red-400">*</span>
-              </label>
-              <input
-                type="text"
-                value={formData.foodName}
-                onChange={(e) => updateFormData('foodName', e.target.value)}
-                placeholder="Enter Food name"
-                className={`w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none ${
-                  errors.foodName ? 'border-red-500' : ''
-                }`}
-              />
-              {errors.foodName && <p className="text-sm text-red-400">{errors.foodName}</p>}
-            </div>
+                      {formData.images.length < 1 && (
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="w-full rounded-lg border-2 border-dashed border-white/20 py-3 text-sm text-gray-400 transition-colors hover:border-white/30"
+                        >
+                          + Add more images
+                        </button>
+                      )}
 
-            {/* Food Category */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-300">
-                Food Category<span className="text-red-400">*</span>
-              </label>
-              <MobileSelect
-                options={foodCategories}
-                value={formData.foodCategory}
-                placeholder="Select"
-                title="Food Category"
-                height={300}
-                onChange={(value) => {
-                  updateFormData('foodCategory', value)
-                }}
-              />
-              {errors.foodCategory && <p className="text-sm text-red-400">{errors.foodCategory}</p>}
-            </div>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </div>
+                  )}
+                </Spin>
 
-            {/* Brand */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium">Brand</label>
-              <input
-                type="text"
-                value={formData.brand}
-                onChange={(e) => updateFormData('brand', e.target.value)}
-                placeholder="Enter brand name"
-                className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-              />
-            </div>
+                {errors.images && <p className="text-sm text-red-400">{errors.images}</p>}
+              </div>
 
-            {/* Region */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-300">
-                Region<span className="text-red-400">*</span>
-              </label>
-              <MobileSelect
-                options={regionList}
-                value={formData.region}
-                placeholder="Select"
-                title="Region"
-                searchable
-                height={500}
-                onChange={(value) => {
-                  updateFormData('region', value)
-                }}
-              />
-              {errors.region && <p className="text-sm text-red-400">{errors.region}</p>}
-            </div>
+              {/* Food Name */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium">
+                  Food Name<span className="text-red-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={formData.foodName}
+                  onChange={(e) => updateFormData('foodName', e.target.value)}
+                  placeholder="Enter Food name"
+                  className={`w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none ${
+                    errors.foodName ? 'border-red-500' : ''
+                  }`}
+                />
+                {errors.foodName && <p className="text-sm text-red-400">{errors.foodName}</p>}
+              </div>
 
-            {/* Quantity of food */}
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-300">
-                Quantity of food<span className="text-red-400">*</span>
-              </label>
-              <div className="relative">
+              {/* Food Category */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-gray-300">
+                  Food Category<span className="text-red-400">*</span>
+                </label>
                 <MobileSelect
-                  options={quantities}
-                  value={formData.quantity}
+                  options={foodCategories}
+                  value={formData.foodCategory}
                   placeholder="Select"
-                  title="Quantity of food"
+                  title="Food Category"
                   height={300}
                   onChange={(value) => {
-                    updateFormData('quantity', value)
+                    updateFormData('foodCategory', value)
                   }}
                 />
+                {errors.foodCategory && <p className="text-sm text-red-400">{errors.foodCategory}</p>}
               </div>
-              {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}
-            </div>
 
-            {/* Is it high in calories */}
-            {/* <div className="space-y-3">
+              {/* Brand */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium">Brand</label>
+                <input
+                  type="text"
+                  value={formData.brand}
+                  onChange={(e) => updateFormData('brand', e.target.value)}
+                  placeholder="Enter brand name"
+                  className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                />
+              </div>
+
+              {/* Region */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-gray-300">
+                  Region<span className="text-red-400">*</span>
+                </label>
+                <MobileSelect
+                  options={regionList}
+                  value={formData.region}
+                  placeholder="Select"
+                  title="Region"
+                  searchable
+                  height={500}
+                  onChange={(value) => {
+                    updateFormData('region', value)
+                  }}
+                />
+                {errors.region && <p className="text-sm text-red-400">{errors.region}</p>}
+              </div>
+
+              {/* Quantity of food */}
+              <div className="space-y-3">
+                <label className="block text-sm font-medium text-gray-300">
+                  Quantity of food<span className="text-red-400">*</span>
+                </label>
+                <div className="relative">
+                  <MobileSelect
+                    options={quantities}
+                    value={formData.quantity}
+                    placeholder="Select"
+                    title="Quantity of food"
+                    height={300}
+                    onChange={(value) => {
+                      updateFormData('quantity', value)
+                    }}
+                  />
+                </div>
+                {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}
+              </div>
+
+              {/* Is it high in calories */}
+              {/* <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-300">Is it high in calories?</label>
               <div className="flex space-x-3">
                 <button
@@ -432,55 +439,60 @@ const FoodForm: React.FC<{
               </div>
             </div> */}
 
-            {/* Submit Button */}
-            <div className="pt-4">
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="w-full rounded-full bg-primary py-4 text-lg font-medium text-white transition-all hover:from-purple-600 hover:to-purple-700 active:scale-[97%] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <div className="flex items-center justify-center py-1">
-                    <div className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  </div>
-                ) : (
-                  'Submit'
-                )}
-              </button>
+              {/* Submit Button */}
+              <div className="pt-4">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+                  className="w-full rounded-full bg-primary py-4 text-lg font-medium text-white transition-all hover:from-purple-600 hover:to-purple-700 active:scale-[97%] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center py-1">
+                      <div className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                    </div>
+                  ) : (
+                    'Submit'
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {showView === 'PENDING' && (
-        <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
-          <object data={TaskPendingImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
-          <div className="mb-6 text-center text-2xl font-bold">Under review</div>
-          <p className="mb-8 text-center text-base text-white/60">
-            The data you submitted is under review. The result will be available in approximately 15 minutes. Once
-            approved, you can claim your event reward
-          </p>
-          <button className="mb-3 block h-[44px] w-full rounded-full bg-primary" onClick={activeUserAction}>
-            Submit another
-          </button>
-          <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={handleBack}>
-            Back
-          </button>
-        </div>
-      )}
+        {showView === 'PENDING' && (
+          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
+            <object data={TaskPendingImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
+            <div className="mb-6 text-center text-2xl font-bold">Under review</div>
+            <p className="mb-3 text-center text-base text-white/60">
+              We’re reviewing your submission now. You’ll receive the result in about 15 minutes. Once it’s approved,
+              you can claim your event reward.
+            </p>
+            <p className="mb-8 text-center text-base text-white/60">
+              To ensure you receive your rewards, verify the task on the Binance Wallet campaign page once your
+              submission is approved.
+            </p>
+            <button className="mb-3 block h-[44px] w-full rounded-full bg-primary" onClick={activeUserAction}>
+              Submit another
+            </button>
+            {/* <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={handleBack}>
+              Back
+            </button> */}
+          </div>
+        )}
 
-      {showView === 'REJECT' && (
-        <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
-          <object data={TaskRefusedImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
-          <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit failed</div>
-          <p className="mb-8 text-center text-base text-white/60">So close! Tweak it and resubmit—you’ve got this!</p>
-          <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
-            Resubmit
-          </button>
-        </div>
-      )}
-    </Spin>
+        {showView === 'REJECT' && (
+          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
+            <object data={TaskRefusedImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
+            <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit failed</div>
+            <p className="mb-8 text-center text-base text-white/60">So close! Tweak it and resubmit—you’ve got this!</p>
+            <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
+              Resubmit
+            </button>
+          </div>
+        )}
+      </Spin>
+    </AuthChecker>
   )
 }
 
