@@ -342,7 +342,7 @@ const FoodForm: React.FC<{
                 title="Region"
                 searchable
                 height={500}
-                onChange={(value, option) => {
+                onChange={(value) => {
                   updateFormData('region', value)
                 }}
               />
@@ -365,8 +365,6 @@ const FoodForm: React.FC<{
                   }}
                   height={300}
                 />
-
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-5 -translate-y-1/2 text-gray-400" />
               </div>
               {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}
             </div>
