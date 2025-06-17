@@ -196,19 +196,19 @@ const FoodForm: React.FC<{
     window.location.reload()
   }
 
-  async function handleBack() {
-    window.close()
-  }
+  // async function handleBack() {
+  //   window.close()
+  // }
 
   async function checkTaskStatus() {
     setLoading(true)
-    // try {
-    //   if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
-    //   const taskDetail = await checkTaskBasicInfo(taskId, templateId)
-    //   await getLastSubmission(taskDetail.frontier_id)
-    // } catch (err) {
-    //   message.error(err.message)
-    // }
+    try {
+      if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
+      const taskDetail = await checkTaskBasicInfo(taskId, templateId)
+      await getLastSubmission(taskDetail.frontier_id)
+    } catch (err) {
+      message.error(err.message)
+    }
     setShowView('PENDING')
     setLoading(false)
   }
