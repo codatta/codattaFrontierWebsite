@@ -6,6 +6,7 @@ import FrontierLayout from '@/layouts/frontier-layout'
 import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
+import BoosterLayout from '@/layouts/booster-layout'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -69,6 +70,10 @@ const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
 const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
+
+// booster
+const Task1Page = lazy(() => import('@/views/booster/task-1'))
+const Task2Page = lazy(() => import('@/views/booster/task-2'))
 
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
@@ -148,6 +153,12 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
         </Route>
+
+        <Route path="/booster" element={<BoosterLayout />}>
+          <Route path="task-1" element={<Task1Page />} />
+          <Route path="task-2" element={<Task2Page />} />
+        </Route>
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
