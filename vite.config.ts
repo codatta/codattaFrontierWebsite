@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 import { ClientRequest, IncomingMessage, ServerResponse } from 'http'
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
+import svgr from 'vite-plugin-svgr'
 
-const isDebugMode = process.env.NODE_ENV === 'debug' || true
+const isDebugMode = process.env.NODE_ENV === 'debug' || false
 
 function proxyDebug(proxy: HttpProxy.Server, _options: ProxyOptions) {
   proxy.on(
@@ -33,6 +34,7 @@ export default defineConfig({
   assetsInclude: ['**/*.md'],
   plugins: [
     react(),
+    svgr(),
     ...[
       isDebugMode
         ? [
