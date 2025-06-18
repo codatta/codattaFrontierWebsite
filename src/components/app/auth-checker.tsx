@@ -10,7 +10,7 @@ export default function ExtensionChecker(props: { children: React.ReactNode }) {
 
   async function handleLogout() {
     if (lastUsedWallet?.client) {
-      await lastUsedWallet.client.request({
+      lastUsedWallet.client.request({
         method: 'wallet_revokePermissions',
         params: [{ eth_accounts: {} }]
       })
