@@ -4,7 +4,15 @@ import { Button } from './button'
 
 import { type DataITemIntro } from './types'
 
-export function IntroCard({ introList, onComplete }: { introList: DataITemIntro[]; onComplete: () => void }) {
+export function IntroCard({
+  introList,
+  onComplete,
+  completeText = 'Task Completed'
+}: {
+  introList: DataITemIntro[]
+  onComplete: () => void
+  completeText?: string
+}) {
   const [introIndex, setIntroIndex] = useState(0)
   const intro = useMemo(() => introList[introIndex], [introList, introIndex])
   const total = useMemo(() => introList.length, [introList])
@@ -20,7 +28,12 @@ export function IntroCard({ introList, onComplete }: { introList: DataITemIntro[
   return (
     <div>
       <Card {...intro} index={introIndex} total={total} />
-      <Button index={introIndex} total={total} onClick={onClickButton} seconds={5} />
+      <Button
+        index={introIndex}
+        text={introIndex < total - 1 ? 'Continue' : completeText}
+        onClick={onClickButton}
+        seconds={5}
+      />
     </div>
   )
 }

@@ -5,30 +5,34 @@ import { useCountdown } from '@/hooks/use-countdown'
 
 export function Button({
   index,
-  total,
+  text = 'Continue',
   seconds = 0,
-  onClick
+  onClick,
+  className
 }: {
-  index: number
-  total: number
+  text: string
   onClick: () => void
+  index?: number
   seconds?: number
+  className?: string
 }) {
   const [remainSeconds, ended, restart] = useCountdown(seconds)
 
   useEffect(() => {
     restart()
   }, [index, restart])
+
   return (
     <button
       disabled={!ended}
       className={cn(
         'mt-8 h-[44px] w-full rounded-full bg-[#875DFF] p-0 px-4 text-center text-base font-bold leading-[44px] text-white',
-        !ended ? 'opacity-25' : ''
+        !ended ? 'opacity-25' : '',
+        className
       )}
       onClick={onClick}
     >
-      {index < total - 1 ? 'Continue' : 'Task Completed'}
+      {text}
       {!ended && `(${remainSeconds}s)`}
     </button>
   )
