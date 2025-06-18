@@ -209,7 +209,6 @@ const FoodForm: React.FC<{
     } catch (err) {
       message.error(err.message)
     }
-    setShowView('PENDING')
     setLoading(false)
   }
 
