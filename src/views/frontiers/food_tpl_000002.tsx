@@ -6,6 +6,7 @@ import frontiterApi, { TaskDetail } from '@/apis/frontiter.api'
 import { message, Spin } from 'antd'
 import TaskPendingImg from '@/assets/images/task-pending.svg'
 import TaskRefusedImg from '@/assets/images/task-reject.svg'
+import TaskApproved from '@/assets/images/task-approved.svg'
 import { useParams } from 'react-router-dom'
 import commonApi from '@/api-v1/common.api'
 import { calculateFileHash } from '@/utils/file-hash'
@@ -40,7 +41,7 @@ const FoodForm: React.FC<{
   const [lastSubmission, setLastSubmission] = useState<TaskDetail>()
   const [uploading, setUploading] = useState(false)
   const { taskId } = useParams()
-  const [showView, setShowView] = useState<'PENDING' | 'FORM' | 'REJECT'>('FORM')
+  const [showView, setShowView] = useState<'PENDING' | 'FORM' | 'REJECT' | 'ADOPT'>('FORM')
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
@@ -50,12 +51,6 @@ const FoodForm: React.FC<{
 
   useEffect(() => {
     if (!lastSubmission) {
-      setShowView('FORM')
-      return
-    }
-
-    const isUserClose = localStorage.getItem('bn_user_close')
-    if (isUserClose === 'true') {
       setShowView('FORM')
       return
     }
@@ -127,7 +122,6 @@ const FoodForm: React.FC<{
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
-      localStorage.removeItem('bn_user_close')
       setShowView('PENDING')
     } catch (error) {
       message.error(error.message)
@@ -192,8 +186,7 @@ const FoodForm: React.FC<{
   }
 
   async function activeUserAction() {
-    localStorage.setItem('bn_user_close', 'true')
-    window.location.reload()
+    setShowView('FORM')
   }
 
   // async function handleBack() {
@@ -459,6 +452,19 @@ const FoodForm: React.FC<{
           </div>
         )}
 
+        {showView === 'ADOPT' && (
+          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
+            <object data={TaskApproved} className="mb-8 size-[120px]" type="image/svg+xml"></object>
+            <div className="mb-6 text-center text-2xl font-bold">Submission approved!</div>
+            <p className="mb-8 text-center text-base text-white/60">
+              To receive your reward, please verify the task on the Binance Wallet campaign page.
+            </p>
+            <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
+              Submit again
+            </button>
+          </div>
+        )}
+
         {showView === 'PENDING' && (
           <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
             <object data={TaskPendingImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
@@ -471,12 +477,6 @@ const FoodForm: React.FC<{
               To ensure you receive your rewards, verify the task on the Binance Wallet campaign page once your
               submission is approved.
             </p>
-            <button className="mb-3 block h-[44px] w-full rounded-full bg-primary" onClick={activeUserAction}>
-              Submit another
-            </button>
-            {/* <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={handleBack}>
-              Back
-            </button> */}
           </div>
         )}
 
@@ -486,7 +486,7 @@ const FoodForm: React.FC<{
             <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit failed</div>
             <p className="mb-8 text-center text-base text-white/60">So close! Tweak it and resubmit—you’ve got this!</p>
             <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
-              Resubmit
+              Submit again
             </button>
           </div>
         )}
