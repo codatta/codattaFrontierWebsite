@@ -10,7 +10,7 @@ interface TaskInfo {
 
 class BoosterApi {
   async getTaskInfo(task_id: string) {
-    const res = await request.post<Response<TaskInfo>>('/v2/h5/quest/list', { task_id })
+    const res = await request.get<Response<TaskInfo>>(`/v2/h5/quest/info?task_id=${task_id}`)
     return res.data
   }
 

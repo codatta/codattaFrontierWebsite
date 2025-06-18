@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { AnimatePresence } from 'framer-motion'
 
 import Header from '@/components/booster/header'
 import { IntroCard } from '@/components/booster/intro-card'
@@ -7,13 +8,14 @@ import { type DataITemIntro } from '@/components/booster/types'
 
 import { Data } from '@/components/booster/read.data'
 import { getTaskInfo, submitTask, useBoosterStore } from '@/stores/booster.store'
+import { Loading } from '@/components/booster/loading'
 
 export default function Component() {
   const navigate = useNavigate()
   const { week } = useParams()
 
   const [introList, setIntroList] = useState<DataITemIntro[]>([])
-  const { loading, status } = useBoosterStore()
+  const { pageLoading, status } = useBoosterStore()
 
   const onComplete = useCallback(() => {
     submitTask(`task-${week}-read`)
@@ -41,6 +43,7 @@ export default function Component() {
 
   return (
     <div>
+      <AnimatePresence>{pageLoading && <Loading />}</AnimatePresence>
       <Header title="Codatta Introduction" />
       <IntroCard introList={introList} onComplete={onComplete} />
     </div>
