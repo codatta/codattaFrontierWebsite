@@ -9,13 +9,14 @@ export default function ExtensionChecker(props: { children: React.ReactNode }) {
   const { lastUsedWallet } = useCodattaConnectContext()
 
   async function handleLogout() {
-    userStoreActions.logout()
     if (!lastUsedWallet?.client) return
 
     await lastUsedWallet.client.request({
       method: 'wallet_revokePermissions',
       params: [{ eth_accounts: {} }]
     })
+
+    userStoreActions.logout()
   }
 
   useEffect(() => {
