@@ -1,11 +1,8 @@
+import type { DataITemIntro } from './types'
+
 import banner1Img from '@/assets/booster/task-1-read-banner.png'
 import banner4Img from '@/assets/booster/task-4-read-banner.png'
 
-export type DataITemIntro = {
-  banner?: string
-  title?: string
-  des: ({ type: 'ul'; content: string[] } | { type: 'p' | 'h4' | 'light'; content: string })[]
-}
 export type DataItem = {
   intro: DataITemIntro[]
 }

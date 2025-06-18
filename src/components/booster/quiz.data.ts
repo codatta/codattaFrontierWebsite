@@ -1,15 +1,8 @@
+import type { DataItemQuiz, DataITemIntro } from './types'
+
 export type DataItem = {
-  intro: {
-    title: string
-    des: (string | string[])[]
-  }[]
-  quiz: {
-    question: string
-    answer: {
-      des: string
-      right?: boolean
-    }[]
-  }[]
+  intro: DataITemIntro[]
+  quiz: DataItemQuiz[]
 }
 
 export const Data: DataItem[] = [
@@ -18,15 +11,29 @@ export const Data: DataItem[] = [
       {
         title: 'Technical Features',
         des: [
-          'Codatta enhances data quality through AI-powered verification, multi-source data cross-referencing, and a staking-as-confidence mechanism. ',
-          'This enables developers to build machine learning-driven Web3 applications.'
+          {
+            type: 'p',
+            content:
+              'Codatta enhances data quality through AI-powered verification, multi-source data cross-referencing, and a staking-as-confidence mechanism. '
+          },
+          {
+            type: 'p',
+            content: 'This enables developers to build machine learning-driven Web3 applications.'
+          }
         ]
       },
       {
         title: 'Community & Ecosystem',
         des: [
-          'Codatta employs incentive mechanisms like "Annotate to Earn" to encourage user participation in data contribution. ',
-          'The platform has already attracted millions of address annotations from its growing community.'
+          {
+            type: 'p',
+            content:
+              'Codatta employs incentive mechanisms like "Annotate to Earn" to encourage user participation in data contribution. '
+          },
+          {
+            type: 'p',
+            content: 'The platform has already attracted millions of address annotations from its growing community.'
+          }
         ]
       }
     ],
@@ -65,15 +72,30 @@ export const Data: DataItem[] = [
       {
         title: 'Unique Value of Decentralized Data Marketplace',
         des: [
-          'Codatta establishes an open data collaboration network where contributors, validators, and users can participate equitably and earn incentives.',
-          'Blockchain technology ensures data traceability, immutability, while safeguarding contributor privacy and rights.'
+          {
+            type: 'p',
+            content:
+              'Codatta establishes an open data collaboration network where contributors, validators, and users can participate equitably and earn incentives.'
+          },
+          {
+            type: 'p',
+            content:
+              'Blockchain technology ensures data traceability, immutability, while safeguarding contributor privacy and rights.'
+          }
         ]
       },
       {
         title: 'Innovative Model for Web3 Data Economy',
         des: [
-          'Users monetize data contributions through token rewards, enabling true data assetization.',
-          'Developers gain streamlined access to verified datasets, accelerating AI-powered Web3 application development.'
+          {
+            type: 'p',
+            content: 'Users monetize data contributions through token rewards, enabling true data assetization.'
+          },
+          {
+            type: 'p',
+            content:
+              'Developers gain streamlined access to verified datasets, accelerating AI-powered Web3 application development.'
+          }
         ]
       }
     ],
@@ -112,16 +134,34 @@ export const Data: DataItem[] = [
       {
         title: 'Innovative "Annotate-to-Mine" Model',
         des: [
-          'Codatta pioneers Labeling-as-a-Service (LaaS), transforming data annotation tasks into verifiable on-chain proof-of-work',
-          'Implements a dual-layer verification system: AI pre-screening + expert review, ensuring quality while maintaining efficiency'
+          {
+            type: 'p',
+            content:
+              'Codatta pioneers Labeling-as-a-Service (LaaS), transforming data annotation tasks into verifiable on-chain proof-of-work'
+          },
+          {
+            type: 'p',
+            content:
+              'Implements a dual-layer verification system: AI pre-screening + expert review, ensuring quality while maintaining efficiency'
+          }
         ]
       },
       {
         title: '',
         des: [
-          'Dynamically adjusts reward coefficients based on:',
-          ['Task difficulty', 'Annotation quality', 'Market demand'],
-          'Features an "Annotation Reputation Score" system, where high-quality annotators receive greater weighting and bonus rewards'
+          {
+            type: 'p',
+            content: 'Dynamically adjusts reward coefficients based on:'
+          },
+          {
+            type: 'ul',
+            content: ['Task difficulty', 'Annotation quality', 'Market demand']
+          },
+          {
+            type: 'p',
+            content:
+              'Features an "Annotation Reputation Score" system, where high-quality annotators receive greater weighting and bonus rewards'
+          }
         ]
       }
     ],
@@ -165,8 +205,14 @@ export const Data: DataItem[] = [
       {
         title: 'Crypto Data Frontier Use Case',
         des: [
-          'Core Application Scenarios of our Crypto Data Frontier include:',
-          ['AML compliance screening', 'On-chain trend analysis', 'Market data monitoring']
+          {
+            type: 'p',
+            content: 'Core Application Scenarios of our Crypto Data Frontier include:'
+          },
+          {
+            type: 'ul',
+            content: ['AML compliance screening', 'On-chain trend analysis', 'Market data monitoring']
+          }
         ]
       }
     ],
