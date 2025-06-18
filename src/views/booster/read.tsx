@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import Header from '@/components/booster/header'
@@ -6,12 +6,18 @@ import { IntroCard } from '@/components/booster/intro-card'
 import { type DataITemIntro } from '@/components/booster/types'
 
 import { Data } from '@/components/booster/read.data'
+import { getTaskInfo, submitTask, useBoosterStore } from '@/stores/booster.store'
 
 export default function Component() {
   const navigate = useNavigate()
   const { week } = useParams()
 
   const [introList, setIntroList] = useState<DataITemIntro[]>([])
+  const { loading, status } = useBoosterStore()
+
+  const onComplete = useCallback(() => {
+    submitTask(`task-${week}-read`)
+  }, [week])
 
   useEffect(() => {
     if (!week || !Data[Number(week) - 1]?.intro) {
@@ -21,10 +27,17 @@ export default function Component() {
     }
   }, [week, navigate, setIntroList])
 
-  const onComplete = () => {
-    console.log('onComplete')
-    navigate('/app/booster/result')
-  }
+  useEffect(() => {
+    getTaskInfo(`task-${week}-read`)
+  }, [week])
+
+  useEffect(() => {
+    if (status === 2) {
+      navigate('/app/booster/result')
+    }
+
+    console.log('complete', status)
+  }, [status, navigate])
 
   return (
     <div>
