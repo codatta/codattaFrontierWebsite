@@ -36,47 +36,45 @@ export default function Component() {
 
   return (
     <TransitionEffect>
-      <div className="">
-        <div className="mb-6 flex items-center gap-2">
-          <ArrowLeft size={14} onClick={() => navigate(-1)} className="cursor-pointer" />
-          <h1>Back</h1>
-        </div>
-        <Spin spinning={loading}>
-          <div className="mb-12">
-            <div className="overflow-hidden rounded-lg">
-              {frontierInfo?.banner && <img src={frontierInfo?.banner} alt="" />}
-            </div>
-            <div className="mb-3 mt-6 flex items-center justify-between">
-              <div className="text-xl font-bold">{frontierInfo?.name}</div>
-              <div className="flex gap-3">
-                {frontierInfo?.media_link
-                  ?.filter((item) => item.value !== '')
-                  ?.map((item) => {
-                    const mediaIconMap = {
-                      [MediaName.DOC]: DocIcon,
-                      [MediaName.WEBSITE]: WebIcon,
-                      [MediaName.TWITTER]: XIcon,
-                      [MediaName.TELEGRAM]: TgIcon,
-                      [MediaName.DISCORD]: DiscordIcon
-                    }
-                    const icon = mediaIconMap[item.name] || ''
-                    return (
-                      <a href={item.value} target="_blank">
-                        <img className="cursor-pointer" src={icon} alt="" />
-                      </a>
-                    )
-                  })}
-              </div>
-            </div>
-            <div className="text-white/55">{frontierInfo?.description}</div>
+      <div className="mb-6 flex cursor-pointer items-center gap-2" onClick={() => navigate(-1)}>
+        <ArrowLeft size={14} />
+        <h1>Back</h1>
+      </div>
+      <Spin spinning={loading}>
+        <div className="mb-12">
+          <div className="overflow-hidden rounded-lg">
+            {frontierInfo?.banner && <img src={frontierInfo?.banner} alt="" />}
           </div>
-          <div className="mb-6">
-            <GetRewardGuide videos={frontierInfo?.videos ?? []} />
+          <div className="mb-3 mt-6 flex items-center justify-between">
+            <div className="text-xl font-bold">{frontierInfo?.name}</div>
+            <div className="flex gap-3">
+              {frontierInfo?.media_link
+                ?.filter((item) => item.value !== '')
+                ?.map((item) => {
+                  const mediaIconMap = {
+                    [MediaName.DOC]: DocIcon,
+                    [MediaName.WEBSITE]: WebIcon,
+                    [MediaName.TWITTER]: XIcon,
+                    [MediaName.TELEGRAM]: TgIcon,
+                    [MediaName.DISCORD]: DiscordIcon
+                  }
+                  const icon = mediaIconMap[item.name] || ''
+                  return (
+                    <a href={item.value} target="_blank">
+                      <img className="cursor-pointer" src={icon} alt="" />
+                    </a>
+                  )
+                })}
+            </div>
           </div>
-        </Spin>
-        <div>
-          <FrontierTaskList />
+          <div className="text-white/55">{frontierInfo?.description}</div>
         </div>
+        <div className="mb-6">
+          <GetRewardGuide videos={frontierInfo?.videos ?? []} />
+        </div>
+      </Spin>
+      <div>
+        <FrontierTaskList />
       </div>
     </TransitionEffect>
   )

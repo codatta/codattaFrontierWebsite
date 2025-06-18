@@ -462,6 +462,16 @@ export default function SettingsAccount() {
             <SocialLinkButtons />
           </div>
         </div>
+        <div className="flex max-w-[390px] items-center justify-center">
+          <button
+            className="block w-full rounded-xl border px-4 py-3 text-white"
+            onClick={() => {
+              userStoreActions.logout()
+            }}
+          >
+            Log out
+          </button>
+        </div>
       </div>
     </TransitionEffect>
   )

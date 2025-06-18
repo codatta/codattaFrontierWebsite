@@ -45,10 +45,10 @@ function AppNavItem(props: { item: MenuItem; selectedKeys: string[]; onClick: (i
       style={style}
       className={cn('group relative', ['/arena', '/app/leaderboard'].includes(key) ? 'hidden md:block' : '')}
     >
-      <div className="py-0.5 pl-4 pr-2 lg:pr-0" onClick={() => handleClick(item)}>
+      <div className="py-0.5 pl-3 pr-2 lg:pr-0" onClick={() => handleClick(item)}>
         <div
           className={cn(
-            'flex cursor-pointer items-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
+            'flex cursor-pointer items-center justify-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
             active ? 'font-600 bg-primary text-white' : ''
           )}
         >
