@@ -1,10 +1,10 @@
-import banner1Img from '@/assets/booster/task-1-ppt-banner.png'
-import banner4Img from '@/assets/booster/task-4-ppt-banner.png'
+import banner1Img from '@/assets/booster/task-1-read-banner.png'
+import banner4Img from '@/assets/booster/task-4-read-banner.png'
 
 export type DataITemIntro = {
   banner?: string
   title?: string
-  des: ({ type: 'ul'; content: string[] } | { type: 'p' | 'h4'; content: string })[]
+  des: ({ type: 'ul'; content: string[] } | { type: 'p' | 'h4' | 'light'; content: string })[]
 }
 export type DataItem = {
   intro: DataITemIntro[]
@@ -88,15 +88,15 @@ export const Data: DataItem[] = [
         banner: banner4Img,
         des: [
           { type: 'h4', content: 'Phase 1 - Completed' },
-          { type: 'p', content: 'Validated genuine market demand and technical feasibility' },
+          { type: 'light', content: 'Validated genuine market demand and technical feasibility' },
           { type: 'h4', content: 'Phase 2 - Completed' },
-          { type: 'p', content: 'Established the Frontier model based on Phase 1 foundations' },
+          { type: 'light', content: 'Established the Frontier model based on Phase 1 foundations' },
           {
-            type: 'p',
+            type: 'light',
             content: 'Launched multiple Frontier products with stable long-term operation and recurring revenue'
           },
           { type: 'h4', content: 'Current Phase 3 - In Progress' },
-          { type: 'p', content: 'FaaS (Frontier-as-a-Service): Completed prototype and initial development phase' }
+          { type: 'light', content: 'FaaS (Frontier-as-a-Service): Completed prototype and initial development phase' }
         ]
       }
     ]

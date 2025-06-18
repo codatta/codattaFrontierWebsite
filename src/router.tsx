@@ -159,6 +159,7 @@ export default function Router() {
           <Route path=":week/read" element={<ReadTaskPage />} />
           <Route path=":week/quiz" element={<QuizTaskPage />} />
           <Route path="result" element={<TaskResult />} />
+          <Route path="not-found" element={<NotFoundPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
