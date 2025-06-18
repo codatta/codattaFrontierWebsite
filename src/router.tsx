@@ -72,8 +72,9 @@ const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard
 const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
 
 // booster
-const Task1Page = lazy(() => import('@/views/booster/task-1'))
-const Task2Page = lazy(() => import('@/views/booster/task-2'))
+const ReadTaskPage = lazy(() => import('@/views/booster/read'))
+const QuizTaskPage = lazy(() => import('@/views/booster/quiz'))
+const TaskResult = lazy(() => import('@/views/booster/result'))
 
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
@@ -154,9 +155,10 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
         </Route>
 
-        <Route path="/booster" element={<BoosterLayout />}>
-          <Route path="task-1" element={<Task1Page />} />
-          <Route path="task-2" element={<Task2Page />} />
+        <Route path="/app/booster" element={<BoosterLayout />}>
+          <Route path=":week/read" element={<ReadTaskPage />} />
+          <Route path=":week/quiz" element={<QuizTaskPage />} />
+          <Route path="result" element={<TaskResult />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

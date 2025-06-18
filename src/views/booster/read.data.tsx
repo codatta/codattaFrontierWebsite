@@ -1,12 +1,13 @@
 import banner1Img from '@/assets/booster/task-1-ppt-banner.png'
 import banner4Img from '@/assets/booster/task-4-ppt-banner.png'
 
+export type DataITemIntro = {
+  banner?: string
+  title?: string
+  des: ({ type: 'ul'; content: string[] } | { type: 'p' | 'h4'; content: string })[]
+}
 export type DataItem = {
-  intro: {
-    banner?: string
-    title?: string
-    des: ({ type: 'ul'; content: string[] } | { type: 'p' | 'h4'; content: string })[]
-  }[]
+  intro: DataITemIntro[]
 }
 
 export const Data: DataItem[] = [
