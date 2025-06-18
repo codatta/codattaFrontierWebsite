@@ -6,8 +6,10 @@ export type DataITemIntro = {
 
 export type DataItemQuiz = {
   question: string
-  answer: {
-    des: string
-    right?: boolean
-  }[]
+  answer: QuizAnswer[]
+}
+
+export type QuizAnswer = {
+  des: string
+  right?: boolean
 }

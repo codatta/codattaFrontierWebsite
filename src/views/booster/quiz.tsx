@@ -30,7 +30,7 @@ export default function Component() {
       {step === 'intro' && (
         <IntroCard introList={introList} onComplete={() => setStep('quiz')} completeText="Continue" />
       )}
-      {step === 'quiz' && <QuizCard quizList={quizList} />}
+      {step === 'quiz' && <QuizCard quizList={quizList} onComplete={() => navigate('/app/booster/result')} />}
     </div>
   )
 }

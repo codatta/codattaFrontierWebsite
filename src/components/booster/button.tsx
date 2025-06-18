@@ -8,13 +8,15 @@ export function Button({
   text = 'Continue',
   seconds = 0,
   onClick,
-  className
+  className,
+  disabled = false
 }: {
   text: string
   onClick: () => void
   index?: number
   seconds?: number
   className?: string
+  disabled?: boolean
 }) {
   const [remainSeconds, ended, restart] = useCountdown(seconds)
 
@@ -24,13 +26,13 @@ export function Button({
 
   return (
     <button
-      disabled={!ended}
+      disabled={!ended || disabled}
       className={cn(
         'mt-8 h-[44px] w-full rounded-full bg-[#875DFF] p-0 px-4 text-center text-base font-bold leading-[44px] text-white',
-        !ended ? 'opacity-25' : '',
+        !ended || disabled ? 'cursor-not-allowed opacity-25' : '',
         className
       )}
-      onClick={onClick}
+      onClick={() => ended && !disabled && onClick()}
     >
       {text}
       {!ended && `(${remainSeconds}s)`}
