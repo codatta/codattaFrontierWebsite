@@ -126,18 +126,13 @@ export default function SubmissionForm(props: {
       onFinish={handleSubmit}
     >
       <div className="pb-3 text-lg font-bold">Basic Information</div>
-      <Row gutter={16}>
-        <Col span={8}>
+      <Row gutter={16} className="min-w-0">
+        <Col span={24} md={8}>
           <Form.Item label="Network" name="network" rules={[{ required: true, message: 'Please select network' }]}>
-            <Select
-              showSearch
-              options={networksWithIcon}
-              onChange={recheckAddress}
-              placeholder="Select the network your address belongs to"
-            />
+            <Select showSearch options={networksWithIcon} onChange={recheckAddress} placeholder="Select the network" />
           </Form.Item>
         </Col>
-        <Col span={16}>
+        <Col span={24} md={16}>
           <Form.Item label="Address" name="address" rules={addressRules}>
             <Input placeholder="Ensure the submitted address matches your selected network" />
           </Form.Item>

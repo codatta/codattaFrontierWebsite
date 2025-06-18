@@ -97,7 +97,7 @@ export default function SettingReputation() {
   const { info } = useUserStore()
 
   return (
-    <TransitionEffect className="flex-auto px-6">
+    <TransitionEffect className="flex-auto">
       <div className="flex justify-between">
         <div className="mb-4 flex items-center gap-4">
           {/* <span className="text-20px font-600 leading-30px mr-1">L{rate}</span> */}

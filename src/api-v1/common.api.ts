@@ -11,12 +11,13 @@ interface uploadResponse {
 
 const postFormData = async (
   url: string,
+  fileType: string,
   formData: FormData,
   onProgress?: (event: AxiosProgressEvent) => void
 ): Promise<uploadResponse> => {
   const res = await request.post<uploadResponse>(url, formData, {
-    params: { content_type: 'multipart/form-data' },
-    headers: { 'Content-Type': 'multipart/form-data' },
+    params: { content_type: fileType },
+    headers: { 'Content-Type': fileType },
     onUploadProgress: onProgress
   })
   return res.data
@@ -30,7 +31,7 @@ const commonApi = {
     const formData = new FormData()
 
     formData.append('file', file)
-    const data = await postFormData('/file/upload', formData, onProgress)
+    const data = await postFormData('/file/upload', file.type, formData, onProgress)
     return data
   }
 }

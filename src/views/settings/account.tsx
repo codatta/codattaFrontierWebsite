@@ -355,7 +355,7 @@ function UserSecurity() {
   function EmailConnectButton() {
     return (
       <button
-        className="flex w-[162px] shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black"
+        className="flex w-full shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black"
         onClick={handleUpdateEmailClick}
       >
         <Mail size={16} className="mr-2"></Mail>
@@ -368,7 +368,7 @@ function UserSecurity() {
     return (
       <button
         onClick={handleWalletConnectClick}
-        className="flex w-[162px] shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black"
+        className="flex w-full shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black"
       >
         <WalletIcon size={16} className="mr-2"></WalletIcon>
         Connect Wallet
@@ -379,7 +379,7 @@ function UserSecurity() {
   return (
     <>
       <Spin spinning={isLoading}>
-        <div className="flex w-[338px] flex-col gap-4">
+        <div className="flex max-w-[390px] flex-col gap-4">
           {emailAccounts?.map((item) => {
             return (
               <EmailAccountItem
@@ -389,7 +389,7 @@ function UserSecurity() {
               ></EmailAccountItem>
             )
           })}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
             {!emailAccounts?.length && (
               <TaskTarget match={['target', 'email']}>
                 <EmailConnectButton />
@@ -416,7 +416,6 @@ function UserSecurity() {
       <Modal
         open={showWalletConnectModal}
         onCancel={() => setShowWalletConnectModal(false)}
-        onClose={() => setShowWalletConnectModal(false)}
         footer={null}
         width={463}
         centered
@@ -440,7 +439,7 @@ export default function SettingsAccount() {
   }, [])
 
   return (
-    <TransitionEffect className="flex flex-1 flex-wrap gap-6 px-6">
+    <TransitionEffect className="flex flex-1 flex-wrap gap-6">
       <div className="flex flex-1 flex-col text-sm">
         <h2 className="mb-4 font-semibold">Personal Info</h2>
         <div className="mb-6">
@@ -448,7 +447,7 @@ export default function SettingsAccount() {
             <h3 className="mb-4 text-sm">Avatar</h3>
             <UserAvatarEditor></UserAvatarEditor>
           </div>
-          <div className="max-w-[338px]">
+          <div className="max-w-[390px]">
             <h3 className="mb-4">Name</h3>
             <UserNameEditor></UserNameEditor>
           </div>
@@ -458,10 +457,20 @@ export default function SettingsAccount() {
           <UserSecurity></UserSecurity>
         </div>
         <div className="mb-10">
-          <div className="w-[338px]">
+          <div className="max-w-[390px]">
             <h2 className="mb-4 text-base font-medium">Connect Account</h2>
             <SocialLinkButtons />
           </div>
+        </div>
+        <div className="flex max-w-[390px] items-center justify-center">
+          <button
+            className="block w-full rounded-xl border px-4 py-3 text-white"
+            onClick={() => {
+              userStoreActions.logout()
+            }}
+          >
+            Log out
+          </button>
         </div>
       </div>
     </TransitionEffect>

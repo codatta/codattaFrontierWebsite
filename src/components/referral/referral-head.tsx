@@ -23,7 +23,7 @@ const Head = () => {
   }, [info])
 
   return (
-    <div className="mt-6 flex w-full rounded-3xl border border-solid border-[#300040]/5 bg-white/5 p-6">
+    <div className="mt-6 flex w-full flex-col rounded-3xl border border-solid border-[#300040]/5 bg-white/5 p-6 lg:flex-row">
       <div className="mr-4 h-[194px] shrink-0">
         <img src={cardImg} className="h-full w-auto" />
       </div>
@@ -37,8 +37,8 @@ const Head = () => {
         </div>
         <div className="mt-6 box-border rounded-lg border-solid">
           <h4 className="text-sm font-medium">Share your unique invitation link</h4>
-          <div className="mt-2 flex items-center">
-            <div className="box-border h-[37px] w-[298px] rounded-lg border border-solid border-[#100033]/20 bg-white pl-3 text-xs leading-[35px] text-black text-opacity-85">
+          <div className="mt-2 flex flex-wrap items-center gap-3">
+            <div className="box-border h-[37px] flex-1 rounded-lg border border-solid border-[#100033]/20 bg-white pl-3 text-xs leading-[35px] text-black text-opacity-85">
               {shareLink}
             </div>
             <CopyToClipboard
@@ -51,7 +51,7 @@ const Head = () => {
                 onCopied()
               }}
             >
-              <Button type="primary" className="ml-[10px] h-[37px] w-[94px] bg-white text-black">
+              <Button type="primary" className="h-[37px] w-[94px] bg-white text-black">
                 Copy link
               </Button>
             </CopyToClipboard>

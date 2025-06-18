@@ -20,21 +20,26 @@ function MessageItem(props: { message: NotificationItem }) {
   const messageRead: boolean = message.have_read == '1'
 
   return (
-    <div className="flex gap-2 rounded-lg bg-gray-100 p-4 text-sm">
-      <div className="flex w-2 items-center justify-center">
-        <i className="block size-2 rounded-full bg-primary"></i>
-        {/* {!messageRead ? <i className="w-8px h-8px bg-primary block rounded-full"></i> : null} */}
+    <div className="flex flex-col gap-2 rounded-lg bg-gray-100 p-4 text-sm lg:flex-row">
+      <div className="flex gap-2 lg:w-[70%]">
+        {!messageRead && (
+          <div className="flex w-2 items-center justify-center">
+            <i className="block size-2 rounded-full bg-primary"></i>
+          </div>
+        )}
+
+        <div className={`break-all ${!messageRead ? 'text-gray-900' : 'text-gray-700'}`}>{message.msg_content}</div>
       </div>
 
-      <div className={`${!messageRead ? 'text-gray-900' : 'text-gray-700'}`}>{message.msg_content}</div>
-
-      <div className="w-[80px]">
-        <div className="inline-block rounded-2xl bg-gray-200 px-2 py-1 text-xs leading-[15px]">
-          {message.notify_type}
+      <div className="flex w-full items-center gap-2 lg:w-[30%]">
+        <div className="w-[80px]">
+          <div className="inline-block rounded-2xl bg-gray-200 px-2 py-1 text-xs leading-[15px]">
+            {message.notify_type}
+          </div>
         </div>
-      </div>
 
-      <div className="ml-auto w-[90px] flex-none text-right text-sm font-semibold text-gray-500">{displayTime}</div>
+        <div className="ml-auto w-[90px] flex-none text-right text-sm font-semibold text-gray-500">{displayTime}</div>
+      </div>
     </div>
   )
 }
@@ -83,6 +88,7 @@ export default function Component() {
   }
 
   const MessageList = list.map((item) => <MessageItem key={item.msg_id} message={item} />)
+
   return (
     <TransitionEffect className="min-h-[calc(100vh-200px)]">
       <h1 className="mb-4 text-[32px] font-semibold leading-8">Notification</h1>

@@ -53,7 +53,7 @@ export default function FashionHome() {
         <div className="mt-3 flex flex-col gap-6">
           <div>
             <div className="mb-3 text-lg font-bold">How to earn rewards?</div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
               {videos.map((video, index) => (
                 <div
                   key={video.url + index}
@@ -79,7 +79,7 @@ export default function FashionHome() {
           </div>
           <div>
             <div className="mb-3 text-lg font-bold">Start earning rewards!</div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
               <div onClick={() => (window.location.href = 'https://tally.so/r/nr0MX2')} className="h-full">
                 <div className="flex h-full cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-transparent bg-[#252532] transition-all hover:border-primary hover:shadow-primary">
                   <div className="p-4 pb-3">

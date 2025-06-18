@@ -26,7 +26,7 @@ export default function AppLayout({ className }: { className?: string }) {
         <Layout.Sider className="bg-transparent" breakpoint="lg" width={248}>
           <SideNav />
         </Layout.Sider>
-        <Layout.Content className="no-scrollbar min-w-0 flex-1 overflow-y-scroll py-8 pl-2 pr-6 lg:px-12">
+        <Layout.Content className="no-scrollbar min-w-0 flex-1 overflow-y-scroll py-7 pl-1 pr-4 lg:px-12 lg:py-8">
           <Outlet />
         </Layout.Content>
       </Layout>

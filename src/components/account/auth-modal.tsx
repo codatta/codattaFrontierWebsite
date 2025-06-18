@@ -36,7 +36,7 @@ export function AuthModal(props: {
     <Modal
       open={open}
       onCancel={handleClose}
-      onClose={handleClose}
+      // onClose={handleClose}
       footer={null}
       width={463}
       centered

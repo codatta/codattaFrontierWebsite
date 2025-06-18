@@ -8,7 +8,7 @@ export const TopList = ({ list }: { list: TValidationItem[] }) => {
   return (
     <TransitionEffect>
       <div>
-        <div className="grid grid-cols-3 gap-4 transition-all">
+        <div className="grid grid-cols-1 gap-4 transition-all sm:grid-cols-2 md:grid-cols-3">
           {list.map((item, index) => (
             <div key={`${item.submission_id}-${item.task_type}-${index}`}>
               {[

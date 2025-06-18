@@ -33,7 +33,7 @@ export default function SettingsReward() {
   }, [])
 
   return (
-    <div className="w-full px-6">
+    <div className="w-full">
       <div className="mb-6">
         <span className="mr-1 text-sm font-semibold leading-[30px]">
           {rewardDesc?.amount ? parseInt(rewardDesc?.amount) : ''}

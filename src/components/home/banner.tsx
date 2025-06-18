@@ -29,7 +29,7 @@ export default function Banner() {
 
   return (
     <div
-      className="aspect-[4/1] w-full overflow-hidden rounded-3xl bg-gray-100 bg-center bg-no-repeat"
+      className="hidden aspect-[4/1] w-full overflow-hidden rounded-3xl bg-gray-100 bg-center bg-no-repeat lg:block"
       style={{ backgroundImage: `url(${ImageLogoGray})` }}
     >
       {list.length !== 0 && (

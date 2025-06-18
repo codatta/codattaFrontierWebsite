@@ -13,6 +13,7 @@ import IconReferral from '@/assets/icons/app-nav/referral.svg'
 import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
+// import IconJourney from '@/assets/icons/app-nav/journey.svg'
 
 import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -40,11 +41,14 @@ function AppNavItem(props: { item: MenuItem; selectedKeys: string[]; onClick: (i
   }
 
   return (
-    <div style={style} className="group relative">
-      <div className="py-0.5 pl-4 pr-2 lg:pr-0" onClick={() => handleClick(item)}>
+    <div
+      style={style}
+      className={cn('group relative', ['/arena', '/app/leaderboard'].includes(key) ? 'hidden md:block' : '')}
+    >
+      <div className="py-0.5 pl-3 pr-2 lg:pr-0" onClick={() => handleClick(item)}>
         <div
           className={cn(
-            'flex cursor-pointer items-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
+            'flex cursor-pointer items-center justify-center gap-3 rounded-2xl bg-transparent px-4 py-3 transition-all',
             active ? 'font-600 bg-primary text-white' : ''
           )}
         >
@@ -107,6 +111,11 @@ const menuItems: MenuItem[] = [
     label: 'Home',
     key: '/app'
   },
+  // {
+  //   icon: <IconJourney color={'white'} size={24} />,
+  //   key: '/app/journey',
+  //   label: 'New Journey'
+  // },
   {
     icon: <IconQuest color={'white'} size={24} />,
     key: '/app/quest',
@@ -130,7 +139,7 @@ const menuItems: MenuItem[] = [
 
   {
     icon: <IconGitbook color="white" />,
-    key: 'https://docs.codatta.io/codatta',
+    key: 'https://docs.xny.ai/xny/codatta',
     label: (
       <div className="flex items-center justify-between">
         <span>Documentation</span>

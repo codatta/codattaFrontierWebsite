@@ -25,7 +25,7 @@ export default function TaskAction(props: TaskActionProps) {
   return (
     <Space size={16}>
       {locked ? (
-        <Button size="large" disabled className="h-[46px] min-w-[120px] rounded-[36px] border-none font-medium">
+        <Button size="large" disabled className="h-[46px] min-w-[100px] rounded-[36px] border-none font-medium">
           Complete
         </Button>
       ) : (
@@ -67,7 +67,7 @@ const actionButton: Record<string, ActionButton> = {
       <Button
         disabled={props.task.locked}
         className={cn(
-          `relative h-auto min-w-[120px] overflow-hidden rounded-[36px] border-none bg-white py-3 text-gray hover:!bg-gray-700 hover:!text-gray`,
+          `relative h-auto min-w-[100px] overflow-hidden rounded-[36px] border-none bg-white py-3 text-gray hover:!bg-gray-700 hover:!text-gray`,
           btnLoading ? 'bg-gray-200 text-gray-500' : ''
         )}
         onClick={handleVerifyClick}
@@ -160,7 +160,7 @@ const actionButton: Record<string, ActionButton> = {
       <Button
         type="primary"
         loading={loading}
-        className="h-[46px] min-w-[120px] rounded-[36px]"
+        className="h-[46px] min-w-[100px] rounded-[36px]"
         onClick={handleLinkClick}
       >
         {loading ? '' : 'Complete'}

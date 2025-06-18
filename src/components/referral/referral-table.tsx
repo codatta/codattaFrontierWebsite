@@ -1,6 +1,6 @@
 import userApi, { InviteRecord } from '@/api-v1/user.api'
 import Empty from '@/components/common/empty'
-import { Button, Col, message, Row } from 'antd'
+import { Button, message } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
@@ -36,8 +36,8 @@ const Table = () => {
   }, [])
 
   return (
-    <div className="mt-4 flex min-h-[372px] w-full rounded-3xl bg-white/5 p-6">
-      <div className="mr-[83px]">
+    <div className="mt-4 flex min-h-[372px] w-full flex-col gap-10 rounded-3xl bg-white/5 p-6 lg:flex-row lg:gap-10">
+      <div className="">
         <h4 className="text-base font-semibold">Rewards</h4>
         <div className="mt-4">
           <span className="mr-[6px] text-4xl font-medium">{totalReward}</span>
@@ -47,38 +47,35 @@ const Table = () => {
       <div className="flex-1 leading-[40px]">
         <h4 className="text-base font-semibold">History</h4>
         <div>
-          <Row gutter={16} className="!mx-0 mt-[17px] h-[40px] text-sm font-medium leading-[40px]">
-            <Col span={14}>Name</Col>
-            <Col span={4} className="flex w-24 flex-none items-center justify-center text-center">
-              Reward
-            </Col>
-            <Col span={6} className="w-[164px] flex-none text-right">
-              Time
-            </Col>
-          </Row>
+          <div className="mb-4 mt-[17px] flex text-sm font-medium">
+            <div>Name</div>
+            <div className="ml-auto flex w-24 flex-none items-center justify-center text-center">Reward</div>
+            <div className="hidden w-[80px] text-right md:block">Time</div>
+          </div>
           <div className="no-scrollbar max-h-[200px] overflow-y-auto pb-4">
             {list.length === 0 ? (
               <Empty />
             ) : (
-              (loadingMore ? list.slice(0, defaultCount) : list).map((item, index) => (
-                <Row
+              (loadingMore ? list.slice(0, defaultCount) : list).map((item) => (
+                <div
                   key={item.user_id}
-                  gutter={16}
-                  className="!mx-0 flex w-full items-center border-b border-solid border-[#300040]/5 text-sm leading-[40px]"
+                  className="mb-4 flex items-center gap-4 border-b border-solid border-[#300040]/5 text-sm"
                 >
-                  <Col span={14} className="flex flex-1 flex-wrap">
-                    <span className="inline-block">{index + 1}.</span>
-                    {item.email || item.address}
-                  </Col>
-                  <Col span={4} className="flex w-24 flex-none items-center justify-center">
-                    <div className="h-[22px] rounded-2xl bg-primary/25 px-2 text-xs font-medium leading-[22px] text-primary">
+                  <div className="line-clamp-1 flex flex-col flex-wrap gap-1">
+                    <span>{item.email || item.address}</span>
+                    <span className="block text-xs text-white/40 md:hidden">
+                      {dayjs(item.date).format('YYYY-MM-DD')}
+                    </span>
+                  </div>
+                  <div className="ml-auto flex items-center justify-center">
+                    <div className="h-[22px] whitespace-nowrap rounded-2xl bg-primary/25 px-2 text-xs font-medium leading-[22px] text-primary">
                       {item.reward} points
                     </div>
-                  </Col>
-                  <Col span={6} className="w-[164px] flex-none text-right">
+                  </div>
+                  <div className="line-clamp-1 hidden w-[80px] text-right md:block">
                     {dayjs(item.date).format('YYYY-MM-DD')}
-                  </Col>
-                </Row>
+                  </div>
+                </div>
               ))
             )}
           </div>

@@ -81,7 +81,7 @@ export default function SubmissionDetailList(props: { list: readonly TSubmission
   const list = props.list || []
 
   return (
-    <>
+    <div className="overflow-scroll">
       {list.length === 0 ? (
         <CustomEmpty></CustomEmpty>
       ) : (
@@ -104,6 +104,6 @@ export default function SubmissionDetailList(props: { list: readonly TSubmission
           </tbody>
         </table>
       )}
-    </>
+    </div>
   )
 }

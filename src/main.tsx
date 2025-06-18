@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client'
-import { VITE_GA_TRACKING_ID } from '@/configs/config'
+import { VITE_GA_TRACKING_ID } from '@/config/config'
 import Router from '@/router'
 import { ConfigProvider } from 'antd'
 import { CodattaConnectContextProvider } from 'codatta-connect'
@@ -33,7 +33,7 @@ initReactGA()
 const root = createRoot(container)
 root.render(
   <ConfigProvider theme={AntdTheme}>
-    <CodattaConnectContextProvider>
+    <CodattaConnectContextProvider singleWalletName="Binance Wallet">
       <Router></Router>
     </CodattaConnectContextProvider>
   </ConfigProvider>

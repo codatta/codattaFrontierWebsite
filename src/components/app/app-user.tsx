@@ -17,7 +17,7 @@ export default function AppUser() {
   }
 
   return (
-    <div className="py-0.5 pl-4 pr-2 lg:pr-0">
+    <div className="py-0.5 pl-3 pr-2 lg:pr-0">
       <Link
         className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 hover:text-white"
         to="/app/settings/account"
