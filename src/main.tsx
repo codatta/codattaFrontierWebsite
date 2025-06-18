@@ -33,7 +33,7 @@ initReactGA()
 const root = createRoot(container)
 root.render(
   <ConfigProvider theme={AntdTheme}>
-    <CodattaConnectContextProvider>
+    <CodattaConnectContextProvider singleWalletName="Binance Wallet">
       <Router></Router>
     </CodattaConnectContextProvider>
   </ConfigProvider>
