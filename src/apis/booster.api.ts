@@ -18,6 +18,17 @@ class BoosterApi {
     const res = await request.post<Response<TaskInfo>>('/v2/h5/quest/submit', { task_id, status: 2, content })
     return res.data
   }
+
+  async getFoodAnnotationDays() {
+    const res = await request.get<
+      Response<{
+        day_count: number
+        has_current_date: boolean
+        days: string[]
+      }>
+    >('/v2/binance/v1/task/days')
+    return res.data
+  }
 }
 
 export default new BoosterApi()
