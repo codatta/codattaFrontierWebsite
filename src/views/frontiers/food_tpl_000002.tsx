@@ -61,7 +61,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
   const [showView, setShowView] = useState<'PENDING' | 'FORM' | 'REJECT' | 'ADOPT'>('FORM')
   const [foodAnnotationDays, setFoodAnnotationDays] = useState<number>()
-  const [validationDays, setValidationDays] = useState(FOOD_ANNOTATION_VALIDATION_DAYS_MAP.get(questId!))
+  const [validationDays] = useState(FOOD_ANNOTATION_VALIDATION_DAYS_MAP.get(questId!))
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
