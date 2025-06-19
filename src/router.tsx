@@ -158,6 +158,10 @@ export default function Router() {
           path="/frontier/project/FOOD_TPL_000002/:taskId/:questId"
           element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
         />
+        <Route
+          path="/frontier/project/FOOD_TPL_000002/:taskId"
+          element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
+        />
 
         {/* <Route
           path="/frontier/project/FOOD_TPL_000002/:taskId"
