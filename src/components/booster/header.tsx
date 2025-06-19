@@ -21,10 +21,10 @@ export default function Header({ title, className }: { title: string; className?
   }
 
   return (
-    <motion.header className={cn('flex items-center gap-3 py-3', className)} variants={headerVariants}>
-      <motion.div variants={itemVariants}>
+    <motion.header className={cn('flex items-center justify-center gap-3 py-3', className)} variants={headerVariants}>
+      {/* <motion.div variants={itemVariants}>
         <ArrowLeftIcon />
-      </motion.div>
+      </motion.div> */}
       <motion.span className="text-base font-bold" variants={itemVariants}>
         {title}
       </motion.span>
