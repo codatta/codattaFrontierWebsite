@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import ArrowLeftIcon from '@/assets/booster/arrow-left-s-line.svg?react'
+// import ArrowLeftIcon from '@/assets/booster/arrow-left-s-line.svg?react'
 import { cn } from '@udecode/cn'
 
 export default function Header({ title, className }: { title: string; className?: string }) {
