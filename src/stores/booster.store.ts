@@ -16,16 +16,30 @@ const boosterStore = proxy<BoosterStore>({
 
 export const useBoosterStore = () => useSnapshot(boosterStore)
 
-export async function getTaskInfo(task_id: string) {
+export async function getTaskInfo(task_id: string): Promise<boolean> {
   boosterStore.pageLoading = true
-  const { data } = await boosterApi.getTaskInfo(task_id)
-  boosterStore.status = data.status
-  boosterStore.pageLoading = false
+  try {
+    const { data } = await boosterApi.getTaskInfo(task_id)
+    boosterStore.status = data.status
+    boosterStore.pageLoading = false
+    return true
+  } catch (error) {
+    console.error('getTaskInfo error: ', error)
+    boosterStore.pageLoading = false
+    return false
+  }
 }
 
-export async function submitTask(task_id: string, content?: string) {
+export async function submitTask(task_id: string, content?: string): Promise<boolean> {
   boosterStore.loading = true
-  const { data } = await boosterApi.submitTask(task_id, content)
-  boosterStore.loading = false
-  boosterStore.status = data.status === 1 ? 2 : boosterStore.status
+  try {
+    const { data } = await boosterApi.submitTask(task_id, content)
+    boosterStore.status = data.status === 1 ? 2 : boosterStore.status
+    boosterStore.loading = false
+    return true
+  } catch (error) {
+    boosterStore.loading = false
+    console.error('submitTask error: ', error)
+    return false
+  }
 }

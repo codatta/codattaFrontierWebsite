@@ -7,6 +7,7 @@ import { IntroCard } from '@/components/booster/intro-card'
 import { QuizCard } from '@/components/booster/quiz-card'
 import { Data } from '@/components/booster/quiz.data'
 import { Loading } from '@/components/booster/loading'
+import Result from '@/components/booster/result'
 
 import type { DataITemIntro, DataItemQuiz } from '@/components/booster/types'
 
@@ -38,21 +39,15 @@ export default function Component() {
     getTaskInfo(`task-${week}-quiz`)
   }, [week])
 
-  useEffect(() => {
-    if (status === 2) {
-      navigate('/app/booster/result')
-    }
-
-    console.log('complete', status)
-  }, [status, navigate])
-
   const variants = {
     hidden: { opacity: 0, x: '100%' },
     visible: { opacity: 1, x: 0 },
     exit: { opacity: 0, x: '-100%' }
   }
 
-  return (
+  return status === 2 ? (
+    <Result />
+  ) : (
     <div className="overflow-hidden">
       <AnimatePresence>{pageLoading && <Loading />}</AnimatePresence>
       <Header title="Introduction and Quiz" />

@@ -6,9 +6,11 @@ import Header from '@/components/booster/header'
 import { IntroCard } from '@/components/booster/intro-card'
 import { type DataITemIntro } from '@/components/booster/types'
 
+import { Loading } from '@/components/booster/loading'
+import Result from '@/components/booster/result'
+
 import { Data } from '@/components/booster/read.data'
 import { getTaskInfo, submitTask, useBoosterStore } from '@/stores/booster.store'
-import { Loading } from '@/components/booster/loading'
 
 export default function Component() {
   const navigate = useNavigate()
@@ -33,15 +35,9 @@ export default function Component() {
     getTaskInfo(`task-${week}-read`)
   }, [week])
 
-  useEffect(() => {
-    if (status === 2) {
-      navigate('/app/booster/result')
-    }
-
-    console.log('complete', status)
-  }, [status, navigate])
-
-  return (
+  return status === 2 ? (
+    <Result />
+  ) : (
     <div>
       <AnimatePresence>{pageLoading && <Loading />}</AnimatePresence>
       <Header title="Codatta Introduction" />

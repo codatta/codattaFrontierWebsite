@@ -77,7 +77,6 @@ const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
 // booster
 const ReadTaskPage = lazy(() => import('@/views/booster/read'))
 const QuizTaskPage = lazy(() => import('@/views/booster/quiz'))
-const TaskResult = lazy(() => import('@/views/booster/result'))
 
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
@@ -167,7 +166,6 @@ export default function Router() {
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />
           <Route path=":week/quiz" element={<QuizTaskPage />} />
-          <Route path="result" element={<TaskResult />} />
           <Route path="not-found" element={<NotFoundPage />} />
         </Route>
 
