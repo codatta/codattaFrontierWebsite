@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { Plus, X } from 'lucide-react'
 import MobileSelect, { SelectOption } from '@/components/mobile-ui/select'
 import { regionList } from '@/components/frontier/region-list'
@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import commonApi from '@/api-v1/common.api'
 import { calculateFileHash } from '@/utils/file-hash'
 import AuthChecker from '@/components/app/auth-checker'
+import boosterApi from '@/apis/booster.api'
 
 interface FoodFormData {
   images: { url: string; hash: string }[]
@@ -21,9 +22,26 @@ interface FoodFormData {
   quantity: string
 }
 
-const FoodForm: React.FC<{
-  templateId: string
-}> = ({ templateId }) => {
+const FOOD_ANNOTATION_VALIDATION_DAYS_MAP = new Map([
+  ['task-food1time', 1],
+  ['task-food5days', 5],
+  ['task-food7days', 7]
+])
+
+function SubmissionProgress(props: { current: number; target: number }) {
+  const { current, target } = props
+  return (
+    <div className="flex w-full flex-wrap items-center justify-center rounded-full border border-white/10 py-4 text-center">
+      <div className="mr-3 text-2xl font-bold">
+        <span className="text-[#5DDD22]">{current}</span>
+        <span>/{target}</span>
+      </div>
+      <span>Days Submitted/Required Days</span>
+    </div>
+  )
+}
+
+const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [formData, setFormData] = useState<FoodFormData>({
     images: [],
     foodName: '',
@@ -40,8 +58,10 @@ const FoodForm: React.FC<{
   const [loading, setLoading] = useState(false)
   const [lastSubmission, setLastSubmission] = useState<TaskDetail>()
   const [uploading, setUploading] = useState(false)
-  const { taskId } = useParams()
+  const { taskId, questId } = useParams()
   const [showView, setShowView] = useState<'PENDING' | 'FORM' | 'REJECT' | 'ADOPT'>('FORM')
+  const [foodAnnotationDays, setFoodAnnotationDays] = useState<number>()
+  const [validationDays] = useState(FOOD_ANNOTATION_VALIDATION_DAYS_MAP.get(questId!))
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
@@ -60,7 +80,7 @@ const FoodForm: React.FC<{
     } else if (lastSubmission?.status === 'REFUSED') {
       setShowView('REJECT')
     } else if (lastSubmission?.status === 'ADOPT') {
-      setShowView('FORM')
+      setShowView('ADOPT')
     }
   }, [lastSubmission])
 
@@ -180,6 +200,7 @@ const FoodForm: React.FC<{
     const res = await frontiterApi.getTaskDetail(taskId)
     const { data_display } = res.data
     if (data_display.template_id !== templateId) {
+      console.log(data_display.template_id, templateId)
       throw new Error('Template not match!')
     }
     return res.data
@@ -205,8 +226,19 @@ const FoodForm: React.FC<{
     setLoading(false)
   }
 
+  async function getFoodAnnotationDays() {
+    const res = await boosterApi.getFoodAnnotationDays()
+    setFoodAnnotationDays(res.data.day_count)
+  }
+
+  const MaxValidateDays = useMemo(() => {
+    console.log('days chagne, ', foodAnnotationDays, validationDays)
+    return Math.min(foodAnnotationDays!, validationDays!)
+  }, [foodAnnotationDays, validationDays])
+
   useEffect(() => {
     checkTaskStatus()
+    getFoodAnnotationDays()
   }, [])
 
   return (
@@ -456,6 +488,9 @@ const FoodForm: React.FC<{
           <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
             <object data={TaskApproved} className="mb-8 size-[120px]" type="image/svg+xml"></object>
             <div className="mb-6 text-center text-2xl font-bold">Submission approved!</div>
+            <div className="mb-6 w-full">
+              <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
+            </div>
             <p className="mb-8 text-center text-base text-white/60">
               To receive your reward, please verify the task on the Binance Wallet campaign page.
             </p>
@@ -469,9 +504,11 @@ const FoodForm: React.FC<{
           <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
             <object data={TaskPendingImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
             <div className="mb-6 text-center text-2xl font-bold">Under review</div>
+            <div className="mb-6 w-full">
+              <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
+            </div>
             <p className="mb-3 text-center text-base text-white/60">
-              We’re reviewing your submission now. You’ll receive the result in about 15 minutes. Once it’s approved,
-              you can claim your event reward.
+              We’re reviewing your submission now. You’ll receive the result in about 15 minutes.
             </p>
             <p className="mb-8 text-center text-base text-white/60">
               To ensure you receive your rewards, verify the task on the Binance Wallet campaign page once your
@@ -484,6 +521,9 @@ const FoodForm: React.FC<{
           <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
             <object data={TaskRefusedImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
             <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit failed</div>
+            <div className="mb-6 w-full">
+              <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
+            </div>
             <p className="mb-8 text-center text-base text-white/60">So close! Tweak it and resubmit—you’ve got this!</p>
             <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
               Submit again
