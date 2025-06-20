@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
+import toast, { Toaster } from 'react-hot-toast'
 
 import Header from '@/components/booster/header'
 import { IntroCard } from '@/components/booster/intro-card'
@@ -20,7 +21,12 @@ export default function Component() {
   const { pageLoading, status } = useBoosterStore()
 
   const onComplete = useCallback(() => {
-    submitTask(`task-${week}-read`)
+    submitTask(`task-${week}-read`).then((success) => {
+      console.log('submitTask', success)
+      if (!success) {
+        toast.error('Submission failed!')
+      }
+    })
   }, [week])
 
   useEffect(() => {
@@ -42,6 +48,16 @@ export default function Component() {
       <AnimatePresence>{pageLoading && <Loading />}</AnimatePresence>
       <Header title="Codatta Introduction" />
       <IntroCard introList={introList} onComplete={onComplete} />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#333',
+            color: '#fff'
+          }
+        }}
+      />
     </div>
   )
 }

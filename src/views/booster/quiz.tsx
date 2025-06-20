@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import toast, { Toaster } from 'react-hot-toast'
 
 import Header from '@/components/booster/header'
 import { IntroCard } from '@/components/booster/intro-card'
@@ -32,7 +33,11 @@ export default function Component() {
   }, [week, navigate, setIntroList, setQuizList])
 
   const onComplete = useCallback(() => {
-    submitTask(`task-${week}-quiz`)
+    submitTask(`task-${week}-quiz`).then((success) => {
+      if (!success) {
+        toast.error('Submission failed!')
+      }
+    })
   }, [week])
 
   useEffect(() => {
@@ -63,6 +68,16 @@ export default function Component() {
           </motion.div>
         )}
       </AnimatePresence>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#333',
+            color: '#fff'
+          }
+        }}
+      />
     </div>
   )
 }
