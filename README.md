@@ -1,4 +1,4 @@
-![brand-image](https://raw.githubusercontent.com/codatta/assets/refs/heads/main/brand-image.svg)
+![brand-image](https://raw.githubusercontent.com/codatta/assets/refs/heads/main/brand-v3.png)
 
 # Codatta Frontier Website
 The website for the [Codatta Frontier Platform](https://app.codatta.io), build with Vite, React, Tailwind and Typescript.
