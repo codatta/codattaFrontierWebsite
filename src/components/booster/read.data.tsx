@@ -16,7 +16,7 @@ export const Data: DataItem[] = [
           {
             type: 'p',
             content:
-              'Codatta is an open, decentralized, multi-chain protocol uniting blockchain-based data infrastructure with a collaborative network of human contributors and specialized AI agents. '
+              'Codatta is an open, decentralized, multi-chain protocol uniting blockchain-based data infrastructure with a collaborative network of human contributors and specialized AI agents.  '
           },
           {
             type: 'p',
