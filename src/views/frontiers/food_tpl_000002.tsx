@@ -237,7 +237,8 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   }, [foodAnnotationDays, validationDays])
 
   useEffect(() => {
-    checkTaskStatus()
+    // checkTaskStatus()
+    setShowView('REJECT')
     getFoodAnnotationDays()
   }, [])
 
@@ -485,14 +486,18 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         )}
 
         {showView === 'ADOPT' && (
-          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
+          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[40px]">
             <object data={TaskApproved} className="mb-8 size-[120px]" type="image/svg+xml"></object>
-            <div className="mb-6 text-center text-2xl font-bold">Submission approved!</div>
+            <div className="mb-6 text-center text-2xl font-bold">Submission Approved!</div>
             <div className="mb-6 w-full">
               <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
             </div>
+            <p className="mb-2 text-center text-base text-white/60">
+              To receive your reward, please verify the task on the Binance Wallet campaign page. Even after task
+              verification, rewards are not distributed immediately — please wait for Binance to process them.
+            </p>
             <p className="mb-8 text-center text-base text-white/60">
-              To receive your reward, please verify the task on the Binance Wallet campaign page.
+              All submission days are counted based on <span className="font-bold text-[#FFA800]">UTC time</span>.
             </p>
             <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
               Submit again
@@ -501,26 +506,33 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         )}
 
         {showView === 'PENDING' && (
-          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
+          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[40px]">
             <object data={TaskPendingImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
-            <div className="mb-6 text-center text-2xl font-bold">Under review</div>
+            <div className="mb-6 text-center text-2xl font-bold text-[#FFA800]">Under Review</div>
             <div className="mb-6 w-full">
               <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
             </div>
-            <p className="mb-3 text-center text-base text-white/60">
-              We’re reviewing your submission now. You’ll receive the result in about 15 minutes.
-            </p>
-            <p className="mb-8 text-center text-base text-white/60">
-              To ensure you receive your rewards, verify the task on the Binance Wallet campaign page once your
-              submission is approved.
+            <p className="mb-3 flex flex-col gap-2 text-center text-base text-white/60">
+              <p>
+                We’re reviewing your submission now. You’ll receive the result in about{' '}
+                <span className="font-bold text-[#FFA800]">15 minutes.</span>
+              </p>
+              <p>
+                Please wait until your submission is approved before verifying the task on the Binance Wallet campaign
+                page. Even after task verification, rewards are not distributed immediately — please wait for Binance to
+                process them.
+              </p>
+              <p>
+                All submission days are counted based on <span className="font-bold text-[#FFA800]">UTC time.</span>
+              </p>
             </p>
           </div>
         )}
 
         {showView === 'REJECT' && (
-          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[80px]">
+          <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[40px]">
             <object data={TaskRefusedImg} className="mb-8 size-[120px]" type="image/svg+xml"></object>
-            <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit failed</div>
+            <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit Failed</div>
             <div className="mb-6 w-full">
               <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
             </div>
