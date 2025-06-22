@@ -41,6 +41,16 @@ function SubmissionProgress(props: { current: number; target: number }) {
   )
 }
 
+function PleaseNote(props: { className?: string }) {
+  return (
+    <div className={`flex w-full items-center gap-3 text-[#BBBBBE] ${props.className}`}>
+      <hr className="flex-1 border-[#BBBBBE]" />
+      <span className="text-center">Please note</span>
+      <hr className="flex-1 border-[#BBBBBE]" />
+    </div>
+  )
+}
+
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [formData, setFormData] = useState<FoodFormData>({
     images: [],
@@ -62,6 +72,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [showView, setShowView] = useState<'PENDING' | 'FORM' | 'REJECT' | 'ADOPT'>('FORM')
   const [foodAnnotationDays, setFoodAnnotationDays] = useState<number>()
   const [validationDays] = useState(FOOD_ANNOTATION_VALIDATION_DAYS_MAP.get(questId!))
+  const [hasToday, setHasToday] = useState(false)
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
@@ -80,9 +91,10 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     } else if (lastSubmission?.status === 'REFUSED') {
       setShowView('REJECT')
     } else if (lastSubmission?.status === 'ADOPT') {
-      setShowView('ADOPT')
+      if (hasToday) setShowView('ADOPT')
+      else setShowView('FORM')
     }
-  }, [lastSubmission])
+  }, [lastSubmission, hasToday])
 
   const quantities = [
     { value: 'Individual (1 person)', label: 'Individual (1 person)' },
@@ -193,7 +205,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   async function getLastSubmission(frontierId: string) {
     const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
     const lastSubmission = res.data[0]
-    setLastSubmission(lastSubmission)
+    return lastSubmission
   }
 
   async function checkTaskBasicInfo(taskId: string, templateId: string) {
@@ -210,25 +222,22 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     setShowView('FORM')
   }
 
-  // async function handleBack() {
-  //   window.close()
-  // }
-
   async function checkTaskStatus() {
     setLoading(true)
     try {
       if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
       const taskDetail = await checkTaskBasicInfo(taskId, templateId)
-      await getLastSubmission(taskDetail.frontier_id)
+      const [lastSubmission, annotationDays] = await Promise.all([
+        getLastSubmission(taskDetail.frontier_id),
+        boosterApi.getFoodAnnotationDays()
+      ])
+      setLastSubmission(lastSubmission)
+      setFoodAnnotationDays(annotationDays.data.day_count)
+      setHasToday(annotationDays.data.has_current_date)
     } catch (err) {
       message.error(err.message)
     }
     setLoading(false)
-  }
-
-  async function getFoodAnnotationDays() {
-    const res = await boosterApi.getFoodAnnotationDays()
-    setFoodAnnotationDays(res.data.day_count)
   }
 
   const MaxValidateDays = useMemo(() => {
@@ -237,9 +246,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   }, [foodAnnotationDays, validationDays])
 
   useEffect(() => {
-    // checkTaskStatus()
-    setShowView('REJECT')
-    getFoodAnnotationDays()
+    checkTaskStatus()
   }, [])
 
   return (
@@ -492,16 +499,20 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <div className="mb-6 w-full">
               <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
             </div>
-            <p className="mb-2 text-center text-base text-white/60">
-              To receive your reward, please verify the task on the Binance Wallet campaign page. Even after task
-              verification, rewards are not distributed immediately — please wait for Binance to process them.
-            </p>
-            <p className="mb-8 text-center text-base text-white/60">
-              All submission days are counted based on <span className="font-bold text-[#FFA800]">UTC time</span>.
-            </p>
-            <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
-              Submit again
-            </button>
+            <div className="flex flex-col gap-3 text-[15.5px] text-[#BBBBBE]">
+              <p className="text-center text-base font-bold text-[#22DD61]">Today's submission is completed.</p>
+              <p className="text-center">
+                To receive your reward, please make sure you meet the days requirement and verify the task on the
+                Binance Wallet campaign page.
+              </p>
+              <PleaseNote></PleaseNote>
+              <ul className="list-disc pl-4">
+                <li>Rewards will be distributed according to Binance campaign rules upon successful verification.</li>
+                <li>
+                  All submission days are counted based on <span className="font-bold text-[#FFA800]">UTC time</span>.
+                </li>
+              </ul>
+            </div>
           </div>
         )}
 
@@ -512,20 +523,20 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <div className="mb-6 w-full">
               <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
             </div>
-            <p className="mb-3 flex flex-col gap-2 text-center text-base text-white/60">
-              <p>
-                We’re reviewing your submission now. You’ll receive the result in about{' '}
-                <span className="font-bold text-[#FFA800]">15 minutes.</span>
+            <div className="mb-3 flex flex-col gap-2 text-[15.5px] leading-6 text-white/60">
+              <p className="text-center">
+                The review results will be available within
+                <span className="font-bold text-[#FFA800]">15 minutes</span>. Please proceed with verification only
+                after your submission has been approved.
               </p>
-              <p>
-                Please wait until your submission is approved before verifying the task on the Binance Wallet campaign
-                page. Even after task verification, rewards are not distributed immediately — please wait for Binance to
-                process them.
-              </p>
-              <p>
-                All submission days are counted based on <span className="font-bold text-[#FFA800]">UTC time.</span>
-              </p>
-            </p>
+              <PleaseNote className="my-3" />
+              <ul className="list-disc pl-4">
+                <li>Rewards will be distributed according to Binance campaign rules upon successful verification. </li>
+                <li>
+                  All submission days are counted based on <span className="font-bold text-[#FFA800]">UTC time</span>.
+                </li>
+              </ul>
+            </div>
           </div>
         )}
 
@@ -536,7 +547,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <div className="mb-6 w-full">
               <SubmissionProgress current={MaxValidateDays} target={validationDays || 0} />
             </div>
-            <p className="mb-8 text-center text-base text-white/60">So close! Tweak it and resubmit—you’ve got this!</p>
+            <p className="mb-8 text-center text-[15.5px] text-white/60">
+              So close! Tweak it and resubmit—you’ve got this!
+            </p>
             <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={activeUserAction}>
               Submit again
             </button>
