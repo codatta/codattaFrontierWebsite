@@ -247,6 +247,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   useEffect(() => {
     checkTaskStatus()
+    // setShowView('PENDING')
   }, [])
 
   return (
@@ -526,7 +527,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <div className="mb-3 flex flex-col gap-2 text-[15.5px] leading-6 text-white/60">
               <p className="text-center">
                 The review results will be available within
-                <span className="font-bold text-[#FFA800]">15 minutes</span>. Please proceed with verification only
+                <span className="font-bold text-[#FFA800]"> 15 minutes</span>. Please proceed with verification only
                 after your submission has been approved.
               </p>
               <PleaseNote className="my-3" />
