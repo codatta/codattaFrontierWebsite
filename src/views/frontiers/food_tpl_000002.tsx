@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
-import { Plus, X } from 'lucide-react'
+import { Loader2, Plus, X } from 'lucide-react'
 import MobileSelect, { SelectOption } from '@/components/mobile-ui/select'
 import { regionList } from '@/components/frontier/region-list'
 import frontiterApi, { TaskDetail } from '@/apis/frontiter.api'
@@ -253,179 +253,196 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   return (
     <AuthChecker>
       <Spin spinning={loading} className="min-h-screen">
-        <div className="mb-4 px-6 py-4 text-center text-base font-bold">Food Image Data Collection & Annotation</div>
+        <div className="px-6 py-4 text-center text-base font-bold">Food Image Data Collection & Annotation</div>
         {showView === 'FORM' && (
-          <div className="min-h-screen p-4 pb-8 text-white">
-            <div className="mx-auto max-w-md space-y-6">
-              {/* Images Upload */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-white">
-                  Food Image<span className="text-red-400">*</span>
-                </label>
-                <Spin spinning={uploading}>
-                  {formData.images.length === 0 ? (
-                    <div className="flex items-start gap-3 rounded-xl bg-white/5 p-3">
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className={`flex size-24 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/15 ${
-                          errors.images ? 'border border-red-500' : ''
-                        }`}
-                      >
-                        <Plus className="size-8" />
-                      </button>
-                      <div className="flex-1 text-sm leading-relaxed">
-                        Please upload a high-quality food image with clear visibility and optimal lighting conditions.
-                        <br />
-                        <span className="text-xs text-gray-500">
-                          Supported formats: JPEG, PNG, WEBP, GIF • Maximum file size: 20MB
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {/* {formData.images.map((file, index) => ( */}
-                      <div className="flex w-full items-center gap-3 rounded-xl bg-white/5 p-3">
-                        <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
-                          <img src={createImagePreview(imageFile!)} className="size-full object-cover" />
-                        </div>
+          <>
+            <div className="flex w-full flex-wrap items-center justify-center bg-white/5 py-2 text-center text-sm">
+              {!loading ? (
+                <>
+                  <div className="mr-3 font-bold">
+                    <span className="text-[#5DDD22]">{MaxValidateDays}</span>
+                    <span>/{validationDays}</span>
+                  </div>
+                  <span>Days Submitted/Required Days</span>
+                </>
+              ) : (
+                <Loader2 className="size-5 animate-spin"></Loader2>
+              )}
+            </div>
 
-                        <div className="flex w-full items-center justify-between">
-                          <div className="w-full text-sm text-white">
-                            <div className="mb-1 line-clamp-2 max-w-[180px] font-medium">{imageFile!.name}</div>
-                            <div className="text-xs text-gray-400">{(imageFile!.size / 1024 / 1024).toFixed(2)} MB</div>
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() => removeImage()}
-                            className="group rounded-full p-2 transition-colors hover:bg-white/10"
-                          >
-                            <X className="size-5 text-gray-400 group-hover:text-red-400" />
-                          </button>
-                        </div>
-                      </div>
-                      {/* ))} */}
-
-                      {formData.images.length < 1 && (
+            <div className="min-h-screen p-4 pb-8 text-white">
+              <div className="mx-auto max-w-md space-y-6">
+                {/* Images Upload */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-white">
+                    Food Image<span className="text-red-400">*</span>
+                  </label>
+                  <Spin spinning={uploading}>
+                    {formData.images.length === 0 ? (
+                      <div className="flex items-start gap-3 rounded-xl bg-white/5 p-3">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
                         <button
                           type="button"
                           onClick={() => fileInputRef.current?.click()}
-                          className="w-full rounded-lg border-2 border-dashed border-white/20 py-3 text-sm text-gray-400 transition-colors hover:border-white/30"
+                          className={`flex size-24 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/15 ${
+                            errors.images ? 'border border-red-500' : ''
+                          }`}
                         >
-                          + Add more images
+                          <Plus className="size-8" />
                         </button>
-                      )}
+                        <div className="flex-1 text-sm leading-relaxed">
+                          Please upload a high-quality food image with clear visibility and optimal lighting conditions.
+                          <br />
+                          <span className="text-xs text-gray-500">
+                            Supported formats: JPEG, PNG, WEBP, GIF • Maximum file size: 20MB
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {/* {formData.images.map((file, index) => ( */}
+                        <div className="flex w-full items-center gap-3 rounded-xl bg-white/5 p-3">
+                          <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
+                            <img src={createImagePreview(imageFile!)} className="size-full object-cover" />
+                          </div>
 
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                      />
-                    </div>
-                  )}
-                </Spin>
+                          <div className="flex w-full items-center justify-between">
+                            <div className="w-full text-sm text-white">
+                              <div className="mb-1 line-clamp-2 max-w-[180px] font-medium">{imageFile!.name}</div>
+                              <div className="text-xs text-gray-400">
+                                {(imageFile!.size / 1024 / 1024).toFixed(2)} MB
+                              </div>
+                            </div>
 
-                {errors.images && <p className="text-sm text-red-400">{errors.images}</p>}
-              </div>
+                            <button
+                              type="button"
+                              onClick={() => removeImage()}
+                              className="group rounded-full p-2 transition-colors hover:bg-white/10"
+                            >
+                              <X className="size-5 text-gray-400 group-hover:text-red-400" />
+                            </button>
+                          </div>
+                        </div>
+                        {/* ))} */}
 
-              {/* Food Name */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium">
-                  Food Name<span className="text-red-400">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.foodName}
-                  onChange={(e) => updateFormData('foodName', e.target.value)}
-                  placeholder="Enter Food name"
-                  className={`w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none ${
-                    errors.foodName ? 'border-red-500' : ''
-                  }`}
-                />
-                {errors.foodName && <p className="text-sm text-red-400">{errors.foodName}</p>}
-              </div>
+                        {formData.images.length < 1 && (
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="w-full rounded-lg border-2 border-dashed border-white/20 py-3 text-sm text-gray-400 transition-colors hover:border-white/30"
+                          >
+                            + Add more images
+                          </button>
+                        )}
 
-              {/* Food Category */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-300">
-                  Food Category<span className="text-red-400">*</span>
-                </label>
-                <MobileSelect
-                  options={foodCategories}
-                  value={formData.foodCategory}
-                  placeholder="Select"
-                  title="Food Category"
-                  height={300}
-                  onChange={(value) => {
-                    updateFormData('foodCategory', value)
-                  }}
-                />
-                {errors.foodCategory && <p className="text-sm text-red-400">{errors.foodCategory}</p>}
-              </div>
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="hidden"
+                        />
+                      </div>
+                    )}
+                  </Spin>
 
-              {/* Brand */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium">Brand</label>
-                <input
-                  type="text"
-                  value={formData.brand}
-                  onChange={(e) => updateFormData('brand', e.target.value)}
-                  placeholder="Enter brand name"
-                  className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                />
-              </div>
+                  {errors.images && <p className="text-sm text-red-400">{errors.images}</p>}
+                </div>
 
-              {/* Region */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-300">
-                  Region<span className="text-red-400">*</span>
-                </label>
-                <MobileSelect
-                  options={regionList}
-                  value={formData.region}
-                  placeholder="Select"
-                  title="Region"
-                  searchable
-                  height={500}
-                  onChange={(value) => {
-                    updateFormData('region', value)
-                  }}
-                />
-                {errors.region && <p className="text-sm text-red-400">{errors.region}</p>}
-              </div>
+                {/* Food Name */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">
+                    Food Name<span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.foodName}
+                    onChange={(e) => updateFormData('foodName', e.target.value)}
+                    placeholder="Enter Food name"
+                    className={`w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none ${
+                      errors.foodName ? 'border-red-500' : ''
+                    }`}
+                  />
+                  {errors.foodName && <p className="text-sm text-red-400">{errors.foodName}</p>}
+                </div>
 
-              {/* Quantity of food */}
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-300">
-                  Quantity of food<span className="text-red-400">*</span>
-                </label>
-                <div className="relative">
+                {/* Food Category */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-gray-300">
+                    Food Category<span className="text-red-400">*</span>
+                  </label>
                   <MobileSelect
-                    options={quantities}
-                    value={formData.quantity}
+                    options={foodCategories}
+                    value={formData.foodCategory}
                     placeholder="Select"
-                    title="Quantity of food"
+                    title="Food Category"
                     height={300}
                     onChange={(value) => {
-                      updateFormData('quantity', value)
+                      updateFormData('foodCategory', value)
                     }}
                   />
+                  {errors.foodCategory && <p className="text-sm text-red-400">{errors.foodCategory}</p>}
                 </div>
-                {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}
-              </div>
 
-              {/* Is it high in calories */}
-              {/* <div className="space-y-3">
+                {/* Brand */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">Brand</label>
+                  <input
+                    type="text"
+                    value={formData.brand}
+                    onChange={(e) => updateFormData('brand', e.target.value)}
+                    placeholder="Enter brand name"
+                    className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                {/* Region */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-gray-300">
+                    Region<span className="text-red-400">*</span>
+                  </label>
+                  <MobileSelect
+                    options={regionList}
+                    value={formData.region}
+                    placeholder="Select"
+                    title="Region"
+                    searchable
+                    height={500}
+                    onChange={(value) => {
+                      updateFormData('region', value)
+                    }}
+                  />
+                  {errors.region && <p className="text-sm text-red-400">{errors.region}</p>}
+                </div>
+
+                {/* Quantity of food */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium text-gray-300">
+                    Quantity of food<span className="text-red-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <MobileSelect
+                      options={quantities}
+                      value={formData.quantity}
+                      placeholder="Select"
+                      title="Quantity of food"
+                      height={300}
+                      onChange={(value) => {
+                        updateFormData('quantity', value)
+                      }}
+                    />
+                  </div>
+                  {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}
+                </div>
+
+                {/* Is it high in calories */}
+                {/* <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-300">Is it high in calories?</label>
               <div className="flex space-x-3">
                 <button
@@ -472,25 +489,26 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
               </div>
             </div> */}
 
-              {/* Submit Button */}
-              <div className="pt-4">
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="w-full rounded-full bg-primary py-4 text-lg font-medium text-white transition-all hover:from-purple-600 hover:to-purple-700 active:scale-[97%] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center justify-center py-1">
-                      <div className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                    </div>
-                  ) : (
-                    'Submit'
-                  )}
-                </button>
+                {/* Submit Button */}
+                <div className="pt-4">
+                  <button
+                    type="button"
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                    className="w-full rounded-full bg-primary py-4 text-lg font-medium text-white transition-all hover:from-purple-600 hover:to-purple-700 active:scale-[97%] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center py-1">
+                        <div className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                      </div>
+                    ) : (
+                      'Submit'
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          </>
         )}
 
         {showView === 'ADOPT' && (
