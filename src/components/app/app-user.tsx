@@ -3,6 +3,7 @@ import { Avatar, Tooltip } from 'antd'
 import { LogOut } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { authRedirect } from '@/utils/auth-redirect'
+import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
 
 export default function AppUser() {
   const { info, username } = useUserStore()
@@ -13,6 +14,7 @@ export default function AppUser() {
     localStorage.removeItem('uid')
     localStorage.removeItem('auth')
     const url = authRedirect()
+    trackEvent(TRACK_CATEGORY.BTN_CLICK, { method: 'click', contentType: 'logout' })
     window.location.href = url
   }
 

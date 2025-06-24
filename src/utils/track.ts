@@ -59,5 +59,7 @@ export function trackEvent(eventCategory: string, params?: Partial<TTrackEventOp
  */
 export const TRACK_CATEGORY = {
   NAV_CLICK: 'nav-click',
-  LINK_CLICK: 'link-click'
+  LINK_CLICK: 'link-click',
+  BTN_CLICK: 'btn-click',
+  SUBMIT_CLICK: 'submit-click'
 }

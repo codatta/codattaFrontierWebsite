@@ -12,6 +12,7 @@ import Result from '@/components/booster/result'
 
 import { Data } from '@/components/booster/read.data'
 import { getTaskInfo, submitTask, useBoosterStore } from '@/stores/booster.store'
+import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
 
 export default function Component() {
   const navigate = useNavigate()
@@ -21,10 +22,14 @@ export default function Component() {
   const { pageLoading, status } = useBoosterStore()
 
   const onComplete = useCallback(() => {
+    trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'click', contentType: `booster-task-${week}-read` })
     submitTask(`task-${week}-read`).then((success) => {
       console.log('submitTask', success)
       if (!success) {
         toast.error('Submission failed!')
+        trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'fail', contentType: `booster-task-${week}-read` })
+      } else {
+        trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'success', contentType: `booster-task-${week}-read` })
       }
     })
   }, [week])

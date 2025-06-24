@@ -12,6 +12,7 @@ import commonApi from '@/api-v1/common.api'
 import { calculateFileHash } from '@/utils/file-hash'
 import AuthChecker from '@/components/app/auth-checker'
 import boosterApi from '@/apis/booster.api'
+import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
 
 interface FoodFormData {
   images: { url: string; hash: string }[]
@@ -123,6 +124,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const handleSubmit = async () => {
     if (!validateForm()) return
     setIsSubmitting(true)
+    trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'click', contentType: `booster-task-food-${templateId}` })
 
     try {
       await frontiterApi.submitTask(taskId!, {
