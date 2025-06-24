@@ -1,5 +1,5 @@
-import { Route, BrowserRouter, Routes, Navigate } from 'react-router-dom'
-import { lazy } from 'react'
+import { Route, BrowserRouter, Routes, Navigate, useLocation } from 'react-router-dom'
+import { lazy, useEffect } from 'react'
 
 // layouts
 import FrontierLayout from '@/layouts/frontier-layout'
@@ -7,6 +7,7 @@ import SettingsLayout from '@/layouts/settings-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
 import BoosterLayout from '@/layouts/booster-layout'
+import { trackPageView } from './utils/track'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -84,6 +85,7 @@ const NotFoundPage = lazy(() => import('@/views/not-found'))
 export default function Router() {
   return (
     <BrowserRouter>
+      <RouteTracker />
       <Routes>
         <Route index element={<Navigate to="/app" />} />
         <Route path="/arena" element={<ArenaLayout />}>
@@ -177,4 +179,15 @@ export default function Router() {
       </Routes>
     </BrowserRouter>
   )
+}
+
+function RouteTracker() {
+  const location = useLocation()
+
+  useEffect(() => {
+    console.log('trackPageView', location.pathname)
+    trackPageView(location.pathname)
+  }, [location])
+
+  return null
 }
