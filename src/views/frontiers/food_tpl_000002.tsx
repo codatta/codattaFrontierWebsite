@@ -231,7 +231,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       const taskDetail = await checkTaskBasicInfo(taskId, templateId)
       const [lastSubmission, annotationDays] = await Promise.all([
         getLastSubmission(taskDetail.frontier_id),
-        boosterApi.getFoodAnnotationDays()
+        boosterApi.getFoodAnnotationDays(taskDetail.task_id)
       ])
       setLastSubmission(lastSubmission)
       setFoodAnnotationDays(annotationDays.data.day_count)
