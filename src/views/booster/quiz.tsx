@@ -13,6 +13,7 @@ import Result from '@/components/booster/result'
 import type { DataITemIntro, DataItemQuiz } from '@/components/booster/types'
 
 import { getTaskInfo, submitTask, useBoosterStore } from '@/stores/booster.store'
+import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
 
 export default function Component() {
   const navigate = useNavigate()
@@ -33,9 +34,13 @@ export default function Component() {
   }, [week, navigate, setIntroList, setQuizList])
 
   const onComplete = useCallback(() => {
+    trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'click', contentType: `booster-task-${week}-quiz` })
     submitTask(`task-${week}-quiz`).then((success) => {
       if (!success) {
         toast.error('Submission failed!')
+        trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'fail', contentType: `booster-task-${week}-quiz` })
+      } else {
+        trackEvent(TRACK_CATEGORY.SUBMIT_CLICK, { method: 'success', contentType: `booster-task-${week}-quiz` })
       }
     })
   }, [week])

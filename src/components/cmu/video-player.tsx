@@ -43,7 +43,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoUrl, posterUrl, classNam
   return (
     <video ref={videoRef} controls={controls} className={className} poster={thumbnailUrl}>
       <source src={videoUrl} type="video/mp4" />
-      您的浏览器不支持视频标签。
+      Your browser does not support the video tag.
     </video>
   )
 }

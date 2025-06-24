@@ -19,6 +19,7 @@ import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import AppUser from '@/components/app/app-user'
+import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
 
 interface MenuItem {
   icon: ReactNode
@@ -181,10 +182,11 @@ function AppNav(_props: AppNavProps) {
   )
   function handleMenuClick(item: MenuItem) {
     if (/https?:/.test(item.key)) {
+      trackEvent(TRACK_CATEGORY.LINK_CLICK, { method: 'click', contentType: item.key })
       window.open(item.key, '_blank')
     } else {
+      trackEvent(TRACK_CATEGORY.NAV_CLICK, { method: 'click', contentType: item.key })
       navigate(item.key)
-      // notificationStoreActions.getUnread()
     }
   }
 

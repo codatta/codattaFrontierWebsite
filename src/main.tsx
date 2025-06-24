@@ -1,5 +1,4 @@
 import { createRoot } from 'react-dom/client'
-import { VITE_GA_TRACKING_ID } from '@/config/config'
 import Router from '@/router'
 import { ConfigProvider } from 'antd'
 import { CodattaConnectContextProvider } from 'codatta-connect'
@@ -10,14 +9,14 @@ import '@/styles/tailwind.css'
 import '@/styles/global.css'
 import 'codatta-connect/dist/style.css'
 
-import ReactGA from 'react-ga4'
-
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import isToday from 'dayjs/plugin/isToday'
 import { defineChain } from 'viem'
+
+import { initGA } from './utils/track'
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -50,7 +49,7 @@ const BSC_CHAIN = defineChain({
   }
 })
 
-initReactGA()
+initGA()
 
 const root = createRoot(container)
 root.render(
@@ -60,14 +59,3 @@ root.render(
     </CodattaConnectContextProvider>
   </ConfigProvider>
 )
-
-function initReactGA() {
-  ReactGA.initialize([
-    {
-      trackingId: VITE_GA_TRACKING_ID,
-      gaOptions: {
-        userId: localStorage.getItem('uid') || undefined
-      }
-    }
-  ])
-}

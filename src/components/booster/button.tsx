@@ -47,6 +47,11 @@ export function Button({
     restart()
   }, [index, restart])
 
+  function handleClick() {
+    if (isButtonDisabled) return
+    onClick()
+  }
+
   return (
     <motion.button
       disabled={isButtonDisabled}
@@ -55,7 +60,7 @@ export function Button({
         isButtonDisabled ? 'cursor-not-allowed opacity-25' : '',
         className
       )}
-      onClick={() => !isButtonDisabled && onClick()}
+      onClick={handleClick}
       whileHover={isButtonDisabled ? {} : { scale: 1.03 }}
       whileTap={isButtonDisabled ? {} : { scale: 0.98 }}
       transition={{ type: 'spring', stiffness: 400, damping: 17 }}
