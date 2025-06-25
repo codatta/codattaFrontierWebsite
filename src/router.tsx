@@ -54,6 +54,7 @@ const RoboticsFormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 // frontiers templates
 const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
 const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
+const FoodTpl000003 = lazy(() => import('@/views/frontiers/food_tpl_000003'))
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
@@ -160,14 +161,9 @@ export default function Router() {
           element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
         />
         <Route
-          path="/frontier/project/FOOD_TPL_000002/:taskId"
-          element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
+          path="/frontier/project/FOOD_TPL_000003/:taskId/:questId"
+          element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
         />
-
-        {/* <Route
-          path="/frontier/project/FOOD_TPL_000002/:taskId"
-          element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
-        /> */}
 
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />
