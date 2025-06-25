@@ -19,14 +19,14 @@ class BoosterApi {
     return res.data
   }
 
-  async getFoodAnnotationDays(task_id: string) {
+  async getFoodAnnotationDays(bn_task_name: string) {
     const res = await request.get<
       Response<{
         day_count: number
         has_current_date: boolean
         days: string[]
       }>
-    >('/v2/binance/v1/task/days', { params: { task_id } })
+    >('/v2/binance/v1/task/days', { params: { task_id: bn_task_name } })
     return res.data
   }
 }
