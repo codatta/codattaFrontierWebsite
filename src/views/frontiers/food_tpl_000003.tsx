@@ -92,7 +92,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     }
 
     if (['PENDING', 'SUBMITTED'].includes(lastSubmission?.status)) {
-      // setShowView('PENDING')
+      setShowView('PENDING')
     } else if (lastSubmission?.status === 'REFUSED') {
       setShowView('REJECT')
     } else if (lastSubmission?.status === 'ADOPT') {
@@ -252,7 +252,6 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   useEffect(() => {
     checkTaskStatus()
-    // setShowView('PENDING')
   }, [])
 
   return (
@@ -373,6 +372,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     className={`w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none ${
                       errors.foodName ? 'border-red-500' : ''
                     }`}
+                    maxLength={64}
                   />
                   {errors.foodName && <p className="text-sm text-red-400">{errors.foodName}</p>}
                 </div>
@@ -404,6 +404,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     onChange={(e) => updateFormData('brand', e.target.value)}
                     placeholder="Enter brand name"
                     className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                    maxLength={64}
                   />
                 </div>
 
