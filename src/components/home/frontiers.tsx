@@ -5,19 +5,6 @@ import { FrontierListItem } from '@/apis/frontiter.api'
 import { frontierStoreActions, useFrontierStore } from '@/stores/frontier.store'
 import { message, Spin } from 'antd'
 
-// interface FrontierItem {
-//   name: string
-//   img: string
-//   desc: string
-//   active: () => void
-// }
-
-// const FixedFrontierRouteMap: { [key: string]: string } = {
-//   Crypto: '/app/crypto',
-//   Fashion: '/app/frontier/fashion',
-//   Healthcare: 'https://healthcare.codatta.io'
-// }
-
 const Frontiers = () => {
   const navigate = useNavigate()
 
@@ -26,48 +13,9 @@ const Frontiers = () => {
 
   const displayFrontiers = useMemo(() => {
     return frontierList.filter((item) => {
-      return item.template_ext?.template_id !== 'FOOD_TPL_000002'
+      return !['FOOD_TPL_000002', 'FOOD_TPL_000003'].includes(item.template_ext?.template_id || '')
     })
   }, [frontierList])
-
-  // const FixedfrontiersList: FrontierListItem[] = [
-  //   {
-  //     creator_id: '',
-  //     description: {
-  //       frontier_desc:
-  //         'Collecting data on wallet addresses and transaction flows enhances transparency in the crypto ecosystem. This transparency enables AI models to detect fraud, improve compliance, and promote a safer environment for all participants, fostering trust in decentralized finance.'
-  //     },
-  //     frontier_id: '',
-  //     logo_url: 'https://static.codatta.io/static/images/38864bef4afa6e626236662e8b309e41494e51cc.png',
-  //     reputation_permission: 0,
-  //     status: '',
-  //     title: 'Crypto'
-  //   },
-  //   {
-  //     creator_id: '',
-  //     description: {
-  //       frontier_desc:
-  //         'Codatta Fashion is more than just a data collection platform-it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
-  //     },
-  //     frontier_id: '',
-  //     logo_url: 'https://static.codatta.io/static/images/c9c55fb1cc2c2635026dc46bd19186d0d5167580.png',
-  //     reputation_permission: 0,
-  //     status: '',
-  //     title: 'Fashion'
-  //   },
-  //   {
-  //     creator_id: '',
-  //     description: {
-  //       frontier_desc:
-  //         'Healthcare data collection is crucial for developing accurate predictive models, which analyze patient records and health metrics. This data-driven approach aids in early diagnosis, personalized treatment plans, and supports advancements in medical research, ultimately improving patient outcomes.'
-  //     },
-  //     frontier_id: '',
-  //     logo_url: 'https://static.codatta.io/static/images/a7610fc644a5362018139079aac301b53a0c817f.png',
-  //     reputation_permission: 0,
-  //     status: '',
-  //     title: 'Healthcare'
-  //   }
-  // ]
 
   async function getFrontiers() {
     setLoading(true)
