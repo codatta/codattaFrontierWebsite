@@ -24,7 +24,10 @@ interface FoodFormData {
 const FOOD_ANNOTATION_VALIDATION_DAYS_MAP = new Map([
   ['task-2-food1time', 1],
   ['task-2-food5days', 5],
-  ['task-2-food7days', 7]
+  ['task-2-food7days', 7],
+  ['task-3-food1time', 1],
+  ['task-3-food5days', 5],
+  ['task-3-food7days', 7]
 ])
 
 const foodTypeList = [
