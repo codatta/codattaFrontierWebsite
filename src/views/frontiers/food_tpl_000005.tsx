@@ -87,8 +87,8 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
-    { label: 'Dine-out meals', value: 'Dine-out meals' },
-    { label: 'Packaged food', value: 'Packaged food' }
+    { label: 'Dine-out meals', value: 'Dine-out meals' }
+    // { label: 'Packaged food', value: 'Packaged food' }
   ]
 
   useEffect(() => {
