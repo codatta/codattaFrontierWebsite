@@ -8,22 +8,24 @@ import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-progress'
+import Result from '@/components/frontier/food_tpl_m2/result'
 
 import CheckCircle from '@/assets/common/check-circle.svg?react'
-import ApprovedIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg?react'
+
+const MockData = {
+  imgUrl: '/food-example.jpg',
+  des: [
+    'Ingredients: Salad, Main Course, Main Course.',
+    'Cooking Method: Boiled, Fry in oil.',
+    'Category: Salad, Main Course.',
+    'Estimated Calories: 100kcal.'
+  ]
+}
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(true)
-  const [data, setData] = useState({
-    imgUrl: '/food-example.jpg',
-    des: [
-      'Ingredients: Salad, Main Course, Main Course.',
-      'Cooking Method: Boiled, Fry in oil.',
-      'Category: Salad, Main Course.',
-      'Estimated Calories: 100kcal.'
-    ]
-  })
+  const [data, setData] = useState(MockData)
 
   useEffect(() => {
     console.log(templateId, 'templateId')
@@ -35,7 +37,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       <Spin spinning={loading} className="min-h-screen">
         <h1 className="mb-4 py-4 text-center text-base font-bold">AI Analysis Result</h1>
         {submitted ? (
-          <Result />
+          <Result templateId={templateId} />
         ) : (
           <main>
             <SubmissionProgress current={1} target={7} />
@@ -103,19 +105,6 @@ function Form() {
       >
         Confirm
       </button>
-    </div>
-  )
-}
-
-function Result() {
-  return (
-    <div className="px-6">
-      <ApprovedIcon className="mx-auto mt-[50px]" />
-      <h2 className="mt-8 text-center text-2xl font-bold">Submission approved!</h2>
-      <p className="mt-6 text-center text-base text-[#BBBBBE]">
-        Thank you for your data annotation. We will use your submission for fine-tuning to improve our model
-        capabilities.
-      </p>
     </div>
   )
 }
