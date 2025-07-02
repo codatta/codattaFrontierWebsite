@@ -57,6 +57,8 @@ const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
 const FoodTpl000003 = lazy(() => import('@/views/frontiers/food_tpl_000003'))
 const FoodTpl000004 = lazy(() => import('@/views/frontiers/food_tpl_000004'))
 const FoodTpl000005 = lazy(() => import('@/views/frontiers/food_tpl_000005'))
+const FoodTplM2W1 = lazy(() => import('@/views/frontiers/food_tpl_m2_w1'))
+const FoodTplM2W234 = lazy(() => import('@/views/frontiers/food_tpl_m2_w234'))
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
@@ -163,6 +165,10 @@ export default function Router() {
           element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
         />
         <Route
+          path="/frontier/project/FOOD_TPL_000003/:taskId"
+          element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
+        />
+        <Route
           path="/frontier/project/FOOD_TPL_000003/:taskId/:questId"
           element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
         />
@@ -173,6 +179,36 @@ export default function Router() {
         <Route
           path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
           element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
+        />
+
+        <Route path="/frontier/project/FOOD_TPL_M2_W1/:taskId" element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />} />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W1/:taskId/:questId"
+          element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W2/:taskId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W2" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W2/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W2" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W3/:taskId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W3" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W3/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W3" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W4/:taskId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W4" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W4/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W4" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>
