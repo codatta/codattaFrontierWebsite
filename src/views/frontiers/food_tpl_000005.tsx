@@ -471,7 +471,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
                 {/* Food weight */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium">Food Weight (in grams)</label>
+                  <label className="block text-sm font-medium">
+                    Food Weight (in grams)<span className="text-red-400">*</span>
+                  </label>
                   <input
                     type="number"
                     value={formData.foodWeight}
@@ -480,11 +482,14 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                     maxLength={64}
                   />
+                  {errors.foodWeight && <p className="text-sm text-red-400">{errors.foodWeight}</p>}
                 </div>
 
                 {/* Cooking method */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium">Cooking Method</label>
+                  <label className="block text-sm font-medium">
+                    Cooking Method<span className="text-red-400">*</span>
+                  </label>
                   <input
                     type="text"
                     value={formData.cookingMethod}
@@ -493,11 +498,14 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                     maxLength={64}
                   />
+                  {errors.cookingMethod && <p className="text-sm text-red-400">{errors.cookingMethod}</p>}
                 </div>
 
                 {/* Calories */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium">Calories (kcal)</label>
+                  <label className="block text-sm font-medium">
+                    Calories (kcal)<span className="text-red-400">*</span>
+                  </label>
                   <input
                     type="number"
                     value={formData.calories}
@@ -506,6 +514,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
                     maxLength={64}
                   />
+                  {errors.calories && <p className="text-sm text-red-400">{errors.calories}</p>}
                 </div>
 
                 {/* Submit Button */}
