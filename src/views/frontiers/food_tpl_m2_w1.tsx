@@ -2,15 +2,19 @@
  *  Month2 Week1
  */
 
-import { Spin } from 'antd'
+import { Spin, message } from 'antd'
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-progress'
 import Result from '@/components/frontier/food_tpl_m2/result'
 
+import { Button } from '@/components/booster/button'
+
 import CheckCircle from '@/assets/common/check-circle.svg?react'
+import boosterApi from '@/apis/booster.api'
 
 const MockData = {
   imgUrl: '/food-example.jpg',
@@ -23,24 +27,28 @@ const MockData = {
 }
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
-  const [loading, setLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(true)
+  const { taskId, questId } = useParams()
+  const [pageLoading, setPageLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
   const [data, setData] = useState(MockData)
 
   useEffect(() => {
+    boosterApi.getTaskInfo(templateId).then((res) => {
+      console.log(res)
+    })
     console.log(templateId, 'templateId')
     // setLoading(true)
   }, [templateId])
 
   return (
     <AuthChecker>
-      <Spin spinning={loading} className="min-h-screen">
+      <Spin spinning={pageLoading} className="min-h-screen">
         <h1 className="mb-4 py-4 text-center text-base font-bold">AI Analysis Result</h1>
         {submitted ? (
           <Result templateId={templateId} />
         ) : (
           <main>
-            <SubmissionProgress current={1} target={7} />
+            <SubmissionProgress questId={questId!} />
             <DataPreview {...data} />
             <Form />
           </main>
@@ -72,6 +80,7 @@ function DataPreview({ imgUrl, des }: { imgUrl: string; des: string[] }) {
 }
 
 function Form() {
+  const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<'correct' | 'incorrect' | null>(null)
 
   const handleSubmit = () => {
@@ -95,21 +104,21 @@ function Form() {
           <span>👎 Incorrect</span> <CheckCircle className={selected === 'incorrect' ? 'opacity-100' : 'opacity-0'} />
         </button>
       </div>
-
-      <button
+      <Button
+        text="Confirm"
+        onClick={handleSubmit}
         className={cn(
           'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white',
           !selected ? 'cursor-not-allowed opacity-25' : 'cursor-pointer opacity-100'
         )}
-        onClick={handleSubmit}
-      >
-        Confirm
-      </button>
+        disabled={!selected}
+        loading={loading}
+      />
     </div>
   )
 }
 
-// http://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-food7days
-// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-food5days
-// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-food1time
-// http://localhost:8080/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-food7days
+// http://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food7days
+// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food5days
+// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food1time
+// http://localhost:8080/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food7days

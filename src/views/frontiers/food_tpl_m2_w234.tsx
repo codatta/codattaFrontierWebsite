@@ -3,14 +3,18 @@
  */
 
 import { Spin } from 'antd'
-import { useMemo, useState } from 'react'
+import { cn } from '@udecode/cn'
+import { useEffect, useMemo, useState } from 'react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-progress'
 import Result from '@/components/frontier/food_tpl_m2/result'
 
+import { Button } from '@/components/booster/button'
 import { FoodFormData, FoodFormItem, ModelInfo, SelectOption } from '@/components/frontier/food_tpl_m2/types'
-import { cn } from '@udecode/cn'
+
+import boosterApi from '@/apis/booster.api'
+import { useParams } from 'react-router-dom'
 
 const MockModelInfo: ModelInfo = {
   modelA: {
@@ -48,10 +52,20 @@ const MockData = {
 }
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
+  const { taskId, questId } = useParams()
+
   const [loading, setLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(true)
+  const [submitted, setSubmitted] = useState(false)
   const [modelInfo, setModelInfo] = useState<ModelInfo>(MockModelInfo)
   const [data, setData] = useState<FoodFormData>(MockData)
+
+  useEffect(() => {
+    boosterApi.getTaskInfo(templateId).then((res) => {
+      console.log(res)
+    })
+    console.log(templateId, 'templateId')
+    // setLoading(true)
+  }, [templateId])
 
   return (
     <AuthChecker>
@@ -61,7 +75,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <Result modelInfo={modelInfo} templateId={templateId} />
         ) : (
           <main className="mb-5">
-            <SubmissionProgress current={1} target={7} />
+            <SubmissionProgress questId={questId!} />
             <Form {...data} />
           </main>
         )}
@@ -85,6 +99,7 @@ function Form({
   category: FoodFormItem
   estimatedCalories: FoodFormItem
 }) {
+  const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<{
     ingredients: SelectOption
     cookingMethod: SelectOption
@@ -132,15 +147,16 @@ function Form({
         onSelect={(value: SelectOption) => handleSelect('estimatedCalories', value)}
       />
 
-      <button
+      <Button
+        text="Confirm"
+        onClick={handleSubmit}
         className={cn(
           'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white',
           !selected ? 'cursor-not-allowed opacity-25' : 'cursor-pointer opacity-100'
         )}
-        onClick={handleSubmit}
-      >
-        Confirm
-      </button>
+        disabled={!selected}
+        loading={loading}
+      />
     </div>
   )
 }
