@@ -4,7 +4,7 @@
 
 import { message, Spin } from 'antd'
 import { cn } from '@udecode/cn'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-progress'
@@ -33,7 +33,12 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [modelInfo, setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
   const [data, setData] = useState<FoodFormData>(w234_mock_data)
 
-  useEffect(() => {
+  const checkTaskStatus = useCallback(() => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
     setPageLoading(true)
     boosterApi
       .getFoodAnnotationDays(questId!)
@@ -44,7 +49,11 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       .finally(() => {
         setPageLoading(false)
       })
-  }, [questId])
+  }, [questId, taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [questId, checkTaskStatus])
 
   return (
     <AuthChecker>

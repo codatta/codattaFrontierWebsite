@@ -3,7 +3,7 @@
  */
 
 import { Spin, message } from 'antd'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 
@@ -33,12 +33,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [validatedDays, setValidatedDays] = useState(0)
   const [data, setData] = useState(w1_mock_data)
 
-  const checkTaskStatus = useCallback(() => {
-    if (!taskId || !templateId) {
-      message.error('Task ID or template ID is required!')
-      return
-    }
-
+  useEffect(() => {
     setPageLoading(true)
     boosterApi
       .getFoodAnnotationDays(questId!)
@@ -49,11 +44,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       .finally(() => {
         setPageLoading(false)
       })
-  }, [questId, taskId, templateId])
-
-  useEffect(() => {
-    checkTaskStatus()
-  }, [questId, checkTaskStatus])
+  }, [questId])
 
   return (
     <AuthChecker>
@@ -146,8 +137,3 @@ function Form({ taskId, templateId, onSubmitted }: { taskId: string; templateId:
     </div>
   )
 }
-
-// http://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food7days
-// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food5days
-// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food1time
-// http://localhost:8080/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food7days
