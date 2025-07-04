@@ -19,15 +19,15 @@ interface FoodFormData {
   brand: string
   foodType: string
   quantity: string
+  foodWeight?: number
+  cookingMethod: string
+  calories?: number
 }
 
 const FOOD_ANNOTATION_VALIDATION_DAYS_MAP = new Map([
-  ['task-2-food1time', 1],
-  ['task-2-food5days', 5],
-  ['task-2-food7days', 7],
-  ['task-3-food1time', 1],
-  ['task-3-food5days', 5],
-  ['task-3-food7days', 7]
+  ['task-4-food1time', 1],
+  ['task-4-food5days', 5],
+  ['task-4-food7days', 7]
 ])
 
 const foodTypeList = [
@@ -66,7 +66,10 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     foodCategory: '',
     brand: '',
     foodType: '',
-    quantity: ''
+    quantity: '',
+    foodWeight: undefined,
+    cookingMethod: '',
+    calories: undefined
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof FoodFormData, string>>>({})
@@ -84,8 +87,8 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
-    { label: 'Dine-out meals', value: 'Dine-out meals' },
-    { label: 'Packaged food', value: 'Packaged food' }
+    { label: 'Dine-out meals', value: 'Dine-out meals' }
+    // { label: 'Packaged food', value: 'Packaged food' }
   ]
 
   useEffect(() => {
@@ -135,6 +138,23 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     if (!formData.quantity) {
       newErrors.quantity = 'Quantity is required'
     }
+    if (!formData.foodWeight) {
+      // restrict to number
+      if (formData.foodWeight && isNaN(formData.foodWeight)) {
+        newErrors.foodWeight = 'Food weight must be a number'
+      }
+      newErrors.foodWeight = 'Food weight is required'
+    }
+    if (!formData.cookingMethod) {
+      newErrors.cookingMethod = 'Cooking method is required'
+    }
+    if (!formData.calories) {
+      // restrict to number
+      if (formData.calories && isNaN(formData.calories)) {
+        newErrors.calories = 'Calories must be a number'
+      }
+      newErrors.calories = 'Calories is required'
+    }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -157,7 +177,10 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         foodCategory: '',
         brand: '',
         foodType: '',
-        quantity: ''
+        quantity: '',
+        foodWeight: undefined,
+        cookingMethod: '',
+        calories: undefined
       })
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
@@ -303,12 +326,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                         >
                           <Plus className="size-8" />
                         </button>
-                        <div className="flex-1 text-sm leading-relaxed">
-                          Please upload a high-quality food image with clear visibility and optimal lighting conditions.
-                          <br />
-                          <span className="text-xs text-gray-500">
-                            Supported formats: JPEG, PNG, WEBP, GIF • Maximum file size: 20MB
-                          </span>
+                        <div className="flex-1 text-sm leading-relaxed text-white/50">
+                          Photos of ready-to-eat dishes (homemade or restaurant-made) <br />
+                          Excludes: Raw ingredients & packaged products
                         </div>
                       </div>
                     ) : (
@@ -447,6 +467,54 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     />
                   </div>
                   {errors.quantity && <p className="text-sm text-red-400">{errors.quantity}</p>}
+                </div>
+
+                {/* Food weight */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">
+                    Food Weight (in grams)<span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.foodWeight}
+                    onChange={(e) => updateFormData('foodWeight', e.target.value)}
+                    placeholder="Enter weight in grams"
+                    className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                    maxLength={64}
+                  />
+                  {errors.foodWeight && <p className="text-sm text-red-400">{errors.foodWeight}</p>}
+                </div>
+
+                {/* Cooking method */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">
+                    Cooking Method<span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.cookingMethod}
+                    onChange={(e) => updateFormData('cookingMethod', e.target.value)}
+                    placeholder="Describe the cooking method"
+                    className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                    maxLength={64}
+                  />
+                  {errors.cookingMethod && <p className="text-sm text-red-400">{errors.cookingMethod}</p>}
+                </div>
+
+                {/* Calories */}
+                <div className="space-y-3">
+                  <label className="block text-sm font-medium">
+                    Calories (kcal)<span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.calories}
+                    onChange={(e) => updateFormData('calories', e.target.value)}
+                    placeholder="Enter calories (kcal)"
+                    className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                    maxLength={64}
+                  />
+                  {errors.calories && <p className="text-sm text-red-400">{errors.calories}</p>}
                 </div>
 
                 {/* Submit Button */}

@@ -22,9 +22,6 @@ interface FoodFormData {
 }
 
 const FOOD_ANNOTATION_VALIDATION_DAYS_MAP = new Map([
-  ['task-2-food1time', 1],
-  ['task-2-food5days', 5],
-  ['task-2-food7days', 7],
   ['task-3-food1time', 1],
   ['task-3-food5days', 5],
   ['task-3-food7days', 7]
@@ -84,8 +81,8 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
-    { label: 'Dine-out meals', value: 'Dine-out meals' },
-    { label: 'Packaged food', value: 'Packaged food' }
+    { label: 'Dine-out meals', value: 'Dine-out meals' }
+    // { label: 'Packaged food', value: 'Packaged food' }
   ]
 
   useEffect(() => {
@@ -303,17 +300,13 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                         >
                           <Plus className="size-8" />
                         </button>
-                        <div className="flex-1 text-sm leading-relaxed">
-                          Please upload a high-quality food image with clear visibility and optimal lighting conditions.
-                          <br />
-                          <span className="text-xs text-gray-500">
-                            Supported formats: JPEG, PNG, WEBP, GIF • Maximum file size: 20MB
-                          </span>
+                        <div className="flex-1 text-sm leading-relaxed text-white/50">
+                          Photos of ready-to-eat dishes (homemade or restaurant-made) <br />
+                          Excludes: Raw ingredients & packaged products
                         </div>
                       </div>
                     ) : (
                       <div className="space-y-3">
-                        {/* {formData.images.map((file, index) => ( */}
                         <div className="flex w-full items-center gap-3 rounded-xl bg-white/5 p-3">
                           <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
                             <img src={createImagePreview(imageFile!)} className="size-full object-cover" />
@@ -336,7 +329,6 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                             </button>
                           </div>
                         </div>
-                        {/* ))} */}
 
                         {formData.images.length < 1 && (
                           <button
@@ -358,7 +350,6 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                       </div>
                     )}
                   </Spin>
-
                   {errors.images && <p className="text-sm text-red-400">{errors.images}</p>}
                 </div>
 

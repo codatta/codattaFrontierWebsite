@@ -55,6 +55,8 @@ const RoboticsFormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
 const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
 const FoodTpl000003 = lazy(() => import('@/views/frontiers/food_tpl_000003'))
+const FoodTpl000004 = lazy(() => import('@/views/frontiers/food_tpl_000004'))
+const FoodTpl000005 = lazy(() => import('@/views/frontiers/food_tpl_000005'))
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
@@ -163,6 +165,14 @@ export default function Router() {
         <Route
           path="/frontier/project/FOOD_TPL_000003/:taskId/:questId"
           element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_000004/:taskId/:questId"
+          element={<FoodTpl000004 templateId="FOOD_TPL_000004" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
+          element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>
