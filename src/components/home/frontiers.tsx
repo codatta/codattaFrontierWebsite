@@ -13,7 +13,9 @@ const Frontiers = () => {
 
   const displayFrontiers = useMemo(() => {
     return frontierList.filter((item) => {
-      return !['FOOD_TPL_000002', 'FOOD_TPL_000003'].includes(item.template_ext?.template_id || '')
+      return !['FOOD_TPL_000002', 'FOOD_TPL_000003', 'FOOD_TPL_000004', 'FOOD_TPL_000005'].includes(
+        item.template_ext?.template_id || ''
+      )
     })
   }, [frontierList])
 
