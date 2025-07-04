@@ -2,81 +2,60 @@
  *  Month2 Week1
  */
 
-import { Spin } from 'antd'
+import { message, Spin } from 'antd'
 import { cn } from '@udecode/cn'
 import { useEffect, useMemo, useState } from 'react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-progress'
 import Result from '@/components/frontier/food_tpl_m2/result'
-
 import { Button } from '@/components/booster/button'
+
 import { FoodFormData, FoodFormItem, ModelInfo, SelectOption } from '@/components/frontier/food_tpl_m2/types'
 
 import boosterApi from '@/apis/booster.api'
 import { useParams } from 'react-router-dom'
+import { w234_mock_data, w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
+import frontiterApi from '@/apis/frontiter.api'
 
-const MockModelInfo: ModelInfo = {
-  modelA: {
-    name: 'GPT-4V',
-    'fine-tuning': 'Before Fine-tuning'
-  },
-  modelB: {
-    name: 'Gemini 1.5 Pro',
-    'fine-tuning': 'After Fine-tuning'
-  }
-}
-
-const MockData = {
-  imgUrl: '/food-example.jpg',
-  ingredients: {
-    modelA: 'Lettuce, cherry tomatoes,cucumber, boiled egg,olive oil',
-    modelB: 'Lettuce, tomato, cucumber, grilled chicken,feta cheese',
-    other: "It's a tie"
-  },
-  cookingMethod: {
-    modelA: 'Raw, ingredients are washed and mixed, egg is boiled',
-    modelB: 'Grilled chicken, vegetables are fresh and mixed',
-    other: "It's a tie"
-  },
-  category: {
-    modelA: 'Salad (Vegetable-based)',
-    modelB: 'Salad (With protein)',
-    other: "It's a tie"
-  },
-  estimatedCalories: {
-    modelA: '120 kcal (per serving)',
-    modelB: '210 kcal (per serving)',
-    other: "It's a tie"
-  }
-}
+/**
+ * TODO: Get annotation display data
+ * @param param0
+ * @returns
+ */
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
 
-  const [loading, setLoading] = useState(false)
+  const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [modelInfo, setModelInfo] = useState<ModelInfo>(MockModelInfo)
-  const [data, setData] = useState<FoodFormData>(MockData)
+  const [validatedDays, setValidatedDays] = useState(0)
+  const [modelInfo, setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
+  const [data, setData] = useState<FoodFormData>(w234_mock_data)
 
   useEffect(() => {
-    boosterApi.getTaskInfo(templateId).then((res) => {
-      console.log(res)
-    })
-    console.log(templateId, 'templateId')
-    // setLoading(true)
-  }, [templateId])
+    setPageLoading(true)
+    boosterApi
+      .getFoodAnnotationDays(questId!)
+      .then((annotationDays) => {
+        setSubmitted(annotationDays.data.has_current_date)
+        setValidatedDays(annotationDays.data.day_count)
+      })
+      .finally(() => {
+        setPageLoading(false)
+      })
+  }, [questId])
 
   return (
     <AuthChecker>
-      <Spin spinning={loading} className="min-h-screen">
+      <Spin spinning={pageLoading} className="min-h-screen">
         <h1 className="mb-4 py-4 text-center text-base font-bold">Model Comparison Review</h1>
         {submitted ? (
           <Result modelInfo={modelInfo} templateId={templateId} />
         ) : (
           <main className="mb-5">
-            <SubmissionProgress questId={questId!} />
-            <Form {...data} />
+            <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
+            <Form data={data} taskId={taskId!} templateId={templateId} onSubmitted={() => setSubmitted(true)} />
           </main>
         )}
       </Spin>
@@ -87,17 +66,15 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 export default FoodForm
 
 function Form({
-  imgUrl,
-  ingredients,
-  cookingMethod,
-  category,
-  estimatedCalories
+  data,
+  taskId,
+  templateId,
+  onSubmitted
 }: {
-  imgUrl: string
-  ingredients: FoodFormItem
-  cookingMethod: FoodFormItem
-  category: FoodFormItem
-  estimatedCalories: FoodFormItem
+  data: FoodFormData
+  taskId: string
+  templateId: string
+  onSubmitted: () => void
 }) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<{
@@ -122,28 +99,46 @@ function Form({
     })
   }
 
-  const handleSubmit = () => {}
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      await frontiterApi.submitTask(taskId!, {
+        templateId: templateId,
+        taskId: taskId,
+        data: Object.assign({}, formData)
+      })
+      onSubmitted()
+    } catch (error) {
+      message.error(error.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="px-6 text-sm text-[#BBBBBE]">
       <h3 className="mb-2 mt-1 pl-4 font-normal">Images*</h3>
       <div className="mb-[22px] overflow-hidden rounded-xl">
-        <img src={imgUrl} alt="" className="h-auto w-full" />
+        <img src={data.imgUrl} alt="" className="h-auto w-full" />
       </div>
       <FormSection
         title="Ingredients"
-        {...ingredients}
+        {...data.ingredients}
         onSelect={(value: SelectOption) => handleSelect('ingredients', value)}
       />
       <FormSection
         title="Cooking Method"
-        {...cookingMethod}
+        {...data.cookingMethod}
         onSelect={(value: SelectOption) => handleSelect('cookingMethod', value)}
       />
-      <FormSection title="Category" {...category} onSelect={(value: SelectOption) => handleSelect('category', value)} />
+      <FormSection
+        title="Category"
+        {...data.category}
+        onSelect={(value: SelectOption) => handleSelect('category', value)}
+      />
       <FormSection
         title="Estimated Calories"
-        {...estimatedCalories}
+        {...data.estimatedCalories}
         onSelect={(value: SelectOption) => handleSelect('estimatedCalories', value)}
       />
 

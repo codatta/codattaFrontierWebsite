@@ -14,31 +14,37 @@ import Result from '@/components/frontier/food_tpl_m2/result'
 import { Button } from '@/components/booster/button'
 
 import CheckCircle from '@/assets/common/check-circle.svg?react'
+
 import boosterApi from '@/apis/booster.api'
 
-const MockData = {
-  imgUrl: '/food-example.jpg',
-  des: [
-    'Ingredients: Salad, Main Course, Main Course.',
-    'Cooking Method: Boiled, Fry in oil.',
-    'Category: Salad, Main Course.',
-    'Estimated Calories: 100kcal.'
-  ]
-}
+import { w1_mock_data } from '@/components/frontier/food_tpl_m2/mock'
+import frontiterApi from '@/apis/frontiter.api'
+
+/**
+ * TODO: Get annotation display data
+ * @param param0
+ * @returns
+ */
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [data, setData] = useState(MockData)
+  const [validatedDays, setValidatedDays] = useState(0)
+  const [data, setData] = useState(w1_mock_data)
 
   useEffect(() => {
-    boosterApi.getTaskInfo(templateId).then((res) => {
-      console.log(res)
-    })
-    console.log(templateId, 'templateId')
-    // setLoading(true)
-  }, [templateId])
+    setPageLoading(true)
+    boosterApi
+      .getFoodAnnotationDays(questId!)
+      .then((annotationDays) => {
+        setSubmitted(annotationDays.data.has_current_date)
+        setValidatedDays(annotationDays.data.day_count)
+      })
+      .finally(() => {
+        setPageLoading(false)
+      })
+  }, [questId])
 
   return (
     <AuthChecker>
@@ -48,9 +54,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <Result templateId={templateId} />
         ) : (
           <main>
-            <SubmissionProgress questId={questId!} />
+            <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
             <DataPreview {...data} />
-            <Form />
+            <Form taskId={taskId!} templateId={templateId} onSubmitted={() => setSubmitted(true)} />
           </main>
         )}
       </Spin>
@@ -79,12 +85,26 @@ function DataPreview({ imgUrl, des }: { imgUrl: string; des: string[] }) {
   )
 }
 
-function Form() {
+function Form({ taskId, templateId, onSubmitted }: { taskId: string; templateId: string; onSubmitted: () => void }) {
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<'correct' | 'incorrect' | null>(null)
 
-  const handleSubmit = () => {
-    console.log(selected)
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      await frontiterApi.submitTask(taskId!, {
+        templateId: templateId,
+        taskId: taskId,
+        data: {
+          is_correct: selected === 'correct'
+        }
+      })
+      onSubmitted()
+    } catch (error) {
+      message.error(error.message)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (

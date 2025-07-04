@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import boosterApi from '@/apis/booster.api'
-
 const extractDaysFromString = (str?: string): number => {
   const match = str?.match(/-food(\d+)/)
   if (match && match[1]) {
@@ -10,19 +8,12 @@ const extractDaysFromString = (str?: string): number => {
   return 1
 }
 
-export default function SubmissionProgress(props: { questId: string }) {
-  const { questId } = props
+export default function SubmissionProgress(props: { questId: string; validatedDays: number }) {
+  const { questId, validatedDays } = props
   const [maxValidateDays, setMaxValidateDays] = useState(0)
-  const [validatedDays, setValidatedDays] = useState(0)
 
   useEffect(() => {
     setMaxValidateDays(extractDaysFromString(questId))
-
-    boosterApi.getFoodAnnotationDays(questId).then((annotationDays) => {
-      setValidatedDays(annotationDays?.data?.day_count ?? 0)
-    })
-
-    console.log('maxValidateDays', extractDaysFromString(questId), questId)
   }, [questId])
 
   return (
