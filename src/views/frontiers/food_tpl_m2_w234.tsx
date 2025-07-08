@@ -32,8 +32,10 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validatedDays, setValidatedDays] = useState(0)
-  const [modelInfo, _setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
-  const [data, _setData] = useState<FoodFormData>(w234_mock_data)
+  const [modelInfo] = useState<ModelInfo>(w234_mock_model_info)
+  const [data] = useState<FoodFormData>(w234_mock_data)
+  // const [modelInfo, _setModelInfo] = useState<ModelInfo>()
+  // const [data, _setData] = useState<FoodFormData>()
   const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
 
   const checkTaskStatus = useCallback(() => {
