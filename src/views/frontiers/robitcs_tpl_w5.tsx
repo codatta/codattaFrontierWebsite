@@ -3,7 +3,7 @@
  */
 
 import { Spin, message } from 'antd'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 
@@ -26,25 +26,57 @@ import { motion, PanInfo } from 'framer-motion'
  * @returns
  */
 
+type Question = {
+  imageUrl: string
+  num: string
+}
 const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(true)
   const [validatedDays, setValidatedDays] = useState(0)
+  const [data, setData] = useState<Question>()
   const [position, setPosition] = useState('50%,50%')
 
-  useEffect(() => {
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
     setPageLoading(true)
-    boosterApi
-      .getFoodAnnotationDays(questId!)
-      .then((annotationDays) => {
-        setSubmitted(annotationDays.data.has_current_date)
-        setValidatedDays(annotationDays.data.day_count)
-      })
-      .finally(() => {
-        setPageLoading(false)
-      })
-  }, [questId])
+
+    try {
+      const [annotationDays, taskDetail] = await Promise.all([
+        boosterApi.getFoodAnnotationDays(questId!),
+        frontiterApi.getTaskDetail(taskId!)
+      ])
+      setSubmitted(annotationDays.data.has_current_date)
+      setValidatedDays(annotationDays.data.day_count)
+
+      const question = taskDetail.data.questions as unknown as {
+        image_url: string
+        num: string
+      }
+
+      if (question) {
+        setData({
+          imageUrl: question.image_url,
+          num: question.num
+        })
+      }
+
+      console.log('question', question)
+    } catch (error) {
+      message.error(error.message)
+    } finally {
+      setPageLoading(false)
+    }
+  }, [questId, taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   return (
     <AuthChecker>
@@ -55,8 +87,15 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         ) : (
           <main>
             <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
-            <DataPreview imgUrl={'/robotics-example.png'} onPositionChange={setPosition} />
-            <Form taskId={taskId!} templateId={templateId} onSubmitted={() => setSubmitted(true)} position={position} />
+            <DataPreview imgUrl={data?.imageUrl} onPositionChange={setPosition} />
+            <Form
+              taskId={taskId!}
+              templateId={templateId}
+              onSubmitted={() => setSubmitted(true)}
+              position={position}
+              num={data?.num}
+              imgUrl={data?.imageUrl}
+            />
           </main>
         )}
       </Spin>
@@ -66,7 +105,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
 export default RoboticsForm
 
-function DataPreview({ imgUrl, onPositionChange }: { imgUrl: string; onPositionChange: (pos: string) => void }) {
+function DataPreview({ imgUrl, onPositionChange }: { imgUrl?: string; onPositionChange: (pos: string) => void }) {
   const constraintsRef = useRef<HTMLDivElement>(null)
   const dragControlRef = useRef<HTMLDivElement>(null)
 
@@ -127,11 +166,15 @@ function Form({
   taskId,
   templateId,
   position = '50%,50%',
+  num,
+  imgUrl,
   onSubmitted
 }: {
   taskId: string
   templateId: string
   position: string
+  num?: string
+  imgUrl?: string
   onSubmitted: () => void
 }) {
   const [loading, setLoading] = useState(false)
@@ -160,8 +203,10 @@ function Form({
       await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
+        num: num,
+        imgUrl: imgUrl,
         data: {
-          is_yes: selected === 'yes',
+          selected: selected,
           contact_target: textInput,
           position: position
         }

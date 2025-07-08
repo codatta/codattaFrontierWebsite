@@ -17,15 +17,8 @@ import CheckCircle from '@/assets/common/check-circle.svg?react'
 
 import boosterApi from '@/apis/booster.api'
 
-import { w1_mock_data } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
 import { FoodDisplayData } from '@/components/frontier/food_tpl_m2/types'
-
-/**
- * TODO: Get annotation display data
- * @param param0
- * @returns
- */
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
@@ -61,17 +54,20 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           model: string
         }[]
       }
-      const description = question.items![0]
 
-      setData({
-        imgUrl: question.image_url,
-        ingredients: description.ingredients,
-        cookingMethod: description.cooking_method,
-        category: description.category,
-        estimatedCalories: description.estimated_calories,
-        model: description.model, // for submission
-        num: question.num // for submission
-      })
+      if (question) {
+        const description = question.items![0]
+
+        setData({
+          imgUrl: question.image_url,
+          ingredients: description.ingredients,
+          cookingMethod: description.cooking_method,
+          category: description.category,
+          estimatedCalories: description.estimated_calories,
+          model: description.model, // for submission
+          num: question.num // for submission
+        })
+      }
 
       console.log('displayData', displayData)
     } catch (error) {
