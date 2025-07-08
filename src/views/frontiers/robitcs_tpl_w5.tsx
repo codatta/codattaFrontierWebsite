@@ -3,7 +3,7 @@
  */
 
 import { Spin, message } from 'antd'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 
@@ -18,7 +18,7 @@ import CheckCircle from '@/assets/common/check-circle.svg?react'
 import boosterApi from '@/apis/booster.api'
 
 import frontiterApi from '@/apis/frontiter.api'
-import { motion, PanInfo } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 /**
  * TODO: Get annotation display data
@@ -30,11 +30,23 @@ type Question = {
   imageUrl: string
   num: string
 }
+
+const extractDaysFromString = (str?: string): number => {
+  const match = str?.match(/-robotics(\d+)/)
+
+  console.log('match', match)
+  if (match && match[1]) {
+    return parseInt(match[1], 10)
+  }
+  return 1
+}
+
 const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(true)
   const [validatedDays, setValidatedDays] = useState(0)
+  const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
   const [data, setData] = useState<Question>()
   const [position, setPosition] = useState('50%,50%')
 
@@ -51,7 +63,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         boosterApi.getFoodAnnotationDays(questId!),
         frontiterApi.getTaskDetail(taskId!)
       ])
-      setSubmitted(annotationDays.data.has_current_date)
+      setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
       setValidatedDays(annotationDays.data.day_count)
 
       const question = taskDetail.data.questions as unknown as {
@@ -72,7 +84,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     } finally {
       setPageLoading(false)
     }
-  }, [questId, taskId, templateId])
+  }, [questId, taskId, templateId, maxValidateDays])
 
   useEffect(() => {
     checkTaskStatus()
@@ -86,7 +98,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <Result />
         ) : (
           <main>
-            <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
+            <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
             <DataPreview imgUrl={data?.imageUrl} onPositionChange={setPosition} />
             <Form
               taskId={taskId!}
@@ -109,7 +121,7 @@ function DataPreview({ imgUrl, onPositionChange }: { imgUrl?: string; onPosition
   const constraintsRef = useRef<HTMLDivElement>(null)
   const dragControlRef = useRef<HTMLDivElement>(null)
 
-  const handleDrag = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+  const handleDrag = (_: MouseEvent | TouchEvent | PointerEvent) => {
     const container = constraintsRef.current
     const dragControl = dragControlRef.current
     if (!container || !dragControl) return

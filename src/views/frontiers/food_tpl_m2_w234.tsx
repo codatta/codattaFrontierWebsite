@@ -11,18 +11,20 @@ import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-pro
 import Result from '@/components/frontier/food_tpl_m2/result'
 import { Button } from '@/components/booster/button'
 
-import { FoodFormData, FoodFormItem, ModelInfo, SelectOption } from '@/components/frontier/food_tpl_m2/types'
+import { FoodFormData, ModelInfo, SelectOption } from '@/components/frontier/food_tpl_m2/types'
 
 import boosterApi from '@/apis/booster.api'
 import { useParams } from 'react-router-dom'
 import { w234_mock_data, w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
 
-/**
- * TODO: Get annotation display data
- * @param param0
- * @returns
- */
+const extractDaysFromString = (str?: string): number => {
+  const match = str?.match(/-food(\d+)/)
+  if (match && match[1]) {
+    return parseInt(match[1], 10)
+  }
+  return 1
+}
 
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
@@ -30,8 +32,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validatedDays, setValidatedDays] = useState(0)
-  const [modelInfo, setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
-  const [data, setData] = useState<FoodFormData>(w234_mock_data)
+  const [modelInfo, _setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
+  const [data, _setData] = useState<FoodFormData>(w234_mock_data)
+  const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
 
   const checkTaskStatus = useCallback(() => {
     if (!taskId || !templateId) {
@@ -43,13 +46,13 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     boosterApi
       .getFoodAnnotationDays(questId!)
       .then((annotationDays) => {
-        setSubmitted(annotationDays.data.has_current_date)
+        setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
         setValidatedDays(annotationDays.data.day_count)
       })
       .finally(() => {
         setPageLoading(false)
       })
-  }, [questId, taskId, templateId])
+  }, [questId, taskId, templateId, maxValidateDays])
 
   useEffect(() => {
     checkTaskStatus()
@@ -63,7 +66,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <Result modelInfo={modelInfo} templateId={templateId} />
         ) : (
           <main className="mb-5">
-            <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
+            <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
             <Form data={data} taskId={taskId!} templateId={templateId} onSubmitted={() => setSubmitted(true)} />
           </main>
         )}

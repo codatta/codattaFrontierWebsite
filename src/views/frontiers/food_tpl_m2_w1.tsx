@@ -3,7 +3,7 @@
  */
 
 import { Spin, message } from 'antd'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 
@@ -20,11 +20,20 @@ import boosterApi from '@/apis/booster.api'
 import frontiterApi from '@/apis/frontiter.api'
 import { FoodDisplayData } from '@/components/frontier/food_tpl_m2/types'
 
+const extractDaysFromString = (str?: string): number => {
+  const match = str?.match(/-food(\d+)/)
+  if (match && match[1]) {
+    return parseInt(match[1], 10)
+  }
+  return 1
+}
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validatedDays, setValidatedDays] = useState(0)
+  const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
+
   const [data, setData] = useState({} as FoodDisplayData)
 
   const checkTaskStatus = useCallback(async () => {
@@ -40,7 +49,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         boosterApi.getFoodAnnotationDays(questId!),
         frontiterApi.getTaskDetail(taskId!)
       ])
-      setSubmitted(annotationDays.data.has_current_date)
+      setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
       setValidatedDays(annotationDays.data.day_count)
 
       const question = displayData.data.questions as unknown as {
@@ -75,7 +84,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     } finally {
       setPageLoading(false)
     }
-  }, [questId, taskId, templateId])
+  }, [questId, taskId, templateId, maxValidateDays])
 
   useEffect(() => {
     checkTaskStatus()
@@ -89,7 +98,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <Result templateId={templateId} />
         ) : (
           <main>
-            <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
+            <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
             <DataPreview {...data} />
             <Form
               taskId={taskId!}
