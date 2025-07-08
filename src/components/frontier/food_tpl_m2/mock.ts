@@ -1,13 +1,13 @@
-import { ModelInfo } from './types'
+import { ModelInfo, FoodDisplayData } from './types'
 
-export const w1_mock_data = {
+export const w1_mock_data: FoodDisplayData = {
   imgUrl: '/food-example.jpg',
-  des: [
-    'Ingredients: Salad, Main Course, Main Course.',
-    'Cooking Method: Boiled, Fry in oil.',
-    'Category: Salad, Main Course.',
-    'Estimated Calories: 100kcal.'
-  ]
+  model: '1',
+  num: '1',
+  ingredients: 'Ingredients: Salad, Main Course, Main Course.',
+  cookingMethod: 'Cooking Method: Boiled, Fry in oil.',
+  category: 'Category: Salad, Main Course.',
+  estimatedCalories: 'Estimated Calories: 100kcal.'
 }
 
 export const w234_mock_model_info: ModelInfo = {

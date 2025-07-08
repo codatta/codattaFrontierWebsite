@@ -14,6 +14,16 @@ export type FoodFormItem = {
   modelB: string
   other: string
 }
+
+export type FoodDisplayData = {
+  imgUrl: string
+  ingredients: string
+  cookingMethod: string
+  category: string
+  estimatedCalories: string
+  model: string // for submission
+  num: string // for submission
+}
 export type FoodFormData = {
   imgUrl: string
   ingredients: FoodFormItem

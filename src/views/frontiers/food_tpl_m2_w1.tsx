@@ -19,6 +19,7 @@ import boosterApi from '@/apis/booster.api'
 
 import { w1_mock_data } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
+import { FoodDisplayData } from '@/components/frontier/food_tpl_m2/types'
 
 /**
  * TODO: Get annotation display data
@@ -31,24 +32,53 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validatedDays, setValidatedDays] = useState(0)
-  const [data, setData] = useState(w1_mock_data)
+  const [data, setData] = useState({} as FoodDisplayData)
 
-  const checkTaskStatus = useCallback(() => {
+  const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) {
       message.error('Task ID or template ID is required!')
       return
     }
 
     setPageLoading(true)
-    boosterApi
-      .getFoodAnnotationDays(questId!)
-      .then((annotationDays) => {
-        setSubmitted(annotationDays.data.has_current_date)
-        setValidatedDays(annotationDays.data.day_count)
+
+    try {
+      const [annotationDays, displayData] = await Promise.all([
+        boosterApi.getFoodAnnotationDays(questId!),
+        frontiterApi.getTaskDetail(taskId!)
+      ])
+      setSubmitted(annotationDays.data.has_current_date)
+      setValidatedDays(annotationDays.data.day_count)
+
+      const question = displayData.data.questions as unknown as {
+        image_url: string
+        num: string
+        items: {
+          ingredients: string
+          cooking_method: string
+          category: string
+          estimated_calories: string
+          model: string
+        }[]
+      }
+      const description = question.items![0]
+
+      setData({
+        imgUrl: question.image_url,
+        ingredients: description.ingredients,
+        cookingMethod: description.cooking_method,
+        category: description.category,
+        estimatedCalories: description.estimated_calories,
+        model: description.model, // for submission
+        num: question.num // for submission
       })
-      .finally(() => {
-        setPageLoading(false)
-      })
+
+      console.log('displayData', displayData)
+    } catch (error) {
+      message.error(error.message)
+    } finally {
+      setPageLoading(false)
+    }
   }, [questId, taskId, templateId])
 
   useEffect(() => {
@@ -65,7 +95,13 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <main>
             <SubmissionProgress questId={questId!} validatedDays={validatedDays} />
             <DataPreview {...data} />
-            <Form taskId={taskId!} templateId={templateId} onSubmitted={() => setSubmitted(true)} />
+            <Form
+              taskId={taskId!}
+              templateId={templateId}
+              onSubmitted={() => setSubmitted(true)}
+              model={data.model}
+              num={data.num}
+            />
           </main>
         )}
       </Spin>
@@ -75,7 +111,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
 export default FoodForm
 
-function DataPreview({ imgUrl, des }: { imgUrl: string; des: string[] }) {
+function DataPreview({ imgUrl, ingredients, cookingMethod, category, estimatedCalories }: FoodDisplayData) {
   return (
     <div className="px-6 text-sm text-[#BBBBBE]">
       <h3 className="mb-2 mt-1 pl-4 font-normal">Images*</h3>
@@ -84,17 +120,28 @@ function DataPreview({ imgUrl, des }: { imgUrl: string; des: string[] }) {
       </div>
       <h3 className="mb-2 mt-5 pl-4 font-normal">AI Analysis Result</h3>
       <ul className="rounded-xl bg-[#252532] px-4 py-3 text-base text-white">
-        {des.map((item, index) => (
-          <li key={'des' + index} className="list-inside list-disc">
-            {item}
-          </li>
-        ))}
+        <li className="list-inside list-disc">Ingredients: {ingredients || '--'}</li>
+        <li className="list-inside list-disc">Cooking Method: {cookingMethod || '--'}</li>
+        <li className="list-inside list-disc">Category: {category || '--'}</li>
+        <li className="list-inside list-disc">Estimated Calories: {estimatedCalories || '--'}</li>
       </ul>
     </div>
   )
 }
 
-function Form({ taskId, templateId, onSubmitted }: { taskId: string; templateId: string; onSubmitted: () => void }) {
+function Form({
+  taskId,
+  templateId,
+  onSubmitted,
+  model,
+  num
+}: {
+  taskId: string
+  templateId: string
+  onSubmitted: () => void
+  model: string
+  num: string
+}) {
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<'correct' | 'incorrect' | null>(null)
 
@@ -104,8 +151,10 @@ function Form({ taskId, templateId, onSubmitted }: { taskId: string; templateId:
       await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
+        num: num,
         data: {
-          is_correct: selected === 'correct'
+          result: selected,
+          models: [model]
         }
       })
       onSubmitted()
