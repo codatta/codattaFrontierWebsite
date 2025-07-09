@@ -1,11 +1,11 @@
 export type ModelInfo = {
   modelA: {
     name: string
-    'fine-tuning'?: string
+    fineTuning?: string
   }
   modelB: {
     name: string
-    'fine-tuning'?: string
+    fineTuning?: string
   }
 }
 
@@ -26,10 +26,23 @@ export type FoodDisplayData = {
 }
 export type FoodFormData = {
   imgUrl: string
-  ingredients: FoodFormItem
-  cookingMethod: FoodFormItem
-  category: FoodFormItem
-  estimatedCalories: FoodFormItem
+  num: string // for submission
+  modelA: {
+    name: string
+    ingredients: string
+    cookingMethod: string
+    category: string
+    estimatedCalories: string
+    fineTuning?: string
+  }
+  modelB: {
+    name: string
+    ingredients: string
+    cookingMethod: string
+    category: string
+    estimatedCalories: string
+    fineTuning?: string
+  }
 }
 
-export type SelectOption = 'modelA' | 'modelB' | 'other' | null
+export type SelectOption = 'a_better' | 'b_better' | 'tie' | null

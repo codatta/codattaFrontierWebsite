@@ -183,29 +183,20 @@ export default function Router() {
           path="/frontier/project/FOOD_TPL_M2_W1/:taskId/:questId"
           element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />}
         />
+        <Route path="/frontier/project/FOOD_TPL_W6/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W6" />} />
         <Route
-          path="/frontier/project/FOOD_TPL_M2_W2/:taskId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W2" />}
+          path="/frontier/project/FOOD_TPL_W6/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W6" />}
         />
+        <Route path="/frontier/project/FOOD_TPL_W7/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W7" />} />
         <Route
-          path="/frontier/project/FOOD_TPL_M2_W2/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W2" />}
+          path="/frontier/project/FOOD_TPL_W7/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W7" />}
         />
+        <Route path="/frontier/project/FOOD_TPL_W8/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />} />
         <Route
-          path="/frontier/project/FOOD_TPL_M2_W3/:taskId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W3" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_M2_W3/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W3" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_M2_W4/:taskId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W4" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_M2_W4/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_M2_W4" />}
+          path="/frontier/project/FOOD_TPL_W8/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />}
         />
         <Route
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"

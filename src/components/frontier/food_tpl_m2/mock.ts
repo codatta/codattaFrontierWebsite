@@ -13,34 +13,31 @@ export const w1_mock_data: FoodDisplayData = {
 export const w234_mock_model_info: ModelInfo = {
   modelA: {
     name: 'GPT-4V',
-    'fine-tuning': 'Before Fine-tuning'
+    fineTuning: 'Before Fine-tuning'
   },
   modelB: {
     name: 'Gemini 1.5 Pro',
-    'fine-tuning': 'After Fine-tuning'
+    fineTuning: 'After Fine-tuning'
   }
 }
 
 export const w234_mock_data = {
+  num: '1',
   imgUrl: '/food-example.jpg',
-  ingredients: {
-    modelA: 'Lettuce, cherry tomatoes,cucumber, boiled egg,olive oil',
-    modelB: 'Lettuce, tomato, cucumber, grilled chicken,feta cheese',
-    other: "It's a tie"
+  modelA: {
+    name: 'GPT-4V',
+    fineTuning: 'Before Fine-tuning',
+    ingredients: 'Lettuce, cherry tomatoes,cucumber, boiled egg,olive oil',
+    cookingMethod: 'Raw, ingredients are washed and mixed, egg is boiled',
+    category: 'Salad (Vegetable-based)',
+    estimatedCalories: '120 kcal (per serving)'
   },
-  cookingMethod: {
-    modelA: 'Raw, ingredients are washed and mixed, egg is boiled',
-    modelB: 'Grilled chicken, vegetables are fresh and mixed',
-    other: "It's a tie"
-  },
-  category: {
-    modelA: 'Salad (Vegetable-based)',
-    modelB: 'Salad (With protein)',
-    other: "It's a tie"
-  },
-  estimatedCalories: {
-    modelA: '120 kcal (per serving)',
-    modelB: '210 kcal (per serving)',
-    other: "It's a tie"
+  modelB: {
+    name: 'Gemini 1.5 Pro',
+    fineTuning: 'After Fine-tuning',
+    ingredients: 'Lettuce, tomato, cucumber, grilled chicken,feta cheese',
+    cookingMethod: 'Grilled chicken, vegetables are fresh and mixed',
+    category: 'Salad (With protein)',
+    estimatedCalories: '210 kcal (per serving)'
   }
 }

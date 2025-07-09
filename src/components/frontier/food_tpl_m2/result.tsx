@@ -73,9 +73,9 @@ export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInf
             <span>Model A</span>
             <div className="flex items-center">
               {modelInfo?.modelA.name}
-              {modelInfo?.modelA['fine-tuning'] && (
+              {modelInfo?.modelA.fineTuning && (
                 <div className="ml-2 rounded-full bg-[#875DFF1F] px-[6px] text-xs leading-6">
-                  {modelInfo?.modelA['fine-tuning']}
+                  {modelInfo?.modelA.fineTuning}
                 </div>
               )}
             </div>
@@ -86,9 +86,9 @@ export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInf
             <span>Model B</span>
             <div className="flex items-center">
               {modelInfo?.modelB.name}
-              {modelInfo?.modelB['fine-tuning'] && (
+              {modelInfo?.modelB.fineTuning && (
                 <div className="ml-2 rounded-full bg-[#5DDD221F] px-[6px] text-xs leading-6">
-                  {modelInfo?.modelB['fine-tuning']}
+                  {modelInfo?.modelB.fineTuning}
                 </div>
               )}
             </div>

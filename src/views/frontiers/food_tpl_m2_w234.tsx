@@ -18,6 +18,8 @@ import { useParams } from 'react-router-dom'
 import { w234_mock_data, w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
 
+type Result = [{ model_name: string; model_type: string }, { model_name: string; model_type: string }]
+
 const extractDaysFromString = (str?: string): number => {
   const match = str?.match(/-food(\d+)/)
   if (match && match[1]) {
@@ -32,33 +34,108 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validatedDays, setValidatedDays] = useState(0)
-  const [modelInfo] = useState<ModelInfo>(w234_mock_model_info)
-  const [data] = useState<FoodFormData>(w234_mock_data)
-  // const [modelInfo, _setModelInfo] = useState<ModelInfo>()
-  // const [data, _setData] = useState<FoodFormData>()
+  const [modelInfo, setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
+  const [data, setData] = useState<FoodFormData>()
+
   const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
 
-  const checkTaskStatus = useCallback(() => {
+  const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) {
       message.error('Task ID or template ID is required!')
       return
     }
 
-    setPageLoading(true)
-    boosterApi
-      .getFoodAnnotationDays(questId!)
-      .then((annotationDays) => {
-        setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
-        setValidatedDays(annotationDays.data.day_count)
+    try {
+      setPageLoading(true)
+
+      const [annotationDays, displayData] = await Promise.all([
+        boosterApi.getFoodAnnotationDays(questId!),
+        frontiterApi.getTaskDetail(taskId!)
+      ])
+      setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
+      setValidatedDays(annotationDays.data.day_count)
+
+      const question = displayData.data.questions as unknown as {
+        image_url: string
+        num: string
+        items: {
+          ingredients: string
+          cooking_method: string
+          category: string
+          estimated_calories: string
+          model: string
+        }[]
+      }
+      const modelAData = question.items![0]
+      const modelBData = question.items![1]
+
+      if (!modelAData || !modelBData) {
+        message.error('Model data is required!')
+        return
+      }
+
+      setData({
+        imgUrl: question.image_url,
+        num: question.num,
+        modelA: {
+          name: modelAData.model,
+          fineTuning: 'Before Fine-tuning',
+          ingredients: modelAData.ingredients,
+          cookingMethod: modelAData.cooking_method,
+          category: modelAData.category,
+          estimatedCalories: modelAData.estimated_calories
+        },
+        modelB: {
+          name: modelBData.model,
+          fineTuning: 'After Fine-tuning',
+          ingredients: modelBData.ingredients,
+          cookingMethod: modelBData.cooking_method,
+          category: modelBData.category,
+          estimatedCalories: modelBData.estimated_calories
+        }
       })
-      .finally(() => {
-        setPageLoading(false)
-      })
+
+      console.log('displayData', displayData)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setPageLoading(false)
+    }
   }, [questId, taskId, templateId, maxValidateDays])
+
+  const onSubmitted = (result: Result) => {
+    console.log('result', result)
+    setModelInfo({
+      modelA: {
+        name: result[0].model_name,
+        fineTuning: result[0].model_type
+      },
+      modelB: {
+        name: result[1].model_name,
+        fineTuning: result[1].model_type
+      }
+    })
+    setSubmitted(true)
+  }
 
   useEffect(() => {
     checkTaskStatus()
   }, [questId, checkTaskStatus])
+
+  useEffect(() => {
+    if (submitted && data) {
+      setModelInfo({
+        modelA: {
+          name: data.modelA.name,
+          fineTuning: data.modelA.fineTuning
+        },
+        modelB: {
+          name: data.modelB.name,
+          fineTuning: data.modelB.fineTuning
+        }
+      })
+    }
+  }, [submitted, data])
 
   return (
     <AuthChecker>
@@ -69,7 +146,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         ) : (
           <main className="mb-5">
             <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
-            <Form data={data} taskId={taskId!} templateId={templateId} onSubmitted={() => setSubmitted(true)} />
+            <Form data={data} taskId={taskId!} templateId={templateId} onSubmitted={onSubmitted} />
           </main>
         )}
       </Spin>
@@ -85,10 +162,10 @@ function Form({
   templateId,
   onSubmitted
 }: {
-  data: FoodFormData
+  data?: FoodFormData
   taskId: string
   templateId: string
-  onSubmitted: () => void
+  onSubmitted: (result: Result) => void
 }) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<{
@@ -116,12 +193,27 @@ function Form({
   const handleSubmit = async () => {
     setLoading(true)
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
-        data: Object.assign({}, formData)
+        num: data!.num,
+        data: Object.assign(
+          {
+            models: [data!.modelA.name, data!.modelB.name]
+          },
+          formData
+        )
       })
-      onSubmitted()
+      const dataSubmission = res.data as unknown as {
+        data_submission: {
+          question_result: {
+            items: Result
+          }
+        }
+      }
+      const result = dataSubmission.data_submission.question_result.items
+      console.log('result', result)
+      onSubmitted(result)
     } catch (error) {
       message.error(error.message)
     } finally {
@@ -132,27 +224,31 @@ function Form({
   return (
     <div className="px-6 text-sm text-[#BBBBBE]">
       <h3 className="mb-2 mt-1 pl-4 font-normal">Images*</h3>
-      <div className="mb-[22px] overflow-hidden rounded-xl">
-        <img src={data.imgUrl} alt="" className="h-auto w-full" />
+      <div className={cn('mb-[22px] overflow-hidden rounded-xl', data?.imgUrl ? '' : 'h-[200px] bg-[#252532]')}>
+        <img src={data?.imgUrl || ''} alt="" className="h-auto w-full" />
       </div>
       <FormSection
         title="Ingredients"
-        {...data.ingredients}
+        modelAVal={data?.modelA.ingredients || '--'}
+        modelBVal={data?.modelB.ingredients || '--'}
         onSelect={(value: SelectOption) => handleSelect('ingredients', value)}
       />
       <FormSection
         title="Cooking Method"
-        {...data.cookingMethod}
+        modelAVal={data?.modelA.cookingMethod || '--'}
+        modelBVal={data?.modelB.cookingMethod || '--'}
         onSelect={(value: SelectOption) => handleSelect('cookingMethod', value)}
       />
       <FormSection
         title="Category"
-        {...data.category}
+        modelAVal={data?.modelA.category || '--'}
+        modelBVal={data?.modelB.category || '--'}
         onSelect={(value: SelectOption) => handleSelect('category', value)}
       />
       <FormSection
         title="Estimated Calories"
-        {...data.estimatedCalories}
+        modelAVal={data?.modelA.estimatedCalories || '--'}
+        modelBVal={data?.modelB.estimatedCalories || '--'}
         onSelect={(value: SelectOption) => handleSelect('estimatedCalories', value)}
       />
 
@@ -172,15 +268,13 @@ function Form({
 
 function FormSection({
   title,
-  modelA,
-  modelB,
-  other,
+  modelAVal,
+  modelBVal,
   onSelect
 }: {
   title: string
-  modelA: string
-  modelB: string
-  other: string
+  modelAVal: string
+  modelBVal: string
   onSelect: (value: SelectOption) => void
 }) {
   const [selected, setSelected] = useState<SelectOption>(null)
@@ -202,29 +296,29 @@ function FormSection({
         <div
           className={cn(
             'flex items-center justify-between gap-[10px] rounded-xl border bg-[#252532] py-[10px] pl-4 pr-3',
-            selected === 'modelA' ? 'border-primary' : 'border-transparent'
+            selected === 'a_better' ? 'border-primary' : 'border-transparent'
           )}
-          onClick={() => handleSelect('modelA')}
+          onClick={() => handleSelect('a_better')}
         >
-          {modelA} <span className="rounded-md bg-[#875DFF3D] px-[6px] py-1 text-xs">ModelA</span>
+          {modelAVal} <span className="rounded-md bg-[#875DFF3D] px-[6px] py-1 text-xs">ModelA</span>
         </div>
         <div
           className={cn(
             'flex items-center justify-between gap-[10px] rounded-xl border bg-[#252532] py-[10px] pl-4 pr-3',
-            selected === 'modelB' ? 'border-primary' : 'border-transparent'
+            selected === 'b_better' ? 'border-primary' : 'border-transparent'
           )}
-          onClick={() => handleSelect('modelB')}
+          onClick={() => handleSelect('b_better')}
         >
-          {modelB} <span className="rounded-md bg-[#875DFF3D] px-[6px] py-1 text-xs">ModelB</span>
+          {modelBVal} <span className="rounded-md bg-[#875DFF3D] px-[6px] py-1 text-xs">ModelB</span>
         </div>
         <div
           className={cn(
             'rounded-xl border bg-[#252532] py-[10px] pl-4 pr-3',
-            selected === 'other' ? 'border-primary' : 'border-transparent'
+            selected === 'tie' ? 'border-primary' : 'border-transparent'
           )}
-          onClick={() => handleSelect('other')}
+          onClick={() => handleSelect('tie')}
         >
-          {other}
+          It‘s a tie
         </div>
       </div>
     </div>
