@@ -137,22 +137,17 @@ export default function Router() {
           </Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
         </Route>
-
         <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
-
         <Route path="/account">
           <Route path="signin" element={<AccountSignin />} />
           <Route path="extension/signin" element={<ExtensionSignin />} />
           <Route path="social/link/:social_media" element={<SocialLinkLanding />}></Route>
         </Route>
-
         <Route path="/referral/:code" element={<ReferralLanding />} />
-
         <Route path="/frontier/project/CMU_TPL_000001/:taskId" element={<CMULayout />}>
           <Route index element={<CMUVideoLabelingTaskList />} />
           <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
         </Route>
-
         <Route path="/frontier/project" element={<FrontierLayout />}>
           <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
           <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
@@ -216,13 +211,24 @@ export default function Router() {
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
         />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W6/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W6" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W7/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W7" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W8/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
+        />
 
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />
           <Route path=":week/quiz" element={<QuizTaskPage />} />
           <Route path="not-found" element={<NotFoundPage />} />
         </Route>
-
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

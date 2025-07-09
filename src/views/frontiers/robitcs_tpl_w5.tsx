@@ -49,6 +49,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
   const [data, setData] = useState<Question>()
   const [position, setPosition] = useState('50%,50%')
+  const [isShaking, setIsShaking] = useState(false)
 
   const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) {
@@ -99,7 +100,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         ) : (
           <main>
             <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
-            <DataPreview imgUrl={data?.imageUrl} onPositionChange={setPosition} />
+            <DataPreview imgUrl={data?.imageUrl} onPositionChange={setPosition} isShaking={isShaking} />
             <Form
               taskId={taskId!}
               templateId={templateId}
@@ -107,6 +108,10 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
               position={position}
               num={data?.num}
               imgUrl={data?.imageUrl}
+              onShake={() => {
+                setIsShaking(true)
+                setTimeout(() => setIsShaking(false), 900)
+              }}
             />
           </main>
         )}
@@ -117,7 +122,15 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
 export default RoboticsForm
 
-function DataPreview({ imgUrl, onPositionChange }: { imgUrl?: string; onPositionChange: (pos: string) => void }) {
+function DataPreview({
+  imgUrl,
+  onPositionChange,
+  isShaking
+}: {
+  imgUrl?: string
+  onPositionChange: (pos: string) => void
+  isShaking: boolean
+}) {
   const constraintsRef = useRef<HTMLDivElement>(null)
   const dragControlRef = useRef<HTMLDivElement>(null)
 
@@ -163,11 +176,18 @@ function DataPreview({ imgUrl, onPositionChange }: { imgUrl?: string; onPosition
           dragConstraints={constraintsRef}
           onDrag={handleDrag}
           onDragEnd={handleDrag}
-          className="absolute size-10 cursor-grab rounded-sm border border-[#FFA800] active:cursor-grabbing"
+          className="absolute size-10 cursor-grab rounded-sm border active:cursor-grabbing"
           style={{
             left: `calc(50% - 20px)`,
             top: `calc(50% - 20px)`
           }}
+          animate={{
+            borderColor: isShaking
+              ? ['#FFA800', '#FF0000', '#FFA800', '#FF0000', '#FFA800', '#FF0000', '#FFA800']
+              : '#FFA800',
+            scale: isShaking ? [1, 1.2, 1, 1.2, 1, 1.2, 1] : 1
+          }}
+          transition={{ duration: 0.9, ease: 'easeInOut' }}
         ></motion.div>
       </div>
     </div>
@@ -180,7 +200,8 @@ function Form({
   position = '50%,50%',
   num,
   imgUrl,
-  onSubmitted
+  onSubmitted,
+  onShake
 }: {
   taskId: string
   templateId: string
@@ -188,6 +209,7 @@ function Form({
   num?: string
   imgUrl?: string
   onSubmitted: () => void
+  onShake: () => void
 }) {
   const [loading, setLoading] = useState(false)
   const [selected, setSelected] = useState<'yes' | 'no' | null>(null)
@@ -204,6 +226,12 @@ function Form({
 
   const handleSubmit = async () => {
     if (loading) return
+
+    if (!isPositionChanged) {
+      onShake()
+      message.warning('Please drag the rectangle to mark the robotic arm position.')
+      return
+    }
 
     if (!isSubmittable) {
       message.warning('Please complete all required fields before submitting.')
