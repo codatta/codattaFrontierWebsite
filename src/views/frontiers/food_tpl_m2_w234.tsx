@@ -15,7 +15,7 @@ import { FoodFormData, ModelInfo, SelectOption } from '@/components/frontier/foo
 
 import boosterApi from '@/apis/booster.api'
 import { useParams } from 'react-router-dom'
-import { w234_mock_data, w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
+import { w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
 
 type Result = [{ model_name: string; model_type: string }, { model_name: string; model_type: string }]

@@ -176,7 +176,7 @@ function DataPreview({
           dragConstraints={constraintsRef}
           onDrag={handleDrag}
           onDragEnd={handleDrag}
-          className="absolute size-10 cursor-grab rounded-sm border active:cursor-grabbing"
+          className="absolute size-10 cursor-grab rounded-sm border-2 active:cursor-grabbing"
           style={{
             left: `calc(50% - 20px)`,
             top: `calc(50% - 20px)`
@@ -288,7 +288,7 @@ function Form({
       ></textarea>
       <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Robotic arm position*</h3>
       <div className="rounded-xl bg-[#252532] px-4 py-[10px]">
-        <div className="text-base">Position({position})</div>
+        {/* <div className="text-base">Position({position})</div> */}
         <p className="mt-1 text-sm text-[#77777D]">Drag the rectangle in the image to mark the robotic arm position</p>
       </div>
 

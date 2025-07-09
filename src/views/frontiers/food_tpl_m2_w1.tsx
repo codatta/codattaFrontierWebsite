@@ -178,13 +178,13 @@ function Form({
           className="flex flex-1 flex-nowrap items-center justify-between rounded-xl bg-[#FFFFFF14] px-4 py-[10px]"
           onClick={() => setSelected('correct')}
         >
-          <span>👍 Correct</span> <CheckCircle className={selected === 'correct' ? 'opacity-100' : 'opacity-0'} />
+          <span>👍 Accurate</span> <CheckCircle className={selected === 'correct' ? 'opacity-100' : 'opacity-0'} />
         </button>
         <button
           className="flex flex-1 flex-nowrap items-center justify-between rounded-xl bg-[#FFFFFF14] px-4 py-[10px]"
           onClick={() => setSelected('incorrect')}
         >
-          <span>👎 Incorrect</span> <CheckCircle className={selected === 'incorrect' ? 'opacity-100' : 'opacity-0'} />
+          <span>👎 Inaccurate</span> <CheckCircle className={selected === 'incorrect' ? 'opacity-100' : 'opacity-0'} />
         </button>
       </div>
       <Button
