@@ -93,7 +93,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   return (
     <AuthChecker>
       <Spin spinning={pageLoading} className="min-h-screen">
-        <h1 className="mb-4 py-4 text-center text-base font-bold">AI Analysis Result</h1>
+        <h1 className="mb-4 py-4 text-center text-base font-bold">AI Food Analysis Review</h1>
         {submitted ? (
           <Result templateId={templateId} />
         ) : (
