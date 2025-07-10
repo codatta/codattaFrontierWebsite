@@ -12,12 +12,12 @@ export const w1_mock_data: FoodDisplayData = {
 
 export const w234_mock_model_info: ModelInfo = {
   modelA: {
-    name: 'GPT-4V',
-    fineTuning: 'Before Fine-tuning'
+    displayName: 'GPT-4V',
+    type: 'Before Fine-tuning'
   },
   modelB: {
-    name: 'Gemini 1.5 Pro',
-    fineTuning: 'After Fine-tuning'
+    displayName: 'Gemini 1.5 Pro',
+    type: 'After Fine-tuning'
   }
 }
 
@@ -25,16 +25,14 @@ export const w234_mock_data = {
   num: '1',
   imgUrl: '/food-example.jpg',
   modelA: {
-    name: 'GPT-4V',
-    fineTuning: 'Before Fine-tuning',
+    name: '1',
     ingredients: 'Lettuce, cherry tomatoes,cucumber, boiled egg,olive oil',
     cookingMethod: 'Raw, ingredients are washed and mixed, egg is boiled',
     category: 'Salad (Vegetable-based)',
     estimatedCalories: '120 kcal (per serving)'
   },
   modelB: {
-    name: 'Gemini 1.5 Pro',
-    fineTuning: 'After Fine-tuning',
+    name: '2',
     ingredients: 'Lettuce, tomato, cucumber, grilled chicken,feta cheese',
     cookingMethod: 'Grilled chicken, vegetables are fresh and mixed',
     category: 'Salad (With protein)',

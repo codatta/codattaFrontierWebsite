@@ -15,7 +15,7 @@ import { FoodFormData, ModelInfo, SelectOption } from '@/components/frontier/foo
 
 import boosterApi from '@/apis/booster.api'
 import { useParams } from 'react-router-dom'
-import { w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
+// import { w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
 
 type Result = [{ model_name: string; model_type: string }, { model_name: string; model_type: string }]
@@ -34,7 +34,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [pageLoading, setPageLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [validatedDays, setValidatedDays] = useState(0)
-  const [modelInfo, setModelInfo] = useState<ModelInfo>(w234_mock_model_info)
+  const [modelInfo, setModelInfo] = useState<ModelInfo>()
   const [data, setData] = useState<FoodFormData>()
 
   const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
@@ -52,8 +52,24 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         boosterApi.getFoodAnnotationDays(questId!),
         frontiterApi.getTaskDetail(taskId!)
       ])
-      setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
+
+      const submitted = annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count
+      setSubmitted(submitted)
       setValidatedDays(annotationDays.data.day_count)
+
+      if (submitted && annotationDays.data.question_result) {
+        const result = annotationDays.data.question_result.items
+        setModelInfo({
+          modelA: {
+            displayName: result[0].model_name,
+            type: result[0].model_type
+          },
+          modelB: {
+            displayName: result[1].model_name,
+            type: result[1].model_type
+          }
+        })
+      }
 
       const question = displayData.data.questions as unknown as {
         image_url: string
@@ -79,7 +95,6 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         num: question.num,
         modelA: {
           name: modelAData.model,
-          fineTuning: 'Before Fine-tuning',
           ingredients: modelAData.ingredients,
           cookingMethod: modelAData.cooking_method,
           category: modelAData.category,
@@ -87,7 +102,6 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         },
         modelB: {
           name: modelBData.model,
-          fineTuning: 'After Fine-tuning',
           ingredients: modelBData.ingredients,
           cookingMethod: modelBData.cooking_method,
           category: modelBData.category,
@@ -104,15 +118,15 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   }, [questId, taskId, templateId, maxValidateDays])
 
   const onSubmitted = (result: Result) => {
-    console.log('result', result)
+    console.log('onSubmitted', result)
     setModelInfo({
       modelA: {
-        name: result[0].model_name,
-        fineTuning: result[0].model_type
+        displayName: result[0].model_name,
+        type: result[0].model_type
       },
       modelB: {
-        name: result[1].model_name,
-        fineTuning: result[1].model_type
+        displayName: result[1].model_name,
+        type: result[1].model_type
       }
     })
     setSubmitted(true)
@@ -121,21 +135,6 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   useEffect(() => {
     checkTaskStatus()
   }, [questId, checkTaskStatus])
-
-  useEffect(() => {
-    if (submitted && data) {
-      setModelInfo({
-        modelA: {
-          name: data.modelA.name,
-          fineTuning: data.modelA.fineTuning
-        },
-        modelB: {
-          name: data.modelB.name,
-          fineTuning: data.modelB.fineTuning
-        }
-      })
-    }
-  }, [submitted, data])
 
   return (
     <AuthChecker>

@@ -25,6 +25,20 @@ class BoosterApi {
         day_count: number
         has_current_date: boolean
         days: string[]
+        question_result?: {
+          num: string
+          image_url: string
+          items: [
+            {
+              model_name: string
+              model_type: string
+            },
+            {
+              model_name: string
+              model_type: string
+            }
+          ]
+        }
       }>
     >('/v2/binance/v1/task/days', { params: { task_id: bn_task_name } })
     return res.data

@@ -1,11 +1,11 @@
 export type ModelInfo = {
   modelA: {
-    name: string
-    fineTuning?: string
+    displayName: string
+    type?: string
   }
   modelB: {
-    name: string
-    fineTuning?: string
+    displayName: string
+    type?: string
   }
 }
 

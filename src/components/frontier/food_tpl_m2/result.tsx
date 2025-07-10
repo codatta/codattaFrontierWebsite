@@ -47,10 +47,21 @@ export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInf
 
   useEffect(() => {
     console.log(templateId, 'templateId')
-    const reg = /FOOD_TPL_M2_W(\d)/
-    const match = templateId.match(reg)
-    if (match) {
-      setWeek(match[1])
+    switch (templateId) {
+      case 'FOOD_TPL_M2_W1':
+        setWeek('1')
+        break
+      case 'FOOD_TPL_W6':
+        setWeek('2')
+        break
+      case 'FOOD_TPL_W7':
+        setWeek('3')
+        break
+      case 'FOOD_TPL_W8':
+        setWeek('4')
+        break
+      default:
+        break
     }
   }, [templateId])
 
@@ -68,27 +79,27 @@ export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInf
       </motion.h2>
 
       <motion.div variants={itemVariants} className="mt-6">
-        {modelInfo?.modelA.name && (
+        {modelInfo?.modelA.displayName && (
           <div className="flex items-center justify-between rounded-full border border-[#FFFFFF1F] px-5 py-2 leading-8">
             <span>Model A</span>
             <div className="flex items-center">
-              {modelInfo?.modelA.name}
-              {modelInfo?.modelA.fineTuning && (
+              {modelInfo?.modelA.displayName}
+              {week === '4' && modelInfo?.modelA.type && (
                 <div className="ml-2 rounded-full bg-[#875DFF1F] px-[6px] text-xs leading-6">
-                  {modelInfo?.modelA.fineTuning}
+                  {modelInfo?.modelA.type}
                 </div>
               )}
             </div>
           </div>
         )}
-        {modelInfo?.modelB.name && (
+        {modelInfo?.modelB.displayName && (
           <div className="mt-3 flex items-center justify-between rounded-full border border-[#FFFFFF1F] px-5 py-2 leading-8">
             <span>Model B</span>
             <div className="flex items-center">
-              {modelInfo?.modelB.name}
-              {modelInfo?.modelB.fineTuning && (
+              {modelInfo?.modelB.displayName}
+              {week === '4' && modelInfo?.modelB.type && (
                 <div className="ml-2 rounded-full bg-[#5DDD221F] px-[6px] text-xs leading-6">
-                  {modelInfo?.modelB.fineTuning}
+                  {modelInfo?.modelB.type}
                 </div>
               )}
             </div>
