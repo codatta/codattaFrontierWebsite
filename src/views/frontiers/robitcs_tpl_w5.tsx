@@ -167,7 +167,10 @@ function DataPreview({
   return (
     <div className="px-6 text-sm text-[#BBBBBE]">
       <h3 className="mb-2 mt-1 pl-4 font-normal">Images*</h3>
-      <div className="relative overflow-hidden rounded-xl" ref={constraintsRef}>
+      <div
+        className={cn('relative overflow-hidden rounded-xl', imgUrl ? '' : 'h-[200px] bg-[#252532]')}
+        ref={constraintsRef}
+      >
         <img src={imgUrl} alt="" className="h-auto w-full" />
         <motion.div
           ref={dragControlRef}

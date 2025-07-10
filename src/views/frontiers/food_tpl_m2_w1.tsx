@@ -120,7 +120,7 @@ function DataPreview({ imgUrl, ingredients, cookingMethod, category, estimatedCa
   return (
     <div className="px-6 text-sm text-[#BBBBBE]">
       <h3 className="mb-2 mt-1 pl-4 font-normal">Images*</h3>
-      <div className="overflow-hidden rounded-xl">
+      <div className={cn('overflow-hidden rounded-xl', imgUrl ? '' : 'h-[200px] bg-[#252532]')}>
         <img src={imgUrl} alt="" className="h-auto w-full" />
       </div>
       <h3 className="mb-2 mt-5 pl-4 font-normal">AI Analysis Result</h3>
