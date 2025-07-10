@@ -1,12 +1,12 @@
 import { useUserStore } from '@/stores/user.store'
 
 import { cn } from '@udecode/cn'
-// import { Badge, Flex } from 'antd'
+import { Badge, Flex } from 'antd'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import ImageLogo from '@/assets/images/logo-white.png'
 import IconHome from '@/assets/icons/app-nav/home.svg'
-// import IconQuest from '@/assets/icons/app-nav/quest.svg'
+import IconQuest from '@/assets/icons/app-nav/quest.svg'
 import IconEcosystem from '@/assets/icons/app-nav/ecosystem.svg'
 import IconArena from '@/assets/icons/app-nav/arena.svg'
 import IconReferral from '@/assets/icons/app-nav/referral.svg'
@@ -83,28 +83,28 @@ function NotificationMenu() {
   )
 }
 
-// const QuestLabel = () => {
-//   // const { unRewardedTask } = useNotificationStore()
-//   const unRewardedTask = 0
-//   return (
-//     <Flex justify="space-between" align="center">
-//       Quest
-//       <Badge
-//         count={unRewardedTask}
-//         showZero={false}
-//         style={{
-//           color: '#fff',
-//           height: '18px',
-//           fontSize: '12px',
-//           padding: '2px 8px',
-//           borderRadius: '12px'
-//         }}
-//         className="[&>.ant-badge-count]:shadow-none"
-//         size="small"
-//       />
-//     </Flex>
-//   )
-// }
+const QuestLabel = () => {
+  // const { unRewardedTask } = useNotificationStore()
+  const unRewardedTask = 0
+  return (
+    <Flex justify="space-between" align="center">
+      Quest
+      <Badge
+        count={unRewardedTask}
+        showZero={false}
+        style={{
+          color: '#fff',
+          height: '18px',
+          fontSize: '12px',
+          padding: '2px 8px',
+          borderRadius: '12px'
+        }}
+        className="[&>.ant-badge-count]:shadow-none"
+        size="small"
+      />
+    </Flex>
+  )
+}
 
 const menuItems: MenuItem[] = [
   {
@@ -117,11 +117,11 @@ const menuItems: MenuItem[] = [
   //   key: '/app/journey',
   //   label: 'New Journey'
   // },
-  // {
-  //   icon: <IconQuest color={'white'} size={24} />,
-  //   key: '/app/quest',
-  //   label: <QuestLabel />
-  // },
+  {
+    icon: <IconQuest color={'white'} size={24} />,
+    key: '/app/quest',
+    label: <QuestLabel />
+  },
   {
     icon: <IconArena color={'white'} size={24} />,
     key: '/arena',
