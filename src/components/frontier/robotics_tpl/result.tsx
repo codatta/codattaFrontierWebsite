@@ -79,8 +79,7 @@ function ApprovedView({ maxValidateDays, validatedDays }: { maxValidateDays: num
       </div>
       <p className="text-center text-base font-bold text-[#22DD61]">Today's submission is completed.</p>
       <motion.p variants={itemVariants} className="mt-6 text-center text-base text-[#BBBBBE]">
-        To receive your reward, please make sure you meet the days requirement and verify the task on the Binance Wallet
-        campaign page.
+        Thank you for annotating robotics data! Your contribution helps advance the robotics industry.
       </motion.p>
       <PleaseNote className="my-3" />
     </motion.div>

@@ -2,6 +2,8 @@ import type { DataITemIntro } from './types'
 
 import banner1Img from '@/assets/booster/task-1-read-banner.png'
 import banner4Img from '@/assets/booster/task-4-read-banner.png'
+import banner5Img from '@/assets/booster/task-5-read-banner.png'
+import banner51Img from '@/assets/booster/task-5-2-read-banner.png'
 
 export type DataItem = {
   intro: DataITemIntro[]
@@ -94,6 +96,39 @@ export const Data: DataItem[] = [
           },
           { type: 'h4', content: 'Current Phase 3 - In Progress' },
           { type: 'light', content: 'FaaS (Frontier-as-a-Service): Completed prototype and initial development phase' }
+        ]
+      }
+    ]
+  },
+  {
+    intro: [
+      {
+        title: 'Data Frontier',
+        banner: banner5Img,
+        des: [
+          {
+            type: 'p',
+            content: `Codatta's "Data Frontier" concept is central to its mission of acquiring valuable, specialized knowledge
+                and data at scale to advance AI, particularly in vertical (specialized) fields.`
+          },
+          {
+            type: 'p',
+            content: `Codatta addresses these challenges through "Frontier as a Service (FaaS)", utilizing Web3.0 to transform human knowledge into "Knowledge Data Assets".`
+          }
+        ]
+      },
+      {
+        title: 'Robotics Frontier',
+        banner: banner51Img,
+        des: [
+          {
+            type: 'p',
+            content: `For fields like robotics, this means obtaining essential visual data annotation from experts to train large AI models for object recognition and spatial awareness.`
+          },
+          {
+            type: 'p',
+            content: `Our royalty-based payment mechanism ensures that as AI grows from using this specialized data, human experts earn long-term rewards.`
+          }
         ]
       }
     ]
