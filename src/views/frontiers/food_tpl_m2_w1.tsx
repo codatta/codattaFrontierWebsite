@@ -228,7 +228,4 @@ function Form({
   )
 }
 
-// http://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food7days
-// https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food5days
 // https://app-test.b18a.io/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food1time
-// http://localhost:8080/frontier/project/FOOD_TPL_M2_W1/7890645093800107259/task-5-food7days
