@@ -305,7 +305,7 @@ function Form({
 
   return (
     <div className="mt-5 px-6 text-white">
-      <h3 className="mb-2 mt-1 pl-4 font-normal text-[#BBBBBE]">Does the robotic arm touch an object?</h3>
+      <h3 className="mb-2 mt-1 pl-4 font-normal text-[#BBBBBE]">Does the robotic arm touch an object?*</h3>
       <div className="flex items-center gap-3 text-base">
         <button
           className="flex flex-1 flex-nowrap items-center justify-between rounded-xl bg-[#FFFFFF14] px-4 py-[10px]"
@@ -325,7 +325,8 @@ function Form({
         placeholder="Describe the target object that the robotic arm iscontacting..."
         className="w-full rounded-xl px-4 py-[10px] text-base text-black placeholder:text-[#77777D]"
         value={textInput}
-        onChange={(e) => setTextInput(e.target.value)}
+        maxLength={128}
+        onChange={(e) => setTextInput(e.target.value.trim())}
       ></textarea>
       <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Robotic arm position*</h3>
       <div className="rounded-xl bg-[#252532] px-4 py-[10px]">
