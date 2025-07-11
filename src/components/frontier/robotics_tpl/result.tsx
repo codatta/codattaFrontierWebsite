@@ -111,7 +111,7 @@ function RejectView({ onSubmitAgain }: { onSubmitAgain?: () => void }) {
       <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit Failed</div>
       <p className="mb-8 text-center text-[15.5px] text-white/60">So close! Tweak it and resubmit—you’ve got this!</p>
       <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={onSubmitAgain}>
-        Submit again
+        Submit
       </button>
     </div>
   )

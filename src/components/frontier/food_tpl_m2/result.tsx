@@ -183,7 +183,7 @@ function RejectView({
         Unfortunately, your submission did not pass our audit.Please review the requirement and resubmit.
       </p>
       <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={onSubmitAgain}>
-        Submit again
+        Submit
       </button>
     </div>
   )
