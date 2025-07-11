@@ -46,3 +46,4 @@ export type FoodFormData = {
 }
 
 export type SelectOption = 'a_better' | 'b_better' | 'tie' | null
+export type ResultType = 'PENDING' | 'REJECT' | 'ADOPT' | null

@@ -11,7 +11,7 @@ import SubmissionProgress from '@/components/frontier/food_tpl_m2/submission-pro
 import Result from '@/components/frontier/food_tpl_m2/result'
 import { Button } from '@/components/booster/button'
 
-import { FoodFormData, ModelInfo, SelectOption } from '@/components/frontier/food_tpl_m2/types'
+import { FoodFormData, ModelInfo, ResultType, SelectOption } from '@/components/frontier/food_tpl_m2/types'
 
 import boosterApi from '@/apis/booster.api'
 import { useParams } from 'react-router-dom'
@@ -28,11 +28,17 @@ const extractDaysFromString = (str?: string): number => {
   return 1
 }
 
+async function getLastSubmission(frontierId: string) {
+  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
+
 const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
 
   const [pageLoading, setPageLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [resultType, setResultType] = useState<'PENDING' | 'REJECT' | 'ADOPT' | null>(null)
   const [validatedDays, setValidatedDays] = useState(0)
   const [modelInfo, setModelInfo] = useState<ModelInfo>()
   const [data, setData] = useState<FoodFormData>()
@@ -44,6 +50,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       message.error('Task ID or template ID is required!')
       return
     }
+    let adopt = false
 
     try {
       setPageLoading(true)
@@ -53,11 +60,24 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         frontiterApi.getTaskDetail(taskId!)
       ])
 
-      const submitted = annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count
-      setSubmitted(submitted)
+      const lastSubmission = await getLastSubmission(displayData.data.frontier_id)
+
+      if (lastSubmission) {
+        if (['PENDING', 'SUBMITTED'].includes(lastSubmission.status)) {
+          setResultType('PENDING')
+        } else if (lastSubmission.status === 'REFUSED') {
+          setResultType('REJECT')
+        } else if (lastSubmission.status === 'ADOPT') {
+          if (annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count) {
+            setResultType('ADOPT')
+            adopt = true
+          }
+        }
+      }
+
       setValidatedDays(annotationDays.data.day_count)
 
-      if (submitted && annotationDays.data.question_result) {
+      if (adopt && annotationDays.data.question_result) {
         const result = annotationDays.data.question_result.items
         setModelInfo({
           modelA: {
@@ -117,7 +137,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     }
   }, [questId, taskId, templateId, maxValidateDays])
 
-  const onSubmitted = (result: Result) => {
+  const onSubmitted = ({ result, status }: { result: Result; status: ResultType }) => {
     console.log('onSubmitted', result)
     setModelInfo({
       modelA: {
@@ -129,7 +149,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         type: result[1].model_type
       }
     })
-    setSubmitted(true)
+    setResultType(status)
   }
 
   useEffect(() => {
@@ -140,8 +160,15 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     <AuthChecker>
       <Spin spinning={pageLoading} className="min-h-screen">
         <h1 className="mb-4 py-4 text-center text-base font-bold">Model Comparison Review</h1>
-        {submitted ? (
-          <Result modelInfo={modelInfo} templateId={templateId} />
+        {resultType ? (
+          <Result
+            modelInfo={modelInfo}
+            templateId={templateId}
+            type={resultType}
+            maxValidateDays={maxValidateDays}
+            validatedDays={validatedDays}
+            onSubmitAgain={() => setResultType(null)}
+          />
         ) : (
           <main className="mb-5">
             <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
@@ -164,7 +191,7 @@ function Form({
   data?: FoodFormData
   taskId: string
   templateId: string
-  onSubmitted: (result: Result) => void
+  onSubmitted: (result: { result: Result; status: ResultType }) => void
 }) {
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState<{
@@ -191,6 +218,7 @@ function Form({
 
   const handleSubmit = async () => {
     setLoading(true)
+
     try {
       const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
@@ -203,16 +231,20 @@ function Form({
           formData
         )
       })
-      const dataSubmission = res.data as unknown as {
+      const resultData = res.data as unknown as {
         data_submission: {
           question_result: {
             items: Result
           }
         }
+        status: ResultType
       }
-      const result = dataSubmission.data_submission.question_result.items
+      const result = resultData.data_submission.question_result.items
       console.log('result', result)
-      onSubmitted(result)
+      onSubmitted({
+        result: result,
+        status: resultData.status
+      })
     } catch (error) {
       message.error(error.message)
     } finally {

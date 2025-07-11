@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 import ApprovedIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg?react'
+import TaskPendingImg from '@/assets/images/task-pending.svg?react'
+import TaskRefusedImg from '@/assets/images/task-reject.svg?react'
 
 import { ModelInfo } from './types'
+import SubmissionProgress from './submission-progress'
 
 // 2. Define animation variants for the container and its items
 const containerVariants = {
@@ -42,7 +45,21 @@ const iconVariants = {
   }
 }
 
-export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInfo; templateId: string }) {
+export default function Result({
+  modelInfo,
+  templateId,
+  type = 'ADOPT',
+  maxValidateDays,
+  validatedDays,
+  onSubmitAgain
+}: {
+  modelInfo?: ModelInfo
+  templateId: string
+  type: 'ADOPT' | 'REJECT' | 'PENDING'
+  maxValidateDays?: number
+  validatedDays?: number
+  onSubmitAgain: () => void
+}) {
   const [week, setWeek] = useState('1')
 
   useEffect(() => {
@@ -66,7 +83,18 @@ export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInf
   }, [templateId])
 
   return (
-    // 3. Apply the container variants to a motion.div
+    <>
+      {type === 'ADOPT' && <AdoptView modelInfo={modelInfo} week={week} />}
+      {type === 'REJECT' && (
+        <RejectView maxValidateDays={maxValidateDays} validatedDays={validatedDays} onSubmitAgain={onSubmitAgain} />
+      )}
+      {type === 'PENDING' && <PendingView maxValidateDays={maxValidateDays} validatedDays={validatedDays} />}
+    </>
+  )
+}
+
+function AdoptView({ modelInfo, week }: { modelInfo?: ModelInfo; week: string }) {
+  return (
     <motion.div className="px-6" initial="hidden" animate="visible" variants={containerVariants}>
       {/* 4. Animate the icon with its specific variant */}
       <motion.div variants={iconVariants}>
@@ -113,5 +141,50 @@ export default function Result({ modelInfo, templateId }: { modelInfo?: ModelInf
           : 'Thank you for your data annotation. We will use your submission for fine-tuning to improve our model capabilities.'}
       </motion.p>
     </motion.div>
+  )
+}
+
+function PendingView({ maxValidateDays, validatedDays }: { maxValidateDays?: number; validatedDays?: number }) {
+  return (
+    <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[40px]">
+      <TaskPendingImg className="mb-8 size-[120px]" />
+      <div className="mb-6 text-center text-2xl font-bold text-[#FFA800]">Under Review</div>
+      <div className="mb-6 w-full">
+        {maxValidateDays && validatedDays && (
+          <SubmissionProgress maxValidateDays={maxValidateDays || 0} validatedDays={validatedDays || 0} />
+        )}
+      </div>
+      <div className="mb-3 flex flex-col gap-2 text-[15.5px] leading-6 text-white/60">
+        <p className="text-center">We're processing your submission. Please check back later for an update.</p>
+      </div>
+    </div>
+  )
+}
+
+function RejectView({
+  maxValidateDays,
+  validatedDays,
+  onSubmitAgain
+}: {
+  maxValidateDays?: number
+  validatedDays?: number
+  onSubmitAgain?: () => void
+}) {
+  return (
+    <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[40px]">
+      <TaskRefusedImg className="mb-8 size-[120px]" />
+      <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit Failed</div>
+      <div className="mb-6 w-full">
+        {maxValidateDays && validatedDays ? (
+          <SubmissionProgress maxValidateDays={maxValidateDays || 0} validatedDays={validatedDays || 0} />
+        ) : null}
+      </div>
+      <p className="mb-8 text-center text-[15.5px] text-white/60">
+        Unfortunately, your submission did not pass our audit.Please review the requirement and resubmit.
+      </p>
+      <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={onSubmitAgain}>
+        Submit again
+      </button>
+    </div>
   )
 }

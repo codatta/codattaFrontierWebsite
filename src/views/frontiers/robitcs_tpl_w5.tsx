@@ -19,6 +19,7 @@ import boosterApi from '@/apis/booster.api'
 
 import frontiterApi from '@/apis/frontiter.api'
 import { motion } from 'framer-motion'
+import { ResultType } from '@/components/frontier/robotics_tpl/types'
 
 /**
  * TODO: Get annotation display data
@@ -41,10 +42,16 @@ const extractDaysFromString = (str?: string): number => {
   return 1
 }
 
+async function getLastSubmission(frontierId: string) {
+  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
+
 const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId, questId } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
-  const [submitted, setSubmitted] = useState(true)
+  const [resultType, setResultType] = useState<'PENDING' | 'REJECT' | 'ADOPT' | null>(null)
   const [validatedDays, setValidatedDays] = useState(0)
   const maxValidateDays = useMemo(() => extractDaysFromString(questId), [questId])
   const [data, setData] = useState<Question>()
@@ -64,7 +71,21 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         boosterApi.getFoodAnnotationDays(questId!),
         frontiterApi.getTaskDetail(taskId!)
       ])
-      setSubmitted(annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count)
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id)
+
+      if (lastSubmission) {
+        if (['PENDING', 'SUBMITTED'].includes(lastSubmission.status)) {
+          setResultType('PENDING')
+        } else if (lastSubmission.status === 'REFUSED') {
+          setResultType('REJECT')
+        } else if (lastSubmission.status === 'ADOPT') {
+          if (annotationDays.data.has_current_date || maxValidateDays <= annotationDays.data.day_count) {
+            setResultType('ADOPT')
+          }
+        }
+      }
+
       setValidatedDays(annotationDays.data.day_count)
 
       const question = taskDetail.data.questions as unknown as {
@@ -95,8 +116,13 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     <AuthChecker>
       <Spin spinning={pageLoading} className="min-h-screen">
         <h1 className="mb-4 py-4 text-center text-base font-bold">Robotics Data Annotation</h1>
-        {submitted ? (
-          <Result />
+        {resultType ? (
+          <Result
+            type={resultType}
+            maxValidateDays={maxValidateDays}
+            validatedDays={validatedDays}
+            onSubmitAgain={() => setResultType(null)}
+          />
         ) : (
           <main>
             <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
@@ -104,7 +130,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <Form
               taskId={taskId!}
               templateId={templateId}
-              onSubmitted={() => setSubmitted(true)}
+              onSubmitted={(result) => setResultType(result.status)}
               position={position}
               num={data?.num}
               imgUrl={data?.imageUrl}
@@ -211,7 +237,7 @@ function Form({
   position: string
   num?: string
   imgUrl?: string
-  onSubmitted: () => void
+  onSubmitted: ({ status }: { status: ResultType }) => void
   onShake: () => void
 }) {
   const [loading, setLoading] = useState(false)
@@ -243,7 +269,7 @@ function Form({
 
     setLoading(true)
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
         num: num,
@@ -254,9 +280,14 @@ function Form({
           position: position
         }
       })
+      const resultData = res.data as unknown as {
+        status: ResultType
+      }
       message.success('Annotation submitted successfully!').then(() => {
         setLoading(false)
-        onSubmitted()
+        onSubmitted({
+          status: resultData.status
+        })
       })
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit annotation!').then(() => {
