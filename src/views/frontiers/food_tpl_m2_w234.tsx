@@ -149,6 +149,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         type: result[1].model_type
       }
     })
+    if (status === 'ADOPT') {
+      setValidatedDays(validatedDays + 1)
+    }
     setResultType(status)
   }
 

@@ -106,6 +106,13 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     }
   }, [questId, taskId, templateId, maxValidateDays])
 
+  const onSubmit = ({ status }: { status: ResultType }) => {
+    if (status === 'ADOPT') {
+      setValidatedDays(validatedDays + 1)
+    }
+    setResultType(status)
+  }
+
   useEffect(() => {
     checkTaskStatus()
   }, [questId, checkTaskStatus])
@@ -120,13 +127,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           <main>
             <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
             <DataPreview {...data} />
-            <Form
-              taskId={taskId!}
-              templateId={templateId}
-              onSubmitted={(type) => setResultType(type)}
-              model={data.model}
-              num={data.num}
-            />
+            <Form taskId={taskId!} templateId={templateId} onSubmitted={onSubmit} model={data.model} num={data.num} />
           </main>
         )}
       </Spin>
@@ -163,7 +164,7 @@ function Form({
 }: {
   taskId: string
   templateId: string
-  onSubmitted: (type: ResultType) => void
+  onSubmitted: ({ status }: { status: ResultType }) => void
   model: string
   num: string
 }) {
@@ -188,7 +189,7 @@ function Form({
       }
       console.log('handleSubmit', res)
 
-      onSubmitted(res.data.status)
+      onSubmitted({ status: res.data.status })
     } catch (error) {
       message.error(error.message)
     } finally {

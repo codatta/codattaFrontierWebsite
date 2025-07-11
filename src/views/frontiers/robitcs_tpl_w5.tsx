@@ -108,6 +108,13 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     }
   }, [questId, taskId, templateId, maxValidateDays])
 
+  const onSubmit = ({ status }: { status: ResultType }) => {
+    if (status === 'ADOPT') {
+      setValidatedDays(validatedDays + 1)
+    }
+    setResultType(status)
+  }
+
   useEffect(() => {
     checkTaskStatus()
   }, [checkTaskStatus])
@@ -130,7 +137,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <Form
               taskId={taskId!}
               templateId={templateId}
-              onSubmitted={(result) => setResultType(result.status)}
+              onSubmitted={onSubmit}
               position={position}
               num={data?.num}
               imgUrl={data?.imageUrl}
