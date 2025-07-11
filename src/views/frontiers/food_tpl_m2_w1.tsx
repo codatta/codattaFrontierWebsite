@@ -181,8 +181,14 @@ function Form({
           result: selected,
           models: [model]
         }
-      })) as unknown as { status: ResultType }
-      onSubmitted(res.status)
+      })) as unknown as {
+        data: {
+          status: ResultType
+        }
+      }
+      console.log('handleSubmit', res)
+
+      onSubmitted(res.data.status)
     } catch (error) {
       message.error(error.message)
     } finally {
