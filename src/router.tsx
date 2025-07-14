@@ -57,6 +57,10 @@ const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
 const FoodTpl000003 = lazy(() => import('@/views/frontiers/food_tpl_000003'))
 const FoodTpl000004 = lazy(() => import('@/views/frontiers/food_tpl_000004'))
 const FoodTpl000005 = lazy(() => import('@/views/frontiers/food_tpl_000005'))
+const FoodTplM2W1 = lazy(() => import('@/views/frontiers/food_tpl_m2_w1'))
+const FoodTplM2W234 = lazy(() => import('@/views/frontiers/food_tpl_m2_w234'))
+const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
+
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
@@ -133,22 +137,17 @@ export default function Router() {
           </Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
         </Route>
-
         <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
-
         <Route path="/account">
           <Route path="signin" element={<AccountSignin />} />
           <Route path="extension/signin" element={<ExtensionSignin />} />
           <Route path="social/link/:social_media" element={<SocialLinkLanding />}></Route>
         </Route>
-
         <Route path="/referral/:code" element={<ReferralLanding />} />
-
         <Route path="/frontier/project/CMU_TPL_000001/:taskId" element={<CMULayout />}>
           <Route index element={<CMUVideoLabelingTaskList />} />
           <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
         </Route>
-
         <Route path="/frontier/project" element={<FrontierLayout />}>
           <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
           <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
@@ -163,6 +162,10 @@ export default function Router() {
           element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
         />
         <Route
+          path="/frontier/project/FOOD_TPL_000003/:taskId"
+          element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
+        />
+        <Route
           path="/frontier/project/FOOD_TPL_000003/:taskId/:questId"
           element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
         />
@@ -175,12 +178,48 @@ export default function Router() {
           element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
         />
 
+        <Route path="/frontier/project/FOOD_TPL_M2_W1/:taskId" element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />} />
+        <Route
+          path="/frontier/project/FOOD_TPL_M2_W1/:taskId/:questId"
+          element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />}
+        />
+        <Route path="/frontier/project/FOOD_TPL_W6/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W6" />} />
+        <Route
+          path="/frontier/project/FOOD_TPL_W6/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W6" />}
+        />
+        <Route path="/frontier/project/FOOD_TPL_W7/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W7" />} />
+        <Route
+          path="/frontier/project/FOOD_TPL_W7/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W7" />}
+        />
+        <Route path="/frontier/project/FOOD_TPL_W8/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />} />
+        <Route
+          path="/frontier/project/FOOD_TPL_W8/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W6/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W6" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W7/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W7" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W8/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
+        />
+
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />
           <Route path=":week/quiz" element={<QuizTaskPage />} />
           <Route path="not-found" element={<NotFoundPage />} />
         </Route>
-
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>

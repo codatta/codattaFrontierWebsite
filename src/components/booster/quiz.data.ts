@@ -1,3 +1,5 @@
+import banner5Img from '@/assets/booster/task-5-quiz.png'
+
 import type { DataItemQuiz, DataITemIntro } from './types'
 
 export type DataItem = {
@@ -233,6 +235,41 @@ export const Data: DataItem[] = [
           { des: 'B) Frontier-as-a-Service', right: true },
           { des: 'C) Framework-as-a-Service' },
           { des: 'D) Firmware-as-a-Service' }
+        ]
+      }
+    ]
+  },
+  {
+    intro: [
+      {
+        title: 'Robotics Data Annotation',
+        banner: banner5Img,
+        des: [
+          {
+            type: 'p',
+            content:
+              'Robotics data annotation is the process of labeling raw data to teach robots how to understand and interact with the real world. This data is used to train machine learning algorithms and improve robot performance. Accurate data annotation is crucial for tasks like object detection, navigation, and manipulation.'
+          }
+        ]
+      }
+    ],
+    quiz: [
+      {
+        question: 'What is the purpose of robotics data annotation?',
+        answer: [
+          { des: 'A) To improve internet speed' },
+          { des: 'B) To train machine learning algorithms', right: true },
+          { des: 'C) To design robot hardware' },
+          { des: 'D) To write robot programming code' }
+        ]
+      },
+      {
+        question: 'Which of the following tasks can robotics data annotation help improve?',
+        answer: [
+          { des: 'A) Time tracking' },
+          { des: 'B) Robot navigation and object recognition', right: true },
+          { des: 'C) Employee payroll' },
+          { des: 'D) Customer support' }
         ]
       }
     ]

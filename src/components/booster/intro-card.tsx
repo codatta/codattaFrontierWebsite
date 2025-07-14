@@ -98,7 +98,6 @@ const itemVariantsFade = {
 function Card({ title, des, banner, index, total }: DataITemIntro & { index: number; total: number }) {
   return (
     <motion.div variants={cardVariants} initial="hidden" animate="visible" exit="exit">
-      {banner && <motion.img src={banner} alt="" className="mt-4 h-auto w-full" variants={itemVariantsTop} />}
       {title && (
         <motion.h2 className="mt-4 text-center text-2xl font-bold leading-9" variants={itemVariantsFade}>
           {title}
@@ -107,6 +106,8 @@ function Card({ title, des, banner, index, total }: DataITemIntro & { index: num
       <motion.div variants={itemVariantsFade}>
         <Pagination index={index} total={total} />
       </motion.div>
+      {banner && <motion.img src={banner} alt="" className="mt-4 h-auto w-full" variants={itemVariantsTop} />}
+
       <motion.div className="mt-4 space-y-2 rounded-xl bg-[#252532] p-4 text-lg" variants={itemVariantsTop}>
         {des?.map((item, index) => {
           if (item.type === 'p') {
