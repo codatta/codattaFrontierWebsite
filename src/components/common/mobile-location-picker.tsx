@@ -5,6 +5,23 @@ import { message } from 'antd'
 import axios from 'axios'
 import { CountryIndex, CountryDetail, State, LocationValue } from '../../types/common'
 
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkIsMobile()
+    window.addEventListener('resize', checkIsMobile)
+
+    return () => window.removeEventListener('resize', checkIsMobile)
+  }, [])
+
+  return isMobile
+}
+
 interface MobileLocationPickerProps {
   value?: LocationValue
   onChange?: (value: LocationValue) => void
@@ -25,6 +42,7 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
   const [countries, setCountries] = useState<CountryIndex[]>([])
   const [countryDetail, setCountryDetail] = useState<CountryDetail>()
   const [provinces, setProvinces] = useState<State | undefined>()
+  const isMobile = useIsMobile()
 
   const [loading, setLoading] = useState({
     countries: false,
@@ -212,6 +230,22 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
     setIsOpen(true)
   }
 
+  const getAnimationProps = () => {
+    if (isMobile) {
+      return {
+        initial: { y: '100%' },
+        animate: { y: 0 },
+        exit: { y: '100%' }
+      }
+    } else {
+      return {
+        initial: { opacity: 0, scale: 0.95, y: 0 },
+        animate: { opacity: 1, scale: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.95, y: 0 }
+      }
+    }
+  }
+
   return (
     <>
       <div className={`relative w-full ${className}`}>
@@ -232,7 +266,7 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
 
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -243,16 +277,22 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
             />
 
             <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{
-                type: 'spring',
-                damping: 25,
-                stiffness: 300,
-                duration: 0.3
-              }}
-              className="relative w-full max-w-md rounded-t-2xl bg-[#1c1c26] text-white"
+              {...getAnimationProps()}
+              transition={
+                isMobile
+                  ? {
+                      type: 'spring',
+                      damping: 25,
+                      stiffness: 300,
+                      duration: 0.3
+                    }
+                  : {
+                      type: 'tween',
+                      ease: [0.25, 0.1, 0.25, 1],
+                      duration: 0.2
+                    }
+              }
+              className="relative w-full max-w-md rounded-t-2xl bg-[#1c1c26] text-white md:max-w-lg md:rounded-2xl"
             >
               {/* Header */}
               <div className="sticky top-0 rounded-t-2xl bg-[#1c1c26]">

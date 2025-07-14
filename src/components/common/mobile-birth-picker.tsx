@@ -1,7 +1,24 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BirthDateTime } from '../../types/common'
+
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    checkIsMobile()
+    window.addEventListener('resize', checkIsMobile)
+
+    return () => window.removeEventListener('resize', checkIsMobile)
+  }, [])
+
+  return isMobile
+}
 
 interface MobileBirthPickerProps {
   value?: BirthDateTime
@@ -26,6 +43,7 @@ const MobileBirthPicker: React.FC<MobileBirthPickerProps> = ({
       minute: 0
     }
   )
+  const isMobile = useIsMobile()
 
   // Generate options
   const currentYear = new Date().getFullYear()
@@ -78,6 +96,22 @@ const MobileBirthPicker: React.FC<MobileBirthPickerProps> = ({
     })
   }
 
+  const getAnimationProps = () => {
+    if (isMobile) {
+      return {
+        initial: { y: '100%' },
+        animate: { y: 0 },
+        exit: { y: '100%' }
+      }
+    } else {
+      return {
+        initial: { opacity: 0, scale: 0.95, y: 0 },
+        animate: { opacity: 1, scale: 1, y: 0 },
+        exit: { opacity: 0, scale: 0.95, y: 0 }
+      }
+    }
+  }
+
   return (
     <>
       <div className={`relative w-full ${className}`}>
@@ -94,7 +128,7 @@ const MobileBirthPicker: React.FC<MobileBirthPickerProps> = ({
 
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-end justify-center">
+          <div className="fixed inset-0 z-50 flex items-end justify-center md:items-center">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -105,16 +139,22 @@ const MobileBirthPicker: React.FC<MobileBirthPickerProps> = ({
             />
 
             <motion.div
-              initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
-              transition={{
-                type: 'spring',
-                damping: 25,
-                stiffness: 300,
-                duration: 0.3
-              }}
-              className="relative w-full max-w-md rounded-t-2xl bg-[#1c1c26] text-white"
+              {...getAnimationProps()}
+              transition={
+                isMobile
+                  ? {
+                      type: 'spring',
+                      damping: 25,
+                      stiffness: 300,
+                      duration: 0.3
+                    }
+                  : {
+                      type: 'tween',
+                      ease: [0.25, 0.1, 0.25, 1],
+                      duration: 0.2
+                    }
+              }
+              className="relative w-full max-w-md rounded-t-2xl bg-[#1c1c26] text-white md:max-w-lg md:rounded-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}

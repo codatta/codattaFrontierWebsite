@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { Button, Form, Input, Select, Radio, message } from 'antd'
-import { Loader2, Plus, Trash2 } from 'lucide-react'
+import { Edit, Loader2, Plus, Trash2 } from 'lucide-react'
 import MobileBirthPicker from '@/components/common/mobile-birth-picker'
 import MobileLocationPicker from '@/components/common/mobile-location-picker'
 import { BirthDateTime, LocationValue, LifeEvent, EventListRow, EventCategory } from '../../types/common'
@@ -270,6 +270,12 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   }
 
   const handleDeleteEvent = (eventId: string) => {
+    if (editingEvent && editingEvent.id === eventId) {
+      setEditingEvent(null)
+      setCurrentLifeStage('')
+      setEventListRows([{ id: 'row_1', category: '', description: '', occurrenceYear: undefined }])
+      eventListRowCountRef.current = 1
+    }
     setLifeEvents((prev) => prev.filter((event) => event.id !== eventId))
     message.success('Event deleted successfully')
   }
@@ -305,6 +311,25 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   return (
     <div className="min-h-screen bg-[#1C1C26] text-white">
+      <div>
+        <div className="mx-auto mt-9 flex max-w-5xl items-center px-6 py-3 text-xs text-[#b0b0b0]">
+          <svg
+            className="mr-2"
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ minWidth: 14, minHeight: 14 }}
+          >
+            <circle cx="8" cy="8" r="7" stroke="#b0b0b0" strokeWidth="1.2" fill="none" />
+            <rect x="7.25" y="3.5" width="1.5" height="6" rx="0.75" fill="#b0b0b0" />
+            <circle cx="8" cy="11.5" r="1" fill="#b0b0b0" />
+          </svg>
+          Your use of this service constitutes consent to process data per our Privacy Policy.
+        </div>
+      </div>
+
       <div className="mx-auto max-w-5xl p-6">
         <Form
           form={form}
@@ -498,11 +523,10 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                           <Button
                             type="text"
                             size="small"
+                            icon={<Edit className="size-3" />}
                             onClick={() => handleEditEvent(event)}
                             className="text-white hover:bg-white/10"
-                          >
-                            Edit
-                          </Button>
+                          ></Button>
                           <Button
                             type="text"
                             size="small"
