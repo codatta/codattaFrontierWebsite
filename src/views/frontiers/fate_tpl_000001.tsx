@@ -17,7 +17,7 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [editingEvent, setEditingEvent] = useState<LifeEvent | null>(null)
-  const [currentLifeStage, setCurrentLifeStage] = useState('')
+  const [currentLifeStage, setCurrentLifeStage] = useState<string>('')
   const [eventListRows, setEventListRows] = useState<EventListRow[]>([
     { id: 'row_1', category: null, description: '', occurrenceYear: undefined }
   ])
@@ -59,19 +59,31 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     return Promise.resolve()
   }
 
-  // Life stages options
-  const lifeStagesOptions = [
-    { label: '1-10 Years Old', value: '1-10 Years Old' },
-    { label: '11-20 Years Old', value: '11-20 Years Old' },
-    { label: '21-30 Years Old', value: '21-30 Years Old' },
-    { label: '31-40 Years Old', value: '31-40 Years Old' },
-    { label: '41-50 Years Old', value: '41-50 Years Old' },
-    { label: '51-60 Years Old', value: '51-60 Years Old' },
-    { label: '61-70 Years Old', value: '61-70 Years Old' },
-    { label: '71-80 Years Old', value: '71-80 Years Old' },
-    { label: '81-90 Years Old', value: '81-90 Years Old' },
-    { label: '91-100 Years Old', value: '91-100 Years Old' }
-  ]
+  // Dynamic life stages options based on birth time
+  const lifeStagesOptions = useMemo(() => {
+    if (!birthDateTime) return []
+
+    const currentYear = new Date().getFullYear()
+    const birthYear = birthDateTime.year
+    const currentAge = currentYear - birthYear
+
+    // Ensure minimum age is 1
+    const actualAge = Math.max(1, currentAge)
+
+    const options = []
+
+    // Generate 10-year stages up to current age
+    for (let startAge = 1; startAge <= actualAge; startAge += 10) {
+      const endAge = Math.min(startAge + 9, actualAge)
+
+      options.push({
+        label: `${startAge}-${endAge} Years Old`,
+        value: `${startAge}-${endAge} Years Old`
+      })
+    }
+
+    return options
+  }, [birthDateTime])
 
   const eventCategories: EventCategory[] = [
     {
@@ -113,7 +125,7 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     const birthYear = birthDateTime.year
     const currentYear = new Date().getFullYear()
 
-    // Parse life stage range
+    // Parse life stage range (e.g., "1-10 Years Old" -> [1, 10])
     const stageMatch = currentLifeStage.match(/(\d+)-(\d+)/)
     if (!stageMatch) return []
 
@@ -126,7 +138,7 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
     const years = []
     for (let year = startYear; year <= endYear; year++) {
-      if (year > 0) {
+      if (year > 0 && year <= currentYear) {
         years.push(year)
       }
     }
@@ -151,6 +163,8 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const handleBirthDateTimeChange = (value: BirthDateTime) => {
     setBirthDateTime(value)
     form.setFieldValue('birthTime', value)
+    // Clear current life stage when birth time changes as available options will change
+    setCurrentLifeStage('')
   }
 
   const handleBirthLocationChange = (value: LocationValue) => {
@@ -326,7 +340,13 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             <rect x="7.25" y="3.5" width="1.5" height="6" rx="0.75" fill="#b0b0b0" />
             <circle cx="8" cy="11.5" r="1" fill="#b0b0b0" />
           </svg>
-          Your use of this service constitutes consent to process data per our Privacy Policy.
+          <span>
+            Your use of this service constitutes consent to process data per our{' '}
+            <a href="https://codatta.io/privacy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy
+            </a>
+            .
+          </span>
         </div>
       </div>
 
@@ -400,11 +420,12 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     <span className="text-red-400">*</span> Life Stages
                   </label>
                   <Select
-                    placeholder="Life Stages"
+                    placeholder={birthDateTime ? 'Select Life Stages' : 'Please select birth time first'}
                     value={currentLifeStage}
                     onChange={setCurrentLifeStage}
                     className="w-full"
                     dropdownClassName="bg-[#252532]"
+                    disabled={!birthDateTime}
                   >
                     {lifeStagesOptions.map((option) => (
                       <Option key={option.value} value={option.value}>

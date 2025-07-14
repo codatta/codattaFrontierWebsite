@@ -28,7 +28,7 @@ const CardList = () => {
               <div className="mb-2 ml-auto w-[88px] flex-none rounded-full bg-white/5 py-2 text-center text-xs text-[#8D8D93]">
                 {item.status}
               </div>
-              {item.data_submission?.['templateId'] !== 'CMU_TPL_000001' ? (
+              {!['CMU_TPL_000001', 'FATE_TPL_000001'].includes(item.data_submission?.['templateId'] as string) ? (
                 <>
                   {item.status === 'SUBMITTED' ? (
                     <a className="flex hover:text-primary" href={item.txHashUrl} target="_blank">
