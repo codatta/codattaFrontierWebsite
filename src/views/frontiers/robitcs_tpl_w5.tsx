@@ -21,12 +21,6 @@ import frontiterApi from '@/apis/frontiter.api'
 import { motion } from 'framer-motion'
 import { ResultType } from '@/components/frontier/robotics_tpl/types'
 
-/**
- * TODO: Get annotation display data
- * @param param0
- * @returns
- */
-
 type Question = {
   imageUrl: string
   num: string
@@ -258,7 +252,7 @@ function Form({
     }
   }, [position])
 
-  const isSubmittable = isPositionChanged && selected !== null && textInput.trim() !== ''
+  const isSubmittable = isPositionChanged && ((selected === 'yes' && textInput.trim() !== '') || selected === 'no')
 
   const handleSubmit = async () => {
     if (loading) return
@@ -320,14 +314,17 @@ function Form({
           <span>No</span> <CheckCircle className={selected === 'no' ? 'opacity-100' : 'opacity-0'} />
         </button>
       </div>
-      <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Contact Target*</h3>
-      <textarea
-        placeholder="Describe the target object that the robotic arm iscontacting..."
-        className="w-full rounded-xl px-4 py-[10px] text-base text-black placeholder:text-[#77777D]"
-        value={textInput}
-        maxLength={128}
-        onChange={(e) => setTextInput(e.target.value.trim())}
-      ></textarea>
+      <div className={selected === 'no' ? 'hidden' : ''}>
+        <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Contact Target*</h3>
+        <textarea
+          placeholder="Describe the target object that the robotic arm iscontacting..."
+          className="w-full rounded-xl px-4 py-[10px] text-base text-black placeholder:text-[#77777D]"
+          value={textInput}
+          maxLength={128}
+          onChange={(e) => setTextInput(e.target.value.trim())}
+        ></textarea>
+      </div>
+
       <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Robotic arm position*</h3>
       <div className="rounded-xl bg-[#252532] px-4 py-[10px]">
         {/* <div className="text-base">Position({position})</div> */}
