@@ -216,6 +216,23 @@ export const Data: DataItem[] = [
             content: ['AML compliance screening', 'On-chain trend analysis', 'Market data monitoring']
           }
         ]
+      },
+      {
+        title: 'Robotics Frontier Use Case',
+        des: [
+          {
+            type: 'p',
+            content: 'Core Application Scenarios of our Robotics Frontier include:'
+          },
+          {
+            type: 'ul',
+            content: [
+              'Object Detection and Recognition',
+              'Scene Understanding for Navigation',
+              'Activity Recognition and Human-Robot Interaction'
+            ]
+          }
+        ]
       }
     ],
     quiz: [
@@ -229,12 +246,12 @@ export const Data: DataItem[] = [
         ]
       },
       {
-        question: 'What does "FaaS" mean in Codatta?',
+        question: 'Which of the following is a primary application scenario of robotics data frontier?',
         answer: [
-          { des: 'A) Function-as-a-Service' },
-          { des: 'B) Frontier-as-a-Service', right: true },
-          { des: 'C) Framework-as-a-Service' },
-          { des: 'D) Firmware-as-a-Service' }
+          { des: 'A) Weather Forecasting' },
+          { des: 'B) Object Detection and Recognition', right: true },
+          { des: 'C) Social Media Sentiment Analysis' },
+          { des: 'D) Financial Market Prediction' }
         ]
       }
     ]
