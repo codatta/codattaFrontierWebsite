@@ -84,9 +84,9 @@ export const Data: DataItem[] = [
   {
     intro: [
       {
+        title: 'Codatta Roadmap',
         banner: banner4Img,
         des: [
-          { type: 'h4', content: 'Phase 1 - Completed' },
           { type: 'light', content: 'Validated genuine market demand and technical feasibility' },
           { type: 'h4', content: 'Phase 2 - Completed' },
           { type: 'light', content: 'Established the Frontier model based on Phase 1 foundations' },
@@ -96,6 +96,30 @@ export const Data: DataItem[] = [
           },
           { type: 'h4', content: 'Current Phase 3 - In Progress' },
           { type: 'light', content: 'FaaS (Frontier-as-a-Service): Completed prototype and initial development phase' }
+        ]
+      },
+      {
+        title: `Codatta's Data Frontiers`,
+        des: [
+          {
+            type: 'p',
+            content:
+              'Codatta categorizes the "data frontiers" based on their difficulty and the level of expertise required from contributors.'
+          },
+          {
+            type: 'p',
+            content: (
+              <>
+                Codatta's current frontiers include:{' '}
+                <span className="font-semibold">
+                  Food Science, Crypto, Robotics, Fashion, Healthcare, Video Evaluation, Outfit of the Day (OOTD) and
+                  Speech
+                </span>
+                , allowing the platform to meet diverse data demands that range from foundational data to highly
+                specialized knowledge required for vertical AI solutions.
+              </>
+            )
+          }
         ]
       }
     ]
