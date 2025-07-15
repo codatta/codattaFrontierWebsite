@@ -1,0 +1,61 @@
+export default function Rect({ className }: { className?: string }) {
+  return (
+    <svg
+      width="53"
+      height="53"
+      viewBox="0 0 53 53"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
+      <g filter="url(#filter0_d_36768_27776)">
+        <rect
+          x="6.07715"
+          y="6.89844"
+          width="40"
+          height="40"
+          rx="3"
+          fill="white"
+          fill-opacity="0.12"
+          shape-rendering="crispEdges"
+        />
+        <rect
+          x="7.07715"
+          y="7.89844"
+          width="38"
+          height="38"
+          rx="2"
+          stroke="#40FF00"
+          stroke-width="2"
+          shape-rendering="crispEdges"
+        />
+      </g>
+      <defs>
+        <filter
+          id="filter0_d_36768_27776"
+          x="0.0771484"
+          y="0.898438"
+          width="52"
+          height="52"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feMorphology radius="2" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_36768_27776" />
+          <feOffset />
+          <feGaussianBlur stdDeviation="2" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 0.913622 0 0 0 0 0.528846 0 0 0 0.5 0" />
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_36768_27776" />
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_36768_27776" result="shape" />
+        </filter>
+      </defs>
+    </svg>
+  )
+}
