@@ -145,7 +145,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       }
       newErrors.foodWeight = 'Food weight is required'
     }
-    if (!formData.cookingMethod) {
+    if (!formData.cookingMethod.trim()) {
       newErrors.cookingMethod = 'Cooking method is required'
     }
     if (!formData.calories) {
@@ -496,7 +496,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                     onChange={(e) => updateFormData('cookingMethod', e.target.value)}
                     placeholder="Describe the cooking method"
                     className="w-full rounded-lg bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
-                    maxLength={64}
+                    maxLength={128}
                   />
                   {errors.cookingMethod && <p className="text-sm text-red-400">{errors.cookingMethod}</p>}
                 </div>
