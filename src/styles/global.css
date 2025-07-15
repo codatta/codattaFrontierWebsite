@@ -16,6 +16,10 @@
   }
 }
 
+/* .ant-select-selector {
+  background-color: transparent !important;
+} */
+
 /* @font-face {
   font-family: 'Inter';
   src: url('/font/inter.ttf') format('truetype');
