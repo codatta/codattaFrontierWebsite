@@ -87,6 +87,7 @@ export const Data: DataItem[] = [
         title: 'Codatta Roadmap',
         banner: banner4Img,
         des: [
+          { type: 'h4', content: 'Phase 1 - Completed' },
           { type: 'light', content: 'Validated genuine market demand and technical feasibility' },
           { type: 'h4', content: 'Phase 2 - Completed' },
           { type: 'light', content: 'Established the Frontier model based on Phase 1 foundations' },
