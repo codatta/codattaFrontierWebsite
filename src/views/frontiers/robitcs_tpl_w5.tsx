@@ -12,6 +12,7 @@ import SubmissionProgress from '@/components/frontier/robotics_tpl/submission-pr
 import Result from '@/components/frontier/robotics_tpl/result'
 
 import { Button } from '@/components/booster/button'
+import Rect from '@/components/frontier/robotics_tpl/rect'
 
 import CheckCircle from '@/assets/common/check-circle.svg?react'
 
@@ -206,19 +207,18 @@ function DataPreview({
           dragConstraints={constraintsRef}
           onDrag={handleDrag}
           onDragEnd={handleDrag}
-          className="absolute size-10 cursor-grab rounded-sm border-2 active:cursor-grabbing"
+          className="absolute size-10 cursor-grab rounded-sm active:cursor-grabbing"
           style={{
             left: `calc(50% - 20px)`,
             top: `calc(50% - 20px)`
           }}
           animate={{
-            borderColor: isShaking
-              ? ['#FFA800', '#FF0000', '#FFA800', '#FF0000', '#FFA800', '#FF0000', '#FFA800']
-              : '#FFA800',
             scale: isShaking ? [1, 1.2, 1, 1.2, 1, 1.2, 1] : 1
           }}
           transition={{ duration: 0.9, ease: 'easeInOut' }}
-        ></motion.div>
+        >
+          <Rect className="ml-[-7px] mt-[-7px] size-[53px]" />
+        </motion.div>
       </div>
     </div>
   )
