@@ -4,6 +4,7 @@ import { lazy, useEffect } from 'react'
 // layouts
 import FrontierLayout from '@/layouts/frontier-layout'
 import SettingsLayout from '@/layouts/settings-layout'
+import UserInfoLayout from '@/layouts/userinfo-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
 import BoosterLayout from '@/layouts/booster-layout'
@@ -27,6 +28,13 @@ const SettingReward = lazy(() => import('@/views/settings/reward'))
 const SettingReputation = lazy(() => import('@/views/settings/reputation'))
 const SettingUserNFT = lazy(() => import('@/views/settings/user-nft'))
 // const SettingUserSBT = lazy(() => import('@/views/settings/user-sbt'))
+
+// user info
+const UserInfo = lazy(() => import('@/views/user-info/index'))
+const UserInfoReward = lazy(() => import('@/views/user-info/reward'))
+const UserInfoReputation = lazy(() => import('@/views/user-info/reputation'))
+const UserInfoNFT = lazy(() => import('@/views/user-info/nft'))
+const UserInfoPersonal = lazy(() => import('@/views/user-info/personal'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
@@ -114,6 +122,13 @@ export default function Router() {
             <Route path="reputation" element={<SettingReputation />} />
             <Route path="nft" element={<SettingUserNFT />} />
             {/* <Route path="sbt" element={<SettingUserSBT />} /> */}
+          </Route>
+          <Route path="userinfo" element={<UserInfoLayout />}>
+            <Route index element={<UserInfo />} />
+            <Route path="reward" element={<UserInfoReward />} />
+            <Route path="reputation" element={<UserInfoReputation />} />
+            <Route path="nft" element={<UserInfoNFT />} />
+            <Route path="personal" element={<UserInfoPersonal />} />
           </Route>
 
           <Route path="quest">

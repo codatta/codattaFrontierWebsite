@@ -156,10 +156,15 @@ const menuItems: MenuItem[] = [
       marginTop: 'auto'
     }
   },
+  // {
+  //   icon: <IconSetting color={'white'} size={24} />,
+  //   key: '/app/settings/account',
+  //   label: 'User Settings'
+  // },
   {
     icon: <IconSetting color={'white'} size={24} />,
-    key: '/app/settings/account',
-    label: 'User Settings'
+    key: '/app/userinfo',
+    label: 'User Info'
   }
 ]
 
