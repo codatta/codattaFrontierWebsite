@@ -61,7 +61,7 @@ function WalletAccountItem(props: { account: UserAccount; canUnbind: boolean | n
 
   return (
     <div key={account.id} className="flex items-center gap-2 border-b border-white/10 py-3 last:border-b-0">
-      <div className="w-[120px]">{account.wallet_name}</div>
+      <div className="w-[120px] capitalize">{account.wallet_name}</div>
       <span>{shortenAddress(address, 12)}</span>
       {canUnbind && (
         <Button type="text" size="small" loading={loading} onClick={handleUnlinkAccount} className="ml-auto">

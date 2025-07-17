@@ -49,6 +49,14 @@ export interface SocialAccountInfoItem {
   status: number
 }
 
+export interface UserAsset {
+  asset_type: 'POINTS' | 'XNYCoin' | 'USDT'
+  balance: {
+    amount: string
+    currency: string
+  }
+}
+
 export interface UserInfo {
   user_reputation: number | null
   user_data: {
@@ -57,13 +65,7 @@ export interface UserInfo {
     user_id: string
     user_name: string
   }
-  user_assets: {
-    asset_type: 'POINTS'
-    balance: {
-      amount: string
-      currency: string
-    }
-  }[]
+  user_assets: UserAsset[]
   accounts_data: UserAccount[]
   social_account_info: SocialAccountInfoItem[]
 }

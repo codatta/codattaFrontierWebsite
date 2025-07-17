@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import ReputationRate from '@/components/common/reputation-rate'
 
@@ -18,37 +18,40 @@ import DataIcon from '@/assets/userinfo/data-icon.svg?react'
 import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
 import ArrowRightIcon from '@/assets/userinfo/arrow-right.svg?react'
 
+import { useUserStore } from '@/stores/user.store'
+
+import { UserAsset } from '@/apis/user.api'
+
 export default function UserInfo() {
+  const { info } = useUserStore()
+
+  useEffect(() => {
+    console.log('info', info)
+  }, [info])
+
   return (
     <div className="">
       <h2 className="mb-6 text-[32px] font-semibold leading-[40px]">User Info</h2>
-      <Asset assets={[]} reputation={2.4} />
+      <Asset assets={info?.user_assets || []} reputation={info?.user_reputation || 0} />
       <div className="mt-12 flex items-stretch gap-6">
-        <NameAndAvatar />
+        <NameAndAvatar name={info?.user_data.user_name || 'Unknown'} avatar={info?.user_data.avatar || avatarIcon} />
         <InfoList />
       </div>
     </div>
   )
 }
 
-type UserAsset = {
-  asset_type: 'POINTS' | 'XnYCoin' | 'USDT'
-  balance: {
-    current: string
-    amount: string
-  }
-}
-function Asset({ assets, reputation = 0 }: { assets: UserAsset[]; reputation: number }) {
+function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reputation: number }) {
   const reward = useMemo(
-    () => Math.round(Number(assets.find((asset) => asset.asset_type === 'POINTS')?.balance.current ?? 0)),
+    () => Math.round(Number(assets.find((asset) => asset.asset_type === 'POINTS')?.balance.amount ?? 0)),
     [assets]
   )
   const xyn = useMemo(
-    () => Number(assets.find((asset) => asset.asset_type === 'XnYCoin')?.balance.current ?? '0').toFixed(2),
+    () => Number(assets.find((asset) => asset.asset_type === 'XNYCoin')?.balance.amount ?? '0').toFixed(2),
     [assets]
   )
   const usdt = useMemo(
-    () => Number(assets.find((asset) => asset.asset_type === 'USDT')?.balance.current ?? '0').toFixed(2),
+    () => Number(assets.find((asset) => asset.asset_type === 'USDT')?.balance.amount ?? '0').toFixed(2),
     [assets]
   )
 
@@ -124,7 +127,7 @@ function AssetCard({ title, bg, children, onClick }: AssetCardProps) {
   )
 }
 
-function NameAndAvatar({ name = 'Eva Robinson', avatar = avatarIcon }: { name?: string; avatar?: string }) {
+function NameAndAvatar({ name, avatar = avatarIcon }: { name?: string; avatar?: string }) {
   return (
     <div>
       <h3 className="mb-3 text-lg font-bold">Name & Avatar</h3>
