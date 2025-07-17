@@ -17,7 +17,7 @@ export default function UserInfoReward() {
 
   return (
     <div>
-      <h3 className="mb-6 flex items-center justify-between text-[32px] font-bold leading-[40px]">
+      <h3 className="mb-6 flex items-center justify-between text-[32px] font-bold leading-[48px]">
         <span>Reward</span>
         <div>
           <span className="text-xl font-bold">{parseInt(reward.amount)}</span>

@@ -31,7 +31,7 @@ export default function UserInfo() {
 
   return (
     <div className="">
-      <h2 className="mb-6 text-[32px] font-semibold leading-[40px]">User Info</h2>
+      <h2 className="mb-6 text-[32px] font-semibold leading-[48px]">User Info</h2>
       <Asset assets={info?.user_assets || []} reputation={info?.user_reputation || 0} />
       <div className="mt-12 flex items-stretch gap-6">
         <NameAndAvatar name={info?.user_data.user_name || 'Unknown'} avatar={info?.user_data.avatar || avatarIcon} />
@@ -64,7 +64,7 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
   return (
     <div>
       <h3 className="mb-3 text-lg font-bold">Asset</h3>
-      <ul className="flex items-stretch gap-6">
+      <ul className="flex gap-6">
         <AssetCard title="Data Assets" bg={card1Bg} onClick={() => handleClick('/app/userinfo/data')}>
           <div className="flex size-full items-center justify-between">
             <div className="flex flex-1 flex-col items-center justify-center">
@@ -110,7 +110,7 @@ interface AssetCardProps {
 function AssetCard({ title, bg, children, onClick }: AssetCardProps) {
   return (
     <li
-      className="group cursor-pointer overflow-hidden rounded-2xl border border-[#FFFFFF1F] bg-[#252532] p-6 transition-all hover:border-[#875DFF] hover:[filter:drop-shadow(0_4px_8px_rgba(135,93,255,0.1))_drop-shadow(0_14px_14px_rgba(135,93,255,0.09))_drop-shadow(0_32px_19px_rgba(135,93,255,0.05))_drop-shadow(0_58px_23px_rgba(135,93,255,0.01))_drop-shadow(0_90px_25px_rgba(135,93,255,0))]"
+      className="group shrink-0 cursor-pointer overflow-hidden rounded-2xl border border-[#FFFFFF1F] bg-[#252532] p-6 transition-all hover:border-[#875DFF] hover:[filter:drop-shadow(0_4px_8px_rgba(135,93,255,0.1))_drop-shadow(0_14px_14px_rgba(135,93,255,0.09))_drop-shadow(0_32px_19px_rgba(135,93,255,0.05))_drop-shadow(0_58px_23px_rgba(135,93,255,0.01))_drop-shadow(0_90px_25px_rgba(135,93,255,0))]"
       onClick={onClick}
     >
       <div

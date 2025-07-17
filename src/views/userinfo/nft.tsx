@@ -64,7 +64,7 @@ export default function UserInfoNFT() {
 
   return (
     <div>
-      <h3 className="mb-6 flex items-center justify-between text-[32px] font-bold leading-[40px]">
+      <h3 className="mb-6 flex items-center justify-between text-[32px] font-bold leading-[48px]">
         <span>NFT</span>
       </h3>
 

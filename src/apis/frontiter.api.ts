@@ -104,6 +104,23 @@ export interface CMUDataRequirements {
   }
 }
 
+export interface SubmissionStatics {
+  total_submissions: number
+  total_rewards: number
+  on_chained: number
+  avg_score: number
+}
+
+export interface SubmissionRecord {
+  submission_time: number
+  frontier_name: string
+  score: string
+  reward: string
+  status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
+  on_chained: 0 | 1
+  submission_id: string
+}
+
 class frontier {
   constructor(private request: AxiosInstance) {}
 
@@ -146,6 +163,16 @@ class frontier {
   async getFrontierInfo(frontier_id: string): Promise<Response<FrontierItemType>> {
     const res = await this.request.get(`/v2/frontier/info?frontier_id=${frontier_id}`)
     console.log(res)
+    return res.data
+  }
+
+  async getSubmissionStatics(): Promise<Response<SubmissionStatics>> {
+    const res = await this.request.get('/v2/submission/user/statics')
+    return res.data
+  }
+
+  async getSubmissionRecords(params: TPagination): Promise<PaginationResponse<SubmissionRecord[]>> {
+    const res = await this.request.post('/v2/submission/user/records', params)
     return res.data
   }
 }

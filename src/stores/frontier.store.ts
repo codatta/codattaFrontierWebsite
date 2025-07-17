@@ -1,4 +1,4 @@
-import frontierApi, { FrontierListItem, TaskDetail } from '@/apis/frontiter.api'
+import frontierApi, { FrontierListItem, TaskDetail, SubmissionStatics, SubmissionRecord } from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
 import { message } from 'antd'
@@ -19,6 +19,14 @@ type FrontierStore = {
     page_size: number
     page: number
   }
+  userStatics: SubmissionStatics
+  userRecords: {
+    list: SubmissionRecord[]
+    total: number
+    listLoading: boolean
+    page_size: number
+    page: number
+  }
 }
 
 export const frontiersStore = proxy<FrontierStore>({
@@ -31,6 +39,19 @@ export const frontiersStore = proxy<FrontierStore>({
     page: 1
   },
   historyPageData: {
+    list: [],
+    total: 0,
+    listLoading: false,
+    page_size: 5,
+    page: 1
+  },
+  userStatics: {
+    total_submissions: 0,
+    total_rewards: 0,
+    on_chained: 0,
+    avg_score: 0
+  },
+  userRecords: {
     list: [],
     total: 0,
     listLoading: false,
@@ -117,8 +138,36 @@ export function useFrontierStore() {
   return useSnapshot(frontiersStore)
 }
 
+export const getFrontierUserStatics = debounce(async () => {
+  const res = await frontierApi.getSubmissionStatics()
+  frontiersStore.userStatics = Object.assign(frontiersStore.userStatics, res.data)
+  return res.data
+})
+
+export const getFrontierUserRecords = debounce(async (params: { page: number }) => {
+  try {
+    frontiersStore.userRecords.listLoading = true
+    const { page } = params
+    const res = await frontierApi.getSubmissionRecords({
+      page_size: frontiersStore.userRecords.page_size,
+      page_num: page
+    })
+    frontiersStore.userRecords.list = res.data ?? []
+    frontiersStore.userRecords.total = res.total_count
+    frontiersStore.userRecords.listLoading = false
+  } catch (err) {
+    message.error(err.message)
+    frontiersStore.userRecords.list = []
+    frontiersStore.userRecords.total = 0
+    frontiersStore.userRecords.listLoading = false
+    throw err
+  }
+}, 500)
+
 export const frontierStoreActions = {
   getFrontierList,
   changeFrontiersFilter,
-  changeFrontiersHistoryFilter
+  changeFrontiersHistoryFilter,
+  getFrontierUserStatics,
+  getFrontierUserRecords
 }

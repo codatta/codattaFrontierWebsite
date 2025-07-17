@@ -23,7 +23,7 @@ export default function SettingsLayout() {
   }, [])
 
   return (
-    <TransitionEffect className="max-w-[1232px] px-6 py-3">
+    <TransitionEffect className="flex min-h-full max-w-[1232px] flex-col px-6 py-3">
       <header className={cn('mb-12 flex text-sm', !hasBackButton && 'hidden')}>
         <div className="flex cursor-pointer items-center gap-2" onClick={onBack}>
           <ArrowLeftIcon />
