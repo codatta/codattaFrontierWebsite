@@ -30,13 +30,13 @@ const SettingUserNFT = lazy(() => import('@/views/settings/user-nft'))
 // const SettingUserSBT = lazy(() => import('@/views/settings/user-sbt'))
 
 // user info
-const UserInfo = lazy(() => import('@/views/user-info/index'))
-const UserInfoReward = lazy(() => import('@/views/user-info/reward'))
-const UserInfoReputation = lazy(() => import('@/views/user-info/reputation'))
-const UserInfoNFT = lazy(() => import('@/views/user-info/nft'))
-const UserInfoPersonal = lazy(() => import('@/views/user-info/personal'))
-const UserInfoOnchain = lazy(() => import('@/views/user-info/onchain'))
-const UserInfoData = lazy(() => import('@/views/user-info/data'))
+const UserInfo = lazy(() => import('@/views/userinfo/index'))
+const UserInfoReward = lazy(() => import('@/views/userinfo/reward'))
+const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
+const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
+const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
+const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
+const UserInfoData = lazy(() => import('@/views/userinfo/data'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
