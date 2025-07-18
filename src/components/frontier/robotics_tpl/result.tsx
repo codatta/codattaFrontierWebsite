@@ -140,7 +140,7 @@ function SubmissionProgress(props: { maxValidateDays: number; validatedDays: num
   return (
     <div className="flex w-full flex-wrap items-center justify-center rounded-full border border-white/10 py-4 text-center">
       <div className="mr-3 text-2xl font-bold">
-        <span className="text-[#5DDD22]">{validatedDays}</span>
+        <span className="text-[#5DDD22]">{Math.min(validatedDays, maxValidateDays)}</span>
         <span>/{maxValidateDays}</span>
       </div>
       <span>Days Submitted/Required Days</span>
