@@ -1,10 +1,15 @@
-import { Empty, message, Spin, Table } from 'antd'
+import { Empty, message, Table } from 'antd'
 import type { TableProps, TablePaginationConfig } from 'antd'
 import dayjs from 'dayjs'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import BookIcon from '@/assets/userinfo/book-icon.svg?react'
 import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
+import LevelASvg from '@/assets/userinfo/level-a-icon.svg?react'
+import LevelBSvg from '@/assets/userinfo/level-b-icon.svg?react'
+import LevelCSvg from '@/assets/userinfo/level-c-icon.svg?react'
+import LevelDSvg from '@/assets/userinfo/level-d-icon.svg?react'
+import LevelSSvg from '@/assets/userinfo/level-s-icon.svg?react'
 
 import { getFrontierUserRecords, getFrontierUserStatics, useFrontierStore } from '@/stores/frontier.store'
 
@@ -99,8 +104,18 @@ const columns: TableProps<DataType>['columns'] = [
   //   width: '15%',
   //   align: 'center',
   //   render: (score: string) => (
-  //     <div className={`${getScoreBackgroundColor(score)} flex size-6 items-center rounded-full font-bold text-black`}>
-  //       {score}
+  //     <div className="ml-2 flex size-6 items-center rounded-full font-bold text-black">
+  //       {score === 'S' ? (
+  //         <LevelSSvg />
+  //       ) : score === 'A' ? (
+  //         <LevelASvg />
+  //       ) : score === 'B' ? (
+  //         <LevelBSvg />
+  //       ) : score === 'C' ? (
+  //         <LevelCSvg />
+  //       ) : score === 'D' ? (
+  //         <LevelDSvg />
+  //       ) : null}
   //     </div>
   //   )
   // },
@@ -135,21 +150,14 @@ const columns: TableProps<DataType>['columns'] = [
 
 function RecordView() {
   const { userRecords } = useFrontierStore()
-  const [loading, setLoading] = useState(false)
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: userRecords.page,
     pageSize: userRecords.page_size,
     total: userRecords.total || 0
   })
 
-  const fetchData = useCallback(async (page: number) => {
-    setLoading(true)
-    await getFrontierUserRecords({ page })
-    setLoading(false)
-  }, [])
-
   useEffect(() => {
-    fetchData(pagination.current || 1)
+    getFrontierUserRecords({ page: pagination.current || 1 })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.current])
 
@@ -163,74 +171,72 @@ function RecordView() {
 
   return (
     <div className="rounded-2xl bg-[#252532] p-6">
-      <Spin spinning={loading}>
-        <Table<DataType>
-          className="[&_.ant-table-placeholder]:border-b-0 [&_.ant-table]:bg-transparent"
-          columns={columns}
-          dataSource={userRecords.list.map((r: SubmissionRecord) => ({
-            id: r.submission_id,
-            key: r.submission_id,
-            time: dayjs(r.submission_time * 1000).format('YYYY/MM/DD HH:mm'),
-            frontier_name: r.frontier_name,
-            score: r.score,
-            reward: r.reward,
-            on_chained: !!r.on_chained
-          }))}
-          rowKey="key"
-          // loading={loading}
-          pagination={{
-            ...pagination,
-            position: ['bottomCenter'],
-            className:
-              'mt-6 flex items-center justify-center gap-x-4 [&_.ant-pagination-item-active]:bg-[#40404b] [&_.ant-pagination-item-active]:text-white [&_.ant-pagination-item-active]:border-none [&_.ant-pagination-item]:bg-transparent [&_.ant-pagination-item]:text-white [&_.ant-pagination-item]:border-none',
-            showTotal: (total) => <span className="text-white/60">{`Total (${total})`}</span>,
-            itemRender: (current: number, type: string, originalElement: React.ReactNode) => {
-              if (type === 'prev' || type === 'next' || type === 'jump-prev' || type === 'jump-next') {
-                return <span className="flex h-full items-center justify-center text-white/60">{originalElement}</span>
-              }
-              if (type === 'page') {
-                return (
-                  <a
-                    className={`flex size-8 items-center justify-center rounded-md border-none !text-white ${
-                      current === pagination.current ? 'bg-[#40404b]' : ''
-                    }`}
-                  >
-                    {current}
-                  </a>
-                )
-              }
-              return originalElement
+      <Table<DataType>
+        className="[&_.ant-table-placeholder]:border-b-0 [&_.ant-table]:bg-transparent"
+        columns={columns}
+        dataSource={userRecords.list.map((r: SubmissionRecord) => ({
+          id: r.submission_id,
+          key: r.submission_id,
+          time: dayjs(r.submission_time * 1000).format('YYYY/MM/DD HH:mm'),
+          frontier_name: r.frontier_name,
+          score: r.score,
+          reward: r.reward,
+          on_chained: !!r.on_chained
+        }))}
+        rowKey="key"
+        loading={userRecords.listLoading}
+        pagination={{
+          ...pagination,
+          position: ['bottomCenter'],
+          className:
+            'mt-6 flex items-center justify-center gap-x-4 [&_.ant-pagination-item-active]:bg-[#40404b] [&_.ant-pagination-item-active]:text-white [&_.ant-pagination-item-active]:border-none [&_.ant-pagination-item]:bg-transparent [&_.ant-pagination-item]:text-white [&_.ant-pagination-item]:border-none',
+          showTotal: (total) => <span className="text-white/60">{`Total (${total})`}</span>,
+          itemRender: (current: number, type: string, originalElement: React.ReactNode) => {
+            if (type === 'prev' || type === 'next' || type === 'jump-prev' || type === 'jump-next') {
+              return <span className="flex h-full items-center justify-center text-white/60">{originalElement}</span>
             }
-          }}
-          onChange={handleTableChange}
-          components={{
-            table: ({ children }: { children: React.ReactNode }) => (
-              <table className="w-full table-fixed">{children}</table>
-            ),
-            header: {
-              wrapper: ({ children }: { children: React.ReactNode }) => (
-                <thead className="bg-transparent text-white">{children}</thead>
-              ),
-              row: ({ children }: { children: React.ReactNode }) => (
-                <tr className="border-b border-white/10">{children}</tr>
-              ),
-              cell: ({ children }: { children: React.ReactNode }) => (
-                <th className="p-4 text-left text-sm font-normal first:!pl-0 last:pl-8">{children}</th>
+            if (type === 'page') {
+              return (
+                <a
+                  className={`flex size-8 items-center justify-center rounded-md border-none !text-white ${
+                    current === pagination.current ? 'bg-[#40404b]' : ''
+                  }`}
+                >
+                  {current}
+                </a>
               )
-            },
-            body: {
-              row: ({ children }: { children: React.ReactNode }) => (
-                <tr className="border-b border-white/10 last:border-b-0 hover:bg-white/5">{children}</tr>
-              ),
-              cell: ({ children }: { children: React.ReactNode }) =>
-                userRecords.total === 0 ? null : (
-                  <td className="truncate p-4 text-sm text-white first:!pl-0">{children}</td>
-                )
             }
-          }}
-        />
-        {userRecords.total === 0 && <Empty className="my-10" />}
-      </Spin>
+            return originalElement
+          }
+        }}
+        onChange={handleTableChange}
+        components={{
+          table: ({ children }: { children: React.ReactNode }) => (
+            <table className="w-full table-fixed">{children}</table>
+          ),
+          header: {
+            wrapper: ({ children }: { children: React.ReactNode }) => (
+              <thead className="bg-transparent text-white">{children}</thead>
+            ),
+            row: ({ children }: { children: React.ReactNode }) => (
+              <tr className="border-b border-white/10">{children}</tr>
+            ),
+            cell: ({ children }: { children: React.ReactNode }) => (
+              <th className="p-4 text-left text-sm font-normal first:!pl-0 last:pl-8">{children}</th>
+            )
+          },
+          body: {
+            row: ({ children }: { children: React.ReactNode }) => (
+              <tr className="border-b border-white/10 last:border-b-0 hover:bg-white/5">{children}</tr>
+            ),
+            cell: ({ children }: { children: React.ReactNode }) =>
+              userRecords.total === 0 ? null : (
+                <td className="truncate p-4 text-sm text-white first:!pl-0">{children}</td>
+              )
+          }
+        }}
+      />
+      {userRecords.total === 0 && <Empty className="my-10" />}
     </div>
   )
 }
