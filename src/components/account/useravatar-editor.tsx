@@ -1,13 +1,12 @@
 import { Button, Modal } from 'antd'
-import { CameraIcon, MinusCircle, PlusCircle, Upload, UserCircleIcon } from 'lucide-react'
+import { CameraIcon, MinusCircle, PlusCircle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
-
-import TaskTarget from '@/components/common/task-target'
 
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 
 import commonApi from '@/api-v1/common.api'
+import TaskTarget from '../common/task-target'
 
 async function canvasToBlob(canvas: HTMLCanvasElement) {
   return new Promise<Blob | null>((resolve) => {
@@ -21,7 +20,7 @@ export default function UserAvatarEditor() {
   const { info } = useUserStore()
 
   const defaultAvatar = 'https://file.codatta.io/d5e3da70-b9d9-45fe-8e6f-e75c51cb7005_855028_default-avatar-1.png'
-  const [avatar, setAvatar] = useState(info?.user_data?.avatar || defaultAvatar)
+  const [avatar, setAvatar] = useState(info?.user_data?.avatar)
   const [showAvatarEditor, setShowAvatarEditor] = useState(false)
   const editor = useRef<AvatarEditor>(null)
   const [imageDataUrl, setImageDataUrl] = useState('')
@@ -77,10 +76,12 @@ export default function UserAvatarEditor() {
   return (
     <>
       <div className="relative size-[108px] cursor-pointer overflow-hidden rounded-full" onClick={handleUploadImage}>
-        <img src={avatar} alt="" className="size-full object-contain" />
-        <div className="absolute left-0 top-0 flex size-full scale-0 items-center justify-center bg-[#00000099] transition-all group-hover:scale-100">
-          <CameraIcon />
-        </div>
+        <img src={avatar || defaultAvatar} alt="" className="size-full object-contain" />
+        <TaskTarget match={['target', 'avatar']}>
+          <div className="absolute left-0 top-0 flex size-full scale-0 items-center justify-center bg-[#00000099] transition-all group-hover:scale-100">
+            <CameraIcon />
+          </div>
+        </TaskTarget>
       </div>
       <Modal
         open={showAvatarEditor}

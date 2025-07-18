@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { Button, message } from 'antd'
 import { Check, Edit, X } from 'lucide-react'
 
+import TaskTarget from '@/components/common/task-target'
+
 import { userStoreActions, useUserStore } from '@/stores/user.store'
-import TaskTarget from '../common/task-target'
 
 export default function UserNameEditor() {
   const { info } = useUserStore()
