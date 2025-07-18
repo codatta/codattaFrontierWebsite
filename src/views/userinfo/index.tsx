@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import ReputationRate from '@/components/common/reputation-rate'
-import EditAvatarModal from '@/components/account/edit-avatar-modal'
-import EditUsername from '@/components/account/edit-username'
+import UsernameEditor from '@/components/account/username-editor'
+import UserAvatarEditor from '@/components/account/useravatar-editor'
 
 import card1Bg from '@/assets/userinfo/card-1-bg.png'
 import card2Bg from '@/assets/userinfo/card-2-bg.png'
@@ -13,13 +13,11 @@ import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import ReputationIcon from '@/assets/userinfo/reputation-icon.svg?react'
 import RewardIcon from '@/assets/userinfo/reward-icon.svg?react'
-import avatarIcon from '@/assets/userinfo/avatar-default-icon.svg'
 import PersonalIcon from '@/assets/userinfo/personal-icon.svg?react'
 import NftIcon from '@/assets/userinfo/nft-icon.svg?react'
 import DataIcon from '@/assets/userinfo/data-icon.svg?react'
 import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
 import ArrowRightIcon from '@/assets/userinfo/arrow-right.svg?react'
-import CameraIcon from '@/assets/userinfo/camera-icon.svg?react'
 
 import { useUserStore } from '@/stores/user.store'
 
@@ -37,7 +35,16 @@ export default function UserInfo() {
       <h2 className="mb-6 text-[32px] font-semibold leading-[48px]">User Info</h2>
       <Asset assets={info?.user_assets || []} reputation={info?.user_reputation || 0} />
       <div className="mt-12 flex items-stretch gap-6">
-        <NameAndAvatar avatar={info?.user_data.avatar || avatarIcon} />
+        <div>
+          <h3 className="mb-3 text-lg font-bold">Name & Avatar</h3>
+          <div
+            className="group flex h-[280px] w-[347px] flex-col items-center justify-center gap-5 overflow-hidden rounded-2xl bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${card3Bg})` }}
+          >
+            <UserAvatarEditor />
+            <UsernameEditor />
+          </div>
+        </div>
         <InfoList />
       </div>
     </div>
@@ -127,37 +134,6 @@ function AssetCard({ title, bg, children, onClick }: AssetCardProps) {
         <ArrowRightIcon className="opacity-0 transition-all group-hover:opacity-100" />
       </div>
     </li>
-  )
-}
-
-function NameAndAvatar({ avatar = avatarIcon }: { avatar?: string }) {
-  return (
-    <div>
-      <h3 className="mb-3 text-lg font-bold">Name & Avatar</h3>
-      <div
-        className="group flex h-[280px] w-[347px] flex-col items-center justify-center gap-5 overflow-hidden rounded-2xl bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${card3Bg})` }}
-      >
-        <AvatarEditor avatar={avatar} />
-        <EditUsername />
-      </div>
-    </div>
-  )
-}
-
-function AvatarEditor({ avatar }: { avatar?: string }) {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <>
-      <EditAvatarModal open={open} onClose={() => setOpen(false)} />
-      <div className="relative size-[108px] cursor-pointer overflow-hidden rounded-full" onClick={() => setOpen(true)}>
-        <img src={avatar} alt="" className="size-full object-contain" />
-        <div className="absolute left-0 top-0 flex size-full scale-0 items-center justify-center bg-[#00000099] transition-all group-hover:scale-100">
-          <CameraIcon />
-        </div>
-      </div>
-    </>
   )
 }
 

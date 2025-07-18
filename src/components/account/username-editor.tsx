@@ -57,13 +57,13 @@ export default function UserNameEditor() {
           </div>
         </div>
       ) : (
-        <div className="flex cursor-pointer items-center gap-2 text-lg font-semibold">
+        <div className="flex cursor-pointer items-center gap-2 text-lg font-semibold" onClick={() => setEdit(true)}>
           <div>{nickname || 'Unknown'}</div>
           <TaskTarget
             match={['target', 'username']}
             className="ml-auto w-0 scale-0 transition-all group-hover:w-5 group-hover:scale-100"
           >
-            <Edit size={24} className="p-1" onClick={() => setEdit(true)}></Edit>
+            <Edit size={24} className="p-1"></Edit>
           </TaskTarget>
         </div>
       )}
