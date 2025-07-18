@@ -5,11 +5,11 @@ import React, { useEffect, useState } from 'react'
 
 import BookIcon from '@/assets/userinfo/book-icon.svg?react'
 import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
-import LevelASvg from '@/assets/userinfo/level-a-icon.svg?react'
-import LevelBSvg from '@/assets/userinfo/level-b-icon.svg?react'
-import LevelCSvg from '@/assets/userinfo/level-c-icon.svg?react'
-import LevelDSvg from '@/assets/userinfo/level-d-icon.svg?react'
-import LevelSSvg from '@/assets/userinfo/level-s-icon.svg?react'
+// import LevelASvg from '@/assets/userinfo/level-a-icon.svg?react'
+// import LevelBSvg from '@/assets/userinfo/level-b-icon.svg?react'
+// import LevelCSvg from '@/assets/userinfo/level-c-icon.svg?react'
+// import LevelDSvg from '@/assets/userinfo/level-d-icon.svg?react'
+// import LevelSSvg from '@/assets/userinfo/level-s-icon.svg?react'
 
 import { getFrontierUserRecords, getFrontierUserStatics, useFrontierStore } from '@/stores/frontier.store'
 
