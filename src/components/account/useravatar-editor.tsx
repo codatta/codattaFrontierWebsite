@@ -89,7 +89,7 @@ export default function UserAvatarEditor() {
         onOk={updateAvatar}
         onCancel={() => setShowAvatarEditor(false)}
         confirmLoading={uploading}
-        className="[.ant-modal-header]:!bg-transparent"
+        className="[&_.ant-modal-header]:bg-transparent"
       >
         <div className="flex flex-col items-center gap-6">
           <AvatarEditor ref={editor} image={imageDataUrl} width={250} height={250} border={20} scale={scale} />

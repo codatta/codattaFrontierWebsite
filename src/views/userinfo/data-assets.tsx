@@ -33,22 +33,24 @@ export default function DataAssets() {
 
 function TokenRewards() {
   const { info } = useUserStore()
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(true)
 
   const assets = useMemo(() => {
     const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XNYCoin')?.balance
     const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
+    const xynAmount = formatNumber(Number(xyn?.amount ?? 0.0))
+    const usdtAmount = formatNumber(Number(usdt?.amount ?? 0.0))
 
     return [
       {
         type: 'XNYCoin',
-        amount: formatNumber(Number(Number(xyn?.amount ?? 0).toFixed(2))),
+        amount: xynAmount === '0' ? '0.00' : xynAmount,
         currency: xyn?.currency ?? 'XNY Token',
         Icon: <XnyIcon />
       },
       {
         type: 'USDT',
-        amount: formatNumber(Number(Number(usdt?.amount ?? 0).toFixed(2))),
+        amount: usdtAmount === '0' ? '0.00' : usdtAmount,
         currency: usdt?.currency ?? 'USDT',
         Icon: <USDTIcon />
       }
@@ -78,7 +80,7 @@ function TokenRewards() {
           >
             {asset.Icon}
             <div className="text-right">
-              <div className="mb-1 text-[28px] font-bold">${asset.amount}</div>
+              <div className="mb-1 text-[28px] font-bold">{asset.amount}</div>
               <div className="text-base text-[#BBBBBE]">{asset.currency}</div>
             </div>
           </li>

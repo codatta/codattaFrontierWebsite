@@ -128,6 +128,7 @@ export default function Router() {
           {/* </Route> */}
           <Route path="settings" element={<UserInfoLayout />}>
             <Route index element={<UserInfo />} />
+            <Route path="account" element={<UserInfo />} />
             <Route path="reward" element={<UserInfoReward />} />
             <Route path="reputation" element={<UserInfoReputation />} />
             <Route path="nft" element={<UserInfoNFT />} />
