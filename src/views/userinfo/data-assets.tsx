@@ -69,13 +69,13 @@ function TokenRewards() {
 
       <ul
         className={cn(
-          'mt-3 grid grid-cols-1 gap-5 overflow-hidden transition-all md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+          'mt-3 grid grid-cols-1 gap-5 overflow-hidden transition-all md:grid-cols-2 xl:grid-cols-3',
           expanded ? 'h-auto' : 'h-0'
         )}
       >
         {assets.map((asset) => (
           <li
-            key={asset.amount}
+            key={asset.currency}
             className="flex items-center justify-between rounded-2xl border border-[#FFFFFF1F] p-6"
           >
             {asset.Icon}

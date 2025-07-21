@@ -56,14 +56,8 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
     () => Math.round(Number(assets.find((asset) => asset.asset_type === 'POINTS')?.balance.amount ?? 0)),
     [assets]
   )
-  const xyn = useMemo(
-    () => Number(assets.find((asset) => asset.asset_type === 'XNYCoin')?.balance.amount ?? '0').toFixed(2),
-    [assets]
-  )
-  const usdt = useMemo(
-    () => Number(assets.find((asset) => asset.asset_type === 'USDT')?.balance.amount ?? '0').toFixed(2),
-    [assets]
-  )
+  const xyn = useMemo(() => assets.find((asset) => asset.asset_type === 'XNYCoin')?.balance.amount ?? '0.00', [assets])
+  const usdt = useMemo(() => assets.find((asset) => asset.asset_type === 'USDT')?.balance.amount ?? '0.00', [assets])
 
   const navigate = useNavigate()
 
@@ -76,14 +70,14 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
       <h3 className="mb-3 text-lg font-bold">Asset</h3>
       <ul className="flex gap-6">
         <AssetCard title="Data Assets" bg={card1Bg} onClick={() => handleClick('/app/settings/data-assets')}>
-          <div className="flex size-full items-center justify-between">
-            <div className="flex flex-1 flex-col items-center justify-center">
-              <USDTIcon />
-              <span className="text-lg font-bold">{usdt}</span>
+          <div className="grid size-full grid-cols-2">
+            <div className="pt-5">
+              <USDTIcon className="mx-auto mb-1 size-[60px]" />
+              <div className="truncate px-3 text-center text-lg font-bold">{usdt}</div>
             </div>
-            <div className="flex flex-1 flex-col items-center justify-center">
-              <XnyIcon />
-              <span className="text-lg font-bold">{xyn}</span>
+            <div className="pt-5">
+              <XnyIcon className="mx-auto mb-1 size-[60px]" />
+              <div className="truncate px-3 text-center text-lg font-bold">{xyn}</div>
             </div>
           </div>
         </AssetCard>
