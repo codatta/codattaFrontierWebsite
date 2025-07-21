@@ -7,18 +7,18 @@ import TaskTarget from '@/components/common/task-target'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 
 export default function UserNameEditor() {
-  const { info } = useUserStore()
+  const { username } = useUserStore()
 
   const [edit, setEdit] = useState(false)
-  const [nickname, setNickname] = useState(info?.user_data.user_name ?? '')
+  const [nickname, setNickname] = useState(username ?? '')
   const [loading, setLoading] = useState(false)
 
   const handleUpdateUsername = useCallback(async () => {
-    if (nickname === info?.user_data.user_name) {
+    if (nickname === username) {
       return
     }
     if (nickname.trim().length === 0) {
-      setNickname(info?.user_data.user_name ?? '')
+      setNickname(username ?? '')
       return message.error('Username cannot be empty')
     }
     try {
@@ -30,18 +30,18 @@ export default function UserNameEditor() {
       message.error(err.message)
       setEdit(false)
       setLoading(false)
-      setNickname(info?.user_data.user_name ?? '')
+      setNickname(username ?? '')
     }
-  }, [nickname, info?.user_data.user_name])
+  }, [nickname, username])
 
   function handleCancel() {
     setEdit(false)
-    setNickname(info?.user_data?.user_name ?? '')
+    setNickname(username ?? '')
   }
 
   useEffect(() => {
-    setNickname(info?.user_data?.user_name ?? '')
-  }, [info?.user_data])
+    setNickname(username ?? '')
+  }, [username])
 
   return (
     <>
