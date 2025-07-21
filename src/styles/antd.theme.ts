@@ -9,7 +9,7 @@ const themeConfig: ThemeConfig = {
     colorInfo: '#0A77FF',
     colorLink: '#875DFF',
     // colorBgBase: '#1C1C26',
-    borderRadius: 8,
+    borderRadius: 6,
     colorBorder: '#404049',
     colorLinkHover: '#ffffff80'
 
@@ -31,10 +31,16 @@ const themeConfig: ThemeConfig = {
       fontSizeLG: 14,
       boxShadow: 'none'
     },
+    Input: {
+      colorBgContainer: 'transparent'
+    },
     Modal: {
       contentBg: '#1C1C26',
       colorBgMask: 'rgba(0,0, 0, 0.8)',
       borderRadiusLG: 24
+    },
+    Select: {
+      colorBgContainer: 'transparent'
     }
   }
 }
