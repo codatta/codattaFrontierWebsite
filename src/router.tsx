@@ -36,7 +36,8 @@ const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
 const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
 const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
-const UserInfoData = lazy(() => import('@/views/userinfo/data'))
+const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
+const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
@@ -125,14 +126,15 @@ export default function Router() {
             <Route path="nft" element={<SettingUserNFT />} /> */}
           {/* <Route path="sbt" element={<SettingUserSBT />} /> */}
           {/* </Route> */}
-          <Route path="userinfo" element={<UserInfoLayout />}>
+          <Route path="settings" element={<UserInfoLayout />}>
             <Route index element={<UserInfo />} />
             <Route path="reward" element={<UserInfoReward />} />
             <Route path="reputation" element={<UserInfoReputation />} />
             <Route path="nft" element={<UserInfoNFT />} />
             <Route path="personal" element={<UserInfoPersonal />} />
             <Route path="onchain" element={<UserInfoOnchain />} />
-            <Route path="data" element={<UserInfoData />} />
+            <Route path="data-profile" element={<UserInfoDataProfile />} />
+            <Route path="data-assets" element={<UserInfoDataAssets />} />
           </Route>
 
           <Route path="quest">

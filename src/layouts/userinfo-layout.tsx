@@ -12,10 +12,10 @@ export default function SettingsLayout() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const hasBackButton = /userinfo\/.+$/.test(location.pathname)
+  const hasBackButton = /settings\/.+$/.test(location.pathname)
 
   const onBack = () => {
-    navigate('/app/userinfo')
+    navigate('/app/settings')
   }
 
   useEffect(() => {

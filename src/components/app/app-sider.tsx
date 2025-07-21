@@ -163,7 +163,7 @@ const menuItems: MenuItem[] = [
   // },
   {
     icon: <IconSetting color={'white'} size={24} />,
-    key: '/app/userinfo',
+    key: '/app/settings',
     label: 'User Info'
   }
 ]

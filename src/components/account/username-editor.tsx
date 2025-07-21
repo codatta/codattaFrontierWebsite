@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Button, message } from 'antd'
 import { Check, Edit, X } from 'lucide-react'
 
@@ -10,10 +10,17 @@ export default function UserNameEditor() {
   const { info } = useUserStore()
 
   const [edit, setEdit] = useState(false)
-  const [nickname, setNickname] = useState(info?.user_data.user_name)
+  const [nickname, setNickname] = useState(info?.user_data.user_name ?? '')
   const [loading, setLoading] = useState(false)
 
-  async function handleUpdateUsername() {
+  const handleUpdateUsername = useCallback(async () => {
+    if (nickname === info?.user_data.user_name) {
+      return
+    }
+    if (nickname.trim().length === 0) {
+      setNickname(info?.user_data.user_name ?? '')
+      return message.error('Username cannot be empty')
+    }
     try {
       setLoading(true)
       await userStoreActions.updateUserInfo({ update_key: 'USER_NAME', update_value: nickname! })
@@ -23,16 +30,17 @@ export default function UserNameEditor() {
       message.error(err.message)
       setEdit(false)
       setLoading(false)
+      setNickname(info?.user_data.user_name ?? '')
     }
-  }
+  }, [nickname, info?.user_data.user_name])
 
   function handleCancel() {
     setEdit(false)
-    setNickname(info?.user_data?.user_name)
+    setNickname(info?.user_data?.user_name ?? '')
   }
 
   useEffect(() => {
-    setNickname(info?.user_data?.user_name)
+    setNickname(info?.user_data?.user_name ?? '')
   }, [info?.user_data])
 
   return (
@@ -46,8 +54,9 @@ export default function UserNameEditor() {
               placeholder="Enter your nickname"
               type="text"
               value={nickname}
+              minLength={1}
               maxLength={12}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e) => setNickname(e.target.value.trim())}
             />
             <Button size="small" className="ml-auto" loading={loading} type="primary" onClick={handleUpdateUsername}>
               {!loading && <Check size={14} />}

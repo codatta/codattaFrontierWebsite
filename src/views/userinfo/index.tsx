@@ -75,7 +75,7 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
     <div>
       <h3 className="mb-3 text-lg font-bold">Asset</h3>
       <ul className="flex gap-6">
-        <AssetCard title="Data Assets" bg={card1Bg} onClick={() => handleClick('/app/userinfo/data')}>
+        <AssetCard title="Data Assets" bg={card1Bg} onClick={() => handleClick('/app/settings/data-assets')}>
           <div className="flex size-full items-center justify-between">
             <div className="flex flex-1 flex-col items-center justify-center">
               <USDTIcon />
@@ -87,7 +87,7 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
             </div>
           </div>
         </AssetCard>
-        <AssetCard title="Reputation" bg={card2Bg} onClick={() => handleClick('/app/userinfo/reputation')}>
+        <AssetCard title="Reputation" bg={card2Bg} onClick={() => handleClick('/app/settings/reputation')}>
           <div className="flex size-full items-center justify-center gap-[14px]">
             <ReputationIcon />
             <div className="flex-1">
@@ -96,7 +96,7 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
             </div>
           </div>
         </AssetCard>
-        <AssetCard title="Reward" bg={card2Bg} onClick={() => handleClick('/app/userinfo/reward')}>
+        <AssetCard title="Reward" bg={card2Bg} onClick={() => handleClick('/app/settings/reward')}>
           <div className="flex size-full items-center justify-center gap-[14px]">
             <RewardIcon />
             <div className="flex-1">
@@ -144,22 +144,22 @@ function InfoList() {
     {
       title: 'Personal',
       icon: <PersonalIcon />,
-      link: '/app/userinfo/personal'
+      link: '/app/settings/personal'
     },
     {
       title: 'NFT',
       icon: <NftIcon />,
-      link: '/app/userinfo/nft'
+      link: '/app/settings/nft'
     },
     {
       title: 'Data Profile',
       icon: <DataIcon />,
-      link: '/app/userinfo/data'
+      link: '/app/settings/data-profile'
     },
     {
       title: 'Data on Chain',
       icon: <ChainIcon />,
-      link: '/app/userinfo/onchain'
+      link: '/app/settings/onchain'
     }
   ]
 

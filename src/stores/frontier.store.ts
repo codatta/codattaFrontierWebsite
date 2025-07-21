@@ -156,7 +156,7 @@ export const getFrontierUserRecords = debounce(async (params: { page: number }) 
     frontiersStore.userRecords.total = res.total_count
     frontiersStore.userRecords.listLoading = false
   } catch (err) {
-    message.error(err.message)
+    message.error(err.message ?? 'Failed to get submission records')
     frontiersStore.userRecords.list = []
     frontiersStore.userRecords.total = 0
     frontiersStore.userRecords.listLoading = false
