@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useMemo } from 'react'
+import { message } from 'antd'
 
 import ReputationRate from '@/components/common/reputation-rate'
 import UsernameEditor from '@/components/account/username-editor'
@@ -158,6 +159,10 @@ function InfoList() {
   ]
 
   const handleClick = (link: string) => {
+    if (['/app/settings/data-profile', '/app/settings/onchain'].includes(link)) {
+      message.info('Coming soon!')
+      return
+    }
     navigate(link)
   }
 

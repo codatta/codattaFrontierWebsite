@@ -1,5 +1,5 @@
-import { Button, message, Tabs, TabsProps } from 'antd'
-import { useMemo, useState } from 'react'
+import { Button, message, Tabs, TabsProps, Spin, List } from 'antd'
+import { useEffect, useMemo, useState } from 'react'
 import { ChevronUp } from 'lucide-react'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
@@ -8,6 +8,7 @@ import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useUserStore } from '@/stores/user.store'
 import { formatNumber } from '@/utils/str'
 import { cn } from '@udecode/cn'
+// import { RewardsDesc } from '@/apis/rewards.api'
 
 export default function DataAssets() {
   const handleClaim = () => {
@@ -94,7 +95,7 @@ const items: TabsProps['items'] = [
   {
     key: 'earned-history-tab',
     label: 'Earned History',
-    children: <EmptyHistory />
+    children: <EarnedHistory />
   },
   {
     key: 'claim-history-tab',
@@ -118,9 +119,134 @@ function History() {
   )
 }
 
-// function EarnedHistory() {
-//   return <div className="h-[calc(100vh-600px)] bg-[red]">EarnedHistory</div>
-// }
+type EarnedHistoryItem = {
+  frontier_id: string
+  frontier_name: string
+  total_submission_count: number
+  average_submission_score: string
+  assets: {
+    asset_id: string
+    asset_type: string
+    amount: {
+      currency: string
+      amount: string
+    }
+  }[]
+}
+
+function EarnedHistory() {
+  const [loading, setLoading] = useState(false)
+  const [rewards, setRewards] = useState<EarnedHistoryItem[]>([])
+
+  useEffect(() => {
+    setLoading(true)
+    try {
+      // const earnedHistory = [
+      //   {
+      //     frontier_id: '1',
+      //     frontier_name: 'NFT Classification Frontier',
+      //     total_submission_count: 10,
+      //     average_submission_score: 'A',
+      //     assets: [
+      //       {
+      //         asset_id: '1',
+      //         asset_type: 'XNYCoin',
+      //         amount: {
+      //           currency: 'XNY Token',
+      //           amount: '0.001'
+      //         }
+      //       },
+      //       {
+      //         asset_id: '2',
+      //         asset_type: 'USDT',
+      //         amount: {
+      //           currency: 'USDT',
+      //           amount: '2.00'
+      //         }
+      //       }
+      //     ]
+      //   },
+      //   {
+      //     frontier_id: '2',
+      //     frontier_name: 'NFT Classification Frontier',
+      //     total_submission_count: 20,
+      //     average_submission_score: 'A',
+      //     assets: [
+      //       {
+      //         asset_id: '1',
+      //         asset_type: 'XNYCoin',
+      //         amount: {
+      //           currency: 'XNY Token',
+      //           amount: '0.001'
+      //         }
+      //       },
+      //       {
+      //         asset_id: '2',
+      //         asset_type: 'USDT',
+      //         amount: {
+      //           currency: 'USDT',
+      //           amount: '20.00'
+      //         }
+      //       }
+      //     ]
+      //   }
+      // ]
+      setRewards([])
+    } catch (error) {
+      console.log(error)
+    }
+    setLoading(false)
+  }, [])
+
+  return (
+    <Spin spinning={loading}>
+      <div>
+        {rewards?.length > 0 ? (
+          <List
+            className="border-none"
+            bordered
+            dataSource={rewards.slice()}
+            renderItem={(item) => (
+              <List.Item className="mb-3 flex justify-between rounded-2xl border border-[#FFFFFF1F] p-6">
+                <div>
+                  <div className="mb-2 text-base font-bold">{item.frontier_name}</div>
+                  <div className="text-sm text-[#BBBBBE]">
+                    Total Submission Count:{' '}
+                    <span className="mr-3 font-bold text-white">{item.total_submission_count}</span>
+                    Average Submission Score:{' '}
+                    <span className="font-bold text-white">{item.average_submission_score}</span>
+                  </div>
+                </div>
+                <ul>
+                  {item.assets.map((asset) => (
+                    <li key={asset.asset_id} className="flex items-center justify-end gap-2 text-sm">
+                      <span>{asset.amount.currency}</span>
+                      <span className="font-semibold text-[#875DFF]">+{asset.amount.amount}</span>
+                    </li>
+                  ))}
+                </ul>
+              </List.Item>
+            )}
+          />
+        ) : (
+          <EmptyHistory />
+        )}
+      </div>
+
+      {/* <Pagination
+        className="mt-6"
+        align="center"
+        size="small"
+        hideOnSinglePage
+        defaultCurrent={1}
+        pageSize={pageSize}
+        onChange={onChange}
+        total={total_count}
+        showSizeChanger={false}
+      /> */}
+    </Spin>
+  )
+}
 
 // function ClaimHistory() {
 //   return <div className="h-[calc(100vh-400px)] bg-[blue]">ClaimHistory</div>
