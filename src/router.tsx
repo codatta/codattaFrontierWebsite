@@ -3,7 +3,8 @@ import { lazy, useEffect } from 'react'
 
 // layouts
 import FrontierLayout from '@/layouts/frontier-layout'
-import SettingsLayout from '@/layouts/settings-layout'
+// import SettingsLayout from '@/layouts/settings-layout'
+import UserInfoLayout from '@/layouts/userinfo-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
 import BoosterLayout from '@/layouts/booster-layout'
@@ -22,11 +23,21 @@ const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
 const Activity = lazy(() => import('@/views/quest/activity'))
 
 // settings
-const SettingAccount = lazy(() => import('@/views/settings/account'))
-const SettingReward = lazy(() => import('@/views/settings/reward'))
-const SettingReputation = lazy(() => import('@/views/settings/reputation'))
-const SettingUserNFT = lazy(() => import('@/views/settings/user-nft'))
+// const SettingAccount = lazy(() => import('@/views/settings/account'))
+// const SettingReward = lazy(() => import('@/views/settings/reward'))
+// const SettingReputation = lazy(() => import('@/views/settings/reputation'))
+// const SettingUserNFT = lazy(() => import('@/views/settings/user-nft'))
 // const SettingUserSBT = lazy(() => import('@/views/settings/user-sbt'))
+
+// user info
+const UserInfo = lazy(() => import('@/views/userinfo/index'))
+const UserInfoReward = lazy(() => import('@/views/userinfo/reward'))
+const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
+const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
+const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
+const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
+const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
+const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
@@ -109,12 +120,23 @@ export default function Router() {
           <Route path="referral" element={<AppReferral />}></Route>
           <Route path="journey" element={<NewJourney />} />
 
-          <Route path="settings" element={<SettingsLayout />}>
+          {/* <Route path="settings" element={<SettingsLayout />}>
             <Route path="account" element={<SettingAccount />} />
             <Route path="reward" element={<SettingReward />} />
             <Route path="reputation" element={<SettingReputation />} />
-            <Route path="nft" element={<SettingUserNFT />} />
-            {/* <Route path="sbt" element={<SettingUserSBT />} /> */}
+            <Route path="nft" element={<SettingUserNFT />} /> */}
+          {/* <Route path="sbt" element={<SettingUserSBT />} /> */}
+          {/* </Route> */}
+          <Route path="settings" element={<UserInfoLayout />}>
+            <Route index element={<UserInfo />} />
+            <Route path="account" element={<UserInfo />} />
+            <Route path="reward" element={<UserInfoReward />} />
+            <Route path="reputation" element={<UserInfoReputation />} />
+            <Route path="nft" element={<UserInfoNFT />} />
+            <Route path="personal" element={<UserInfoPersonal />} />
+            <Route path="onchain" element={<UserInfoOnchain />} />
+            <Route path="data-profile" element={<UserInfoDataProfile />} />
+            <Route path="data-assets" element={<UserInfoDataAssets />} />
           </Route>
 
           <Route path="quest">

@@ -48,7 +48,7 @@ export default function ArenaHeader() {
           })}
         </nav>
         {info?.user_data?.avatar && (
-          <div className="ml-auto flex cursor-pointer items-center" onClick={() => navigate('/app/settings/account')}>
+          <div className="ml-auto flex cursor-pointer items-center" onClick={() => navigate('/app/settings')}>
             <img src={info?.user_data.avatar || ''} alt="" className="size-8 rounded-full" />
           </div>
         )}
