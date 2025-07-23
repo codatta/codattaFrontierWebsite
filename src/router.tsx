@@ -77,6 +77,8 @@ const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 
+const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -237,6 +239,14 @@ export default function Router() {
         <Route
           path="/frontier/project/ROBOTICS_TPL_W8/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAWAL/:taskId"
+          element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAWAL" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId"
+          element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>

@@ -1,0 +1,17 @@
+/* Add custom styles for antd Select to match the theme */
+.custom-antd-select .ant-select-selector {
+  background-color: #3a3a4a !important;
+  border: none !important;
+  color: white !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  height: auto !important;
+}
+
+.custom-antd-select .ant-select-selection-placeholder {
+  color: #888 !important;
+}
+
+.custom-antd-select .ant-select-arrow {
+  color: white !important;
+}
