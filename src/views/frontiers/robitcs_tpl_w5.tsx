@@ -9,7 +9,7 @@ import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/robotics_tpl/submission-progress'
-import Result from '@/components/frontier/robotics_tpl/result'
+import Result from '@/components/frontier/crypto/result'
 
 import { Button } from '@/components/booster/button'
 import Rect from '@/components/frontier/robotics_tpl/rect'

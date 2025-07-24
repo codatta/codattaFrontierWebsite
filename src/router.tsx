@@ -77,7 +77,8 @@ const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 
-const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
+const CryptoDepositBnbForm = lazy(() => import('@/views/frontiers/crypto_tpl_deposit_bnb'))
+const CryptoWithdrawBnbForm = lazy(() => import('@/views/frontiers/crypto_tpl_withdraw_bnb'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -241,12 +242,12 @@ export default function Router() {
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
         />
         <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
-          element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_BNB/:taskId"
+          element={<CryptoWithdrawBnbForm templateId="CRYPTO_TPL_WITHDRAW_BNB" />}
         />
         <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId"
-          element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_BNB/:taskId"
+          element={<CryptoDepositBnbForm templateId="CRYPTO_TPL_DEPOSIT_BNB" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>

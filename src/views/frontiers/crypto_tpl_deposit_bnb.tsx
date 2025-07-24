@@ -9,69 +9,48 @@ import { EXCHANGE_OPTIONS, BLOCKCHAIN_OPTIONS, CURRENCY_OPTIONS } from '@/compon
 import type { Exchange, Blockchain, Currency } from '@/components/frontier/crypto/consts'
 import Select from '@/components/frontier/crypto/select'
 import Input from '@/components/frontier/crypto/input'
-import Upload, { UploadedImage } from '@/components/frontier/crypto/upload'
+import Upload from '@/components/frontier/crypto/upload'
+import { Button } from '@/components/booster/button'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
-import { Button } from '@/components/booster/button'
+import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
 
-interface CryptoFormData {
+interface DepositFormData {
   exchange: Exchange
   blockchain: Blockchain
   currency: Currency
-  transactionHash: string
-  collectionAddress: string
+  transactionHash?: string
+  collectionAddress?: string
+  depositAddress: string
   images: { url: string; hash: string }[]
 }
 
-function validateTxHash(hash: string): boolean {
-  if (!hash || typeof hash !== 'string') {
-    return false
-  }
-  const hexRegex = /^(?:0x)?[a-f0-9]{64}$/i
-  const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{60,90}$/
-
-  return hexRegex.test(hash) || base58Regex.test(hash)
-}
-function validateCryptoAddress(address: string): boolean {
-  if (!address || typeof address !== 'string') {
-    return false
-  }
-
-  const regex = /^[a-zA-Z0-9]{25,}$/
-
-  return regex.test(address)
-}
-
-export default function CryptoForm({ templateId }: { templateId: string }) {
-  const isWithdraw = /withdraw/.test(templateId.toLowerCase())
+export default function CryptoDepositForm({ templateId }: { templateId: string }) {
   const { taskId } = useParams()
   const isMobile = useIsMobile()
 
   const [pageLoading, _setPageLoading] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const [errors, setErrors] = useState<Partial<Record<keyof CryptoFormData, string>>>({})
-  const [formData, setFormData] = useState<CryptoFormData>({
+  const [errors, setErrors] = useState<Partial<Record<keyof DepositFormData, string>>>({})
+  const [formData, setFormData] = useState<DepositFormData>({
     exchange: '' as Exchange,
     blockchain: '' as Blockchain,
     currency: '' as Currency,
     transactionHash: '',
     collectionAddress: '',
+    depositAddress: '',
     images: []
   })
   const canSubmit = useMemo(() => {
     return (
       Object.values(errors).every((error) => !error) &&
-      Object.keys(formData).every((key) => {
-        if (['transactionHash', 'collectionAddress'].includes(key)) {
-          return true
-        }
-        if (key === 'images') {
-          return formData.images?.length > 0
-        }
-        return !!formData[key as keyof CryptoFormData]
-      })
+      !!formData.exchange &&
+      !!formData.blockchain &&
+      !!formData.currency &&
+      !!formData.depositAddress &&
+      formData.images?.length > 0
     )
   }, [errors, formData])
 
@@ -80,7 +59,7 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
   }, [templateId])
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<Record<keyof CryptoFormData, string>> = {}
+    const newErrors: Partial<Record<keyof DepositFormData, string>> = {}
 
     if (formData.images.length === 0) {
       newErrors.images = 'Please upload an image'
@@ -93,6 +72,9 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
     }
     if (!formData.currency) {
       newErrors.currency = 'Currency is required'
+    }
+    if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
+      newErrors.depositAddress = 'Please provide a valid address'
     }
     if (formData.transactionHash && !validateTxHash(formData.transactionHash)) {
       newErrors.transactionHash = 'Please provide a valid transaction hash'
@@ -107,14 +89,15 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
   const resetForm = () => {
     setFormData({
       images: [],
-      exchange: '',
-      blockchain: '',
-      currency: '',
+      exchange: '' as Exchange,
+      blockchain: '' as Blockchain,
+      currency: '' as Currency,
       transactionHash: '',
-      collectionAddress: ''
+      collectionAddress: '',
+      depositAddress: ''
     })
   }
-  const handleFormChange = (field: keyof typeof formData, value: string | number | UploadedImage[]) => {
+  const handleFormChange = (field: keyof DepositFormData, value: string | number | { url: string; hash: string }[]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
 
     if (errors[field]) {
@@ -132,9 +115,14 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
         taskId: taskId,
         data: Object.assign({}, formData)
       })
+      message.success('Submit Success')
       resetForm()
     } catch (error) {
-      message.error(error.message)
+      if (error instanceof Error) {
+        message.error(error.message)
+      } else {
+        message.error('An unknown error occurred')
+      }
     }
     setLoading(false)
   }
@@ -151,7 +139,7 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
             ) : (
               <span></span>
             )}
-            {isWithdraw ? 'Withdraw' : 'Deposit'} Submission
+            Deposit Submission
             <span></span>
           </h1>
           <div className="mt-[34px] space-y-[22px] md:mt-[72px] md:space-y-[30px]">
@@ -196,11 +184,24 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
             </div>
             <div>
               <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+                Deposit Address <span className="text-red-400">*</span>
+              </h3>
+              <Input
+                isMobile={isMobile}
+                placeholder="Enter deposit address"
+                value={formData.depositAddress}
+                maxLength={255}
+                onChange={(value) => handleFormChange('depositAddress', value)}
+              />
+              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.depositAddress}</p>
+            </div>
+            <div>
+              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
                 Transaction Hash
               </h3>
               <Input
                 isMobile={isMobile}
-                placeholder="Provide transaction hash for verification"
+                placeholder="Optional: Provide transaction hash for verification"
                 maxLength={255}
                 value={formData.transactionHash}
                 onChange={(value) => handleFormChange('transactionHash', value)}
@@ -213,7 +214,7 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
               </h3>
               <Input
                 isMobile={isMobile}
-                placeholder="Address where funds were transferred from deposit address for verification"
+                placeholder="Optional: Address where funds were transferred from deposit address"
                 value={formData.collectionAddress}
                 maxLength={255}
                 onChange={(value) => handleFormChange('collectionAddress', value)}
@@ -222,7 +223,7 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
             </div>
             <div>
               <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                {isWithdraw ? 'Withdraw' : 'Deposit'} Address Screenshot<span className="text-red-400">*</span>
+                Deposit Address Screenshot<span className="text-red-400">*</span>
               </h3>
               <Upload
                 value={formData.images}
@@ -233,7 +234,7 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
             </div>
           </div>
           <Button
-            text={`Submit ${isWithdraw ? 'Withdraw' : 'Deposit'}`}
+            text="Submit Deposit"
             onClick={handleSubmit}
             className={cn(
               'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white md:mx-auto md:w-[240px] md:text-sm md:font-normal',
