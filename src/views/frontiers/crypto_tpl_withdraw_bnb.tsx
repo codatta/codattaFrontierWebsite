@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spin, message } from 'antd'
 import { cn } from '@udecode/cn'
@@ -12,10 +12,12 @@ import Input from '@/components/frontier/crypto/input'
 import Upload from '@/components/frontier/crypto/upload'
 import { Button } from '@/components/booster/button'
 import Result from '@/components/frontier/crypto/result'
+import { ResultType } from '@/components/frontier/crypto/types'
+import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
+
 import frontiterApi from '@/apis/frontiter.api'
-import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
 
 interface WithdrawFormData {
   exchange: Exchange
@@ -26,13 +28,19 @@ interface WithdrawFormData {
   images: { url: string; hash: string }[]
 }
 
+async function getLastSubmission(frontierId: string) {
+  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
+
 export default function CryptoWithdrawForm({ templateId }: { templateId: string }) {
   const { taskId } = useParams()
   const isMobile = useIsMobile()
 
-  const [pageLoading, _setPageLoading] = useState(false)
+  const [pageLoading, setPageLoading] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>('ADOPT')
+  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
 
   const [errors, setErrors] = useState<Partial<Record<keyof WithdrawFormData, string>>>({})
   const [formData, setFormData] = useState<WithdrawFormData>({
@@ -105,19 +113,38 @@ export default function CryptoWithdrawForm({ templateId }: { templateId: string 
     }
   }
 
+  const handleResultStatus = (status: string) => {
+    status = status.toLocaleUpperCase()
+    if (['PENDING', 'SUBMITTED'].includes(status)) {
+      setResultType('PENDING')
+    } else if (status === 'REFUSED') {
+      setResultType('REJECT')
+    } else if (status === 'ADOPT') {
+      setResultType('ADOPT')
+    }
+  }
+
   const handleSubmit = async () => {
     if (!validateForm()) return
     setLoading(true)
 
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
-        data: Object.assign({}, formData)
+        data: Object.assign({ type: 'withdraw' }, formData)
       })
       resetForm()
+
+      const resultData = res.data as unknown as {
+        status: ResultType
+      }
+
+      handleResultStatus(resultData.status)
     } catch (error) {
-      message.error(error.message)
+      message.error(error.message ? error.message : 'Failed to submit!').then(() => {
+        setLoading(false)
+      })
     }
     setLoading(false)
   }
@@ -126,6 +153,35 @@ export default function CryptoWithdrawForm({ templateId }: { templateId: string 
     resetForm()
     setResultType(null)
   }
+
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id)
+
+      if (lastSubmission) {
+        handleResultStatus(lastSubmission.status)
+      }
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to get task detail!').then(() => {
+        setPageLoading(false)
+      })
+    } finally {
+      setPageLoading(false)
+    }
+  }, [taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   return (
     <AuthChecker>

@@ -6,21 +6,20 @@ import { Spin, message } from 'antd'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
+import { motion } from 'framer-motion'
 
 import AuthChecker from '@/components/app/auth-checker'
 import SubmissionProgress from '@/components/frontier/robotics_tpl/submission-progress'
-import Result from '@/components/frontier/crypto/result'
+import Result from '@/components/frontier/robotics_tpl/result'
 
 import { Button } from '@/components/booster/button'
 import Rect from '@/components/frontier/robotics_tpl/rect'
+import { ResultType } from '@/components/frontier/robotics_tpl/types'
 
 import CheckCircle from '@/assets/common/check-circle.svg?react'
 
 import boosterApi from '@/apis/booster.api'
-
 import frontiterApi from '@/apis/frontiter.api'
-import { motion } from 'framer-motion'
-import { ResultType } from '@/components/frontier/robotics_tpl/types'
 
 type Question = {
   imageUrl: string

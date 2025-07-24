@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { Spin, message } from 'antd'
 import { cn } from '@udecode/cn'
@@ -11,10 +11,12 @@ import Select from '@/components/frontier/crypto/select'
 import Input from '@/components/frontier/crypto/input'
 import Upload from '@/components/frontier/crypto/upload'
 import { Button } from '@/components/booster/button'
+import { ResultType } from '@/components/frontier/crypto/types'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
 import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
+import Result from '@/components/frontier/crypto/result'
 
 interface DepositFormData {
   exchange: Exchange
@@ -26,12 +28,19 @@ interface DepositFormData {
   images: { url: string; hash: string }[]
 }
 
+async function getLastSubmission(frontierId: string) {
+  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
+
 export default function CryptoDepositForm({ templateId }: { templateId: string }) {
   const { taskId } = useParams()
   const isMobile = useIsMobile()
 
-  const [pageLoading, _setPageLoading] = useState(false)
+  const [pageLoading, setPageLoading] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
 
   const [errors, setErrors] = useState<Partial<Record<keyof DepositFormData, string>>>({})
   const [formData, setFormData] = useState<DepositFormData>({
@@ -73,11 +82,11 @@ export default function CryptoDepositForm({ templateId }: { templateId: string }
     if (!formData.currency) {
       newErrors.currency = 'Currency is required'
     }
+    if (!formData.transactionHash || !validateTxHash(formData.transactionHash)) {
+      newErrors.transactionHash = 'Please provide a valid transaction hash'
+    }
     if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
       newErrors.depositAddress = 'Please provide a valid address'
-    }
-    if (formData.transactionHash && !validateTxHash(formData.transactionHash)) {
-      newErrors.transactionHash = 'Please provide a valid transaction hash'
     }
     if (formData.collectionAddress && !validateCryptoAddress(formData.collectionAddress)) {
       newErrors.collectionAddress = 'Please provide a valid address'
@@ -104,28 +113,75 @@ export default function CryptoDepositForm({ templateId }: { templateId: string }
       setErrors((prev) => ({ ...prev, [field]: undefined }))
     }
   }
+  const handleResultStatus = (status: string) => {
+    status = status.toLocaleUpperCase()
+    if (['PENDING', 'SUBMITTED'].includes(status)) {
+      setResultType('PENDING')
+    } else if (status === 'REFUSED') {
+      setResultType('REJECT')
+    } else if (status === 'ADOPT') {
+      setResultType('ADOPT')
+    }
+  }
 
   const handleSubmit = async () => {
     if (!validateForm()) return
     setLoading(true)
 
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
-        data: Object.assign({}, formData)
+        data: Object.assign({ type: 'deposit' }, formData)
       })
-      message.success('Submit Success')
       resetForm()
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message)
-      } else {
-        message.error('An unknown error occurred')
+
+      const resultData = res.data as unknown as {
+        status: ResultType
       }
+
+      handleResultStatus(resultData.status)
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to submit!').then(() => {
+        setLoading(false)
+      })
     }
     setLoading(false)
   }
+
+  const onSubmitAgain = () => {
+    resetForm()
+    setResultType(null)
+  }
+
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id)
+
+      if (lastSubmission) {
+        handleResultStatus(lastSubmission.status)
+      }
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to get task detail!').then(() => {
+        setPageLoading(false)
+      })
+    } finally {
+      setPageLoading(false)
+    }
+  }, [taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   return (
     <AuthChecker>
@@ -142,107 +198,132 @@ export default function CryptoDepositForm({ templateId }: { templateId: string }
             Deposit Submission
             <span></span>
           </h1>
-          <div className="mt-[34px] space-y-[22px] md:mt-[72px] md:space-y-[30px]">
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Exchange Name<span className="text-red-400">*</span>
-              </h3>
-              <Select
-                isMobile={isMobile}
-                options={EXCHANGE_OPTIONS}
-                placeholder="Select Exchange"
-                value={formData.exchange || undefined}
-                onChange={(value) => handleFormChange('exchange', value)}
+
+          {resultType ? (
+            <Result type={resultType} onSubmitAgain={onSubmitAgain} />
+          ) : (
+            <>
+              <div className="mt-[34px] space-y-[22px] md:mt-[72px] md:space-y-[30px]">
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Exchange Name<span className="text-red-400">*</span>
+                  </h3>
+                  <Select
+                    isMobile={isMobile}
+                    options={EXCHANGE_OPTIONS}
+                    placeholder="Select Exchange"
+                    value={formData.exchange || undefined}
+                    onChange={(value) => handleFormChange('exchange', value)}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.exchange}</p>
+                </div>
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Blockchain<span className="text-red-400">*</span>
+                  </h3>
+                  <Select
+                    options={BLOCKCHAIN_OPTIONS}
+                    placeholder="Select Blockchain"
+                    value={formData.blockchain || undefined}
+                    onChange={(value) => handleFormChange('blockchain', value)}
+                    isMobile={isMobile}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.blockchain}</p>
+                </div>
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Currency<span className="text-red-400">*</span>
+                  </h3>
+                  <Select
+                    isMobile={isMobile}
+                    options={CURRENCY_OPTIONS}
+                    placeholder="Select Currency"
+                    value={formData.currency || undefined}
+                    onChange={(value) => handleFormChange('currency', value)}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.currency}</p>
+                </div>
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Deposit Address <span className="text-red-400">*</span>
+                  </h3>
+                  <Input
+                    isMobile={isMobile}
+                    placeholder="Enter deposit address"
+                    value={formData.depositAddress}
+                    maxLength={255}
+                    onChange={(value) => handleFormChange('depositAddress', value)}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.depositAddress}</p>
+                </div>
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Transaction Hash <span className="text-red-400">*</span>
+                  </h3>
+                  <Input
+                    isMobile={isMobile}
+                    placeholder="Provide transaction hash for verification"
+                    maxLength={255}
+                    value={formData.transactionHash}
+                    onChange={(value) => handleFormChange('transactionHash', value)}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>
+                    {errors.transactionHash}
+                  </p>
+                </div>
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Collection Address
+                  </h3>
+                  <Input
+                    isMobile={isMobile}
+                    placeholder="Optional: Address where funds were transferred from deposit address"
+                    value={formData.collectionAddress}
+                    maxLength={255}
+                    onChange={(value) => handleFormChange('collectionAddress', value)}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>
+                    {errors.collectionAddress}
+                  </p>
+                </div>
+                <div>
+                  <h3
+                    className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}
+                  >
+                    Deposit Address Screenshot<span className="text-red-400">*</span>
+                  </h3>
+                  <Upload
+                    value={formData.images}
+                    onChange={(images) => handleFormChange('images', images)}
+                    isMobile={isMobile}
+                  />
+                  <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.images}</p>
+                </div>
+              </div>
+              <Button
+                text="Submit Deposit"
+                onClick={handleSubmit}
+                className={cn(
+                  'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white md:mx-auto md:w-[240px] md:text-sm md:font-normal',
+                  !canSubmit ? 'cursor-not-allowed opacity-25' : 'cursor-pointer opacity-100'
+                )}
+                disabled={!canSubmit}
+                loading={loading}
               />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.exchange}</p>
-            </div>
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Blockchain<span className="text-red-400">*</span>
-              </h3>
-              <Select
-                options={BLOCKCHAIN_OPTIONS}
-                placeholder="Select Blockchain"
-                value={formData.blockchain || undefined}
-                onChange={(value) => handleFormChange('blockchain', value)}
-                isMobile={isMobile}
-              />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.blockchain}</p>
-            </div>
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Currency<span className="text-red-400">*</span>
-              </h3>
-              <Select
-                isMobile={isMobile}
-                options={CURRENCY_OPTIONS}
-                placeholder="Select Currency"
-                value={formData.currency || undefined}
-                onChange={(value) => handleFormChange('currency', value)}
-              />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.currency}</p>
-            </div>
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Deposit Address <span className="text-red-400">*</span>
-              </h3>
-              <Input
-                isMobile={isMobile}
-                placeholder="Enter deposit address"
-                value={formData.depositAddress}
-                maxLength={255}
-                onChange={(value) => handleFormChange('depositAddress', value)}
-              />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.depositAddress}</p>
-            </div>
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Transaction Hash
-              </h3>
-              <Input
-                isMobile={isMobile}
-                placeholder="Optional: Provide transaction hash for verification"
-                maxLength={255}
-                value={formData.transactionHash}
-                onChange={(value) => handleFormChange('transactionHash', value)}
-              />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.transactionHash}</p>
-            </div>
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Collection Address
-              </h3>
-              <Input
-                isMobile={isMobile}
-                placeholder="Optional: Address where funds were transferred from deposit address"
-                value={formData.collectionAddress}
-                maxLength={255}
-                onChange={(value) => handleFormChange('collectionAddress', value)}
-              />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.collectionAddress}</p>
-            </div>
-            <div>
-              <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-                Deposit Address Screenshot<span className="text-red-400">*</span>
-              </h3>
-              <Upload
-                value={formData.images}
-                onChange={(images) => handleFormChange('images', images)}
-                isMobile={isMobile}
-              />
-              <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.images}</p>
-            </div>
-          </div>
-          <Button
-            text="Submit Deposit"
-            onClick={handleSubmit}
-            className={cn(
-              'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white md:mx-auto md:w-[240px] md:text-sm md:font-normal',
-              !canSubmit ? 'cursor-not-allowed opacity-25' : 'cursor-pointer opacity-100'
-            )}
-            disabled={!canSubmit}
-            loading={loading}
-          />
+            </>
+          )}
         </div>
       </Spin>
     </AuthChecker>
