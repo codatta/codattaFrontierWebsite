@@ -37,8 +37,8 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
   }, [value])
 
   const processFile = async (file: File) => {
-    if (file.size > 20 * 1024 * 1024) {
-      message.error('Image size must be less than 20MB')
+    if (file.size > 10 * 1024 * 1024) {
+      message.error('Image size must be less than 10MB')
       return
     }
     if (!file.type.startsWith('image/')) {
@@ -83,6 +83,9 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
 
   const removeImage = () => {
     onChange([])
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
   }
 
   const createImagePreview = (file: File): string => {
@@ -95,7 +98,13 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
   return (
     <div className="space-y-3">
       <Spin spinning={uploading}>
-        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/gif,image/webp"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
 
         {value.length === 0 ? (
           isMobile ? (
@@ -118,7 +127,7 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               className={cn(
-                'flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-[#FFFFFF1F] py-9 text-center text-[#606067] transition-colors hover:border-dashed hover:border-white',
+                'flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-[#FFFFFF1F] py-9 text-center text-[#606067] transition-colors hover:border-dashed hover:border-[#875DFF]',
                 error && 'border-red-500'
               )}
             >

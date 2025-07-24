@@ -81,7 +81,7 @@ const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder
   return (
     <AntdSelect
       className={cn(
-        `h-[48px] w-full rounded-lg border border-[#FFFFFF1F] leading-[46px] text-white [&>.ant-select-arrow>.rv-icon]:!text-[#606067] [&>.ant-select-arrow]:text-lg`,
+        `h-[48px] w-full rounded-lg leading-[46px] text-white [&>.ant-select-arrow>.rv-icon]:!text-[#606067] [&>.ant-select-arrow]:text-lg`,
         className
       )}
       options={options}

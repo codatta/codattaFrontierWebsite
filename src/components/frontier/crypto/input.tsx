@@ -10,10 +10,11 @@ interface InputProps {
   placeholder?: string
   className?: string
   isMobile: boolean
+  maxLength?: number
 }
 
 // Mobile Input Component using react-vant
-const MobileInput: React.FC<InputProps> = ({ value, onChange, placeholder, className }) => {
+const MobileInput: React.FC<InputProps> = ({ value, onChange, placeholder, className, maxLength }) => {
   const onHandleChange = (str: string) => {
     const val = str.trim()
 
@@ -25,6 +26,7 @@ const MobileInput: React.FC<InputProps> = ({ value, onChange, placeholder, class
       value={value}
       onChange={onHandleChange}
       placeholder={placeholder}
+      maxLength={maxLength}
       className={cn(
         'w-full rounded-[10px] bg-[#252532] px-4 py-3 text-base text-white [&>input]:text-white [&>input]:placeholder:text-[#77777D]',
         className
@@ -34,7 +36,7 @@ const MobileInput: React.FC<InputProps> = ({ value, onChange, placeholder, class
 }
 
 // PC Input Component using antd
-const PCInput: React.FC<InputProps> = ({ value, onChange, placeholder, className }) => {
+const PCInput: React.FC<InputProps> = ({ value, onChange, placeholder, className, maxLength }) => {
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value.trim()
     console.log('onHandleChange', val)
@@ -46,6 +48,7 @@ const PCInput: React.FC<InputProps> = ({ value, onChange, placeholder, className
       value={value}
       onChange={onHandleChange}
       placeholder={placeholder}
+      maxLength={maxLength}
       className={cn('!w-full !rounded-lg !bg-none !px-4 !py-3 !text-white placeholder:!text-[#606067]', className)}
     />
   )
