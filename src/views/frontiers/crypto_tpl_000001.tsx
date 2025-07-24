@@ -105,7 +105,11 @@ export default function CryptoForm({ templateId }: { templateId: string }) {
               <h3 className={cn('mb-2 text-sm text-[#BBBBBE]', isMobile ? 'px-4' : 'px-0')}>
                 Upload Screenshot<span className="text-red-400">*</span>
               </h3>
-              <PCUpload value={formData.file} onChange={(fileList) => handleFormChange('file', fileList)} />
+              <PCUpload
+                value={formData.file}
+                onChange={(fileList) => handleFormChange('file', fileList)}
+                isMobile={isMobile}
+              />
             </div>
           </div>
         </div>

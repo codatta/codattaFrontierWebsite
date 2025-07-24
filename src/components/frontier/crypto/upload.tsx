@@ -88,41 +88,42 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
   const createImagePreview = (file: File): string => {
     return URL.createObjectURL(file)
   }
+  const handleClick = () => {
+    fileInputRef.current?.click()
+  }
 
   return (
     <div className="space-y-3">
       <Spin spinning={uploading}>
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+
         {value.length === 0 ? (
           isMobile ? (
-            <div className={cn('flex items-center gap-4 rounded-xl bg-[#252532] px-4 py-3', className)}>
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
+            <div className={cn('flex items-center gap-4 rounded-xl bg-[#252532] p-3', className)} onClick={handleClick}>
+              <div
                 className={cn(
-                  'flex size-24 items-center justify-center rounded-lg bg-white/10 transition-colors hover:bg-white/15',
+                  'flex size-[100px] shrink-0 items-center justify-center rounded-lg bg-[#3A3A4A] transition-colors hover:bg-[#4a4a5a]',
                   error && 'border border-red-500'
                 )}
               >
-                <Plus className="size-8" />
-              </button>
-              <div className="flex-1 text-sm leading-relaxed text-white/50">
+                <Plus className="size-6" />
+              </div>
+              <div className="flex-1 text-sm leading-relaxed text-[#868686]">
                 {description || 'Click to upload screenshot'}
               </div>
             </div>
           ) : (
             <div
-              onClick={() => fileInputRef.current?.click()}
+              onClick={handleClick}
               onDrop={handleDrop}
               onDragOver={handleDragOver}
               className={cn(
-                'flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-white/20 bg-white/5 p-8 text-center transition-colors hover:border-dashed hover:bg-white/10',
+                'flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-[#FFFFFF1F] py-9 text-center text-[#606067] transition-colors hover:border-dashed hover:border-white',
                 error && 'border-red-500'
               )}
             >
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-              <Plus className="mb-4 size-8 text-white/50" />
-              <p className="text-sm text-white/50">{description || 'Click to upload screenshot or drag and drop'}</p>
+              <Plus className="mb-3 size-6" />
+              <p className="text-sm">{description || 'Click to upload screenshot or drag and drop'}</p>
             </div>
           )
         ) : (

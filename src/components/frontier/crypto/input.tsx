@@ -46,10 +46,7 @@ const PCInput: React.FC<InputProps> = ({ value, onChange, placeholder, className
       value={value}
       onChange={onHandleChange}
       placeholder={placeholder}
-      className={cn(
-        '!w-full !rounded-lg !border !border-[#FFFFFF1F] !bg-[#3a3a4a] !px-4 !py-3 !text-white placeholder:!text-[#888888]',
-        className
-      )}
+      className={cn('!w-full !rounded-lg !bg-none !px-4 !py-3 !text-white placeholder:!text-[#606067]', className)}
     />
   )
 }
