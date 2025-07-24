@@ -1,15 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react'
-import { Picker, Popup } from 'react-vant'
+import React from 'react'
+// import { Picker, Popup } from 'react-vant'
 import { ArrowDown } from '@react-vant/icons'
 import { Select as AntdSelect } from 'antd'
-
-import { useIsMobile } from '@/hooks/use-is-mobile'
 import { cn } from '@udecode/cn'
 
-export interface SelectOption {
-  text: string
-  value: string | number
-}
+import MobileSelect, { SelectOption } from '@/components/mobile-ui/select'
 
 interface SelectProps {
   options: SelectOption[]
@@ -20,57 +15,61 @@ interface SelectProps {
 }
 
 // Mobile Select Component using react-vant
-const MobileSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder = 'Select', className }) => {
-  const [visible, setVisible] = useState(false)
-  const [selectedText, setSelectedText] = useState('')
-  const [selectedValue, setSelectedValue] = useState(value)
+// const MobileSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder = 'Select', className }) => {
+//   const [visible, setVisible] = useState(false)
+//   const [selectedText, setSelectedText] = useState('')
+//   const [selectedValue, setSelectedValue] = useState(value)
 
-  const selectedOption = useMemo(() => options.find((option) => option.value === value), [options, value])
+//   const selectedOption = useMemo(() => options.find((option) => option.value === value), [options, value])
 
-  const handleConfirm = (val: string | number) => {
-    console.log(handleConfirm, val)
-    onChange?.(val)
-    setVisible(false)
-  }
+//   const handleConfirm = (val: string | number) => {
+//     console.log(handleConfirm, val)
+//     onChange?.(val)
+//     setVisible(false)
+//   }
 
-  const handleCancel = () => {
-    setVisible(false)
-    setSelectedValue(value)
-  }
+//   const handleCancel = () => {
+//     setVisible(false)
+//     setSelectedValue(value)
+//   }
 
-  const handleValueChange = (val: string | number) => {
-    console.log(handleValueChange, val)
-    setSelectedValue(val)
-  }
+//   const handleValueChange = (val: string | number) => {
+//     console.log(handleValueChange, val)
+//     setSelectedValue(val)
+//   }
 
-  useEffect(() => {
-    console.log(value)
-    setSelectedText(options.find((option) => option.value === value)?.text || '')
-    setSelectedValue(value)
-  }, [value, options])
+//   useEffect(() => {
+//     console.log(value)
+//     setSelectedText(options.find((option) => option.value === value)?.text || '')
+//     setSelectedValue(value)
+//   }, [value, options])
 
-  return (
-    <>
-      <div
-        className={`flex cursor-pointer select-none items-center justify-between rounded-lg bg-[#3a3a4a] px-4 py-3 text-white transition-colors duration-300 hover:bg-[#4a4a5a] ${className || ''}`}
-        onClick={() => setVisible(true)}
-      >
-        <span className={selectedOption ? 'text-white' : 'text-[#888]'}>{selectedText || placeholder}</span>
-        <ArrowDown />
-      </div>
-      <Popup visible={visible} round position="bottom" onClose={handleCancel}>
-        <Picker
-          title={placeholder}
-          columns={options}
-          value={selectedValue?.toString()}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
-          onChange={handleValueChange}
-        />
-      </Popup>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <div
+//         className={cn(
+//           'flex cursor-pointer select-none items-center justify-between rounded-[10px] bg-[#252532] px-4 py-3 text-base text-white transition-colors duration-300 hover:bg-[#4a4a5a]',
+//           className
+//         )}
+//         onClick={() => setVisible(true)}
+//       >
+//         <span className={selectedOption ? 'text-white' : 'text-[#77777D]'}>{selectedText || placeholder}</span>
+//         <ArrowDown />
+//       </div>
+//       <Popup visible={visible} round position="top" onClose={handleCancel}>
+//         <Picker
+//           title={placeholder}
+//           columns={options}
+//           value={selectedValue?.toString()}
+//           onConfirm={handleConfirm}
+//           onCancel={handleCancel}
+//           onChange={handleValueChange}
+//           className="text-base"
+//         />
+//       </Popup>
+//     </>
+//   )
+// }
 
 // PC Select Component using antd
 const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder, className }) => {
@@ -82,10 +81,10 @@ const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder
   return (
     <AntdSelect
       className={cn(
-        `h-[48px] w-full rounded-lg border border-[#FFFFFF1F] bg-[#3a3a4a] leading-[46px] text-white [&>.ant-select-arrow>.rv-icon]:!text-[#606067] [&>.ant-select-arrow]:text-lg`,
+        `h-[48px] w-full rounded-lg border border-[#FFFFFF1F] bg-[#252532] leading-[46px] text-white [&>.ant-select-arrow>.rv-icon]:!text-[#606067] [&>.ant-select-arrow]:text-lg`,
         className
       )}
-      options={options.map((opt) => ({ label: opt.text, value: opt.value }))}
+      options={options}
       value={value}
       onChange={onHandleChange}
       placeholder={placeholder}
@@ -95,10 +94,8 @@ const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder
 }
 
 // Responsive Select Component
-const ResponsiveSelect: React.FC<SelectProps> = (props) => {
-  const isMobile = useIsMobile()
-
-  return isMobile ? <MobileSelect {...props} /> : <PCSelect {...props} />
+const ResponsiveSelect: React.FC<SelectProps & { isMobile: boolean }> = (props) => {
+  return props.isMobile ? <MobileSelect {...props} className="[&>div]:bg-[#252532]" /> : <PCSelect {...props} />
 }
 
 export default ResponsiveSelect

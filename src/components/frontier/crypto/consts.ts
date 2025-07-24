@@ -1,40 +1,40 @@
-import { type SelectOption } from './select'
+import { type SelectOption } from '@/components/mobile-ui/select'
 
 export const EXCHANGE_OPTIONS: SelectOption[] = [
-  { value: 'binance', text: 'Binance' },
-  { value: 'coinbase', text: 'Coinbase' },
-  { value: 'kraken', text: 'Kraken' },
-  { value: 'okx', text: 'OKX' },
-  { value: 'bybit', text: 'Bybit' },
-  { value: 'kucoin', text: 'KuCoin' },
-  { value: 'gate.io', text: 'Gate.io' },
-  { value: 'huobi', text: 'Huobi' }
+  { value: 'binance', label: 'Binance' },
+  { value: 'coinbase', label: 'Coinbase' },
+  { value: 'kraken', label: 'Kraken' },
+  { value: 'okx', label: 'OKX' },
+  { value: 'bybit', label: 'Bybit' },
+  { value: 'kucoin', label: 'KuCoin' },
+  { value: 'gate.io', label: 'Gate.io' },
+  { value: 'huobi', label: 'Huobi' }
 ]
 
 export type Exchange = (typeof EXCHANGE_OPTIONS)[number]['value']
 
 export const BLOCKCHAIN_OPTIONS: SelectOption[] = [
-  { value: 'ethereum', text: 'Ethereum' },
-  { value: 'bitcoin', text: 'Bitcoin' },
-  { value: 'solana', text: 'Solana' },
-  { value: 'polygon', text: 'Polygon' },
-  { value: 'bsc', text: 'BSC' },
-  { value: 'arbitrum', text: 'Arbitrum' },
-  { value: 'optimism', text: 'Optimism' },
-  { value: 'avalanche', text: 'Avalanche' }
+  { value: 'ethereum', label: 'Ethereum' },
+  { value: 'bitcoin', label: 'Bitcoin' },
+  { value: 'solana', label: 'Solana' },
+  { value: 'polygon', label: 'Polygon' },
+  { value: 'bsc', label: 'BSC' },
+  { value: 'arbitrum', label: 'Arbitrum' },
+  { value: 'optimism', label: 'Optimism' },
+  { value: 'avalanche', label: 'Avalanche' }
 ]
 
 export type Blockchain = (typeof BLOCKCHAIN_OPTIONS)[number]['value']
 
 export const CURRENCY_OPTIONS: SelectOption[] = [
-  { value: 'eth', text: 'ETH' },
-  { value: 'btc', text: 'BTC' },
-  { value: 'sol', text: 'SOL' },
-  { value: 'usdt', text: 'USDT' },
-  { value: 'usdc', text: 'USDC' },
-  { value: 'matic', text: 'MATIC' },
-  { value: 'bnb', text: 'BNB' },
-  { value: 'ada', text: 'ADA' }
+  { value: 'eth', label: 'ETH' },
+  { value: 'btc', label: 'BTC' },
+  { value: 'sol', label: 'SOL' },
+  { value: 'usdt', label: 'USDT' },
+  { value: 'usdc', label: 'USDC' },
+  { value: 'matic', label: 'MATIC' },
+  { value: 'bnb', label: 'BNB' },
+  { value: 'ada', label: 'ADA' }
 ]
 
 export type Currency = (typeof CURRENCY_OPTIONS)[number]['value']
