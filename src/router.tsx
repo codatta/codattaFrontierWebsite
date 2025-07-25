@@ -241,19 +241,19 @@ export default function Router() {
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
         />
         <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_BNB/:taskId"
-          element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW_BNB" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_BNB/:taskId"
-          element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT_BNB" />}
-        />
-        <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
         />
         <Route
           path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId"
+          element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId/:questId"
+          element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId/:questId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
         />
 

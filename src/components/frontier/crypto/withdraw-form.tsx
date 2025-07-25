@@ -22,8 +22,10 @@ interface WithdrawFormData {
 export default function WithdrawForm({
   isMobile,
   resultType,
+  isBnb,
   onSubmit
 }: {
+  isBnb?: boolean
   isMobile: boolean
   resultType?: 'ADOPT' | 'PENDING' | 'REJECT' | null
   onSubmit: (data: WithdrawFormData) => Promise<boolean>
@@ -155,7 +157,7 @@ export default function WithdrawForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Transaction Hash <span className="text-red-400">*</span>
+            Transaction Hash<span className="text-red-400">*</span>
           </h3>
           <Input
             isMobile={isMobile}
@@ -168,7 +170,7 @@ export default function WithdrawForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Source Address <span className="text-red-400">*</span>
+            Source Address<span className="text-red-400">*</span>
           </h3>
           <Input
             isMobile={isMobile}
@@ -193,7 +195,7 @@ export default function WithdrawForm({
         </div>
       </div>
       <Button
-        text={`Submit Withdraw`}
+        text={`Submit Withdraw${isBnb ? ' Data' : ''}`}
         onClick={handleSubmit}
         className={cn(
           'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white md:mx-auto md:w-[240px] md:text-sm md:font-normal',

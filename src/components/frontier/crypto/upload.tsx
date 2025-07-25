@@ -132,7 +132,7 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
               )}
             >
               <Plus className="mb-3 size-6" />
-              <p className="text-sm">{description || 'Click to upload screenshot or drag and drop'}</p>
+              <p className="text-sm">{description || 'Click to upload screenshot'}</p>
             </div>
           )
         ) : (

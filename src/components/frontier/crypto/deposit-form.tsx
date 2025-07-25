@@ -14,8 +14,10 @@ import { validateCryptoAddress, validateTxHash } from '@/components/frontier/cry
 export default function DepositForm({
   isMobile,
   resultType,
+  isBnb,
   onSubmit
 }: {
+  isBnb?: boolean
   isMobile: boolean
   resultType?: 'ADOPT' | 'PENDING' | 'REJECT' | null
   onSubmit: (data: DepositFormData) => Promise<boolean>
@@ -149,7 +151,7 @@ export default function DepositForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Deposit Address <span className="text-red-400">*</span>
+            Deposit Address<span className="text-red-400">*</span>
           </h3>
           <Input
             isMobile={isMobile}
@@ -162,7 +164,7 @@ export default function DepositForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Transaction Hash <span className="text-red-400">*</span>
+            Transaction Hash<span className="text-red-400">*</span>
           </h3>
           <Input
             isMobile={isMobile}
@@ -175,7 +177,7 @@ export default function DepositForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Collection Address
+            Exchange Hot Wallet Address
           </h3>
           <Input
             isMobile={isMobile}
@@ -199,7 +201,7 @@ export default function DepositForm({
         </div>
       </div>
       <Button
-        text="Submit Deposit"
+        text={`Submit Deposit${isBnb ? ' Data' : ''}`}
         onClick={handleSubmit}
         className={cn(
           'mt-4 w-full rounded-full bg-primary px-4 leading-[44px] text-white md:mx-auto md:w-[240px] md:text-sm md:font-normal',

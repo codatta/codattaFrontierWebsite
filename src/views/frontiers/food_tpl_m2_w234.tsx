@@ -15,7 +15,6 @@ import { FoodFormData, ModelInfo, ResultType, SelectOption } from '@/components/
 
 import boosterApi from '@/apis/booster.api'
 import { useParams } from 'react-router-dom'
-// import { w234_mock_model_info } from '@/components/frontier/food_tpl_m2/mock'
 import frontiterApi from '@/apis/frontiter.api'
 
 type Result = [{ model_name: string; model_type: string }, { model_name: string; model_type: string }]
@@ -259,7 +258,9 @@ function Form({
 
   return (
     <div className="px-6 text-sm text-[#BBBBBE]">
-      <h3 className="mb-2 mt-1 pl-4 font-normal">Images*</h3>
+      <h3 className="mb-2 mt-1 pl-4 font-normal">
+        Images<span className="text-red-400">*</span>
+      </h3>
       <div className={cn('mb-[22px] overflow-hidden rounded-xl', data?.imgUrl ? '' : 'h-[200px] bg-[#252532]')}>
         <img src={data?.imgUrl || ''} alt="" className="h-auto w-full" />
       </div>
@@ -327,7 +328,10 @@ function FormSection({
 
   return (
     <div className="mb-[22px]">
-      <h3 className="mb-2 mt-1 pl-4 font-normal">{title}</h3>
+      <h3 className="mb-2 mt-1 pl-4 font-normal">
+        {title}
+        <span className="text-red-400">*</span>
+      </h3>
       <div className="space-y-3 text-base text-white">
         <div
           className={cn(

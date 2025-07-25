@@ -20,10 +20,10 @@ async function getLastSubmission(frontierId: string) {
 }
 
 export default function CryptoTpl000001({ templateId }: { templateId: string }) {
-  const { taskId } = useParams()
+  const { taskId, questId } = useParams()
   const isMobile = useIsMobile()
   const isWithdraw = templateId.toLocaleUpperCase().includes('WITHDRAW')
-  const isBnb = templateId.toLocaleUpperCase().includes('BNB')
+  const isBnb = questId?.toLocaleUpperCase().includes('TASK')
 
   const [rewardPoints, setRewardPoints] = useState(0)
   const [pageLoading, setPageLoading] = useState(false)
@@ -40,12 +40,19 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
     }
   }
 
+  useEffect(() => {
+    console.log('questId', questId)
+  }, [questId])
+
   const onSubmit = async (formData: WithdrawFormData | DepositFormData): Promise<boolean> => {
     try {
       const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
-        data: Object.assign({ type: 'withdraw' }, formData)
+        data: Object.assign(
+          { type: isWithdraw ? 'withdraw' : 'deposit', source: isBnb ? 'binance' : 'codatta' },
+          formData
+        )
       })
 
       const resultData = res.data as unknown as {
@@ -120,7 +127,8 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
             ) : (
               <span></span>
             )}
-            {isWithdraw ? 'Withdraw' : 'Deposit'} Submission
+            Submit {isWithdraw ? 'Withdraw' : 'Deposit'}
+            {isBnb ? ' Data' : ''}
             <span></span>
           </h1>
           {resultType ? (
