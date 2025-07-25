@@ -21,16 +21,16 @@ async function getLastSubmission(frontierId: string) {
 }
 
 export default function CryptoTpl000001({ templateId }: { templateId: string }) {
-  const { taskId, questId } = useParams()
+  const { taskId, questId = '' } = useParams()
   const isMobile = useIsMobile()
   const isWithdraw = templateId.toLocaleUpperCase().includes('WITHDRAW')
-  const isBnb = questId?.toLocaleUpperCase().includes('TASK')
+  const isBnb = questId.toLocaleUpperCase().includes('TASK')
 
   const [rewardPoints, setRewardPoints] = useState(0)
   const [pageLoading, setPageLoading] = useState(false)
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
 
-  const handleResultStatus = (status: string) => {
+  const handleResultStatus = (status: string = '') => {
     status = status.toLocaleUpperCase()
     if (['PENDING', 'SUBMITTED'].includes(status)) {
       setResultType('PENDING')
@@ -61,7 +61,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
       }
 
       message.success('Submitted successfully!').then(() => {
-        handleResultStatus(resultData.status)
+        handleResultStatus(resultData?.status)
       })
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit!')
