@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useParams } from 'react-router-dom'
-import { Spin, message } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Spin, message, Result as AntResult, Button, Modal } from 'antd'
 import { ArrowLeft } from 'lucide-react'
 
 import AuthChecker from '@/components/app/auth-checker'
@@ -104,8 +104,14 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
         setRewardPoints(totalRewards)
       }
     } catch (error) {
-      message.error(error.message ? error.message : 'Failed to get task detail!').then(() => {
-        setPageLoading(false)
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
       })
     } finally {
       setPageLoading(false)
@@ -113,7 +119,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
   }, [taskId, templateId, isBnb])
 
   useEffect(() => {
-    checkTaskStatus()
+    // checkTaskStatus()
   }, [checkTaskStatus])
 
   return (
@@ -144,7 +150,6 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
             <DepositForm isMobile={isMobile} resultType={resultType} onSubmit={onSubmit} />
           )}
         </div>
-        {/* <PageError error={'error'} /> */}
       </Spin>
     </AuthChecker>
   )

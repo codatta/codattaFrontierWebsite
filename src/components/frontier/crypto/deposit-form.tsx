@@ -30,7 +30,7 @@ export default function DepositForm({
     blockchain: '' as Blockchain,
     currency: '' as Currency,
     transactionHash: '',
-    collectionAddress: '',
+    fromHistoryHash: '',
     depositAddress: '',
     images: []
   })
@@ -41,6 +41,7 @@ export default function DepositForm({
       !!formData.blockchain &&
       !!formData.currency &&
       !!formData.depositAddress &&
+      !!formData.fromHistoryHash &&
       formData.images?.length > 0
     )
   }, [errors, formData])
@@ -66,8 +67,8 @@ export default function DepositForm({
     if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
       newErrors.depositAddress = 'Please provide a valid address'
     }
-    if (formData.collectionAddress && !validateCryptoAddress(formData.collectionAddress)) {
-      newErrors.collectionAddress = 'Please provide a valid address'
+    if (!formData.fromHistoryHash || !validateTxHash(formData.fromHistoryHash)) {
+      newErrors.fromHistoryHash = 'Please provide a valid transaction hash'
     }
 
     setErrors(newErrors)
@@ -80,7 +81,7 @@ export default function DepositForm({
       blockchain: '' as Blockchain,
       currency: '' as Currency,
       transactionHash: '',
-      collectionAddress: '',
+      fromHistoryHash: '',
       depositAddress: ''
     })
   }
@@ -175,7 +176,7 @@ export default function DepositForm({
           />
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.transactionHash}</p>
         </div>
-        <div>
+        {/* <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
             Exchange Hot Wallet Address
           </h3>
@@ -187,6 +188,19 @@ export default function DepositForm({
             onChange={(value) => handleFormChange('collectionAddress', value)}
           />
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.collectionAddress}</p>
+        </div> */}
+        <div>
+          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+            From History Hash<span className="text-red-400">*</span>
+          </h3>
+          <Input
+            isMobile={isMobile}
+            placeholder="Provide transaction hash for verification"
+            value={formData.fromHistoryHash}
+            maxLength={255}
+            onChange={(value) => handleFormChange('fromHistoryHash', value)}
+          />
+          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.fromHistoryHash}</p>
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
