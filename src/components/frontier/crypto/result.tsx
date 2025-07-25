@@ -26,7 +26,7 @@ interface ResultMap {
 const mobileResultMap: Record<ResultType, ResultMap> = {
   ADOPT: {
     Icon: ApprovedIcon,
-    title: <div>Submission Successful!</div>,
+    title: <div>🎉 Submission Approved!</div>,
     description: (
       <>
         Your data has been successfully verified and added to our platform. Thank you for contributing to the Codatta
@@ -59,7 +59,7 @@ const mobileResultMap: Record<ResultType, ResultMap> = {
 const desktopResultMap: Record<ResultType, ResultMap> = {
   ADOPT: {
     Icon: ApprovedIconPc,
-    title: <div>Submission successful</div>,
+    title: <div>Submission Approved</div>,
     description: (
       <>
         Your data has been successfully verified and added to our platform. Thank you for contributing to the Codatta
