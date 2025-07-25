@@ -15,8 +15,8 @@ export type DepositFormData = {
   exchange: Exchange
   blockchain: Blockchain
   currency: Currency
-  transactionHash?: string
-  fromHistoryHash?: string
+  transactionHash: string
+  depositAddressTransactionHash?: string
   depositAddress: string
   images: { url: string; hash: string }[]
 }

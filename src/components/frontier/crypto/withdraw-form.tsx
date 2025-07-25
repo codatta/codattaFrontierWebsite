@@ -161,7 +161,7 @@ export default function WithdrawForm({
           </h3>
           <Input
             isMobile={isMobile}
-            placeholder="Address where funds were transferred from deposit address for verification"
+            placeholder="Provide Transaction Hash for verification"
             value={formData.transactionHash}
             maxLength={255}
             onChange={(value) => handleFormChange('transactionHash', value)}
@@ -174,7 +174,7 @@ export default function WithdrawForm({
           </h3>
           <Input
             isMobile={isMobile}
-            placeholder="Optional: Address where funds were transferred from deposit address "
+            placeholder="Address where funds were transferred from deposit address "
             value={formData.sourceAddress}
             maxLength={255}
             onChange={(value) => handleFormChange('sourceAddress', value)}

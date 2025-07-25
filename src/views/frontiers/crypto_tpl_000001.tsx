@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Spin, message, Result as AntResult, Button, Modal } from 'antd'
+import { useParams } from 'react-router-dom'
+import { Spin, message, Modal } from 'antd'
 import { ArrowLeft } from 'lucide-react'
 
 import AuthChecker from '@/components/app/auth-checker'
