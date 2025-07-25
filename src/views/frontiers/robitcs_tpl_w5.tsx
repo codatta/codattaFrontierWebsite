@@ -126,7 +126,9 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           />
         ) : (
           <main>
-            <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
+            {maxValidateDays > 1 && (
+              <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
+            )}
             <DataPreview imgUrl={data?.imageUrl} onPositionChange={setPosition} isShaking={isShaking} />
             <Form
               taskId={taskId!}

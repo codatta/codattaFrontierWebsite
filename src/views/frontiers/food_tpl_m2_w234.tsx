@@ -174,7 +174,9 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
           />
         ) : (
           <main className="mb-5">
-            <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
+            {maxValidateDays > 1 && (
+              <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
+            )}
             <Form data={data} taskId={taskId!} templateId={templateId} onSubmitted={onSubmitted} />
           </main>
         )}

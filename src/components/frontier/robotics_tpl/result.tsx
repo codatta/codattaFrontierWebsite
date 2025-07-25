@@ -74,14 +74,24 @@ function ApprovedView({ maxValidateDays, validatedDays }: { maxValidateDays: num
       <motion.h2 variants={itemVariants} className="mt-8 text-center text-2xl font-bold">
         Submission approved!
       </motion.h2>
-      <div className="my-6 rounded-full border-white/60">
-        <SubmissionProgress validatedDays={validatedDays} maxValidateDays={maxValidateDays || 0} />
-      </div>
-      <p className="text-center text-base font-bold text-[#22DD61]">Today's submission is completed.</p>
-      <motion.p variants={itemVariants} className="mt-6 text-center text-base text-[#BBBBBE]">
-        Thank you for annotating robotics data! Your contribution helps advance the robotics industry.
-      </motion.p>
-      <PleaseNote className="my-3" />
+      {maxValidateDays > 1 ? (
+        <>
+          <div className="my-6 rounded-full border-white/60">
+            <SubmissionProgress validatedDays={validatedDays} maxValidateDays={maxValidateDays || 0} />
+          </div>
+          <p className="text-center text-base font-bold text-[#22DD61]">Today's submission is completed.</p>
+          <motion.p variants={itemVariants} className="mt-6 text-center text-base text-[#BBBBBE]">
+            Thank you for annotating robotics data! Your contribution helps advance the robotics industry.
+          </motion.p>
+          <PleaseNote className="my-3" />
+        </>
+      ) : (
+        <>
+          <motion.p variants={itemVariants} className="mt-6 text-center text-base text-[#BBBBBE]">
+            Thank you for annotating robotics data! Your contribution helps advance the robotics industry.
+          </motion.p>
+        </>
+      )}
     </motion.div>
   )
 }

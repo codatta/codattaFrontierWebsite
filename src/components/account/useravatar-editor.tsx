@@ -1,4 +1,4 @@
-import { Button, Modal } from 'antd'
+import { Avatar, Button, Modal } from 'antd'
 import { CameraIcon, MinusCircle, PlusCircle } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import AvatarEditor from 'react-avatar-editor'
@@ -72,11 +72,17 @@ export default function UserAvatarEditor() {
     if (avatar && avatar !== info?.user_data?.avatar) {
       userStoreActions.updateUserInfo({ update_key: 'AVATAR', update_value: avatar })
     }
-  }, [avatar, info])
+  }, [avatar, info?.user_data?.avatar])
+
+  useEffect(() => {
+    console.log('avatar', avatar, info?.user_data?.avatar, '-')
+    setAvatar(info?.user_data?.avatar ?? defaultAvatar)
+  }, [info?.user_data?.avatar])
+
   return (
     <>
       <div className="relative size-[108px] cursor-pointer overflow-hidden rounded-full" onClick={handleUploadImage}>
-        <img src={avatar || defaultAvatar} alt="" className="size-full object-contain" />
+        <Avatar className="shrink-0 rounded-full" src={avatar} size={108}></Avatar>
         <TaskTarget match={['target', 'avatar']}>
           <div className="absolute left-0 top-0 flex size-full scale-0 items-center justify-center bg-[#00000099] transition-all group-hover:scale-100">
             <CameraIcon />
