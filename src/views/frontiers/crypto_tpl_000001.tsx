@@ -8,6 +8,7 @@ import Result from '@/components/frontier/crypto/result'
 import WithdrawForm from '@/components/frontier/crypto/withdraw-form'
 import DepositForm from '@/components/frontier/crypto/deposit-form'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
+// import PageError from '@/components/robotics/page-error'
 import { DepositFormData, ResultType, WithdrawFormData } from '@/components/frontier/crypto/types'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
@@ -90,7 +91,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
 
       if (isBnb) {
         const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id)
-        handleResultStatus(lastSubmission.status)
+        handleResultStatus(lastSubmission?.status)
       } else {
         const totalRewards = taskDetail.data.reward_info
           .filter((item) => {
@@ -143,6 +144,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
             <DepositForm isMobile={isMobile} resultType={resultType} onSubmit={onSubmit} />
           )}
         </div>
+        {/* <PageError error={'error'} /> */}
       </Spin>
     </AuthChecker>
   )
