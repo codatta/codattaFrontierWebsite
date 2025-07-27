@@ -36,8 +36,13 @@ const extractDaysFromString = (str?: string): number => {
   return 1
 }
 
-async function getLastSubmission(frontierId: string) {
-  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
   const lastSubmission = res.data[0]
   return lastSubmission
 }
@@ -66,7 +71,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         frontiterApi.getTaskDetail(taskId!)
       ])
 
-      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id)
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
 
       if (lastSubmission) {
         if (['PENDING', 'SUBMITTED'].includes(lastSubmission.status)) {
