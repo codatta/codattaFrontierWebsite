@@ -14,8 +14,13 @@ import { DepositFormData, ResultType, WithdrawFormData } from '@/components/fron
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
 
-async function getLastSubmission(frontierId: string) {
-  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
   const lastSubmission = res.data[0]
   return lastSubmission
 }
@@ -90,7 +95,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
       }
 
       if (isBnb) {
-        const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id)
+        const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
         handleResultStatus(lastSubmission?.status)
       } else {
         const totalRewards = taskDetail.data.reward_info
@@ -119,7 +124,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
   }, [taskId, templateId, isBnb])
 
   useEffect(() => {
-    // checkTaskStatus()
+    checkTaskStatus()
   }, [checkTaskStatus])
 
   return (

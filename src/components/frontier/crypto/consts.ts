@@ -13,7 +13,7 @@ export const EXCHANGE_OPTIONS: SelectOption[] = [
 
 export type Exchange = (typeof EXCHANGE_OPTIONS)[number]['value']
 
-export const BLOCKCHAIN_OPTIONS: SelectOption[] = [
+export const NETWORK_OPTIONS: SelectOption[] = [
   { value: 'ethereum', label: 'Ethereum' },
   { value: 'bitcoin', label: 'Bitcoin' },
   { value: 'solana', label: 'Solana' },
@@ -24,7 +24,7 @@ export const BLOCKCHAIN_OPTIONS: SelectOption[] = [
   { value: 'avalanche', label: 'Avalanche' }
 ]
 
-export type Blockchain = (typeof BLOCKCHAIN_OPTIONS)[number]['value']
+export type Network = (typeof NETWORK_OPTIONS)[number]['value']
 
 export const CURRENCY_OPTIONS: SelectOption[] = [
   { value: 'eth', label: 'ETH' },

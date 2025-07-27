@@ -1,15 +1,19 @@
 import { useEffect, useState, useMemo } from 'react'
 import { cn } from '@udecode/cn'
 
-import { EXCHANGE_OPTIONS, BLOCKCHAIN_OPTIONS, CURRENCY_OPTIONS } from '@/components/frontier/crypto/consts'
-import type { Exchange, Blockchain, Currency } from '@/components/frontier/crypto/consts'
+import { EXCHANGE_OPTIONS, NETWORK_OPTIONS, CURRENCY_OPTIONS } from '@/components/frontier/crypto/consts'
+import type { Exchange, Network, Currency } from '@/components/frontier/crypto/consts'
 import Select from '@/components/frontier/crypto/select'
-import Input from '@/components/frontier/crypto/input'
+// import Input from '@/components/frontier/crypto/input'
 import Upload from '@/components/frontier/crypto/upload'
 import { Button } from '@/components/booster/button'
 import { DepositFormData } from './types'
 
-import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
+// import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
+
+// const depositAddressPlaceholder = `You can get it from blockchain explorer. If no tx hash matches the deposit address as the "To Address", please deposit first.`
+// eslint-disable-next-line @markof/no-chinese/no-chinese-comment
+// const depositAddressTransactionHashPlaceholder = `Optional: You can get it from blockchain explorer. If no tx hash matches the deposit address as the “From Address”, please leave it blank.`
 
 export default function DepositForm({
   isMobile,
@@ -27,20 +31,20 @@ export default function DepositForm({
   const [errors, setErrors] = useState<Partial<Record<keyof DepositFormData, string>>>({})
   const [formData, setFormData] = useState<DepositFormData>({
     exchange: '' as Exchange,
-    blockchain: '' as Blockchain,
+    network: '' as Network,
     currency: '' as Currency,
-    transactionHash: '',
-    depositAddressTransactionHash: '',
-    depositAddress: '',
+    // transactionHash: '',
+    // depositAddressTransactionHash: '',
+    // depositAddress: '',
     images: []
   })
   const canSubmit = useMemo(() => {
     return (
       Object.values(errors).every((error) => !error) &&
       !!formData.exchange &&
-      !!formData.blockchain &&
+      !!formData.network &&
       !!formData.currency &&
-      !!formData.depositAddress &&
+      // !!formData.depositAddress &&
       formData.images?.length > 0
     )
   }, [errors, formData])
@@ -54,21 +58,21 @@ export default function DepositForm({
     if (!formData.exchange) {
       newErrors.exchange = 'Exchange is required'
     }
-    if (!formData.blockchain) {
-      newErrors.blockchain = 'Blockchain is required'
+    if (!formData.network) {
+      newErrors.network = 'network is required'
     }
     if (!formData.currency) {
       newErrors.currency = 'Currency is required'
     }
-    if (!formData.transactionHash || !validateTxHash(formData.transactionHash)) {
-      newErrors.transactionHash = 'Please provide a valid transaction hash'
-    }
-    if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
-      newErrors.depositAddress = 'Please provide a valid address'
-    }
-    if (formData.depositAddressTransactionHash && !validateTxHash(formData.depositAddressTransactionHash)) {
-      newErrors.depositAddressTransactionHash = 'Please provide a valid deposit address transaction hash'
-    }
+    // if (!formData.transactionHash || !validateTxHash(formData.transactionHash)) {
+    //   newErrors.transactionHash = 'Please provide a valid transaction hash'
+    // }
+    // if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
+    //   newErrors.depositAddress = 'Please provide a valid address'
+    // }
+    // if (formData.depositAddressTransactionHash && !validateTxHash(formData.depositAddressTransactionHash)) {
+    //   newErrors.depositAddressTransactionHash = 'Please provide a valid deposit address transaction hash'
+    // }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -77,11 +81,11 @@ export default function DepositForm({
     setFormData({
       images: [],
       exchange: '' as Exchange,
-      blockchain: '' as Blockchain,
-      currency: '' as Currency,
-      transactionHash: '',
-      depositAddressTransactionHash: '',
-      depositAddress: ''
+      network: '' as Network,
+      currency: '' as Currency
+      // transactionHash: '',
+      // depositAddressTransactionHash: '',
+      // depositAddress: ''
     })
   }
   const handleFormChange = (field: keyof DepositFormData, value: string | number | { url: string; hash: string }[]) => {
@@ -125,16 +129,16 @@ export default function DepositForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Blockchain<span className="text-red-400">*</span>
+            Network<span className="text-red-400">*</span>
           </h3>
           <Select
-            options={BLOCKCHAIN_OPTIONS}
-            placeholder="Select Blockchain"
-            value={formData.blockchain || undefined}
-            onChange={(value) => handleFormChange('blockchain', value)}
+            options={NETWORK_OPTIONS}
+            placeholder="Select Network"
+            value={formData.network || undefined}
+            onChange={(value) => handleFormChange('network', value)}
             isMobile={isMobile}
           />
-          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.blockchain}</p>
+          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.network}</p>
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
@@ -149,7 +153,7 @@ export default function DepositForm({
           />
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.currency}</p>
         </div>
-        <div>
+        {/* <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
             Deposit Address<span className="text-red-400">*</span>
           </h3>
@@ -164,7 +168,7 @@ export default function DepositForm({
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Transaction Hash<span className="text-red-400">*</span>
+            Transaction Hash with 'To Address'='Deposit Address'<span className="text-red-400">*</span>
           </h3>
           <Input
             isMobile={isMobile}
@@ -173,24 +177,19 @@ export default function DepositForm({
             value={formData.transactionHash}
             onChange={(value) => handleFormChange('transactionHash', value)}
           />
-          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.transactionHash}</p>
+          <p
+            className={cn(
+              'mt-2 text-sm',
+              isMobile ? 'px-4' : 'px-0',
+              errors.transactionHash ? 'text-red-400' : 'text-[#BBBBBE]'
+            )}
+          >
+            {errors.transactionHash ? errors.transactionHash : ``}
+          </p>
         </div>
-        {/* <div>
-          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Exchange Hot Wallet Address
-          </h3>
-          <Input
-            isMobile={isMobile}
-            placeholder="Optional: Address where funds were transferred from deposit address"
-            value={formData.collectionAddress}
-            maxLength={255}
-            onChange={(value) => handleFormChange('collectionAddress', value)}
-          />
-          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.collectionAddress}</p>
-        </div> */}
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Transaction Hash for 'To Address' = 'Deposit Address'
+            Transaction Hash for 'From Address' = 'Deposit Address'
           </h3>
           <Input
             isMobile={isMobile}
@@ -199,18 +198,33 @@ export default function DepositForm({
             maxLength={255}
             onChange={(value) => handleFormChange('depositAddressTransactionHash', value)}
           />
-          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>
-            {errors.depositAddressTransactionHash}
+          <p
+            className={cn(
+              'mt-2 text-sm',
+              isMobile ? 'px-4' : 'px-0',
+              errors.depositAddressTransactionHash ? 'text-red-400' : 'text-[#BBBBBE]'
+            )}
+          >
+            {errors.depositAddressTransactionHash ? errors.depositAddressTransactionHash : ''}
           </p>
-        </div>
+        </div> */}
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Deposit Address Screenshot<span className="text-red-400">*</span>
+            Deposit Address Screenshot From the Exchange<span className="text-red-400">*</span>
           </h3>
           <Upload
             value={formData.images}
             onChange={(images) => handleFormChange('images', images)}
             isMobile={isMobile}
+            description={
+              <div className="text-left text-xs text-[#606067] md:text-center md:text-sm">
+                <p>Click to upload screenshot or drag and drop</p>
+                <p>
+                  Go to the on-chain deposit page in the app and click “Save Image” (not a screenshot). Make sure the
+                  exchange name is visible, or your reward may be affected.
+                </p>
+              </div>
+            }
           />
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.images}</p>
         </div>

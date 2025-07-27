@@ -15,7 +15,7 @@ export interface UploadedImage {
 interface UploadProps {
   value: UploadedImage[]
   error?: string
-  description?: string
+  description?: string | React.ReactNode
   isMobile?: boolean
   className?: string
   onChange: (value: UploadedImage[]) => void

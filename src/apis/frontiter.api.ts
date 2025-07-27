@@ -149,6 +149,7 @@ class frontier {
   async getSubmissionList(
     data: TPagination & {
       frontier_id?: string
+      task_ids?: string
     }
   ): Promise<PaginationResponse<TaskDetail[]>> {
     const res = await this.request.post('/v2/submission/list', data)
