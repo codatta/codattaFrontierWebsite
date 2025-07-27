@@ -123,6 +123,10 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
     }
   }, [taskId, templateId, isBnb])
 
+  const onBack = () => {
+    window.history.back()
+  }
+
   useEffect(() => {
     checkTaskStatus()
   }, [checkTaskStatus])
@@ -133,7 +137,7 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
         <div className="mx-auto min-h-screen max-w-[1272px] px-6 py-3 md:py-8">
           <h1 className="flex items-center justify-between text-center text-base font-bold">
             {!isMobile ? (
-              <div className="flex items-center gap-2 text-sm font-normal text-[white]">
+              <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
                 <ArrowLeft size={18} /> Back
               </div>
             ) : (

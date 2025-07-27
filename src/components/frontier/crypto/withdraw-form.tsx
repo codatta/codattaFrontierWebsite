@@ -169,7 +169,7 @@ export default function WithdrawForm({
               <div className="text-left text-xs text-[#606067] md:text-center md:text-sm">
                 <p>Click to upload screenshot{isBnb ? '' : ' or drag and drop'} </p>
                 <p>
-                  Go to the on-chain deposit page in the app and click “Save Image” (not a screenshot). Make sure the
+                  Go to the on-chain withdraw page in the app and click “Save Image” (not a screenshot). Make sure the
                   exchange name is visible, or your reward may be affected.
                 </p>
               </div>
