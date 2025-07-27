@@ -1,4 +1,5 @@
 import banner5Img from '@/assets/booster/task-5-quiz.png'
+import banner6Img from '@/assets/booster/task-6-quiz.png'
 
 import type { DataItemQuiz, DataITemIntro } from './types'
 
@@ -287,6 +288,41 @@ export const Data: DataItem[] = [
           { des: 'B) Robot navigation and object recognition', right: true },
           { des: 'C) Employee payroll' },
           { des: 'D) Customer support' }
+        ]
+      }
+    ]
+  },
+  {
+    intro: [
+      {
+        title: 'Crypto Data Annotation',
+        banner: banner6Img,
+        des: [
+          {
+            type: 'p',
+            content:
+              'Crypto Data Annotation is designed to enhance the accuracy and quality of blockchain data. By leveraging community contributions, Codatta enables users to annotate crypto transactions, addresses, and other relevant data, helping to improve data labeling for compliance, analysis, and AI models. ​'
+          }
+        ]
+      }
+    ],
+    quiz: [
+      {
+        question: 'What is the main goal of Crypto Data Annotation?',
+        answer: [
+          { des: 'A) To increase the speed of blockchain transactions​' },
+          { des: 'B) To enhance the accuracy and quality of blockchain data​', right: true },
+          { des: 'C) To store blockchain data​' },
+          { des: 'D) To develop new blockchain networks' }
+        ]
+      },
+      {
+        question: 'How does Codatta improve crypto data annotation?',
+        answer: [
+          { des: 'A) By using automated bots​' },
+          { des: 'B) By leveraging community contributions to annotate transactions and addresses​', right: true },
+          { des: 'C) By storing data in centralized databases​' },
+          { des: 'D) By using AI to generate blockchain transactions' }
         ]
       }
     ]
