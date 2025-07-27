@@ -150,9 +150,9 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
               <SubmitSuccessModal points={rewardPoints} open={true} onClose={() => window.history.back()} />
             )
           ) : isWithdraw ? (
-            <WithdrawForm isMobile={isMobile} resultType={resultType} onSubmit={onSubmit} />
+            <WithdrawForm isMobile={isMobile} isBnb={isBnb} resultType={resultType} onSubmit={onSubmit} />
           ) : (
-            <DepositForm isMobile={isMobile} resultType={resultType} onSubmit={onSubmit} />
+            <DepositForm isMobile={isMobile} isBnb={isBnb} resultType={resultType} onSubmit={onSubmit} />
           )}
         </div>
       </Spin>
