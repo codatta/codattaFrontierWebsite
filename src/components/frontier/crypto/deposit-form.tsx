@@ -210,7 +210,7 @@ export default function DepositForm({
         </div> */}
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Deposit Address Screenshot From the Exchange<span className="text-red-400">*</span>
+            Deposit Address Screenshot<span className="text-red-400">*</span>
           </h3>
           <Upload
             value={formData.images}
