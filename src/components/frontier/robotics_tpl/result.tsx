@@ -45,15 +45,21 @@ export default function Result({
   type = 'ADOPT',
   maxValidateDays,
   validatedDays,
+  showProgress,
   onSubmitAgain
 }: {
   type: ResultType
   maxValidateDays?: number
   validatedDays?: number
+  showProgress?: boolean
   onSubmitAgain?: () => void
 }) {
   return type === 'ADOPT' ? (
-    <ApprovedView maxValidateDays={maxValidateDays || 0} validatedDays={validatedDays || 0} />
+    <ApprovedView
+      maxValidateDays={maxValidateDays || 0}
+      validatedDays={validatedDays || 0}
+      showProgress={showProgress}
+    />
   ) : type === 'REJECT' ? (
     <RejectView onSubmitAgain={onSubmitAgain} />
   ) : (
@@ -61,7 +67,15 @@ export default function Result({
   )
 }
 
-function ApprovedView({ maxValidateDays, validatedDays }: { maxValidateDays: number; validatedDays: number }) {
+function ApprovedView({
+  maxValidateDays,
+  validatedDays,
+  showProgress
+}: {
+  maxValidateDays: number
+  validatedDays: number
+  showProgress?: boolean
+}) {
   return (
     // 3. Apply the container variants to a motion.div
     <motion.div className="px-6" initial="hidden" animate="visible" variants={containerVariants}>
@@ -74,7 +88,7 @@ function ApprovedView({ maxValidateDays, validatedDays }: { maxValidateDays: num
       <motion.h2 variants={itemVariants} className="mt-8 text-center text-2xl font-bold">
         Submission approved!
       </motion.h2>
-      {maxValidateDays > 1 ? (
+      {showProgress ? (
         <>
           <div className="my-6 rounded-full border-white/60">
             <SubmissionProgress validatedDays={validatedDays} maxValidateDays={maxValidateDays || 0} />

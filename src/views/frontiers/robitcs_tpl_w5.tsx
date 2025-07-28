@@ -56,6 +56,7 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [data, setData] = useState<Question>()
   const [position, setPosition] = useState('50%,50%')
   const [isShaking, setIsShaking] = useState(false)
+  const isW5 = useMemo(() => templateId?.toLowerCase().includes('w5'), [templateId])
 
   const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) {
@@ -127,11 +128,12 @@ const RoboticsForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             type={resultType}
             maxValidateDays={maxValidateDays}
             validatedDays={validatedDays}
+            showProgress={maxValidateDays > 1 || isW5}
             onSubmitAgain={() => setResultType(null)}
           />
         ) : (
           <main>
-            {maxValidateDays > 1 && (
+            {(maxValidateDays > 1 || isW5) && (
               <SubmissionProgress maxValidateDays={maxValidateDays} validatedDays={validatedDays} />
             )}
             <DataPreview imgUrl={data?.imageUrl} onPositionChange={setPosition} isShaking={isShaking} />

@@ -27,8 +27,13 @@ const extractDaysFromString = (str?: string): number => {
   return 1
 }
 
-async function getLastSubmission(frontierId: string) {
-  const res = await frontiterApi.getSubmissionList({ page_num: 1, page_size: 1, frontier_id: frontierId })
+async function getLastSubmission(frontierId: string, taskId: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskId
+  })
   const lastSubmission = res.data[0]
   return lastSubmission
 }
@@ -59,7 +64,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         frontiterApi.getTaskDetail(taskId!)
       ])
 
-      const lastSubmission = await getLastSubmission(displayData.data.frontier_id)
+      const lastSubmission = await getLastSubmission(displayData.data.frontier_id, taskId!)
 
       if (lastSubmission) {
         if (['PENDING', 'SUBMITTED'].includes(lastSubmission.status)) {
