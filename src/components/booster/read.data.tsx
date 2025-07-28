@@ -4,6 +4,7 @@ import banner1Img from '@/assets/booster/task-1-read-banner.png'
 import banner4Img from '@/assets/booster/task-4-read-banner.png'
 import banner5Img from '@/assets/booster/task-5-read-banner.png'
 import banner51Img from '@/assets/booster/task-5-2-read-banner.png'
+import banner6Img from '@/assets/booster/task-6-read-banner.png'
 
 export type DataItem = {
   intro: DataITemIntro[]
@@ -153,6 +154,57 @@ export const Data: DataItem[] = [
           {
             type: 'p',
             content: `Our royalty-based payment mechanism ensures that as AI grows from using this specialized data, human experts earn long-term rewards.`
+          }
+        ]
+      }
+    ]
+  },
+  {
+    intro: [
+      {
+        title: 'The $XNY Token',
+        des: [
+          {
+            type: 'h4',
+            content: `The utility of the $XNY token includes:`
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Payment Features:</span> Use $XNY for gas fees or as a
+                medium of exchange within the platform.
+              </>
+            )
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Governance:</span> Hold $XNY to gain governance voting
+                power, allowing you to influence platform decisions.
+              </>
+            )
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Reputation Staking: </span> Stake $XNY to boost your
+                reputation score. A higher reputation unlocks more tasks, faster verification, and potentially greater
+                rewards.
+              </>
+            )
+          }
+        ]
+      },
+      {
+        title: 'Tokenomics Distribution',
+        banner: banner6Img,
+        des: [
+          {
+            type: 'ul',
+            content: ['Community 48%', 'Foundation 21.5%', 'Team 18%', 'Investors 12.5%']
           }
         ]
       }

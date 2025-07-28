@@ -144,13 +144,13 @@ function AdoptView({ modelInfo, week }: { modelInfo?: ModelInfo; week: string })
   )
 }
 
-function PendingView({ maxValidateDays, validatedDays }: { maxValidateDays?: number; validatedDays?: number }) {
+function PendingView({ maxValidateDays = 1, validatedDays }: { maxValidateDays?: number; validatedDays?: number }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center justify-center px-6 pt-[40px]">
       <TaskPendingImg className="mb-8 size-[120px]" />
       <div className="mb-6 text-center text-2xl font-bold text-[#FFA800]">Under Review</div>
       <div className="mb-6 w-full">
-        {maxValidateDays && validatedDays && (
+        {maxValidateDays > 1 && validatedDays && (
           <SubmissionProgress maxValidateDays={maxValidateDays || 0} validatedDays={validatedDays || 0} />
         )}
       </div>
@@ -162,7 +162,7 @@ function PendingView({ maxValidateDays, validatedDays }: { maxValidateDays?: num
 }
 
 function RejectView({
-  maxValidateDays,
+  maxValidateDays = 1,
   validatedDays,
   onSubmitAgain
 }: {
@@ -175,7 +175,7 @@ function RejectView({
       <TaskRefusedImg className="mb-8 size-[120px]" />
       <div className="mb-6 text-center text-2xl font-bold text-[#D92B2B]">Audit Failed</div>
       <div className="mb-6 w-full">
-        {maxValidateDays && validatedDays ? (
+        {maxValidateDays > 1 && validatedDays ? (
           <SubmissionProgress maxValidateDays={maxValidateDays || 0} validatedDays={validatedDays || 0} />
         ) : null}
       </div>
@@ -183,7 +183,7 @@ function RejectView({
         Unfortunately, your submission did not pass our audit.Please review the requirement and resubmit.
       </p>
       <button className="block h-[44px] w-full rounded-full bg-white text-black" onClick={onSubmitAgain}>
-        Submit
+        Submit Again
       </button>
     </div>
   )
