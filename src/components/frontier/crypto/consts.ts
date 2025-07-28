@@ -28,7 +28,7 @@ export type Network = (typeof NETWORK_OPTIONS)[number]['value']
 
 export const CURRENCY_OPTIONS: SelectOption[] = [
   { value: 'eth', label: 'ETH' },
-  { value: 'btc', label: 'BTC' },
+  // { value: 'btc', label: 'BTC' },
   // { value: 'sol', label: 'SOL' },
   { value: 'usdt', label: 'USDT' },
   { value: 'usdc', label: 'USDC' },
