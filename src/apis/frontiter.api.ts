@@ -45,6 +45,12 @@ export interface FrontierListItem {
   reputation_permission: number
   status: string
   title: string
+  // start
+  total_asset_amount: number
+  reward_asset_type: string
+  min_ranking_grade: string
+  days_left: number
+  // end
   template_ext?: {
     template_id: string
     gif_resource?: string
