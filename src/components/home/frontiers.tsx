@@ -87,7 +87,7 @@ const Frontiers = () => {
                   <div className="flex items-center text-sm">
                     <DollarCircle />
                     <span>{item.total_asset_amount || 2000}</span>
-                    <span className="mr-3">{item.reward_asset_type || 'XNY'}</span>
+                    <span className="mr-3">{item.reward_asset_type}</span>
                     <Hourglass />
                     <span>{item.days_left || 10}</span>D
                   </div>
