@@ -218,10 +218,10 @@ export default function DepositForm({
             isMobile={isMobile}
             description={
               <div className="text-left text-xs text-[#606067] md:text-center md:text-sm">
-                <p>Click to upload screenshot{isBnb ? '' : ' or drag and drop'}</p>
+                <p>Upload an image of the Deposit Address QR Code from the selected Exchange, Network, and Currency.</p>
                 <p>
-                  Go to the on-chain deposit page in the app and click “Save Image” (not a screenshot). Make sure the
-                  exchange name is visible, or your reward may be affected.
+                  Go to your exchange app (e.g., Binance), enter the deposit page, save the image of the deposit address
+                  with the exchange logo visible. Upload it here.
                 </p>
               </div>
             }
