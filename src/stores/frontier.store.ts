@@ -3,7 +3,7 @@ import frontierApi, {
   TaskDetail,
   SubmissionStatics,
   SubmissionRecord,
-  FrontierActivityListItem,
+  FrontierActivityInfoItem,
   ActiveStatus
 } from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
@@ -12,7 +12,7 @@ import { message } from 'antd'
 
 type FrontierStore = {
   frontierList: FrontierListItem[]
-  frontierActivities: FrontierActivityListItem[]
+  frontierActivities: FrontierActivityInfoItem[]
   pageData: {
     list: TaskDetail[]
     total: number
@@ -144,11 +144,11 @@ async function getFrontierList() {
 }
 
 async function getFrontierActivities(data: { frontier_id: string; status?: ActiveStatus }) {
-  const res = await frontierApi.getFrontierActivities({
+  const res = await frontierApi.getFrontierActivityInfo({
     frontier_id: data.frontier_id,
     status: data.status
   })
-  frontiersStore.frontierActivities = res.data || []
+  frontiersStore.frontierActivities = res.data[0] || []
   return res.data
 }
 

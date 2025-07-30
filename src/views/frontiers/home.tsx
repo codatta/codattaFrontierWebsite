@@ -70,8 +70,8 @@ export default function Component() {
             </div>
           </div>
           <div className="text-white/55">{frontierInfo?.description}</div>
+          <ActivityInfo className="mb-6" />
         </div>
-        <ActivityInfo className="mb-6" />
         <div className="mb-6">
           <GetRewardGuide videos={frontierInfo?.videos ?? []} />
         </div>

@@ -23,13 +23,14 @@ export interface FrontierActivityInfoItem {
   end_time: string
   reward_mode: 'EQUAL_SPLIT_ON_END' | 'FIRST_COME_FIRST_SERVE'
   min_ranking_grade: string
+  days_left: number
   total_asset_amount: number
   max_reward_count: number
   reward_asset_type: string
   participants: number
   submissions: number
   status: ActiveStatus
-  rules?: string[]
+  rules?: readonly string[]
 }
 
 export interface TaskDetail {
@@ -63,11 +64,12 @@ export interface FrontierListItem {
   reputation_permission: number
   status: string
   title: string
+  activities: FrontierActivityInfoItem[]
   // start
-  total_asset_amount: number
-  reward_asset_type: string
-  min_ranking_grade: string
-  days_left: number
+  // total_asset_amount: number
+  // reward_asset_type: string
+  // min_ranking_grade: string
+  // days_left: number
   // end
   template_ext?: {
     template_id: string
