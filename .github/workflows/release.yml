@@ -1,4 +1,4 @@
-name: Release Pipeline
+name: 构建编译
 
 on:
   workflow_dispatch:
@@ -6,11 +6,11 @@ on:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'production'
+        default: 'test'
         type: choice
         options:
           - production
-          - staging
+          - test
 
 env:
   NODE_VERSION: '22'
@@ -39,7 +39,7 @@ jobs:
     - name: Create .env file
       run: |
         BUILD_TIME=$(TZ=Asia/Shanghai date +"%Y-%m-%d-%H-%M-%S")
-        ENVIRONMENT=${{ github.event.inputs.environment || 'production' }}
+        ENVIRONMENT=${{ github.event.inputs.environment || 'test' }}
         
         # 根据环境设置不同的配置
         if [ "$ENVIRONMENT" = "production" ]; then
