@@ -23,7 +23,7 @@
 OSS_ENDPOINT               # OSS端点（如：oss-cn-hangzhou.aliyuncs.com）
 OSS_BUCKET                 # OSS存储桶名称
 OSS_REGION                 # OSS区域（如：cn-hangzhou）
-CDN_ASSETS_PATH            # 生产环境CDN资源路径
+PROD_CDN_ASSETS_PATH       # 生产环境CDN资源路径
 TEST_CDN_ASSETS_PATH       # 测试环境CDN资源路径
 PROD_VITE_TG_BOT_ID       # 生产环境Telegram Bot ID
 TEST_VITE_TG_BOT_ID       # 测试环境Telegram Bot ID

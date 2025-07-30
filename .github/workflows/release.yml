@@ -101,6 +101,7 @@ jobs:
         # Set OSS configuration based on environment
         OSS_BUCKET="${{ vars.OSS_BUCKET }}"
         OSS_REGION="${{ vars.OSS_REGION }}"
+        ENVIRONMENT="${{ github.event.inputs.environment || 'test' }}"
 
         # Determine CDN_ASSETS_PATH based on environment
         if [ "$ENVIRONMENT" = "production" ]; then
