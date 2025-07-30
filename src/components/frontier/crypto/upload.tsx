@@ -98,13 +98,7 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
   return (
     <div className="space-y-3">
       <Spin spinning={uploading}>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/gif,image/webp"
-          onChange={handleImageUpload}
-          className="hidden"
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
 
         {value.length === 0 ? (
           isMobile ? (
