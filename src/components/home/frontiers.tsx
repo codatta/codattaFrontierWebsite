@@ -90,32 +90,33 @@ const Frontiers = () => {
                     {item.activities?.[0].min_ranking_grade || 'S'}
                   </div>
                 )}
-                <div className="px-4">
-                  <h2 className="mb-2 text-base font-bold">{item.title}</h2>
-                  <div className="line-clamp-2 text-[#A4A4A8]">{item.description.frontier_desc}</div>
-                </div>
-                {item.activities?.[0] && (
-                  <div className="relative bg-[#0000000A] px-4 pt-2">
-                    <div className="absolute left-0 top-0 size-full blur-sm" />
+                <div>
+                  <h2 className="mb-2 px-4 text-base font-bold">{item.title}</h2>
+                  <div className="relative bg-[#0000000A] px-4 py-2">
+                    <div className="absolute inset-0 size-full blur-sm" />
                     <div className="relative flex items-center justify-between gap-5">
-                      <div className="text-sm">
-                        <div className="flex items-center">
-                          <DollarCircle />
-                          <span>{item.activities?.[0].total_asset_amount || 0}</span>
-                          <span className="mr-3">{item.activities?.[0].reward_asset_type}</span>
+                      {item.activities?.[0] ? (
+                        <div className="text-sm">
+                          <div className="flex items-center">
+                            <DollarCircle className="mr-1" />
+                            <span>{item.activities?.[0].total_asset_amount || 0}</span>
+                            <span className="mr-3">{item.activities?.[0].reward_asset_type}</span>
+                          </div>
+                          <div className="mt-1 flex items-center">
+                            <Hourglass className="mr-1" />
+                            <span>{item.activities?.[0].days_left || 0}</span>D
+                          </div>
                         </div>
-                        <div className="mt-1 flex items-center">
-                          <Hourglass />
-                          <span>{item.activities?.[0].days_left || 0}</span>D
-                        </div>
-                      </div>
+                      ) : (
+                        <div className="line-clamp-2 text-[#A4A4A8]">{item.description.frontier_desc}</div>
+                      )}
                       <div className="flex h-[30px] w-[98px] flex-none cursor-pointer items-center justify-center gap-1 rounded-full bg-primary text-xs">
                         <span>Start</span>
                         <img src={arrowRight} alt="" />
                       </div>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             </div>
           ))}
