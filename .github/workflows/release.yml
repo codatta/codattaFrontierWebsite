@@ -104,7 +104,7 @@ jobs:
 
         # Determine CDN_ASSETS_PATH based on environment
         if [ "$ENVIRONMENT" = "production" ]; then
-          CDN_ASSETS_PATH="${{ vars.CDN_ASSETS_PATH }}"
+          CDN_ASSETS_PATH="${{ vars.PROD_CDN_ASSETS_PATH }}"
         else
           CDN_ASSETS_PATH="${{ vars.TEST_CDN_ASSETS_PATH }}"
         fi
