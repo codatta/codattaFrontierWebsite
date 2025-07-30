@@ -4,6 +4,9 @@ import path from 'path'
 import { ClientRequest, IncomingMessage, ServerResponse } from 'http'
 import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import svgr from 'vite-plugin-svgr'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const isDebugMode = process.env.NODE_ENV === 'debug' || false
 

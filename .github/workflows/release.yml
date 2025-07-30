@@ -38,12 +38,12 @@ jobs:
       
     - name: Create .env file
       run: |
-        BUILD_TIME=$(date -u +"%Y-%m-%d-%H-%M-%S")
+        BUILD_TIME=$(TZ=Asia/Shanghai date +"%Y-%m-%d-%H-%M-%S")
         ENVIRONMENT=${{ github.event.inputs.environment || 'production' }}
         
         # 根据环境设置不同的配置
         if [ "$ENVIRONMENT" = "production" ]; then
-          CDN_ASSETS_PATH="${{ vars.CDN_ASSETS_PATH }}"
+          CDN_ASSETS_PATH="${{ vars.PROD_CDN_ASSETS_PATH }}"
           TG_BOT_ID="${{ vars.PROD_VITE_TG_BOT_ID }}"
           GA_TRACKING_ID="${{ vars.PROD_VITE_GA_TRACKING_ID }}"
         else
@@ -57,6 +57,7 @@ jobs:
         VITE_TG_BOT_ID=$TG_BOT_ID
         VITE_GA_TRACKING_ID=$GA_TRACKING_ID
         EOF
+        cat .env
         echo "BUILD_TIME=$BUILD_TIME" >> $GITHUB_ENV
         echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
       
@@ -142,7 +143,7 @@ jobs:
         
     - name: Generate build time
       id: build-time
-      run: echo "build-time=$(date -u +"%Y-%m-%d-%H-%M-%S")" >> $GITHUB_OUTPUT
+      run: echo "build-time=$(TZ=Asia/Shanghai date +"%Y-%m-%d-%H-%M-%S")" >> $GITHUB_OUTPUT
       
     - name: Extract metadata
       id: meta
@@ -150,7 +151,7 @@ jobs:
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=raw,value=${{ steps.build-time.outputs.build-time }}
+          type=raw,value=${{ github.event.inputs.environment }}-${{ steps.build-time.outputs.build-time }}
           
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
