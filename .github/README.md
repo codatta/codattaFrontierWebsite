@@ -10,7 +10,7 @@
 
 ### 手动触发
 
-- 在GitHub Actions页面手动运行，可以指定分支和环境
+- 在GitHub Actions页面手动运行，可以指定环境
 - 版本号会自动使用当前时间（格式：YYYY-MM-DD-HH-MM-SS）
 
 ## 必需的GitHub Secrets
@@ -21,7 +21,14 @@
 
 ```
 OSS_ENDPOINT               # OSS端点（如：oss-cn-hangzhou.aliyuncs.com）
-OSS_BASE_PATH              # OSS基础路径（如：frontier）
+OSS_BUCKET                 # OSS存储桶名称
+OSS_REGION                 # OSS区域（如：cn-hangzhou）
+CDN_ASSETS_PATH            # 生产环境CDN资源路径
+TEST_CDN_ASSETS_PATH       # 测试环境CDN资源路径
+PROD_VITE_TG_BOT_ID       # 生产环境Telegram Bot ID
+TEST_VITE_TG_BOT_ID       # 测试环境Telegram Bot ID
+PROD_VITE_GA_TRACKING_ID  # 生产环境Google Analytics跟踪ID
+TEST_VITE_GA_TRACKING_ID  # 测试环境Google Analytics跟踪ID
 ```
 
 #### Repository Secrets（加密隐藏）
@@ -29,35 +36,8 @@ OSS_BASE_PATH              # OSS基础路径（如：frontier）
 ```
 OSS_ACCESS_KEY_ID          # 阿里云OSS访问密钥ID
 OSS_ACCESS_KEY_SECRET      # 阿里云OSS访问密钥Secret
-PROD_OSS_BUCKET            # 生产环境OSS存储桶名称
-PROD_OSS_REGION            # 生产环境OSS区域（如：cn-hangzhou）
-TEST_OSS_BUCKET            # 测试环境OSS存储桶名称
-TEST_OSS_REGION            # 测试环境OSS区域（如：cn-hangzhou）
-```
-
-### API配置
-
-```
-PROD_API_BASE_URL          # 生产环境API基础URL
-TEST_API_BASE_URL          # 测试环境API基础URL
-```
-
-### 应用配置（按环境区分）
-
-```
-PROD_CDN_ASSETS_PATH       # 生产环境CDN资源路径
-PROD_VITE_TG_BOT_ID       # 生产环境Telegram Bot ID
-PROD_VITE_GA_TRACKING_ID  # 生产环境Google Analytics跟踪ID
-TEST_CDN_ASSETS_PATH       # 测试环境CDN资源路径
-TEST_VITE_TG_BOT_ID       # 测试环境Telegram Bot ID
-TEST_VITE_GA_TRACKING_ID  # 测试环境Google Analytics跟踪ID
-```
-
-### 阿里云镜像仓库配置
-
-```
-ALIYUN_REGISTRY_USERNAME  # 阿里云镜像仓库用户名
-ALIYUN_REGISTRY_PASSWORD  # 阿里云镜像仓库密码
+ALIYUN_REGISTRY_USERNAME   # 阿里云镜像仓库用户名
+ALIYUN_REGISTRY_PASSWORD   # 阿里云镜像仓库密码
 ```
 
 ## 工作流程说明
@@ -75,7 +55,7 @@ ALIYUN_REGISTRY_PASSWORD  # 阿里云镜像仓库密码
 
 - 下载构建产物
 - 根据环境选择对应的OSS配置
-- 配置阿里云OSS工具
+- 配置阿里云OSS工具（使用manyuanrong/setup-ossutil@v3.0）
 - 上传文件到指定OSS路径
 
 ### 3. Docker镜像构建 (build-docker)
@@ -131,9 +111,8 @@ VITE_GA_TRACKING_ID     # 测试环境Google Analytics跟踪ID
 1. 进入GitHub Actions页面
 2. 选择"Release Pipeline"
 3. 点击"Run workflow"
-4. 输入要构建的分支名称（默认：main）
-5. 选择部署环境（production/staging）
-6. 点击"Run workflow"
+4. 选择部署环境（production/staging）
+5. 点击"Run workflow"
 
 ## 注意事项
 

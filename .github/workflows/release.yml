@@ -3,11 +3,6 @@ name: Release Pipeline
 on:
   workflow_dispatch:
     inputs:
-      branch:
-        description: 'Git branch to build from'
-        required: true
-        default: 'main'
-        type: string
       environment:
         description: 'Deployment environment'
         required: true
@@ -31,8 +26,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch }}
       
     - name: Setup Node.js
       uses: actions/setup-node@v4
@@ -50,13 +43,13 @@ jobs:
         
         # 根据环境设置不同的配置
         if [ "$ENVIRONMENT" = "production" ]; then
-          CDN_ASSETS_PATH="${{ secrets.PROD_CDN_ASSETS_PATH }}"
-          TG_BOT_ID="${{ secrets.PROD_VITE_TG_BOT_ID }}"
-          GA_TRACKING_ID="${{ secrets.PROD_VITE_GA_TRACKING_ID }}"
+          CDN_ASSETS_PATH="${{ vars.CDN_ASSETS_PATH }}"
+          TG_BOT_ID="${{ vars.PROD_VITE_TG_BOT_ID }}"
+          GA_TRACKING_ID="${{ vars.PROD_VITE_GA_TRACKING_ID }}"
         else
-          CDN_ASSETS_PATH="${{ secrets.TEST_CDN_ASSETS_PATH }}"
-          TG_BOT_ID="${{ secrets.TEST_VITE_TG_BOT_ID }}"
-          GA_TRACKING_ID="${{ secrets.TEST_VITE_GA_TRACKING_ID }}"
+          CDN_ASSETS_PATH="${{ vars.TEST_CDN_ASSETS_PATH }}"
+          TG_BOT_ID="${{ vars.TEST_VITE_TG_BOT_ID }}"
+          GA_TRACKING_ID="${{ vars.TEST_VITE_GA_TRACKING_ID }}"
         fi
         
         cat > .env << EOF
@@ -90,33 +83,35 @@ jobs:
         name: build-files
         path: dist/
         
-    - name: Setup Alibaba Cloud CLI
-      uses: alibaba-cloud-toolkit/ossutil@v1.0.0
-      with:
-        access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
-        access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
-        endpoint: ${{ vars.OSS_ENDPOINT }}
-        
+    - name: Install ossutil
+      run: |
+        # Install ossutil directly from Alibaba Cloud
+        curl -L https://gosspublic.alicdn.com/ossutil/1.7.16/ossutil64 -o ossutil
+        chmod +x ossutil
+        sudo mv ossutil /usr/local/bin/ossutil
+
+    - name: Configure ossutil
+      run: |
+        # Configure ossutil with credentials
+        ossutil config -e "${{ vars.OSS_ENDPOINT }}" -i "${{ secrets.OSS_ACCESS_KEY_ID }}" -k "${{ secrets.OSS_ACCESS_KEY_SECRET }}"
+
     - name: Upload to OSS
       run: |
-        # 根据环境确定OSS配置
-        OSS_BUCKET="${{ secrets.OSS_BUCKET }}"
-        OSS_REGION="${{ secrets.OSS_REGION }}"
+        # Set OSS configuration based on environment
+        OSS_BUCKET="${{ vars.OSS_BUCKET }}"
+        OSS_REGION="${{ vars.OSS_REGION }}"
 
         # Determine CDN_ASSETS_PATH based on environment
         if [ "$ENVIRONMENT" = "production" ]; then
-          CDN_ASSETS_PATH="${{ secrets.CDN_ASSETS_PATH }}"
+          CDN_ASSETS_PATH="${{ vars.CDN_ASSETS_PATH }}"
         else
-          CDN_ASSETS_PATH="${{ secrets.TEST_CDN_ASSETS_PATH }}"
+          CDN_ASSETS_PATH="${{ vars.TEST_CDN_ASSETS_PATH }}"
         fi
 
-        # 确定上传目录
-        UPLOAD_PATH="${{ vars.OSS_BASE_PATH }}/CDN_ASSETS_PATH"
-        
-        # 上传文件到OSS
-        ossutil cp -r dist/ oss://$OSS_BUCKET/$UPLOAD_PATH/ --meta Cache-Control=max-age=31536000
-        
-        echo "Deployed to: https://$OSS_BUCKET.${{ vars.OSS_ENDPOINT }}/$UPLOAD_PATH/"
+        # Upload files to OSS with cache control
+        ossutil cp -r dist/ oss://$OSS_BUCKET/$CDN_ASSETS_PATH/ --meta Cache-Control=max-age=31536000
+
+        echo "Deployed to: https://$OSS_BUCKET.${{ vars.OSS_ENDPOINT }}/$CDN_ASSETS_PATH/"
 
   # 构建Docker镜像
   build-docker:
@@ -127,8 +122,6 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch }}
       
     - name: Download build artifacts
       uses: actions/download-artifact@v4
@@ -145,6 +138,7 @@ jobs:
         registry: ${{ env.REGISTRY }}
         username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
         password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
+        ecr: auto
         
     - name: Extract metadata
       id: meta
