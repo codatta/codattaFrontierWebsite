@@ -108,8 +108,8 @@ jobs:
           CDN_ASSETS_PATH="${{ vars.TEST_CDN_ASSETS_PATH }}"
         fi
 
-        # Upload files to OSS with cache control
-        ossutil cp -r dist/ oss://$OSS_BUCKET/$CDN_ASSETS_PATH/ --meta Cache-Control=max-age=31536000
+        # Upload files to OSS
+        ossutil cp -r dist/ oss://$OSS_BUCKET/$CDN_ASSETS_PATH/ --recursive
 
         echo "Deployed to: https://$OSS_BUCKET.${{ vars.OSS_ENDPOINT }}/$CDN_ASSETS_PATH/"
 
@@ -140,13 +140,17 @@ jobs:
         password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
         ecr: auto
         
+    - name: Generate build time
+      id: build-time
+      run: echo "build-time=$(date -u +"%Y-%m-%d-%H-%M-%S")" >> $GITHUB_OUTPUT
+      
     - name: Extract metadata
       id: meta
       uses: docker/metadata-action@v5
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
         tags: |
-          type=raw,value=${{ env.BUILD_TIME }}
+          type=raw,value=${{ steps.build-time.outputs.build-time }}
           
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
