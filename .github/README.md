@@ -17,11 +17,18 @@
 
 ### OSS相关配置
 
+#### Repository Variables（公开可见）
+
+```
+OSS_ENDPOINT               # OSS端点（如：oss-cn-hangzhou.aliyuncs.com）
+OSS_BASE_PATH              # OSS基础路径（如：frontier）
+```
+
+#### Repository Secrets（加密隐藏）
+
 ```
 OSS_ACCESS_KEY_ID          # 阿里云OSS访问密钥ID
 OSS_ACCESS_KEY_SECRET      # 阿里云OSS访问密钥Secret
-OSS_ENDPOINT               # OSS端点（如：oss-cn-hangzhou.aliyuncs.com）
-OSS_BASE_PATH              # OSS基础路径（如：frontend）
 PROD_OSS_BUCKET            # 生产环境OSS存储桶名称
 PROD_OSS_REGION            # 生产环境OSS区域（如：cn-hangzhou）
 TEST_OSS_BUCKET            # 测试环境OSS存储桶名称
@@ -70,18 +77,12 @@ ALIYUN_REGISTRY_PASSWORD  # 阿里云镜像仓库密码
 - 根据环境选择对应的OSS配置
 - 配置阿里云OSS工具
 - 上传文件到指定OSS路径
-- 创建版本信息文件
 
 ### 3. Docker镜像构建 (build-docker)
 
 - 设置Docker Buildx
 - 登录到阿里云镜像仓库
-- 构建并推送Docker镜像到 `registry-intl.ap-southeast-1.aliyuncs.com/codatta/codatta-frontier-website`
-
-### 5. 创建Release (create-release)
-
-- 自动创建GitHub Release
-- 包含部署信息和制品链接
+- 构建并推送Docker镜像
 
 ## 环境变量说明
 

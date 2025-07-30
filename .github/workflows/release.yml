@@ -50,32 +50,16 @@ jobs:
         
         # 根据环境设置不同的配置
         if [ "$ENVIRONMENT" = "production" ]; then
-          API_BASE_URL="${{ secrets.PROD_API_BASE_URL }}"
-          OSS_BUCKET="${{ secrets.PROD_OSS_BUCKET }}"
-          OSS_REGION="${{ secrets.PROD_OSS_REGION }}"
           CDN_ASSETS_PATH="${{ secrets.PROD_CDN_ASSETS_PATH }}"
           TG_BOT_ID="${{ secrets.PROD_VITE_TG_BOT_ID }}"
           GA_TRACKING_ID="${{ secrets.PROD_VITE_GA_TRACKING_ID }}"
         else
-          API_BASE_URL="${{ secrets.TEST_API_BASE_URL }}"
-          OSS_BUCKET="${{ secrets.TEST_OSS_BUCKET }}"
-          OSS_REGION="${{ secrets.TEST_OSS_REGION }}"
           CDN_ASSETS_PATH="${{ secrets.TEST_CDN_ASSETS_PATH }}"
           TG_BOT_ID="${{ secrets.TEST_VITE_TG_BOT_ID }}"
           GA_TRACKING_ID="${{ secrets.TEST_VITE_GA_TRACKING_ID }}"
         fi
         
         cat > .env << EOF
-        VITE_APP_ENV=$ENVIRONMENT
-        VITE_APP_VERSION=$BUILD_TIME
-        VITE_APP_BUILD_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-        VITE_APP_COMMIT_SHA=${{ github.sha }}
-        VITE_APP_BRANCH=${{ github.ref_name }}
-        VITE_API_BASE_URL=$API_BASE_URL
-        VITE_OSS_BUCKET=$OSS_BUCKET
-        VITE_OSS_REGION=$OSS_REGION
-        VITE_OSS_ACCESS_KEY_ID=${{ secrets.OSS_ACCESS_KEY_ID }}
-        VITE_OSS_ACCESS_KEY_SECRET=${{ secrets.OSS_ACCESS_KEY_SECRET }}
         CDN_ASSETS_PATH=$CDN_ASSETS_PATH
         VITE_TG_BOT_ID=$TG_BOT_ID
         VITE_GA_TRACKING_ID=$GA_TRACKING_ID
@@ -111,37 +95,28 @@ jobs:
       with:
         access-key-id: ${{ secrets.OSS_ACCESS_KEY_ID }}
         access-key-secret: ${{ secrets.OSS_ACCESS_KEY_SECRET }}
-        endpoint: ${{ secrets.OSS_ENDPOINT }}
+        endpoint: ${{ vars.OSS_ENDPOINT }}
         
     - name: Upload to OSS
       run: |
         # 根据环境确定OSS配置
+        OSS_BUCKET="${{ secrets.OSS_BUCKET }}"
+        OSS_REGION="${{ secrets.OSS_REGION }}"
+
+        # Determine CDN_ASSETS_PATH based on environment
         if [ "$ENVIRONMENT" = "production" ]; then
-          OSS_BUCKET="${{ secrets.PROD_OSS_BUCKET }}"
-          OSS_REGION="${{ secrets.PROD_OSS_REGION }}"
+          CDN_ASSETS_PATH="${{ secrets.CDN_ASSETS_PATH }}"
         else
-          OSS_BUCKET="${{ secrets.TEST_OSS_BUCKET }}"
-          OSS_REGION="${{ secrets.TEST_OSS_REGION }}"
+          CDN_ASSETS_PATH="${{ secrets.TEST_CDN_ASSETS_PATH }}"
         fi
-        
+
         # 确定上传目录
-        UPLOAD_PATH="${{ secrets.OSS_BASE_PATH }}/$ENVIRONMENT/$BUILD_TIME"
+        UPLOAD_PATH="${{ vars.OSS_BASE_PATH }}/CDN_ASSETS_PATH"
         
         # 上传文件到OSS
         ossutil cp -r dist/ oss://$OSS_BUCKET/$UPLOAD_PATH/ --meta Cache-Control=max-age=31536000
         
-        # 创建版本信息文件
-        echo "{
-          \"version\": \"$BUILD_TIME\",
-          \"environment\": \"$ENVIRONMENT\",
-          \"buildTime\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\",
-          \"commitSha\": \"${{ github.sha }}\",
-          \"branch\": \"${{ github.ref_name }}\"
-        }" > version.json
-        
-        ossutil cp version.json oss://$OSS_BUCKET/$UPLOAD_PATH/version.json
-        
-        echo "Deployed to: https://$OSS_BUCKET.${{ secrets.OSS_ENDPOINT }}/$UPLOAD_PATH/"
+        echo "Deployed to: https://$OSS_BUCKET.${{ vars.OSS_ENDPOINT }}/$UPLOAD_PATH/"
 
   # 构建Docker镜像
   build-docker:
@@ -189,39 +164,3 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
-
-
-
-  # 创建Release
-  create-release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    needs: [deploy-to-oss, build-docker]
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.inputs.branch }}
-      
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ env.BUILD_TIME }}
-        release_name: Release v${{ env.BUILD_TIME }}
-        body: |
-          ## Release v${{ env.BUILD_TIME }}
-          
-          ### Changes
-          - Built and deployed to OSS
-          - Docker image pushed to Aliyun Container Registry
-          - Environment: ${{ env.ENVIRONMENT }}
-          
-          ### Artifacts
-          - OSS Path: ${{ secrets.OSS_BASE_PATH }}/${{ env.ENVIRONMENT }}/${{ env.BUILD_TIME }}
-          - Docker Image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_TIME }}
-          
-        draft: false
-        prerelease: false 
