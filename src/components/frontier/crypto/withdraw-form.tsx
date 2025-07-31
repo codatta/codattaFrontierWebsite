@@ -167,10 +167,13 @@ export default function WithdrawForm({
             isMobile={isMobile}
             description={
               <div className="text-left text-xs text-[#606067] md:text-center md:text-sm">
-                <p>Click to upload screenshot{isBnb ? '' : ' or drag and drop'} </p>
                 <p>
-                  Go to the on-chain withdraw page in the app and click “Save Image” (not a screenshot). Make sure the
-                  exchange name is visible, or your reward may be affected.
+                  Upload a screenshot of your Withdraw Transaction Details from the selected Exchange, Network, and
+                  Currency.
+                </p>
+                <p>
+                  Go to your exchange app (e.g., Binance), find the withdrawal history, capture the transaction details
+                  of the withdraw transaction, and upload it here.
                 </p>
               </div>
             }
