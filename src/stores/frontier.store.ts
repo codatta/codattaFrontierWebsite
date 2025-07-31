@@ -148,7 +148,7 @@ async function getFrontierActivities(data: { frontier_id: string; status?: Activ
     frontier_id: data.frontier_id,
     status: data.status
   })
-  frontiersStore.frontierActivities = res.data[0] || []
+  frontiersStore.frontierActivities = res.data || []
   return res.data
 }
 
