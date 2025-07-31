@@ -15,7 +15,7 @@ export default function ActivityInfo({ className }: { className?: string }) {
   async function getFrontierActivityInfo(frontier_id: string) {
     const res = await frontierApi.getFrontierActivityInfo({ frontier_id })
     if (res.errorCode === 0) {
-      setActivityInfoList(res.data[0])
+      setActivityInfoList(res.data)
       console.log(res.data)
     }
   }
@@ -54,7 +54,7 @@ export default function ActivityInfo({ className }: { className?: string }) {
                   {item.reward_asset_type}
                 </div>
               </div>
-              {item.reward_mode !== 'EQUAL_SPLIT_ON_END' ? (
+              {item.reward_mode === 'EQUAL_SPLIT_ON_END' ? (
                 <div>
                   <div className="mb-[2px] text-[#FFFFFF/75]">Total Submissions</div>
                   <div className="text-base font-bold">{formatNumber(item.submissions || 0)}</div>
