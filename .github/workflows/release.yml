@@ -1,0 +1,166 @@
+name: 构建编译
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        default: 'test'
+        type: choice
+        options:
+          - production
+          - test
+
+env:
+  NODE_VERSION: '22'
+  REGISTRY: registry-intl.ap-southeast-1.aliyuncs.com
+  IMAGE_NAME: codatta/codatta-frontier-website
+
+jobs:
+  # 编译和构建
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env file
+        run: |
+          BUILD_TIME=$(TZ=Asia/Shanghai date +"%Y-%m-%d-%H-%M-%S")
+          ENVIRONMENT=${{ github.event.inputs.environment || 'test' }}
+
+          # 根据环境设置不同的配置
+          if [ "$ENVIRONMENT" = "production" ]; then
+            CDN_ASSETS_PATH="${{ vars.PROD_CDN_ASSETS_PATH }}"
+            TG_BOT_ID="${{ vars.PROD_VITE_TG_BOT_ID }}"
+            GA_TRACKING_ID="${{ vars.PROD_VITE_GA_TRACKING_ID }}"
+          else
+            CDN_ASSETS_PATH="${{ vars.TEST_CDN_ASSETS_PATH }}"
+            TG_BOT_ID="${{ vars.TEST_VITE_TG_BOT_ID }}"
+            GA_TRACKING_ID="${{ vars.TEST_VITE_GA_TRACKING_ID }}"
+          fi
+
+          cat > .env << EOF
+          CDN_ASSETS_PATH=$CDN_ASSETS_PATH
+          VITE_TG_BOT_ID=$TG_BOT_ID
+          VITE_GA_TRACKING_ID=$GA_TRACKING_ID
+          EOF
+          cat .env
+          echo "BUILD_TIME=$BUILD_TIME" >> $GITHUB_ENV
+          echo "ENVIRONMENT=$ENVIRONMENT" >> $GITHUB_ENV
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 30
+
+  # 上传到OSS
+  deploy-to-oss:
+    name: Deploy to OSS
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+
+      - name: Install ossutil
+        run: |
+          # Install ossutil directly from Alibaba Cloud
+          curl -L https://gosspublic.alicdn.com/ossutil/1.7.16/ossutil64 -o ossutil
+          chmod +x ossutil
+          sudo mv ossutil /usr/local/bin/ossutil
+
+      - name: Configure ossutil
+        run: |
+          # Configure ossutil with credentials
+          ossutil config -e "${{ vars.OSS_ENDPOINT }}" -i "${{ secrets.OSS_ACCESS_KEY_ID }}" -k "${{ secrets.OSS_ACCESS_KEY_SECRET }}"
+
+      - name: Upload to OSS
+        run: |
+          # Set OSS configuration based on environment
+          OSS_BUCKET="${{ vars.OSS_BUCKET }}"
+          OSS_REGION="${{ vars.OSS_REGION }}"
+          ENVIRONMENT="${{ github.event.inputs.environment || 'test' }}"
+
+          # Determine CDN_ASSETS_PATH based on environment
+          if [ "$ENVIRONMENT" = "production" ]; then
+            CDN_ASSETS_PATH="${{ vars.PROD_CDN_ASSETS_PATH }}"
+          else
+            CDN_ASSETS_PATH="${{ vars.TEST_CDN_ASSETS_PATH }}"
+          fi
+
+          # Upload files to OSS
+          ossutil cp -r dist/ oss://$OSS_BUCKET/$CDN_ASSETS_PATH/ --recursive
+
+          echo "Deployed to: https://$OSS_BUCKET.${{ vars.OSS_ENDPOINT }}/$CDN_ASSETS_PATH/"
+
+  # 构建Docker镜像
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: dist/
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Aliyun Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
+          password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
+          ecr: auto
+
+      - name: Generate build time
+        id: build-time
+        run: echo "build-time=$(TZ=Asia/Shanghai date +"%Y-%m-%d-%H-%M-%S")" >> $GITHUB_OUTPUT
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=${{ github.event.inputs.environment }}-${{ steps.build-time.outputs.build-time }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
