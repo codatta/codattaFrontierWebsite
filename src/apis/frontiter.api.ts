@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import request, { PaginationResponse, TPagination } from './request'
+import { data } from 'react-router-dom'
 
 interface Response<T> {
   data: T
@@ -13,6 +14,23 @@ export interface TaskRewardInfo {
   reward_mode: string
   reward_type: string
   reward_value: number
+}
+
+export type ActiveStatus = 'ACTIVE' | 'INACTIVE' | 'COMPLETED'
+export interface FrontierActivityInfoItem {
+  activity_id: string
+  start_time: string
+  end_time: string
+  reward_mode: 'EQUAL_SPLIT_ON_END' | 'FIRST_COME_FIRST_SERVE'
+  min_ranking_grade: string
+  days_left: number
+  total_asset_amount: number
+  max_reward_count: number
+  reward_asset_type: string
+  participants: number
+  submissions: number
+  status: ActiveStatus
+  rules?: readonly string[]
 }
 
 export interface TaskDetail {
@@ -31,6 +49,7 @@ export interface TaskDetail {
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
+
   status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
 }
@@ -45,6 +64,13 @@ export interface FrontierListItem {
   reputation_permission: number
   status: string
   title: string
+  activities: FrontierActivityInfoItem[]
+  // start
+  // total_asset_amount: number
+  // reward_asset_type: string
+  // min_ranking_grade: string
+  // days_left: number
+  // end
   template_ext?: {
     template_id: string
     gif_resource?: string
@@ -157,7 +183,15 @@ class frontier {
   }
 
   async getFrontiers(): Promise<Response<FrontierListItem[]>> {
-    const res = await this.request.post('/v2/frontier/list ')
+    const res = await this.request.post('/v2/frontier/list ', data)
+    return res.data
+  }
+
+  async getFrontierActivityInfo(data: {
+    frontier_id: string
+    status?: ActiveStatus
+  }): Promise<Response<FrontierActivityInfoItem[]>> {
+    const res = await this.request.post('/v2/frontier/activity/info', data)
     return res.data
   }
 

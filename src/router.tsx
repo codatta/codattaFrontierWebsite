@@ -3,7 +3,6 @@ import { lazy, useEffect } from 'react'
 
 // layouts
 import FrontierLayout from '@/layouts/frontier-layout'
-// import SettingsLayout from '@/layouts/settings-layout'
 import UserInfoLayout from '@/layouts/userinfo-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
@@ -21,13 +20,6 @@ const NewJourney = lazy(() => import('@/views/new-journey'))
 // quest
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
 const Activity = lazy(() => import('@/views/quest/activity'))
-
-// settings
-// const SettingAccount = lazy(() => import('@/views/settings/account'))
-// const SettingReward = lazy(() => import('@/views/settings/reward'))
-// const SettingReputation = lazy(() => import('@/views/settings/reputation'))
-// const SettingUserNFT = lazy(() => import('@/views/settings/user-nft'))
-// const SettingUserSBT = lazy(() => import('@/views/settings/user-sbt'))
 
 // user info
 const UserInfo = lazy(() => import('@/views/userinfo/index'))
@@ -122,13 +114,6 @@ export default function Router() {
           <Route path="referral" element={<AppReferral />}></Route>
           <Route path="journey" element={<NewJourney />} />
 
-          {/* <Route path="settings" element={<SettingsLayout />}>
-            <Route path="account" element={<SettingAccount />} />
-            <Route path="reward" element={<SettingReward />} />
-            <Route path="reputation" element={<SettingReputation />} />
-            <Route path="nft" element={<SettingUserNFT />} /> */}
-          {/* <Route path="sbt" element={<SettingUserSBT />} /> */}
-          {/* </Route> */}
           <Route path="settings" element={<UserInfoLayout />}>
             <Route index element={<UserInfo />} />
             <Route path="account" element={<UserInfo />} />

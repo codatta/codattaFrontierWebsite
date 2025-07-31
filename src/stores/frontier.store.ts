@@ -1,10 +1,18 @@
-import frontierApi, { FrontierListItem, TaskDetail, SubmissionStatics, SubmissionRecord } from '@/apis/frontiter.api'
+import frontierApi, {
+  FrontierListItem,
+  TaskDetail,
+  SubmissionStatics,
+  SubmissionRecord,
+  FrontierActivityInfoItem,
+  ActiveStatus
+} from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
 import { message } from 'antd'
 
 type FrontierStore = {
   frontierList: FrontierListItem[]
+  frontierActivities: FrontierActivityInfoItem[]
   pageData: {
     list: TaskDetail[]
     total: number
@@ -31,6 +39,7 @@ type FrontierStore = {
 
 export const frontiersStore = proxy<FrontierStore>({
   frontierList: [],
+  frontierActivities: [],
   pageData: {
     list: [],
     total: 0,
@@ -134,6 +143,15 @@ async function getFrontierList() {
   return res.data
 }
 
+async function getFrontierActivities(data: { frontier_id: string; status?: ActiveStatus }) {
+  const res = await frontierApi.getFrontierActivityInfo({
+    frontier_id: data.frontier_id,
+    status: data.status
+  })
+  frontiersStore.frontierActivities = res.data || []
+  return res.data
+}
+
 export function useFrontierStore() {
   return useSnapshot(frontiersStore)
 }
@@ -166,6 +184,7 @@ export const getFrontierUserRecords = debounce(async (params: { page: number }) 
 
 export const frontierStoreActions = {
   getFrontierList,
+  getFrontierActivities,
   changeFrontiersFilter,
   changeFrontiersHistoryFilter,
   getFrontierUserStatics,

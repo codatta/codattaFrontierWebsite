@@ -4,6 +4,8 @@ import { ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import FrontierTaskList from '@/components/robotics/task-list'
+import ActivityInfo from '@/components/home/activity-info'
+
 import { useEffect, useState } from 'react'
 import frontierApi, { FrontierItemType, MediaName } from '@/apis/frontiter.api'
 import XIcon from '@/assets/robotics/x-logo.svg'
@@ -68,6 +70,7 @@ export default function Component() {
             </div>
           </div>
           <div className="text-white/55">{frontierInfo?.description}</div>
+          <ActivityInfo className="mb-6" />
         </div>
         <div className="mb-6">
           <GetRewardGuide videos={frontierInfo?.videos ?? []} />
