@@ -92,7 +92,7 @@ export default function ActivityInfo({ className }: { className?: string }) {
                 </div>
               )}
             </header>
-            <Rules />
+            <Rules activity={item} />
           </li>
         ))}
       </ul>
@@ -100,16 +100,20 @@ export default function ActivityInfo({ className }: { className?: string }) {
   )
 }
 
-const defaultRules = [
-  'Multiple valid submissions count for reward sharing',
-  'Minimum data quality requirement: Grade S',
-  'Below standard submissions receive points reward',
-  'Quality assessment based on accuracy and completeness',
-  'First come, first served: Fixed rewards for reaching baseline score during activity period. Once required quantity is reached, no more rewards will be distributed even if activity continues.Below standard gets points reward',
-  'Divide and share mode: Multiple submissions valid, each counts for sharing. Below standard gets points reward.'
-]
+function getRulesText(activity: FrontierActivityInfoItem) {
+  return [
+    'Multiple valid submissions count for reward sharing',
+    `Minimum data quality requirement: Grade ${activity.min_ranking_grade}`,
+    'Below standard submissions receive points reward',
+    'Quality assessment based on accuracy and completeness',
+    activity.reward_mode === 'FIRST_COME_FIRST_SERVE'
+      ? 'First come, first served: Fixed rewards for reaching baseline score during activity period. Once required quantity is reached, no more rewards will be distributed even if activity continues.Below standard gets points reward'
+      : 'Divide and share mode: Multiple submissions valid, each counts for sharing. Below standard gets points reward.'
+  ]
+}
 
-function Rules({ rules = defaultRules }: { rules?: string[] }) {
+function Rules({ activity }: { activity: FrontierActivityInfoItem }) {
+  const rules = getRulesText(activity)
   const [showRules, setShowRules] = useState(false)
 
   return (
