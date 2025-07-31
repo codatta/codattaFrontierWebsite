@@ -11,3 +11,8 @@ declare module '*.md' {
   const value: string
   export default value
 }
+
+declare module '*#file' {
+  const src: string
+  export default src
+}

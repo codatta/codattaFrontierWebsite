@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
 import arrowRight from '@/assets/icons/arrow-right.svg?url'
-import badgeIcon from '@/assets/home/badge.svg?url'
+import badgeIcon from '@/assets/home/badge.svg#file'
 import DollarCircle from '@/assets/home/dollar-circle.svg?react'
 import Hourglass from '@/assets/home/hourglass.svg?react'
 
