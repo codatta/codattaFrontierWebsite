@@ -2,8 +2,8 @@ import { message, Spin } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
-import arrowRight from '@/assets/icons/arrow-right.svg'
-import badgeIcon from '@/assets/home/badge.svg'
+import arrowRight from '@/assets/icons/arrow-right.svg?url'
+import badgeIcon from '@/assets/home/badge.svg?url'
 import DollarCircle from '@/assets/home/dollar-circle.svg?react'
 import Hourglass from '@/assets/home/hourglass.svg?react'
 
@@ -68,7 +68,7 @@ const Frontiers = () => {
           {displayFrontiers.map((item) => (
             <div
               key={item.title}
-              className="group relative aspect-[269/243] w-full min-w-[284px] cursor-pointer overflow-hidden rounded-2xl"
+              className="group relative aspect-[269/243] cursor-pointer overflow-hidden rounded-2xl"
               onClick={() => handleFrontierClick(item)}
             >
               <img
