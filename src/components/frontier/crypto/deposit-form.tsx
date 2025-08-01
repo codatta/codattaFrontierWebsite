@@ -218,7 +218,9 @@ export default function DepositForm({
             isMobile={isMobile}
             description={
               <div className="text-left text-xs text-[#606067] md:text-center md:text-sm">
-                <p>Upload an image of the Deposit Address QR Code from the selected Exchange, Network, and Currency.</p>
+                <p>
+                  UUpload an image of the Deposit Address QR Code from the selected Exchange, Network, and Currency.
+                </p>
                 <p>
                   Go to your exchange app (e.g., Binance), enter the deposit page, save the image of the deposit address
                   with the exchange logo visible. Upload it here.
