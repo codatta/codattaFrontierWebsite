@@ -190,7 +190,7 @@ class frontier {
   async getFrontierActivityInfo(data: {
     frontier_id: string
     status?: ActiveStatus
-  }): Promise<Response<[FrontierActivityInfoItem[], number]>> {
+  }): Promise<Response<FrontierActivityInfoItem[]>> {
     const res = await this.request.post('/v2/frontier/activity/info', data)
     return res.data
   }
