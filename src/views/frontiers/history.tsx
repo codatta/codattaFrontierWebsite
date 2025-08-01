@@ -2,13 +2,34 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Pagination, Spin } from 'antd'
 import { useSnapshot } from 'valtio'
-import { ArrowUpRight } from 'lucide-react'
 
 import arrowLeft from '@/assets/common/arrow-left.svg'
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import dayjs from 'dayjs'
 
 import CustomEmpty from '@/components/common/empty'
+import { cn } from '@udecode/cn'
+
+function SubmissionResultLevel({ result }: { result: 'S' | 'A' | 'B' | 'C' | 'D' }) {
+  const resultColorMap = {
+    S: 'bg-[#E7B231]',
+    A: 'bg-[#54F0B7]',
+    B: 'bg-[#5CB0FF]',
+    C: 'bg-[#F0A254]',
+    D: 'bg-[#F07354]'
+  }
+
+  return (
+    <div
+      className={cn(
+        'flex size-8 items-center justify-center rounded-full font-bold text-black',
+        resultColorMap[result]
+      )}
+    >
+      {result}
+    </div>
+  )
+}
 
 const CardList = () => {
   const { historyPageData } = useSnapshot(frontiersStore)
@@ -18,28 +39,19 @@ const CardList = () => {
         {historyPageData.list?.map((item, index) => (
           <div
             key={`${item.submission_id}-${item.task_type}-${index}`}
-            className="flex w-full cursor-pointer items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
+            className="flex w-full cursor-pointer items-center gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
           >
             <div className="flex-1">
-              <div className="mb-2 break-all font-semibold md:mb-6">{item.name}</div>
-              <div>{dayjs(item.create_time * 1000).format('DD MMM YYYY h:mm a')}</div>
+              <div className="mb-1 break-all font-semibold md:mb-1">{item.name}</div>
+              <div className="text-white/45">{dayjs(item.create_time * 1000).format('DD MMM YYYY h:mm a')}</div>
             </div>
-            <div className="flex w-[100px] flex-col items-center">
-              <div className="mb-2 ml-auto w-[88px] flex-none rounded-full bg-white/5 py-2 text-center text-xs text-[#8D8D93]">
+            <div className="ml-auto shrink-0">
+              <SubmissionResultLevel result={item.result}></SubmissionResultLevel>
+            </div>
+            <div className="flex items-center">
+              <div className="ml-auto w-[88px] flex-none rounded-full bg-white/5 py-2 text-center text-xs text-[#8D8D93]">
                 {item.status}
               </div>
-              {!['CMU_TPL_000001', 'FATE_TPL_000001'].includes(item.data_submission?.['templateId'] as string) ? (
-                <>
-                  {item.status === 'SUBMITTED' ? (
-                    <a className="flex hover:text-primary" href={item.txHashUrl} target="_blank">
-                      <span className="text-xs">On-chain Success!</span>
-                      <ArrowUpRight strokeWidth={1.25} size={16} />
-                    </a>
-                  ) : (
-                    <div>On-chain...</div>
-                  )}
-                </>
-              ) : null}
             </div>
           </div>
         ))}

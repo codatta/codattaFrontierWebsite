@@ -7,6 +7,8 @@ import { ChevronUp } from 'lucide-react'
 
 import { formatNumber } from '@/utils/str'
 import frontierApi, { FrontierActivityInfoItem } from '@/apis/frontiter.api'
+import XNYCoinIcon from '@/assets/home/xyn-coin-icon.svg?react'
+import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'
 
 export default function ActivityInfo({ className }: { className?: string }) {
   const { frontier_id } = useParams()
@@ -49,9 +51,18 @@ export default function ActivityInfo({ className }: { className?: string }) {
               </div>
               <div>
                 <div className="mb-[2px] text-[#FFFFFF/75]">Total Rewards</div>
-                <div className="text-base font-bold">
-                  {formatNumber(item.total_asset_amount || 0)}
-                  {item.reward_asset_type}
+                <div className="flex items-center gap-1 text-base font-bold">
+                  {item.reward_asset_type == 'USDT' ? (
+                    <div className="flex items-center gap-1">
+                      <USDTCoinIcon></USDTCoinIcon>
+                    </div>
+                  ) : null}
+                  {item.reward_asset_type == 'XNY' ? (
+                    <div>
+                      <XNYCoinIcon></XNYCoinIcon>
+                    </div>
+                  ) : null}
+                  <div className="text-lg font-bold text-[#FCC800]">{formatNumber(item.total_asset_amount || 0)}</div>
                 </div>
               </div>
               {item.reward_mode === 'EQUAL_SPLIT_ON_END' ? (
