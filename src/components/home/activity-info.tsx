@@ -111,7 +111,8 @@ function getRulesText(activity: FrontierActivityInfoItem) {
       qualify for the main reward.
     </p>,
     <p>
-      <strong>Points Reward</strong>: Submissions that do not meet the Grade S standard will receive a points reward.
+      <strong>Points Reward</strong>: Submissions that do not meet the Grade {activity.min_ranking_grade} standard will
+      receive a points reward.
     </p>,
     <p>
       <strong>Quality Assessment</strong>: Quality is assessed based on accuracy and completeness.
