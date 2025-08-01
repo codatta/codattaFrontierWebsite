@@ -52,6 +52,7 @@ export interface TaskDetail {
 
   status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
+  result: 'S' | 'A' | 'B' | 'C' | 'D'
 }
 
 export interface FrontierListItem {
