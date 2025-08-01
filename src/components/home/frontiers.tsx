@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
 import arrowRight from '@/assets/icons/arrow-right.svg?url'
-import badgeIcon from '@/assets/home/badge.svg#file'
-import DollarCircle from '@/assets/home/dollar-circle.svg?react'
+import badgeIcon from '@/assets/home/badge.svg?url'
 import Hourglass from '@/assets/home/hourglass.svg?react'
+import XNYCoinIcon from '@/assets/home/xyn-coin-icon.svg?react'
+import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'
 
 import { FrontierListItem } from '@/apis/frontiter.api'
 import { frontierStoreActions, useFrontierStore } from '@/stores/frontier.store'
+import { formatNumber } from '@/utils/str'
 
 const Frontiers = () => {
   const navigate = useNavigate()
@@ -26,9 +28,10 @@ const Frontiers = () => {
       .map((item) => {
         return {
           ...item,
-          activities: item.activities?.filter((activity) => {
-            return activity.status === 'ACTIVE'
-          })
+          activities:
+            item.activities?.filter((activity) => {
+              return activity.status === 'ACTIVE'
+            }) || []
         }
       })
   }, [frontierList])
@@ -91,29 +94,43 @@ const Frontiers = () => {
                   </div>
                 )}
                 <div>
-                  <h2 className="mb-2 px-4 text-base font-bold">{item.title}</h2>
+                  <h2 className="mb-2 flex items-center justify-between px-4 text-base font-bold">
+                    <span>{item.title}</span>
+                    {item.activities?.[0] ? (
+                      <div className="flex items-center text-sm font-normal">
+                        <Hourglass className="mr-1" />
+                        <span>{item.activities?.[0].days_left || 0}</span>D
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
+                  </h2>
                   <div className="relative bg-[#0000000A] px-4 py-2">
                     <div className="absolute inset-0 size-full blur-sm" />
                     <div className="relative flex items-center justify-between gap-5">
                       {item.activities?.[0] ? (
-                        <div className="text-sm">
-                          <div className="flex items-center">
-                            <DollarCircle className="mr-1" />
-                            <span>{item.activities?.[0].total_asset_amount || 0}</span>
-                            <span className="mr-3">{item.activities?.[0].reward_asset_type}</span>
+                        <div className="flex w-full flex-none cursor-pointer items-center justify-between gap-1 rounded-full bg-primary px-3 py-[6px] text-xs">
+                          <div className="flex items-center gap-[2px]">
+                            {item.activities?.[0].reward_asset_type === 'XNY' && <XNYCoinIcon />}
+                            {item.activities?.[0].reward_asset_type === 'USDT' && <USDTCoinIcon />}
+                            <span className="text-lg font-bold text-[#FCC800]">
+                              {formatNumber(item.activities?.[0].total_asset_amount || 0)}
+                            </span>
                           </div>
-                          <div className="mt-1 flex items-center">
-                            <Hourglass className="mr-1" />
-                            <span>{item.activities?.[0].days_left || 0}</span>D
+                          <div className="flex items-center gap-[2px] text-xs">
+                            <span>Start</span>
+                            <img src={arrowRight} alt="" className="size-[14px]" />
                           </div>
                         </div>
                       ) : (
-                        <div className="line-clamp-2 text-[#A4A4A8]">{item.description.frontier_desc}</div>
+                        <>
+                          <div className="line-clamp-2 text-[#A4A4A8]">{item.description.frontier_desc}</div>
+                          <div className="flex h-[30px] w-[98px] flex-none cursor-pointer items-center justify-center gap-1 rounded-full bg-primary text-xs">
+                            <span>Start</span>
+                            <img src={arrowRight} alt="" />
+                          </div>
+                        </>
                       )}
-                      <div className="flex h-[30px] w-[98px] flex-none cursor-pointer items-center justify-center gap-1 rounded-full bg-primary text-xs">
-                        <span>Start</span>
-                        <img src={arrowRight} alt="" />
-                      </div>
                     </div>
                   </div>
                 </div>
