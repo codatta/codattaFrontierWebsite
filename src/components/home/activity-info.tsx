@@ -102,13 +102,32 @@ export default function ActivityInfo({ className }: { className?: string }) {
 
 function getRulesText(activity: FrontierActivityInfoItem) {
   return [
-    'Multiple valid submissions count for reward sharing',
-    `Minimum data quality requirement: Grade ${activity.min_ranking_grade}`,
-    'Below standard submissions receive points reward',
-    'Quality assessment based on accuracy and completeness',
-    activity.reward_mode === 'FIRST_COME_FIRST_SERVE'
-      ? 'First come, first served: Fixed rewards for reaching baseline score during activity period. Once required quantity is reached, no more rewards will be distributed even if activity continues.Below standard gets points reward'
-      : 'Divide and share mode: Multiple submissions valid, each counts for sharing. Below standard gets points reward.'
+    <p>
+      <strong>Reward Share</strong>: The rewards will be divided among all qualified submissions. Multiple valid
+      submissions will increase your share.
+    </p>,
+    <p>
+      <strong>Minimum Quality</strong>: Submissions must meet a minimum quality of Grade {activity.min_ranking_grade} to
+      qualify for the main reward.
+    </p>,
+    <p>
+      <strong>Points Reward</strong>: Submissions that do not meet the Grade {activity.min_ranking_grade} standard will
+      receive a points reward.
+    </p>,
+    <p>
+      <strong>Quality Assessment</strong>: Quality is assessed based on accuracy and completeness.
+    </p>,
+    activity.reward_mode === 'FIRST_COME_FIRST_SERVE' ? (
+      <p>
+        <strong>First-Come, First-Served</strong>: Main rewards are distributed on a first-come, first-served basis
+        until the reward pool is depleted. Submissions after this point will still earn a points reward.
+      </p>
+    ) : (
+      <p>
+        <strong>Divide and Share</strong>: The total reward pool for this activity will be shared among all qualified
+        submissions when the event ends.{' '}
+      </p>
+    )
   ]
 }
 
@@ -132,7 +151,7 @@ function Rules({ activity }: { activity: FrontierActivityInfoItem }) {
           showRules ? 'h-auto' : 'h-0'
         )}
       >
-        {rules?.map((rule) => <li key={rule}>{rule}</li>)}
+        {rules?.map((rule, index) => <li key={index}>{rule}</li>)}
       </ul>
     </div>
   )
