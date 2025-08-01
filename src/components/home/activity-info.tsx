@@ -67,7 +67,7 @@ export default function ActivityInfo({ className }: { className?: string }) {
               </div>
               {item.reward_mode === 'EQUAL_SPLIT_ON_END' ? (
                 <div>
-                  <div className="mb-[2px] text-[#FFFFFF/75]">Total Submissions</div>
+                  <div className="mb-[2px] text-[#FFFFFF/75]">Total Qualified Submissions</div>
                   <div className="text-base font-bold">{formatNumber(item.submissions || 0)}</div>
                 </div>
               ) : (
