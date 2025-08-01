@@ -2,7 +2,6 @@ import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Pagination, Spin } from 'antd'
 import { useSnapshot } from 'valtio'
-import { ArrowUpRight } from 'lucide-react'
 
 import arrowLeft from '@/assets/common/arrow-left.svg'
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
