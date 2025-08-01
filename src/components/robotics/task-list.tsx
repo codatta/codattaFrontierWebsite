@@ -4,8 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import AngleRight from '@/assets/crypto/angle-right.svg'
 
-import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import CustomEmpty from '@/components/common/empty'
+
+import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import { TaskDetail } from '@/apis/frontiter.api'
 
 const RoboticsTaskList: React.FC = () => {
