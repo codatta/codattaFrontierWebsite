@@ -71,6 +71,7 @@ const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
+const CryptoTpl000003 = lazy(() => import('@/views/frontiers/crypto_tpl_000003'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -189,7 +190,6 @@ export default function Router() {
           path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
           element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
         />
-
         <Route path="/frontier/project/FOOD_TPL_M2_W1/:taskId" element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />} />
         <Route
           path="/frontier/project/FOOD_TPL_M2_W1/:taskId/:questId"
@@ -242,7 +242,6 @@ export default function Router() {
           path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId/:questId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
         />
-
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId"
           element={<CryptoTpl000002 templateId="CRYPTO_TPL_WITHDRAW_W7" />}
@@ -259,7 +258,22 @@ export default function Router() {
           path="/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId/:questId"
           element={<CryptoTpl000002 templateId="CRYPTO_TPL_DEPOSIT_W7" />}
         />
-
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W8/:taskId"
+          element={<CryptoTpl000003 templateId="CRYPTO_TPL_WITHDRAW_W8" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId"
+          element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W8/:taskId/:questId"
+          element={<CryptoTpl000003 templateId="CRYPTO_TPL_WITHDRAW_W8" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId/:questId"
+          element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
+        />
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />
           <Route path=":week/quiz" element={<QuizTaskPage />} />
