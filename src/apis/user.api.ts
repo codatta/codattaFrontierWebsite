@@ -191,112 +191,14 @@ class UserApi {
     return data
   }
 
-  async getNewJourneyLevels() {
-    const data: JourneyLevelItem[] = [
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      }
-    ]
+  async getClaimSign(address: string | `0x${string}`, amount: number) {
+    // TODO:
+    const { data } = await request.post<Response<{ signature: string }>>('/v2/user/claim/sign', {
+      address,
+      amount
+    })
     return data
   }
-
-  async getNewJourneyQuests() {}
-
-  async getNewJourneyReferral() {}
-
-  async getNewJourneyPoints() {}
 }
 
 export default new UserApi(request)

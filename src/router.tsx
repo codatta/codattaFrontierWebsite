@@ -169,6 +169,8 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
+          <Route path="CRYPTO_TPL_WITHDRAW/:taskId" element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />} />
+          <Route path="CRYPTO_TPL_DEPOSIT/:taskId" element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />} />
         </Route>
         <Route
           path="/frontier/project/FOOD_TPL_000002/:taskId/:questId"

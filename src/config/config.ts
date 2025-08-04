@@ -1,6 +1,5 @@
 export const VITE_IS_LOCAL = import.meta.env.DEV
 export const VITE_MODE = import.meta.env.MODE
-export const VITE_DYNAMIC_ENVIRONMENT_ID = import.meta.env.VITE_DYNAMIC_ENVIRONMENT_ID
 export const VITE_GA_TRACKING_ID = import.meta.env.VITE_GA_TRACKING_ID
 export const VITE_SENTRY_URL =
   'https://246a3c3dd39b2f7b32dfa4b3db18a223@o4506974851366912.ingest.us.sentry.io/4506974929485824'

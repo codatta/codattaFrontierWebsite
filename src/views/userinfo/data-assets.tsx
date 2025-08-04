@@ -8,11 +8,14 @@ import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useUserStore } from '@/stores/user.store'
 import { formatNumber } from '@/utils/str'
 import { cn } from '@udecode/cn'
+import TokenClaimModal from '@/components/settings/token-claim-modal'
 // import { RewardsDesc } from '@/apis/rewards.api'
 
 export default function DataAssets() {
+  const [tokenClaimModalOpen, setTokenClaimModalOpen] = useState(false)
+
   const handleClaim = () => {
-    message.info('Coming soon!')
+    setTokenClaimModalOpen(true)
   }
 
   return (
@@ -28,6 +31,7 @@ export default function DataAssets() {
       </div>
       <TokenRewards />
       <History />
+      <TokenClaimModal open={tokenClaimModalOpen} onClose={() => setTokenClaimModalOpen(false)}></TokenClaimModal>
     </div>
   )
 }

@@ -1,14 +1,12 @@
-import { Outlet } from 'react-router-dom'
 import AuthChecker from '@/components/app/auth-checker'
 import WalletWatcher from '@/components/app/wallet-watcher'
+import { Outlet } from 'react-router-dom'
 
-export default function BoosterLayout() {
+export default function BinanceActivityLayout() {
   return (
     <AuthChecker>
       <WalletWatcher>
-        <div className="relative min-h-screen bg-[#1c1c26] px-6 pb-10 text-white">
-          <Outlet />
-        </div>
+        <Outlet />
       </WalletWatcher>
     </AuthChecker>
   )
