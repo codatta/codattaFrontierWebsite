@@ -37,4 +37,22 @@ export const CURRENCY_OPTIONS: SelectOption[] = [
   // { value: 'ada', label: 'ADA' }
 ]
 
+export const NETWORK_OPTIONS_W7: SelectOption[] = [
+  { value: 'ethereum', label: 'Ethereum' },
+  { value: 'bsc', label: 'BSC' },
+  { value: 'polygon', label: 'Polygon' },
+  { value: 'base', label: 'Base' },
+  { value: 'avalanche', label: 'Avalanche' }
+]
+
+export const CURRENCY_OPTIONS_W7: SelectOption[] = [
+  { value: 'eth', label: 'ETH' },
+  { value: 'bnb', label: 'BNB' },
+  { value: 'usdt', label: 'USDT' },
+  { value: 'usdc', label: 'USDC' },
+  { value: 'matic', label: 'MATIC' },
+  { value: 'arb', label: 'ARB' },
+  { value: 'avax', label: 'AVAX' }
+]
+
 export type Currency = (typeof CURRENCY_OPTIONS)[number]['value']

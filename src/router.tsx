@@ -70,6 +70,7 @@ const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
+const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -240,6 +241,23 @@ export default function Router() {
         <Route
           path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId/:questId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
+        />
+
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId"
+          element={<CryptoTpl000002 templateId="CRYPTO_TPL_WITHDRAW_W7" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId"
+          element={<CryptoTpl000002 templateId="CRYPTO_TPL_DEPOSIT_W7" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId/:questId"
+          element={<CryptoTpl000002 templateId="CRYPTO_TPL_WITHDRAW_W7" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId/:questId"
+          element={<CryptoTpl000002 templateId="CRYPTO_TPL_DEPOSIT_W7" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>
