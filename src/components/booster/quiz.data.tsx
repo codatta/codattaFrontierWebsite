@@ -330,33 +330,92 @@ export const Data: DataItem[] = [
   {
     intro: [
       {
-        title: 'Our Vision',
+        title: 'Key Factors Impacting AML Risk (1)',
         des: [
           {
-            type: 'p',
+            type: 'h4',
+            content: 'Regulated Financial Institutions:'
+          },
+          {
+            type: 'light',
             content:
-              'Codatta aims to make knowledge a tradable asset, helping AI grow faster and share its benefits with everyone. By creating a system where experts are paid fairly, Codatta helps AI learn from specialized knowledge and adapts quickly. It creates new opportunities for people worldwide, using blockchain to make sure those who contribute get rewarded.'
+              'Banks (like JP Morgan Chase) are highly regulated and follow strict KYC (Know Your Customer) procedures. This means they must verify the identity of their customers, making it difficult for illicit actors to use these platforms for money laundering.'
+          },
+          {
+            type: 'h4',
+            content: 'Cryptocurrency Exchanges:'
+          },
+          {
+            type: 'light',
+            content:
+              'Centralized exchanges (such as Binance) are businesses that provide a platform for trading crypto. Most of these exchanges are regulated and have AML and KYC measures in place. However, the level of compliance can vary between exchanges.'
+          }
+        ]
+      },
+      {
+        title: 'Key Factors Impacting AML Risk (2)',
+        des: [
+          {
+            type: 'h4',
+            content: 'Decentralized Exchanges (DEXs)'
+          },
+          {
+            type: 'light',
+            content:
+              'DEXs like Uniswap operate without a central authority and typically do not require KYC. While they offer more privacy, this lack of regulation makes them more vulnerable to misuse for money laundering or other illicit activities.'
+          },
+          {
+            type: 'h4',
+            content: 'Coin Mixers (Tumblers):'
+          },
+          {
+            type: 'light',
+            content:
+              "Coin mixers are services that blend different users' cryptocurrencies together, effectively hiding the trail of where the funds came from. This is considered a high-risk behavior from an AML perspective, as it makes it much harder to trace the origin and destination of funds."
+          },
+          {
+            type: 'h4',
+            content: 'Cryptocurrency Wallets:'
+          },
+          {
+            type: 'light',
+            content:
+              'Wallets (both hot and cold) are used to store cryptocurrencies. While wallets themselves are neutral tools, the way in which they are used in transactions can impact the overall AML risk, especially if linked with unregulated platforms or coin mixers.'
           }
         ]
       }
     ],
     quiz: [
       {
-        question: `What is Codatta's goal?`,
+        question: (
+          <div className="text-left">
+            You are assessing AML (Anti-Money Laundering) risk for different crypto transaction paths. Rank the
+            following paths from safest to riskiest:
+            <p className="mt-3 text-base font-normal">Path A: JP Morgan Chase → Binance → Withdrawal</p>
+            <p className="text-base font-normal">Path B: JP Morgan Chase → Binance → Uniswap (DEX) → Wallet</p>
+            <p className="text-base font-normal">
+              Path C: JP Morgan Chase → Binance → Coin Mixer → Wallet Which ranking is correct?
+            </p>
+          </div>
+        ),
         answer: [
-          { des: 'A) To make knowledge a tradable asset', right: true },
-          { des: 'B) To make AI smarter without experts' },
-          { des: 'C) To eliminate the need for experts in AI' },
-          { des: 'D) To make AI more expensive' }
+          { des: 'A) Path A → Path B → Path C', right: true },
+          { des: 'B) Path B → Path A → Path C' },
+          { des: 'C) Path C → Path B → Path A' },
+          { des: 'D) Path A → Path C → Path B' }
         ]
       },
       {
-        question: 'How does Codatta help AI improve?',
+        question: (
+          <div className="text-left">
+            Which of the following is a common red flag for potential money laundering in cryptocurrency transactions?
+          </div>
+        ),
         answer: [
-          { des: 'A) By using expert contributions to guide AI', right: true },
-          { des: 'B) By letting AI automatically learn everything' },
-          { des: 'C) By removing all human involvement' },
-          { des: 'D) By making AI development slower' }
+          { des: 'A) Small, frequent transactions to known wallets', right: true },
+          { des: 'B) Large transactions to wallets with no prior transaction history' },
+          { des: 'C) Transactions involving stablecoins pegged to fiat currencies' },
+          { des: 'D) Transactions occurring during regular business hours' }
         ]
       }
     ]

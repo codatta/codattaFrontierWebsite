@@ -8,11 +8,11 @@ export type DataITemIntro = {
 }
 
 export type DataItemQuiz = {
-  question: string
+  question: string | React.ReactNode
   answer: QuizAnswer[]
 }
 
 export type QuizAnswer = {
-  des: string
+  des: string | React.ReactNode
   right?: boolean
 }
