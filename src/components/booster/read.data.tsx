@@ -209,5 +209,56 @@ export const Data: DataItem[] = [
         ]
       }
     ]
+  },
+  {
+    intro: [
+      {
+        title: 'The Issues to Address',
+        des: [
+          {
+            type: 'p',
+            content: <>We aim to address significant challenges posed by centralized data systems:</>
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Data Silos:</span> Data is often locked within
+                centralized entities, limiting accessibility and utility.
+              </>
+            )
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Lacking Data Integrity:</span> In-house and centralized
+                models lack transparency in data curation and quality verification, and suffer from a single point of
+                failure.
+              </>
+            )
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Inefficiency:</span> The traditional model of curating
+                data is costly and involves a lot of duplicative efforts among projects relying on the same dataset.
+              </>
+            )
+          },
+          {
+            type: 'p',
+            content: (
+              <>
+                In contrast, <span className="text-lg font-bold text-white">Codatta</span> aggregates and curates data
+                from various sources, ensuring high quality and confidence through collaborative and automated
+                mechanisms.
+              </>
+            )
+          }
+        ]
+      }
+    ]
   }
 ]

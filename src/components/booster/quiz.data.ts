@@ -326,5 +326,39 @@ export const Data: DataItem[] = [
         ]
       }
     ]
+  },
+  {
+    intro: [
+      {
+        title: 'Our Vision',
+        des: [
+          {
+            type: 'p',
+            content:
+              'Codatta aims to make knowledge a tradable asset, helping AI grow faster and share its benefits with everyone. By creating a system where experts are paid fairly, Codatta helps AI learn from specialized knowledge and adapts quickly. It creates new opportunities for people worldwide, using blockchain to make sure those who contribute get rewarded.'
+          }
+        ]
+      }
+    ],
+    quiz: [
+      {
+        question: `What is Codatta's goal?`,
+        answer: [
+          { des: 'A) To make knowledge a tradable asset', right: true },
+          { des: 'B) To make AI smarter without experts' },
+          { des: 'C) To eliminate the need for experts in AI' },
+          { des: 'D) To make AI more expensive' }
+        ]
+      },
+      {
+        question: 'How does Codatta help AI improve?',
+        answer: [
+          { des: 'A) By using expert contributions to guide AI', right: true },
+          { des: 'B) By letting AI automatically learn everything' },
+          { des: 'C) By removing all human involvement' },
+          { des: 'D) By making AI development slower' }
+        ]
+      }
+    ]
   }
 ]
