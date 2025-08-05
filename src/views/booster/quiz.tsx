@@ -56,7 +56,7 @@ export default function Component() {
   }
 
   return status === 2 ? (
-    <Result />
+    <Result title="Introduction and Quiz" />
   ) : (
     <div className="overflow-hidden">
       <AnimatePresence>{pageLoading && <Loading />}</AnimatePresence>

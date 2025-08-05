@@ -4,7 +4,7 @@ import Header from '@/components/booster/header'
 import completeBg from '@/assets/booster/task-complete-bg.png'
 import QuizIcon from '@/assets/booster/quiz-success.svg?react'
 
-export default function Result() {
+export default function Result({ title = 'Introduction and Quiz' }: { title?: string }) {
   const containerVariants = {
     hidden: {},
     visible: {
@@ -33,7 +33,7 @@ export default function Result() {
     <div className="relative h-screen overflow-hidden">
       <motion.div className="relative z-10" initial="hidden" animate="visible" variants={containerVariants}>
         <motion.div variants={headerVariants}>
-          <Header title="Introduction and Quiz" />
+          <Header title={title} />
         </motion.div>
         <motion.div
           className="mx-auto mt-[80px] w-fit"

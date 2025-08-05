@@ -47,7 +47,7 @@ export default function Component() {
   }, [week])
 
   return status === 2 ? (
-    <Result />
+    <Result title="Codatta Introduction" />
   ) : (
     <div>
       <AnimatePresence>{pageLoading && <Loading />}</AnimatePresence>
