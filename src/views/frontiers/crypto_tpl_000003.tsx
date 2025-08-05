@@ -10,10 +10,12 @@ import DepositForm from '@/components/frontier/crypto/deposit-form'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 // import PageError from '@/components/robotics/page-error'
 import { DepositFormData, ResultType, WithdrawFormData } from '@/components/frontier/crypto/types'
-import { EXCHANGE_OPTIONS, NETWORK_OPTIONS, CURRENCY_OPTIONS } from '@/components/frontier/crypto/consts'
+import { EXCHANGE_OPTIONS, NETWORK_OPTIONS_W7, CURRENCY_OPTIONS_W7 } from '@/components/frontier/crypto/consts'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
+
+// TODO change when w8 is ready
 
 async function getLastSubmission(frontierId: string, taskIds: string) {
   const res = await frontiterApi.getSubmissionList({
@@ -161,8 +163,8 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
               resultType={resultType}
               onSubmit={onSubmit}
               exchangeOptions={EXCHANGE_OPTIONS}
-              networkOptions={NETWORK_OPTIONS}
-              currencyOptions={CURRENCY_OPTIONS}
+              networkOptions={NETWORK_OPTIONS_W7}
+              currencyOptions={CURRENCY_OPTIONS_W7}
             />
           ) : (
             <DepositForm
@@ -171,8 +173,8 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
               resultType={resultType}
               onSubmit={onSubmit}
               exchangeOptions={EXCHANGE_OPTIONS}
-              networkOptions={NETWORK_OPTIONS}
-              currencyOptions={CURRENCY_OPTIONS}
+              networkOptions={NETWORK_OPTIONS_W7}
+              currencyOptions={CURRENCY_OPTIONS_W7}
             />
           )}
         </div>
@@ -180,3 +182,6 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
     </AuthChecker>
   )
 }
+
+// http://localhost:5175/frontier/project/CRYPTO_TPL_DEPOSIT_W8/8176231080700108480/task-8-cryptod1time
+// http://localhost:5175/frontier/project/CRYPTO_TPL_WITHDRAW_W8/8176226812900108479/task-8-cryptow1time

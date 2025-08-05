@@ -10,7 +10,7 @@ import DepositForm from '@/components/frontier/crypto/deposit-form'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 // import PageError from '@/components/robotics/page-error'
 import { DepositFormData, ResultType, WithdrawFormData } from '@/components/frontier/crypto/types'
-import { EXCHANGE_OPTIONS, NETWORK_OPTIONS, CURRENCY_OPTIONS } from '@/components/frontier/crypto/consts'
+import { EXCHANGE_OPTIONS, NETWORK_OPTIONS_W7, CURRENCY_OPTIONS_W7 } from '@/components/frontier/crypto/consts'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
@@ -161,8 +161,8 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
               resultType={resultType}
               onSubmit={onSubmit}
               exchangeOptions={EXCHANGE_OPTIONS}
-              networkOptions={NETWORK_OPTIONS}
-              currencyOptions={CURRENCY_OPTIONS}
+              networkOptions={NETWORK_OPTIONS_W7}
+              currencyOptions={CURRENCY_OPTIONS_W7}
             />
           ) : (
             <DepositForm
@@ -171,8 +171,8 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
               resultType={resultType}
               onSubmit={onSubmit}
               exchangeOptions={EXCHANGE_OPTIONS}
-              networkOptions={NETWORK_OPTIONS}
-              currencyOptions={CURRENCY_OPTIONS}
+              networkOptions={NETWORK_OPTIONS_W7}
+              currencyOptions={CURRENCY_OPTIONS_W7}
             />
           )}
         </div>
@@ -180,3 +180,6 @@ export default function CryptoTpl000001({ templateId }: { templateId: string }) 
     </AuthChecker>
   )
 }
+
+// http://localhost:5175/frontier/project/CRYPTO_TPL_DEPOSIT_W7/8175976962300108468/task-7-cryptod1time
+// http://localhost:5175/frontier/project/CRYPTO_TPL_WITHDRAW_W7/8175986473600108469/task-7-cryptow1time

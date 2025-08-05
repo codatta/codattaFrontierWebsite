@@ -1,13 +1,13 @@
 import { useEffect, useState, useMemo } from 'react'
 import { cn } from '@udecode/cn'
 
-import { EXCHANGE_OPTIONS, NETWORK_OPTIONS, CURRENCY_OPTIONS } from '@/components/frontier/crypto/consts'
 import type { Exchange, Network, Currency } from '@/components/frontier/crypto/consts'
 import Select from '@/components/frontier/crypto/select'
 // import Input from '@/components/frontier/crypto/input'
 import Upload from '@/components/frontier/crypto/upload'
 import { Button } from '@/components/booster/button'
 import { DepositFormData } from './types'
+import { SelectOption } from '@/components/mobile-ui/select'
 
 // import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
 
@@ -19,11 +19,17 @@ export default function DepositForm({
   isMobile,
   resultType,
   isBnb,
-  onSubmit
+  onSubmit,
+  exchangeOptions,
+  networkOptions,
+  currencyOptions
 }: {
   isBnb?: boolean
   isMobile: boolean
   resultType?: 'ADOPT' | 'PENDING' | 'REJECT' | null
+  exchangeOptions: SelectOption[]
+  networkOptions: SelectOption[]
+  currencyOptions: SelectOption[]
   onSubmit: (data: DepositFormData) => Promise<boolean>
 }) {
   const [loading, setLoading] = useState(false)
@@ -120,7 +126,7 @@ export default function DepositForm({
           </h3>
           <Select
             isMobile={isMobile}
-            options={EXCHANGE_OPTIONS}
+            options={exchangeOptions}
             placeholder="Select Exchange"
             value={formData.exchange || undefined}
             onChange={(value) => handleFormChange('exchange', value)}
@@ -132,7 +138,7 @@ export default function DepositForm({
             Network<span className="text-red-400">*</span>
           </h3>
           <Select
-            options={NETWORK_OPTIONS}
+            options={networkOptions}
             placeholder="Select Network"
             value={formData.network || undefined}
             onChange={(value) => handleFormChange('network', value)}
@@ -146,7 +152,7 @@ export default function DepositForm({
           </h3>
           <Select
             isMobile={isMobile}
-            options={CURRENCY_OPTIONS}
+            options={currencyOptions}
             placeholder="Select Currency"
             value={formData.currency || undefined}
             onChange={(value) => handleFormChange('currency', value)}

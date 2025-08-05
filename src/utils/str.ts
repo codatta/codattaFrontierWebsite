@@ -41,3 +41,7 @@ export function truncateStr(
   const halfSliceLen = Math.floor(sliceLen / 2)
   return `${address.slice(0, halfSliceLen)}${ellipsis}${address.slice(-halfSliceLen)}`
 }
+
+export function timeToUTC(time: string): string {
+  return new Date(time).toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
+}
