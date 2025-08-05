@@ -30,6 +30,7 @@ export interface FrontierActivityInfoItem {
   participants: number
   submissions: number
   status: ActiveStatus
+  description: string
   rules?: readonly string[]
 }
 
