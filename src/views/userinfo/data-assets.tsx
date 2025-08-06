@@ -15,7 +15,8 @@ export default function DataAssets() {
   const [tokenClaimModalOpen, setTokenClaimModalOpen] = useState(false)
 
   const handleClaim = () => {
-    setTokenClaimModalOpen(true)
+    message.info('coming soon')
+    // setTokenClaimModalOpen(true)
   }
 
   return (
