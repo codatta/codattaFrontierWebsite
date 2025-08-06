@@ -43,6 +43,7 @@ export interface TaskDetail {
   data_display: {
     gif_resource: string
     template_id: string
+    hide?: boolean
   }
   questions?: CMUDataRequirements[]
   data_submission?: { [key: string]: unknown }
