@@ -419,5 +419,95 @@ export const Data: DataItem[] = [
         ]
       }
     ]
+  },
+  {
+    intro: [
+      {
+        title: 'Factors Increasing AML Risk',
+        des: [
+          {
+            type: 'h4',
+            content: 'High-Frequency Trading (B):'
+          },
+          {
+            type: 'light',
+            content: 'Rapid trades can be used to obscure funds, but data transparency helps track such activity.'
+          },
+          {
+            type: 'h4',
+            content: 'Transparent Blockchain Transactions (C):'
+          },
+          {
+            type: 'light',
+            content: 'Transparency actually reduces AML risk by allowing authorities to trace all transactions.'
+          },
+          {
+            type: 'h4',
+            content: 'Hardware Wallet Transactions (D): '
+          },
+          {
+            type: 'light',
+            content: 'While secure, these transactions still need monitoring through transparent on-chain data.'
+          }
+        ]
+      },
+      {
+        title: 'AML Controls in Centralized Exchanges',
+        des: [
+          {
+            type: 'p',
+            content: 'Centralized exchanges face high AML risks and must implement the following measures:'
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">KYC Verification:</span> Ensures users' identities are
+                confirmed to prevent illegal activity.
+              </>
+            )
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Transaction Monitoring:</span> Identifies suspicious
+                transactions, such as rapid or large trades.
+              </>
+            )
+          },
+          {
+            type: 'light',
+            content: (
+              <>
+                <span className="text-lg font-bold text-white">Reporting Large Transactions:</span> Exchanges report
+                transactions above a certain threshold to regulators.
+              </>
+            )
+          }
+        ]
+      }
+    ],
+    quiz: [
+      {
+        question: 'Which of the following factors increases the AML risk of a cryptocurrency transaction?',
+        answer: [
+          { des: 'A) The transaction involves a well-known, regulated exchange' },
+          { des: 'B) The transaction is part of a series of rapid, high-frequency trades', right: true },
+          { des: 'C) The transaction is transparent and recorded on a public blockchain' },
+          { des: 'D) The transaction is initiated from a hardware wallet' }
+        ]
+      },
+      {
+        question:
+          'Which of the following is NOT a typical AML control implemented by centralized cryptocurrency exchanges?',
+        answer: [
+          { des: 'A) Know Your Customer (KYC) verification' },
+          { des: 'B) Transaction monitoring for suspicious activity' },
+          { des: 'C) Mandatory use of multi-signature wallets', right: true },
+          { des: 'D) Reporting large transactions to regulators' }
+        ]
+      }
+    ]
   }
 ]
