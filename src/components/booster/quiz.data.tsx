@@ -388,14 +388,13 @@ export const Data: DataItem[] = [
     quiz: [
       {
         question: (
-          <div className="text-left">
+          <div className="text-left text-lg">
             You are assessing AML (Anti-Money Laundering) risk for different crypto transaction paths. Rank the
             following paths from safest to riskiest:
             <p className="mt-3 text-base font-normal">Path A: JP Morgan Chase → Binance → Withdrawal</p>
             <p className="text-base font-normal">Path B: JP Morgan Chase → Binance → Uniswap (DEX) → Wallet</p>
-            <p className="text-base font-normal">
-              Path C: JP Morgan Chase → Binance → Coin Mixer → Wallet Which ranking is correct?
-            </p>
+            <p className="text-base font-normal">Path C: JP Morgan Chase → Binance → Coin Mixer → Wallet</p>
+            <p className="text-base font-normal">Which ranking is correct?</p>
           </div>
         ),
         answer: [
@@ -412,8 +411,8 @@ export const Data: DataItem[] = [
           </div>
         ),
         answer: [
-          { des: 'A) Small, frequent transactions to known wallets', right: true },
-          { des: 'B) Large transactions to wallets with no prior transaction history' },
+          { des: 'A) Small, frequent transactions to known wallets' },
+          { des: 'B) Large transactions to wallets with no prior transaction history', right: true },
           { des: 'C) Transactions involving stablecoins pegged to fiat currencies' },
           { des: 'D) Transactions occurring during regular business hours' }
         ]
