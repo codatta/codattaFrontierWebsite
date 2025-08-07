@@ -242,7 +242,7 @@ class UserApi {
         count: number
         list: FrontierTokenRewardItem[]
       }>
-    >('/api/v2/submission/user/token/rewards', {
+    >('/v2/submission/user/token/rewards', {
       page_num: page,
       page_size: pageSize
     })
