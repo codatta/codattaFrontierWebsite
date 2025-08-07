@@ -50,7 +50,7 @@ export interface SocialAccountInfoItem {
 }
 
 export interface UserAsset {
-  asset_type: 'POINTS' | 'XNYCoin' | 'USDT'
+  asset_type: 'POINTS' | 'XnYCoin' | 'USDT'
   balance: {
     amount: string
     currency: string
@@ -125,6 +125,34 @@ export interface JourneyLevelItem {
   status: number
 }
 
+export interface TokenClaimItem {
+  id: number
+  uid: number
+  claim_time: string
+  tx_hash: string
+  from_address: string
+  to_address: string
+  asset_type: string
+  balance: number
+  status: number
+  status_name: string
+}
+
+export interface FrontierTokenRewardTokenItem {
+  frontier_id: string
+  reward_type: string
+  reward_amount: number
+}
+
+export interface FrontierTokenRewardItem {
+  frontier_id: string
+  frontier_name: string
+  total_submission: number
+  average_rating_name: string
+  average_result: number
+  tokens: FrontierTokenRewardTokenItem[]
+}
+
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -191,112 +219,36 @@ class UserApi {
     return data
   }
 
-  async getNewJourneyLevels() {
-    const data: JourneyLevelItem[] = [
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      },
-      {
-        levelId: 1,
-        reward_type: 'score',
-        reward_value: 100,
-        status: 1
-      },
-      {
-        levelId: 1,
-        reward_type: 'reputation',
-        reward_value: 100,
-        status: 0
-      },
-      {
-        levelId: 1,
-        reward_type: 'nft',
-        reward_value: 'nft_1',
-        soul_id: 2,
-        status: 2
-      }
-    ]
+  async getTokenClaimRecords(page: number, pageSize: number) {
+    const { data } = await request.post<
+      Response<{
+        page_num: number
+        page_size: number
+        count: number
+        list: TokenClaimItem[]
+      }>
+    >('/api/v2/user/reward/record/list', {
+      page_num: page,
+      page_size: pageSize
+    })
     return data
   }
 
-  async getNewJourneyQuests() {}
+  async getFrontierTokenReward(page: number, pageSize: number) {
+    const { data } = await request.post<
+      Response<{
+        page_num: number
+        page_size: number
+        count: number
+        list: FrontierTokenRewardItem[]
+      }>
+    >('/api/v2/submission/user/token/rewards', {
+      page_num: page,
+      page_size: pageSize
+    })
 
-  async getNewJourneyReferral() {}
-
-  async getNewJourneyPoints() {}
+    return data
+  }
 }
 
 export default new UserApi(request)

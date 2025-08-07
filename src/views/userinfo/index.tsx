@@ -57,7 +57,7 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
     () => Math.round(Number(assets.find((asset) => asset.asset_type === 'POINTS')?.balance.amount ?? 0)),
     [assets]
   )
-  const xyn = useMemo(() => assets.find((asset) => asset.asset_type === 'XNYCoin')?.balance.amount ?? '0.00', [assets])
+  const xyn = useMemo(() => assets.find((asset) => asset.asset_type === 'XnYCoin')?.balance.amount ?? '0.00', [assets])
   const usdt = useMemo(() => assets.find((asset) => asset.asset_type === 'USDT')?.balance.amount ?? '0.00', [assets])
 
   const navigate = useNavigate()
