@@ -9,6 +9,7 @@ import { formatNumber } from '@/utils/str'
 import frontierApi, { FrontierActivityInfoItem } from '@/apis/frontiter.api'
 import XNYCoinIcon from '@/assets/home/xyn-coin-icon.svg?react'
 import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'
+import FrontierActivityMarkdown from '../frontier/frontier-activity-markdown'
 
 export default function ActivityInfo({ className }: { className?: string }) {
   const { frontier_id } = useParams()
@@ -205,9 +206,15 @@ function ActivityDetail({ activity }: { activity: FrontierActivityInfoItem }) {
         <ChevronUp size={24} className={cn('cursor-pointer transition-all', showRules ? 'rotate-180' : '')} />
       </h3>
       <div className={cn(showRules ? 'h-auto pt-4' : 'h-0 overflow-hidden')}>
-        <ActivityGuide activity={activity}></ActivityGuide>
-        <ActivityTime activity={activity}></ActivityTime>
-        <ActivityRules activity={activity}></ActivityRules>
+        {activity.description ? (
+          <FrontierActivityMarkdown>{activity.description}</FrontierActivityMarkdown>
+        ) : (
+          <>
+            <ActivityGuide activity={activity}></ActivityGuide>
+            <ActivityTime activity={activity}></ActivityTime>
+            <ActivityRules activity={activity}></ActivityRules>
+          </>
+        )}
       </div>
     </div>
   )
