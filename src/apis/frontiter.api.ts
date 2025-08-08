@@ -31,6 +31,7 @@ export interface FrontierActivityInfoItem {
   submissions: number
   status: ActiveStatus
   rules?: readonly string[]
+  description?: string
 }
 
 export interface TaskDetail {

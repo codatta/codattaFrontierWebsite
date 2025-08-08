@@ -1,6 +1,6 @@
 import { proxy } from 'valtio'
 import { useSnapshot } from 'valtio'
-import userApi, { JourneyLevelItem } from '@/apis/user.api'
+import { JourneyLevelItem } from '@/apis/user.api'
 
 type TJourneyStore = {
   levels: JourneyLevelItem[]
@@ -13,8 +13,8 @@ export const journeyStore = proxy<TJourneyStore>({
 export const useJourneyStore = () => useSnapshot(journeyStore)
 
 async function getNewJourneyLevels() {
-  const res = await userApi.getNewJourneyLevels()
-  journeyStore.levels = res
+  // const res = await userApi.getNewJourneyLevels()
+  // journeyStore.levels = res
 }
 
 async function getNewJourneyQuests() {}
