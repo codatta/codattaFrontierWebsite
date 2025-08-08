@@ -73,8 +73,8 @@ const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001')
 const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
 const CryptoTpl000003 = lazy(() => import('@/views/frontiers/crypto_tpl_000003'))
 
-const CollectionTpl0001 = lazy(() => import('@/views/frontiers/collection_tpl_0001'))
-const CollectionTpl0002 = lazy(() => import('@/views/frontiers/collection_tpl_0002'))
+const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_info_survey_basic'))
+const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -278,20 +278,20 @@ export default function Router() {
           element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
         />
         <Route
-          path="/frontier/project/PERSONAL_INFO_COLLECTION_0001/:taskId"
-          element={<CollectionTpl0001 templateId="PERSONAL_INFO_COLLECTION_0001" />}
+          path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId"
+          element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
         />
         <Route
-          path="/frontier/project/PERSONAL_INFO_COLLECTION_0001/:taskId/:questId"
-          element={<CollectionTpl0001 templateId="PERSONAL_INFO_COLLECTION_0001" />}
+          path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId/:questId"
+          element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
         />
         <Route
-          path="/frontier/project/PERSONAL_INFO_COLLECTION_0002/:taskId"
-          element={<CollectionTpl0002 templateId="PERSONAL_INFO_COLLECTION_0002" />}
+          path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId"
+          element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
         />
         <Route
-          path="/frontier/project/PERSONAL_INFO_COLLECTION_0002/:taskId/:questId"
-          element={<CollectionTpl0002 templateId="PERSONAL_INFO_COLLECTION_0002" />}
+          path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId/:questId"
+          element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>

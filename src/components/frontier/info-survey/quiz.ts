@@ -13,12 +13,14 @@ export type QuestionKey =
   | 'coding_ability'
   | 'blockchain_domain_knowledge'
 
-const questionsMap: {
+export interface Question {
   key: QuestionKey
   question: string
   des: string
   options: Option[]
-}[] = [
+}
+
+const questionsMap: Question[] = [
   {
     key: 'most_proficient_language',
     question: 'Most Proficient Language *',
@@ -159,6 +161,6 @@ const questionsMap: {
   }
 ]
 
-export const getQuizQuestions = () => {
+export const getQuizQuestions = (): Question[] => {
   return questionsMap
 }

@@ -1,19 +1,19 @@
 import { Spin, message } from 'antd'
 import { ArrowLeft } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import AuthChecker from '@/components/app/auth-checker'
-import SelectCard from '@/components/frontier/info-collection/select-card'
+import SelectCard from '@/components/frontier/info-survey/select-card'
 import { Button } from '@/components/booster/button'
 
-import { getQuizQuestions, QuestionKey, AnswerKey } from '@/components/frontier/info-collection/quiz'
+import { getQuizQuestions, QuestionKey, AnswerKey, Question } from '@/components/frontier/info-survey/quiz'
 
 interface Props {
   templateId: string
 }
 
-export default function CollectionTpl0002({ templateId }: Props) {
+export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
   const { taskId, questId = '' } = useParams()
   const isBnb = questId.toLocaleUpperCase().includes('TASK')
 
@@ -27,7 +27,7 @@ export default function CollectionTpl0002({ templateId }: Props) {
     coding_ability: '',
     blockchain_domain_knowledge: ''
   })
-  const [questions, setQuestions] = useState(getQuizQuestions())
+  const [questions, setQuestions] = useState<Question[]>([])
 
   const allAnswered = useMemo(() => {
     return Object.values(answers).every((answer) => answer !== '')
@@ -60,6 +60,12 @@ export default function CollectionTpl0002({ templateId }: Props) {
     }, 2000)
   }
 
+  useEffect(() => {
+    setPageLoading(false)
+    setQuestions(getQuizQuestions())
+    console.log('CollectionTpl0002', taskId, questId, templateId)
+  }, [taskId, questId, templateId])
+
   return (
     <AuthChecker>
       <Spin spinning={pageLoading} className="min-h-screen">
@@ -72,7 +78,7 @@ export default function CollectionTpl0002({ templateId }: Props) {
             ) : (
               <span></span>
             )}
-            <span>Personal Information Collection</span>
+            <span>Annotator Information Survey</span>
             <span></span>
           </h1>
           <hr className="hidden border-[#FFFFFF1F] md:block" />
@@ -101,4 +107,4 @@ export default function CollectionTpl0002({ templateId }: Props) {
   )
 }
 
-// http://localhost:5175/frontier/project/PERSONAL_INFO_COLLECTION_0002/8202164179200108849/task-9-collectionb1time
+// http://localhost:5175/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/8202164179200108849/task-9-surveyb1time
