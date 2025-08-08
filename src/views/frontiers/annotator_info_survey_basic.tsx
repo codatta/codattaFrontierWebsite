@@ -50,6 +50,9 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
     setPageLoading(false)
     setAllAnswered(false)
     console.log('CollectionTpl0001', taskId, questId, templateId)
+    for (const key of ['country_of_residence', 'most_proficient_language', 'education_level', 'occupation']) {
+      console.log(key, selectOptionsMap[key])
+    }
   }, [taskId, questId, templateId])
 
   return (
@@ -68,32 +71,43 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
             <span></span>
           </h1>
           <hr className="hidden border-[#FFFFFF1F] md:block" />
-          <div className="mx-auto mt-[22px] max-w-[1272px] space-y-[22px] px-6 pb-6 md:mt-[48px] md:space-y-8 md:pb-[48px]">
-            <h2 className="text-center text-base font-bold leading-[48px] md:leading-[74px]">Basic Information</h2>
-            <ul>
+          <div className="mx-auto mt-[22px] max-w-[1272px] px-6 pb-6 md:mt-[48px] md:pb-[48px]">
+            <h2 className="px-4 text-left text-base font-bold text-white">Basic Information</h2>
+            <ul className="mt-3 space-y-[22px] text-sm md:space-y-8">
               <li>
-                <label htmlFor="">Contact Email*</label>
-                <Input isMobile={isMobile} className="" placeholder="" maxLength={256} onChange={handleEmailChange} />
+                <div className="mb-2 pl-4 text-[#BBBBBE]">Contact Email*</div>
+                <Input
+                  isMobile={isMobile}
+                  className="rounded-[10px] leading-5"
+                  placeholder=""
+                  maxLength={256}
+                  onChange={handleEmailChange}
+                />
               </li>
-              {['country_of_residence', 'preferred_language', 'education_level', 'occupation'].map((key) => (
-                <li key={key}>
-                  <label htmlFor="">{selectOptionsMap[key].title}</label>
-                  <Select
-                    options={selectOptionsMap[key].options}
-                    value={''}
-                    onChange={() => {}}
-                    placeholder=""
-                    isMobile={isMobile}
-                  />
-                </li>
-              ))}
+              {['country_of_residence', 'most_proficient_language', 'education_level', 'occupation'].map(
+                (key) =>
+                  selectOptionsMap[key] && (
+                    <li key={key}>
+                      <div className="mb-2 pl-4 text-[#BBBBBE]">{selectOptionsMap[key].title}</div>
+                      <Select
+                        className="rounded-[10px] leading-5"
+                        options={selectOptionsMap[key].options}
+                        value={''}
+                        onChange={() => {}}
+                        placeholder=""
+                        isMobile={isMobile}
+                      />
+                    </li>
+                  )
+              )}
             </ul>
-            <h2 className="text-center text-base font-bold leading-[48px] md:leading-[74px]">Skills Assessment</h2>
-            <ul>
+            <h2 className="mt-[22px] px-4 text-left text-base font-bold text-white">Skills Assessment</h2>
+            <ul className="mt-3 space-y-[22px] text-sm md:space-y-8">
               {['large_model_familiarity', 'coding_ability', 'blockchain_domain_knowledge'].map((key) => (
                 <li key={key}>
-                  <label htmlFor="">{selectOptionsMap[key].title}</label>
+                  <div className="mb-2 pl-4 text-[#BBBBBE]">{selectOptionsMap[key].title}</div>
                   <Select
+                    className="rounded-[10px] leading-5"
                     options={selectOptionsMap[key].options}
                     value={''}
                     onChange={() => {}}

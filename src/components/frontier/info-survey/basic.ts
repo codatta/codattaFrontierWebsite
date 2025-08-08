@@ -10,7 +10,7 @@ interface SelectOptionsMap {
 
 export const selectOptionsMap: SelectOptionsMap = {
   country_of_residence: {
-    title: 'Country of Residence *',
+    title: 'Country of Residence*',
     placeholder: 'Select your country',
     options: [
       {
@@ -68,7 +68,7 @@ export const selectOptionsMap: SelectOptionsMap = {
     ] as SelectOption[]
   },
   most_proficient_language: {
-    title: 'Most Proficient Language *',
+    title: 'Most Proficient Language*',
     placeholder: 'Select your language',
     options: [
       {
@@ -118,7 +118,7 @@ export const selectOptionsMap: SelectOptionsMap = {
     ] as SelectOption[]
   },
   education_level: {
-    title: 'Education Level *',
+    title: 'Education Level*',
     placeholder: 'Select your education level',
     options: [
       {
@@ -192,7 +192,7 @@ export const selectOptionsMap: SelectOptionsMap = {
     ] as SelectOption[]
   },
   coding_ability: {
-    title: 'Coding Ability *',
+    title: 'Coding Ability*',
     placeholder: 'Select your coding ability',
     options: [
       {
@@ -210,7 +210,7 @@ export const selectOptionsMap: SelectOptionsMap = {
     ] as SelectOption[]
   },
   blockchain_domain_knowledge: {
-    title: 'Blockchain Domain Knowledge *',
+    title: 'Blockchain Domain Knowledge*',
     placeholder: 'Select your blockchain knowledge',
     options: [
       {

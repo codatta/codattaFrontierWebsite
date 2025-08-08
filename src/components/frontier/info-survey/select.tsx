@@ -22,22 +22,23 @@ const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder
 
   return (
     <AntdSelect
-      className={cn(
-        `h-[48px] w-full rounded-lg leading-[46px] text-white [&>.ant-select-arrow>.rv-icon]:!text-[#606067] [&>.ant-select-arrow]:text-lg`,
-        className
-      )}
+      className={cn(`h-[48px] w-full rounded-lg leading-[46px] text-white [&>.ant-select-arrow]:text-lg`, className)}
       options={options}
       value={value}
       onChange={onHandleChange}
       placeholder={placeholder}
-      suffixIcon={<ArrowDown className="text-white" />}
+      suffixIcon={<ArrowDown />}
     />
   )
 }
 
 // Responsive Select Component
 const ResponsiveSelect: React.FC<SelectProps & { isMobile: boolean }> = (props) => {
-  return props.isMobile ? <MobileSelect {...props} className="[&>div]:bg-[#252532]" /> : <PCSelect {...props} />
+  return props.isMobile ? (
+    <MobileSelect {...props} className="[&>div]:bg-[#252532] [&_svg]:text-white" />
+  ) : (
+    <PCSelect {...props} />
+  )
 }
 
 export default ResponsiveSelect
