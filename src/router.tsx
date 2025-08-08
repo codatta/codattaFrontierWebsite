@@ -73,6 +73,9 @@ const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001')
 const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
 const CryptoTpl000003 = lazy(() => import('@/views/frontiers/crypto_tpl_000003'))
 
+const CollectionTpl0001 = lazy(() => import('@/views/frontiers/collection_tpl_0001'))
+const CollectionTpl0002 = lazy(() => import('@/views/frontiers/collection_tpl_0002'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -274,6 +277,23 @@ export default function Router() {
           path="/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId/:questId"
           element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
         />
+        <Route
+          path="/frontier/project/PERSONAL_INFO_COLLECTION_0001/:taskId"
+          element={<CollectionTpl0001 templateId="PERSONAL_INFO_COLLECTION_0001" />}
+        />
+        <Route
+          path="/frontier/project/PERSONAL_INFO_COLLECTION_0001/:taskId/:questId"
+          element={<CollectionTpl0001 templateId="PERSONAL_INFO_COLLECTION_0001" />}
+        />
+        <Route
+          path="/frontier/project/PERSONAL_INFO_COLLECTION_0002/:taskId"
+          element={<CollectionTpl0002 templateId="PERSONAL_INFO_COLLECTION_0002" />}
+        />
+        <Route
+          path="/frontier/project/PERSONAL_INFO_COLLECTION_0002/:taskId/:questId"
+          element={<CollectionTpl0002 templateId="PERSONAL_INFO_COLLECTION_0002" />}
+        />
+
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />
           <Route path=":week/quiz" element={<QuizTaskPage />} />
