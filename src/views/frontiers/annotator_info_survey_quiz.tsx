@@ -1,6 +1,6 @@
-import { Spin, message } from 'antd'
+import { Modal, Spin, message } from 'antd'
 import { ArrowLeft } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import AuthChecker from '@/components/app/auth-checker'
@@ -10,8 +10,21 @@ import { Button } from '@/components/booster/button'
 import { getQuizQuestions } from '@/components/frontier/info-survey/quiz'
 import { QuestionKey, AnswerKey, Question } from '@/components/frontier/info-survey/types'
 
+import frontiterApi from '@/apis/frontiter.api'
+
 interface Props {
   templateId: string
+}
+
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
+  const lastSubmission = res.data[0]
+  return lastSubmission
 }
 
 export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
@@ -20,6 +33,8 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
 
   const [pageLoading, setPageLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [rewardPoints, setRewardPoints] = useState(0)
+  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
   const [answers, setAnswers] = useState<{ [key in QuestionKey]: AnswerKey }>({
     most_proficient_language: '',
     education_level: '',
@@ -61,11 +76,74 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
     }, 2000)
   }
 
+  const handleResultStatus = (status: string = '') => {
+    status = status.toLocaleUpperCase()
+    if (['PENDING', 'SUBMITTED'].includes(status)) {
+      setResultType('PENDING')
+    } else if (status === 'REFUSED') {
+      setResultType('REJECT')
+    } else if (status === 'ADOPT') {
+      setResultType('ADOPT')
+    }
+  }
+
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+      if (taskDetail.data.data_display.template_id !== templateId) {
+        message.error('Template not match!')
+        return
+      }
+
+      console.log('data_display', taskDetail.data.data_display)
+
+      if (isBnb) {
+        const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
+        if (lastSubmission) {
+          handleResultStatus(lastSubmission?.status)
+        } else if (taskDetail.data.data_display.related_task_id) {
+          const relatedLastSubmission = await getLastSubmission(
+            taskDetail.data.frontier_id,
+            taskDetail.data.data_display.related_task_id
+          )
+          console.log('relatedLastSubmission', relatedLastSubmission)
+        }
+      } else {
+        const totalRewards = taskDetail.data.reward_info
+          .filter((item) => {
+            return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+          })
+          .reduce((acc, cur) => {
+            return acc + cur.reward_value
+          }, 0)
+
+        setRewardPoints(totalRewards)
+      }
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setPageLoading(false)
+    }
+  }, [taskId, templateId, isBnb])
+
   useEffect(() => {
-    setPageLoading(false)
-    setQuestions(getQuizQuestions())
-    console.log('CollectionTpl0002', taskId, questId, templateId)
-  }, [taskId, questId, templateId])
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   return (
     <AuthChecker>

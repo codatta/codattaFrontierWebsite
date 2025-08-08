@@ -1,7 +1,4 @@
-import { SelectOption } from '@/components/mobile-ui/select'
-import { SelectOptionsMap } from './types'
-
-export const selectOptionsMap: SelectOptionsMap = {
+export const selectOptionsMap = {
   country_of_residence: {
     title: 'Country of Residence*',
     placeholder: 'Select your country',
@@ -58,7 +55,7 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: 'Others',
         value: 'others'
       }
-    ] as SelectOption[]
+    ]
   },
   most_proficient_language: {
     title: 'Most Proficient Language*',
@@ -108,7 +105,7 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: 'Others',
         value: 'others'
       }
-    ] as SelectOption[]
+    ]
   },
   education_level: {
     title: 'Education Level*',
@@ -130,7 +127,7 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: `PhD or above`,
         value: 'phd_or_above'
       }
-    ] as SelectOption[]
+    ]
   },
   occupation: {
     title: 'Occupation *',
@@ -160,7 +157,7 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: 'Others',
         value: 'others'
       }
-    ] as SelectOption[]
+    ]
   },
   large_model_familiarity: {
     title: 'Large Model Familiarity *',
@@ -182,7 +179,7 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: `Expert level — familiar with underlying principles, capable of development and fine-tuning`,
         value: 'expert_level'
       }
-    ] as SelectOption[]
+    ]
   },
   coding_ability: {
     title: 'Coding Ability*',
@@ -200,7 +197,7 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: 'Professional developer with system-level skills',
         value: 'professional_developer'
       }
-    ] as SelectOption[]
+    ]
   },
   blockchain_domain_knowledge: {
     title: 'Blockchain Domain Knowledge*',
@@ -222,6 +219,6 @@ export const selectOptionsMap: SelectOptionsMap = {
         label: 'Professional Web3 practitioner',
         value: 'professional_web3_practitioner'
       }
-    ] as SelectOption[]
+    ]
   }
-}
+} as const

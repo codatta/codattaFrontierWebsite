@@ -2,7 +2,6 @@ import { Modal, Spin, message } from 'antd'
 import { ArrowLeft } from 'lucide-react'
 import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
-import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import { Button } from '@/components/booster/button'
@@ -15,7 +14,7 @@ import { useIsMobile } from '@/hooks/use-is-mobile'
 import { isValidEmail } from '@/utils/str'
 
 import frontiterApi from '@/apis/frontiter.api'
-import { ResultType } from '@/components/frontier/info-survey/types'
+import { BasicInfoKey, ResultType } from '@/components/frontier/info-survey/types'
 import Result from '@/components/frontier/info-survey/result'
 
 interface SurveyFormData {
@@ -46,9 +45,8 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
 
   const [pageLoading, setPageLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isFormValid, setIsFormValid] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
-  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
+  const [resultType, setResultType] = useState<ResultType | null>(null)
   const isMobile = useIsMobile()
   const [formData, setFormData] = useState<SurveyFormData>({
     email: '',
@@ -61,6 +59,19 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
     blockchain_domain_knowledge: ''
   })
   const [errors, setErrors] = useState<Partial<Record<keyof SurveyFormData, string>>>({})
+
+  const basicInfoKeys: BasicInfoKey[] = [
+    'country_of_residence',
+    'most_proficient_language',
+    'education_level',
+    'occupation'
+  ]
+
+  const skillsAssessmentKeys: BasicInfoKey[] = [
+    'large_model_familiarity',
+    'coding_ability',
+    'blockchain_domain_knowledge'
+  ]
 
   const onBack = () => {
     window.history.back()
@@ -126,18 +137,25 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
     if (trimmedEmail !== formData.email) {
       updateFormData('email', trimmedEmail)
     }
-
-    if (!isValidEmail(trimmedEmail)) {
-      setErrors((prev) => ({ ...prev, email: 'Email is invalid.' }))
+    if (trimmedEmail && !isValidEmail(trimmedEmail)) {
+      setErrors((prev) => ({ ...prev, email: 'Invalid email format.' }))
     } else {
-      setErrors((prev) => ({ ...prev, email: '' }))
+      setErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors.email
+        return newErrors
+      })
     }
   }
 
   const updateFormData = (field: keyof SurveyFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    if (field !== 'email' && errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: '' }))
+    if (errors[field]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev }
+        delete newErrors[field]
+        return newErrors
+      })
     }
   }
 
@@ -149,14 +167,15 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
       if (!formData.email) {
         newErrors.email = 'Email is required.'
         isValid = false
-      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-        newErrors.email = 'Email is invalid.'
+      } else if (!isValidEmail(formData.email)) {
+        newErrors.email = 'Invalid email format.'
         isValid = false
       }
 
-      for (const key in formData) {
-        if (key !== 'email' && !formData[key as keyof SurveyFormData]) {
-          newErrors[key as keyof SurveyFormData] = 'This field is required.'
+      const keys = Object.keys(formData) as Array<keyof SurveyFormData>
+      for (const key of keys) {
+        if (key !== 'email' && !formData[key]) {
+          newErrors[key] = 'This field is required.'
           isValid = false
         }
       }
@@ -168,10 +187,6 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
     },
     [formData]
   )
-
-  useEffect(() => {
-    setIsFormValid(validateForm(false))
-  }, [formData, validateForm])
 
   const onSubmit = async () => {
     if (!validateForm()) {
@@ -185,10 +200,11 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
         email: formData.email
       }
 
-      for (const key in formData) {
+      const keys = Object.keys(formData) as Array<keyof SurveyFormData>
+      for (const key of keys) {
         if (key !== 'email') {
-          const value = formData[key as keyof Omit<SurveyFormData, 'email'>]
-          const options = selectOptionsMap[key as keyof Omit<SurveyFormData, 'email'>]?.options || []
+          const value = formData[key]
+          const options = selectOptionsMap[key]?.options || []
           const selectedOption = options.find((option) => option.value === value)
           mappedData[key] = {
             value: value,
@@ -197,12 +213,10 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
         }
       }
 
-      console.log('Submitted Data:', mappedData)
-
       const res = await frontiterApi.submitTask(taskId!, {
+        data: mappedData,
         templateId: templateId,
-        taskId: taskId,
-        data: mappedData
+        taskId: taskId
       })
 
       const resultData = res.data as unknown as {
@@ -214,11 +228,9 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
       })
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit!')
-      return false
     } finally {
       setIsSubmitting(false)
     }
-    return true
   }
 
   const onSubmitAgain = () => {
@@ -239,12 +251,12 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                 <ArrowLeft size={18} className="md:size-[14px]" /> Back
               </div>
             ) : (
-              <span></span>
+              <div />
             )}
-            <span>Annotator Information Survey</span>
-            <span></span>
+            <div className="flex-1 text-center">Annotator Information Survey</div>
+            <div className="w-[50px]" />
           </h1>
-          <hr className="hidden border-[#FFFFFF1F] md:block" />
+
           {resultType ? (
             isBnb ? (
               <Result type={resultType} onSubmitAgain={onSubmitAgain} />
@@ -275,61 +287,47 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                   />
                   {errors.email && <p className="mt-1 pl-4 text-sm text-red-500">{errors.email}</p>}
                 </li>
-                {['country_of_residence', 'most_proficient_language', 'education_level', 'occupation'].map(
-                  (key) =>
-                    selectOptionsMap[key] && (
-                      <li key={key}>
-                        <div className="mb-2 pl-4 text-[#BBBBBE] md:pl-0 md:text-base md:font-bold md:text-white">
-                          {selectOptionsMap[key].title}
-                        </div>
-                        <Select
-                          className="rounded-[10px] leading-5 md:rounded-lg md:leading-[22px]"
-                          options={selectOptionsMap[key].options}
-                          value={formData[key as keyof SurveyFormData]}
-                          onChange={(value) => updateFormData(key as keyof SurveyFormData, String(value))}
-                          placeholder="Select an option"
-                          isMobile={isMobile}
-                        />
-                        {errors[key as keyof SurveyFormData] && (
-                          <p className="mt-1 pl-4 text-sm text-red-500 md:pl-0">
-                            {errors[key as keyof SurveyFormData]}
-                          </p>
-                        )}
-                      </li>
-                    )
-                )}
-              </ul>
-              <h2 className="mt-[22px] px-4 text-left text-base font-bold text-white md:mt-12 md:pl-0 md:text-lg">
-                Skills Assessment
-              </h2>
-              <ul className="mt-3 space-y-[22px] text-sm md:space-y-[14px]">
-                {['large_model_familiarity', 'coding_ability', 'blockchain_domain_knowledge'].map((key) => (
+                {basicInfoKeys.map((key) => (
                   <li key={key}>
                     <div className="mb-2 pl-4 text-[#BBBBBE] md:pl-0 md:text-base md:font-bold md:text-white">
                       {selectOptionsMap[key].title}
                     </div>
                     <Select
                       className="rounded-[10px] leading-5 md:rounded-lg md:leading-[22px]"
-                      options={selectOptionsMap[key].options}
-                      value={formData[key as keyof SurveyFormData]}
-                      onChange={(value) => updateFormData(key as keyof SurveyFormData, String(value))}
+                      options={[...selectOptionsMap[key].options]}
+                      value={formData[key]}
+                      onChange={(value) => updateFormData(key, String(value))}
                       placeholder="Select an option"
                       isMobile={isMobile}
                     />
-                    {errors[key as keyof SurveyFormData] && (
-                      <p className="mt-1 pl-4 text-sm text-red-500 md:pl-0">{errors[key as keyof SurveyFormData]}</p>
-                    )}
+                    {errors[key] && <p className="mt-1 pl-4 text-sm text-red-500 md:pl-0">{errors[key]}</p>}
                   </li>
                 ))}
               </ul>
-
+              <h2 className="mt-[22px] px-4 text-left text-base font-bold text-white md:mt-12 md:pl-0 md:text-lg">
+                Skills Assessment
+              </h2>
+              <ul className="mt-3 space-y-[22px] text-sm md:space-y-[14px]">
+                {skillsAssessmentKeys.map((key) => (
+                  <li key={key}>
+                    <div className="mb-2 pl-4 text-[#BBBBBE] md:pl-0 md:text-base md:font-bold md:text-white">
+                      {selectOptionsMap[key].title}
+                    </div>
+                    <Select
+                      className="rounded-[10px] leading-5 md:rounded-lg md:leading-[22px]"
+                      options={[...selectOptionsMap[key].options]}
+                      value={formData[key]}
+                      onChange={(value) => updateFormData(key, String(value))}
+                      placeholder="Select an option"
+                      isMobile={isMobile}
+                    />
+                    {errors[key] && <p className="mt-1 pl-4 text-sm text-red-500 md:pl-0">{errors[key]}</p>}
+                  </li>
+                ))}
+              </ul>
               <Button
                 text="Submit Information"
-                className={cn(
-                  'h-[44px] w-full rounded-full text-base font-bold',
-                  !isFormValid && 'opacity-50',
-                  'md:mx-auto md:w-[240px] md:text-sm md:font-normal'
-                )}
+                className={`h-[44px] w-full rounded-full text-base font-bold ${!validateForm(false) && 'opacity-50'} md:mx-auto md:w-[240px] md:text-sm md:font-normal`}
                 onClick={onSubmit}
                 disabled={isSubmitting}
                 loading={isSubmitting}
@@ -342,4 +340,4 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
   )
 }
 
-// http://localhost:5175/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/8202162439800108848/task-9-surveya1time
+// http://localhost:5175/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/8211237469900109207/task-9-surveya1time
