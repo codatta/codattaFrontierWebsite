@@ -7,7 +7,8 @@ import AuthChecker from '@/components/app/auth-checker'
 import SelectCard from '@/components/frontier/info-survey/select-card'
 import { Button } from '@/components/booster/button'
 
-import { getQuizQuestions, QuestionKey, AnswerKey, Question } from '@/components/frontier/info-survey/quiz'
+import { getQuizQuestions } from '@/components/frontier/info-survey/quiz'
+import { QuestionKey, AnswerKey, Question } from '@/components/frontier/info-survey/types'
 
 interface Props {
   templateId: string
@@ -107,4 +108,4 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
   )
 }
 
-// http://localhost:5175/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/8202164179200108849/task-9-surveyb1time
+// http://localhost:5175/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/8211239602200109208/task-9-surveyb1time

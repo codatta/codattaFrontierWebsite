@@ -1,12 +1,5 @@
 import { SelectOption } from '@/components/mobile-ui/select'
-
-interface SelectOptionsMap {
-  [key: string]: {
-    title: string
-    placeholder: string
-    options: SelectOption[]
-  }
-}
+import { SelectOptionsMap } from './types'
 
 export const selectOptionsMap: SelectOptionsMap = {
   country_of_residence: {

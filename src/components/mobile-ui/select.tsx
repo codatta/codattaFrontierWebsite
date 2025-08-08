@@ -239,10 +239,10 @@ const DarkSelect: React.FC<DarkSelectProps> = ({
                           option.disabled ? 'cursor-not-allowed text-gray-600' : 'hover:bg-white/5 active:bg-primary/10'
                         } ${tempValue === option.value ? 'bg-primary/10 text-primary' : 'text-white'} `}
                       >
-                        <span className="flex-1 truncate">{option.label}</span>
+                        <span className="flex-1 text-wrap">{option.label}</span>
                         {tempValue === option.value && (
                           <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }}>
-                            <Check className="size-5 text-primary" />
+                            <Check className="ml-2 size-5 text-primary" />
                           </motion.div>
                         )}
                       </button>
