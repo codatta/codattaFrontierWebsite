@@ -35,9 +35,24 @@ export type QuestionKey =
   | 'coding_ability'
   | 'blockchain_domain_knowledge'
 
+export interface QuestionsMap<T> {
+  title: string
+  defaultKey: T
+  list: {
+    key: T
+    question: string
+    rightAnswer: string
+    options: {
+      label: string
+      value: AnswerKey
+    }[]
+  }[]
+}
+
 export interface Question {
   key: QuestionKey
+  title: string
   question: string
-  des: string
+  rightAnswer: AnswerKey
   options: QuestionOption[]
 }

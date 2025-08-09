@@ -6,14 +6,32 @@ import { useParams } from 'react-router-dom'
 import AuthChecker from '@/components/app/auth-checker'
 import SelectCard from '@/components/frontier/info-survey/select-card'
 import { Button } from '@/components/booster/button'
+import { QuestionKey, AnswerKey, Question, ResultType } from '@/components/frontier/info-survey/types'
 
-import { getQuizQuestions } from '@/components/frontier/info-survey/quiz'
-import { QuestionKey, AnswerKey, Question } from '@/components/frontier/info-survey/types'
+import { getQuestion } from '@/components/frontier/info-survey/quiz'
+import Result from '@/components/frontier/info-survey/result'
+import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 
 import frontiterApi from '@/apis/frontiter.api'
 
 interface Props {
   templateId: string
+}
+
+const QUESTION_KEYS: QuestionKey[] = [
+  'most_proficient_language',
+  'education_level',
+  'occupation',
+  'large_model_familiarity',
+  'coding_ability',
+  'blockchain_domain_knowledge'
+]
+
+function getQuestions(data?: unknown) {
+  return QUESTION_KEYS.map((key) => {
+    // @ts-expect-error The type of `data` is `unknown`, so we are intentionally ignoring the type error here.
+    return getQuestion(key, data?.[key]?.value)
+  })
 }
 
 async function getLastSubmission(frontierId: string, taskIds: string) {
@@ -43,11 +61,15 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
     coding_ability: '',
     blockchain_domain_knowledge: ''
   })
-  const [questions, setQuestions] = useState<Question[]>([])
+  const [questions, setQuestions] = useState<Question[]>(getQuestions())
 
   const allAnswered = useMemo(() => {
     return Object.values(answers).every((answer) => answer !== '')
   }, [answers])
+
+  const onSubmitAgain = () => {
+    setResultType(null)
+  }
 
   const onBack = () => {
     window.history.back()
@@ -58,22 +80,70 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
     setAnswers((prev) => ({ ...prev, [key]: selectedKey }))
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!allAnswered) {
       const unansweredQuestion = questions.find((q) => !answers[q.key])
       if (unansweredQuestion) {
-        message.error(`Please complete the question: "${unansweredQuestion.question}"`)
+        message.error(`Please complete the question: "${unansweredQuestion.title}"`)
       }
       return
     }
 
     setIsSubmitting(true)
-    console.log('Submitting answers:', answers)
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      const questionData = QUESTION_KEYS.reduce(
+        (acc, key) => {
+          const question = questions.find((q) => q.key === key)!
+          acc[key] = {
+            value: answers[key],
+            label: question.options.find((option) => option.value === answers[key])?.label || '',
+            question: question.question,
+            title: question.title,
+            rightValue: question.rightAnswer,
+            rightLabel: question.options.find((option) => option.value === question.rightAnswer)?.label || '',
+            isRight: answers[key] === question.rightAnswer
+          }
+          return acc
+        },
+        {} as Record<
+          QuestionKey,
+          {
+            value: AnswerKey
+            label: string
+            question: string
+            title: string
+            rightValue: AnswerKey
+            rightLabel: string
+            isRight: boolean
+          }
+        >
+      )
+
+      const mappedData = {
+        ...questionData,
+        source: isBnb ? 'binance' : 'codatta',
+        total_count: QUESTION_KEYS.length,
+        right_count: Object.values(questionData).filter((q) => q.isRight).length
+      }
+
+      const res = await frontiterApi.submitTask(taskId!, {
+        data: mappedData,
+        templateId: templateId,
+        taskId: taskId
+      })
+
+      const resultData = res.data as unknown as {
+        status: ResultType
+      }
+
+      message.success('Submitted successfully!').then(() => {
+        handleResultStatus(resultData?.status)
+      })
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to submit!')
+    } finally {
       setIsSubmitting(false)
-      message.success('Submitted successfully!')
-    }, 2000)
+    }
   }
 
   const handleResultStatus = (status: string = '') => {
@@ -113,7 +183,11 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
             taskDetail.data.frontier_id,
             taskDetail.data.data_display.related_task_id
           )
-          console.log('relatedLastSubmission', relatedLastSubmission)
+          const relatedSubmissionData = relatedLastSubmission?.data_submission?.data
+          const questions = getQuestions(relatedSubmissionData)
+          setQuestions(questions)
+
+          console.log('questions:', questions)
         }
       } else {
         const totalRewards = taskDetail.data.reward_info
@@ -161,25 +235,33 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
             <span></span>
           </h1>
           <hr className="hidden border-[#FFFFFF1F] md:block" />
-          <div className="mx-auto mt-[22px] max-w-[1272px] space-y-[22px] px-6 pb-6 md:mt-[48px] md:space-y-8 md:pb-[48px]">
-            {questions.map((item) => (
-              <SelectCard
-                key={item.key}
-                title={item.question}
-                question={item.des}
-                options={item.options}
-                selectedKey={answers[item.key]}
-                onChange={(selectedKey) => onChange(item.key, selectedKey)}
+          {resultType ? (
+            isBnb ? (
+              <Result type={resultType} onSubmitAgain={onSubmitAgain} />
+            ) : (
+              <SubmitSuccessModal points={rewardPoints} open={true} onClose={() => window.history.back()} />
+            )
+          ) : (
+            <div className="mx-auto mt-[22px] max-w-[1272px] space-y-[22px] px-6 pb-6 md:mt-[48px] md:space-y-8 md:pb-[48px]">
+              {questions.map((item) => (
+                <SelectCard
+                  key={item.key}
+                  title={item.title}
+                  question={item.question}
+                  options={item.options}
+                  selectedKey={answers[item.key]}
+                  onChange={(selectedKey) => onChange(item.key, selectedKey)}
+                />
+              ))}
+              <Button
+                text="Submit Information"
+                onClick={onSubmit}
+                disabled={isSubmitting || !allAnswered}
+                loading={isSubmitting}
+                className={`md:mx-auto md:w-[240px] md:text-sm md:font-normal ${!allAnswered ? 'cursor-not-allowed opacity-50' : ''}`}
               />
-            ))}
-            <Button
-              text="Submit Information"
-              onClick={onSubmit}
-              disabled={isSubmitting}
-              loading={isSubmitting}
-              className={`md:mx-auto md:w-[240px] md:text-sm md:font-normal ${!allAnswered ? 'cursor-not-allowed opacity-50' : ''}`}
-            />
-          </div>
+            </div>
+          )}
         </div>
       </Spin>
     </AuthChecker>

@@ -11,11 +11,10 @@ interface SelectProps {
   onChange?: (value: string | number) => void
   placeholder?: string
   className?: string
-  name?: string
 }
 
 // PC Select Component using antd
-const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder, className, name }) => {
+const PCSelect: React.FC<SelectProps> = ({ options, value, onChange, placeholder, className }) => {
   const onHandleChange = (value: string | number) => {
     console.log(onHandleChange, value)
     onChange?.(value)

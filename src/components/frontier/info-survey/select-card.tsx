@@ -1,13 +1,12 @@
 import { motion } from 'framer-motion'
 import { cn } from '@udecode/cn'
 import { CircleCheck } from 'lucide-react'
-
-import { type Option, type AnswerKey } from './quiz'
+import { AnswerKey, QuestionOption } from './types'
 
 interface SelectCardProps {
   title: string
   question: string
-  options: Option[]
+  options: QuestionOption[]
   selectedKey: AnswerKey
   showCheck?: boolean
   onChange: (selectedKey: AnswerKey) => void
@@ -53,10 +52,8 @@ export default function SelectCard({ title, question, options, selectedKey, onCh
           {question}
         </motion.p>
         <motion.ul className="mt-3 space-y-3 md:mt-4 md:space-y-4" variants={itemVariants}>
-          {options.map((option, i) => {
+          {options.map((option) => {
             const isSelected = selectedKey === option.value
-            const isDisabled = selectedKey !== ''
-            // const optionPrefix = String.fromCharCode(65 + i) // A, B, C...
 
             return (
               <motion.li

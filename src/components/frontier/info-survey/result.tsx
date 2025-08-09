@@ -1,14 +1,7 @@
-import { Modal } from 'antd'
-import { useNavigate } from 'react-router-dom'
-
 import ApprovedIcon from '@/assets/frontier/crypto/approved-icon.svg?react'
 import PendingIcon from '@/assets/frontier/crypto/pending-icon.svg?react'
 import RejectIcon from '@/assets/frontier/crypto/reject-icon.svg?react'
-import ApprovedIconPc from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
-import PendingIconPc from '@/assets/frontier/crypto/pc-pending-icon.svg?react'
-import RejectIconPc from '@/assets/frontier/crypto/pc-reject-icon.svg?react'
 
-import { useIsMobile } from '@/hooks/use-is-mobile'
 import { ResultType } from './types'
 
 import { Button } from '@/components/booster/button'
