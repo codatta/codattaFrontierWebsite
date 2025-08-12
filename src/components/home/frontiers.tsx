@@ -111,8 +111,8 @@ const Frontiers = () => {
                       {item.activities?.[0] ? (
                         <div className="flex w-full flex-none cursor-pointer items-center justify-between gap-1 rounded-full bg-primary px-3 py-[6px] text-xs">
                           <div className="flex items-center gap-[2px]">
-                            {item.activities?.[0].reward_asset_type === 'XNY' && <XNYCoinIcon />}
-                            {item.activities?.[0].reward_asset_type === 'USDT' && <USDTCoinIcon />}
+                            {item.activities?.[0].reward_asset_type === 'XnYCoin' && <XNYCoinIcon className="size-7" />}
+                            {item.activities?.[0].reward_asset_type === 'USDT' && <USDTCoinIcon className="size-7" />}
                             <span className="text-lg font-bold text-[#FCC800]">
                               {formatNumber(item.activities?.[0].total_asset_amount || 0)}
                             </span>
