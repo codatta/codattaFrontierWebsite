@@ -230,5 +230,26 @@ export const Data: DataItem[] = [
         ]
       }
     ]
+  },
+  {
+    intro: [
+      {
+        title: 'Importance of Data Transparency in AML',
+        des: [
+          {
+            type: 'p',
+            content: (
+              <>
+                <span className="text-lg font-bold">Data transparency</span> is key to effective Anti-Money Laundering
+                (AML) efforts, especially in cryptocurrency. Public blockchain data allows regulators to track the flow
+                of funds, making it easier to spot suspicious activities like money laundering. Without transparency,
+                it's much harder to detect illegal behavior. Transparent transaction records provide the visibility
+                needed for real-time monitoring and accountability.
+              </>
+            )
+          }
+        ]
+      }
+    ]
   }
 ]
