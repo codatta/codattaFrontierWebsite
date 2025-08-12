@@ -86,6 +86,7 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
       if (unansweredQuestion) {
         message.error(`Please complete the question: "${unansweredQuestion.title}"`)
       }
+
       return
     }
 
@@ -259,9 +260,9 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
               <Button
                 text="Submit Information"
                 onClick={onSubmit}
-                disabled={isSubmitting || !allAnswered}
+                disabled={isSubmitting}
                 loading={isSubmitting}
-                className={`md:mx-auto md:w-[240px] md:text-sm md:font-normal ${!allAnswered ? 'cursor-not-allowed opacity-50' : ''}`}
+                className={`md:mx-auto md:w-[240px] md:text-sm md:font-normal ${!allAnswered ? 'opacity-50' : ''}`}
               />
             </div>
           )}

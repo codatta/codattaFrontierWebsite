@@ -78,6 +78,7 @@ export default function Result({
         setWeek('4')
         break
       default:
+        setWeek('4')
         break
     }
   }, [templateId])
