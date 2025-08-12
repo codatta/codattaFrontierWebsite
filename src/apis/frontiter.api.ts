@@ -44,6 +44,7 @@ export interface TaskDetail {
   data_display: {
     gif_resource: string
     template_id: string
+    related_task_id?: string
     hide?: boolean
   }
   questions?: CMUDataRequirements[]
