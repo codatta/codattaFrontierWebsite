@@ -225,14 +225,17 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
         <div className="min-h-screen">
           <h1 className="mx-auto flex max-w-[1272px] items-center justify-between px-6 text-center text-base font-bold leading-[48px] md:leading-[74px]">
             {!isBnb ? (
-              <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
+              <div
+                className="flex w-[60px] cursor-pointer items-center gap-2 text-sm font-normal text-[white]"
+                onClick={onBack}
+              >
                 <ArrowLeft size={18} className="md:size-[14px]" /> Back
               </div>
             ) : (
-              <span></span>
+              <div className="w-[60px]" />
             )}
             <span>Annotator Information Survey</span>
-            <span></span>
+            <div className="w-[60px]" />
           </h1>
           <hr className="hidden border-[#FFFFFF1F] md:block" />
           {resultType ? (
