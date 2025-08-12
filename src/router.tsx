@@ -72,6 +72,7 @@ const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
 const CryptoTpl000003 = lazy(() => import('@/views/frontiers/crypto_tpl_000003'))
+const CryptoTpl000004 = lazy(() => import('@/views/frontiers/crypto_tpl_000004'))
 
 const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_info_survey_basic'))
 const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
@@ -213,6 +214,11 @@ export default function Router() {
           path="/frontier/project/FOOD_TPL_W8/:taskId/:questId"
           element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />}
         />
+        <Route path="/frontier/project/FOOD_TPL_W9/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W9" />} />
+        <Route
+          path="/frontier/project/FOOD_TPL_W9/:taskId/:questId"
+          element={<FoodTplM2W234 templateId="FOOD_TPL_W9" />}
+        />
         <Route
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
@@ -228,6 +234,10 @@ export default function Router() {
         <Route
           path="/frontier/project/ROBOTICS_TPL_W8/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W9/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W9" />}
         />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
@@ -276,6 +286,22 @@ export default function Router() {
         <Route
           path="/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId/:questId"
           element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W9/:taskId"
+          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W9" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W9/:taskId"
+          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W9" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W9/:taskId/:questId"
+          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W9" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W9/:taskId/:questId"
+          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W9" />}
         />
         <Route
           path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId"
