@@ -260,7 +260,7 @@ const OccupationQuestionsMap: QuestionsMap<OccupationValue> = {
 }
 
 const LargeModelFamiliarityQuestionsMap: QuestionsMap<LargeModelFamiliarityValue> = {
-  title: 'Large Model Familiarity*',
+  title: 'Large Language Model Familiarity*',
   defaultKey: 'never_used',
   list: [
     {

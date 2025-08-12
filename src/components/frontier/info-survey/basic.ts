@@ -160,7 +160,7 @@ export const selectOptionsMap = {
     ]
   },
   large_model_familiarity: {
-    title: 'Large Model Familiarity *',
+    title: 'Large Language Model Familiarity *',
     placeholder: 'Select your familiarity level',
     options: [
       {
