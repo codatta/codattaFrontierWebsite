@@ -14,7 +14,9 @@ export default function HomePage() {
         <Banner />
         <Frontiers />
       </div>
-      <Aside className="absolute right-0 top-0 hidden h-full md:block" />
+      <div className="absolute right-0 top-0 hidden h-full md:block">
+        <Aside className="sticky top-0" />
+      </div>
     </TransitionEffect>
   )
 }
