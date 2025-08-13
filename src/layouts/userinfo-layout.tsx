@@ -15,7 +15,7 @@ export default function SettingsLayout() {
   const hasBackButton = /settings\/.+$/.test(location.pathname)
 
   const onBack = () => {
-    navigate('/app/settings')
+    navigate(-1)
   }
 
   useEffect(() => {

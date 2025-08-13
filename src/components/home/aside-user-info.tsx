@@ -3,6 +3,7 @@ import { cn } from '@udecode/cn'
 import { ChevronRight } from 'lucide-react'
 
 import ReputationRate from '@/components/common/reputation-rate'
+import CheckinBtn from './aside-checkin'
 
 import defaultAvatar from '@/assets/home/default-avatar.png'
 import ImageChrown from '@/assets/home/chrown.png'
@@ -60,7 +61,7 @@ export default function UserInfoSection() {
       <div
         className="absolute top-0 w-full"
         style={{
-          background: 'radial-gradient(at 0% 0%, #4C3F76 10%, #2E2E37 70%)'
+          background: 'radial-gradient(at 0% 0%, #4C3F76 10%, #252532 70%)'
         }}
       >
         <object data={gridTextureImage} type="image/svg+xml"></object>
@@ -69,8 +70,8 @@ export default function UserInfoSection() {
         <div className="mb-2 flex justify-center">
           <img className="block size-20 rounded-full" src={info?.user_data?.avatar ?? defaultAvatar} alt="" />
         </div>
-        <div className="mb-8 text-[16px] font-bold">{username}</div>
-
+        <div className="text-[16px] font-bold">{username}</div>
+        <CheckinBtn className="mb-3 mt-7" />
         <ul className="text-left text-sm leading-[22px] text-white">
           {assets.map((asset) => (
             <AssetItem
