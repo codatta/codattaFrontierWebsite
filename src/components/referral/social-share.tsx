@@ -32,6 +32,7 @@ const supportList = new Map<Social, { url: (content: ShareContent) => string; ic
 ])
 
 interface SocialShareProps {
+  iconSize?: number
   className?: string
   content?: (name: Social) => ShareContent
   socials?: Social[]
@@ -54,12 +55,14 @@ export default function SocialShare(props: SocialShareProps) {
           onShare={props.onShare}
           request={props.request!}
           content={props.content}
+          iconSize={props.iconSize}
         />
       ))}
     </ul>
   )
 }
 function SocialItem(props: {
+  iconSize?: number
   socialName: Social
   content?: (name: Social) => ShareContent
   socials?: Social[]
@@ -109,7 +112,9 @@ function SocialItem(props: {
             handleClick()
           }}
         >
-          <div className="flex size-4 items-center justify-center">{social?.icon()}</div>
+          <div className={cn('flex items-center justify-center', props.iconSize && `size-${props.iconSize ?? 4}`)}>
+            {social?.icon()}
+          </div>
         </a>
       )}
     </li>
