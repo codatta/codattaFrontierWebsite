@@ -33,7 +33,7 @@ export default function AsideReferral() {
           <p>share with friends</p>
         </div>
       </div>
-      <div className="box-border overflow-hidden text-ellipsis rounded-lg border border-solid border-[#FFFFFF1F] px-3 text-xs leading-[35px]">
+      <div className="box-border overflow-hidden text-ellipsis text-nowrap rounded-lg border border-solid border-[#FFFFFF1F] px-3 text-xs leading-[35px]">
         {shareLink}
       </div>
       <div className="mt-4 flex items-center gap-2">
