@@ -13,8 +13,10 @@ import XnyIcon from '@/assets/userinfo/xny-icon.svg'
 
 import { useUserStore, userStoreActions } from '@/stores/user.store'
 import { formatNumber } from '@/utils/str'
+import { useNavigate } from 'react-router-dom'
 
 export default function UserInfoSection() {
+  const navigate = useNavigate()
   const { info, username, reputation } = useUserStore()
   const assets = useMemo(() => {
     const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
@@ -29,19 +31,22 @@ export default function UserInfoSection() {
         amount: usdtAmount === '0' ? '0.00' : usdtAmount,
         currency: 'USDT',
         icon: USDTIcon,
-        hasBg: false
+        hasBg: false,
+        link: '/app/settings/data-assets'
       },
       {
         amount: xynAmount === '0' ? '0.00' : xynAmount,
         currency: 'XNY',
         icon: XnyIcon,
-        hasBg: true
+        hasBg: true,
+        link: '/app/settings/data-assets'
       },
       {
         amount: pointsAmount === '0' ? '0.00' : pointsAmount,
         currency: 'Reward',
         icon: ImageChrown,
-        hasBg: true
+        hasBg: true,
+        link: '/app/settings/reward'
       }
     ]
   }, [info])
@@ -49,10 +54,6 @@ export default function UserInfoSection() {
   useEffect(() => {
     userStoreActions.getUserInfo()
   }, [])
-
-  useEffect(() => {
-    console.log(info, info)
-  }, [info])
 
   return (
     <div className="relative bg-[#252532] pt-6 text-center">
@@ -78,9 +79,14 @@ export default function UserInfoSection() {
               name={asset.currency}
               balance={asset.amount}
               className={asset.hasBg ? 'bg-[#252532] px-4' : 'px-4'}
+              onClick={() => navigate(asset.link)}
             />
           ))}
-          <ReputationItem reputation={reputation} className="bg-[#252532] px-4" />
+          <ReputationItem
+            reputation={reputation}
+            className="bg-[#252532] px-4"
+            onClick={() => navigate('/app/settings/reputation')}
+          />
         </ul>
       </div>
     </div>
@@ -91,15 +97,23 @@ function AssetItem({
   icon,
   name,
   balance,
-  className
+  className,
+  onClick
 }: {
   icon: string
   name: string
   balance: number | string
   className?: string
+  onClick?: () => void
 }) {
   return (
-    <li className={cn('flex items-center justify-between border-b border-[#FFFFFF1F] pb-3 pt-4', className)}>
+    <li
+      className={cn(
+        'flex items-center justify-between border-b border-[#FFFFFF1F] pb-3 pt-4 hover:cursor-pointer',
+        className
+      )}
+      onClick={onClick}
+    >
       <div className="flex items-center gap-3">
         <img src={icon} className="size-12" alt="" />
         <div>
@@ -112,9 +126,23 @@ function AssetItem({
   )
 }
 
-function ReputationItem({ reputation, className }: { reputation: number; className?: string }) {
+function ReputationItem({
+  reputation,
+  className,
+  onClick
+}: {
+  reputation: number
+  className?: string
+  onClick?: () => void
+}) {
   return (
-    <li className={cn('flex items-center justify-between border-b border-[#FFFFFF1F] pb-3 pt-4', className)}>
+    <li
+      className={cn(
+        'flex items-center justify-between border-b border-[#FFFFFF1F] pb-3 pt-4 hover:cursor-pointer',
+        className
+      )}
+      onClick={onClick}
+    >
       <div className="flex items-center gap-3">
         <img src={ImageLevel} className="size-12" alt="" />
         <div>
