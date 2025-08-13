@@ -244,7 +244,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       <Spin spinning={loading} className="min-h-screen">
         <div className="px-6 py-4 text-center text-base font-bold">Food Image Data Collection & Annotation</div>
         {!resultType ? (
-          <div className="min-h-screen p-4 pb-8 text-white">
+          <div className="min-h-screen p-6 pb-8 text-white">
             <div className="mx-auto max-w-md space-y-6">
               {/* Images Upload */}
               <div className="space-y-3">
