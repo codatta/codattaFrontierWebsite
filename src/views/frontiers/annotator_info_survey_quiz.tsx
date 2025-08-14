@@ -258,7 +258,7 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
                 />
               ))}
               <Button
-                text="Submit Information"
+                text="Submit"
                 onClick={onSubmit}
                 disabled={isSubmitting}
                 loading={isSubmitting}
