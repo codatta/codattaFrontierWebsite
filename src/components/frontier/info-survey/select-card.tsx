@@ -11,6 +11,7 @@ interface SelectCardProps {
   showCheck?: boolean
   onChange: (selectedKey: AnswerKey) => void
   className?: string
+  required?: boolean
 }
 
 const containerVariants = {
@@ -29,7 +30,15 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 }
 }
 
-export default function SelectCard({ title, question, options, selectedKey, onChange, className }: SelectCardProps) {
+export default function SelectCard({
+  title,
+  question,
+  options,
+  selectedKey,
+  onChange,
+  className,
+  required
+}: SelectCardProps) {
   const handleSelect = (selectedKey: AnswerKey) => {
     onChange(selectedKey)
   }
@@ -43,6 +52,7 @@ export default function SelectCard({ title, question, options, selectedKey, onCh
     >
       <motion.h3 className="mb-2 font-bold text-white" variants={itemVariants}>
         {title}
+        {required ? <span className="text-red-400">*</span> : ''}
       </motion.h3>
       <motion.div
         className="rounded-xl border border-[#00000029] bg-[#252532] px-4 py-3 md:px-6 md:py-5 md:text-sm"

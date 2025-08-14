@@ -275,7 +275,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                     className="pl-4 text-[#BBBBBE] md:pl-0 md:text-base md:font-bold md:text-white"
                     htmlFor="email"
                   >
-                    Contact Email*
+                    Contact Email<span className="text-red-400">*</span>
                   </label>
                   <Input
                     isMobile={isMobile}
@@ -294,6 +294,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                   <li key={key}>
                     <div className="mb-2 pl-4 text-[#BBBBBE] md:pl-0 md:text-base md:font-bold md:text-white">
                       {selectOptionsMap[key].title}
+                      {selectOptionsMap[key].required ? <span className="text-red-400">*</span> : ''}
                     </div>
                     <Select
                       className="rounded-[10px] leading-5 md:rounded-lg md:leading-[22px]"
@@ -315,6 +316,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                   <li key={key}>
                     <div className="mb-2 pl-4 text-[#BBBBBE] md:pl-0 md:text-base md:font-bold md:text-white">
                       {selectOptionsMap[key].title}
+                      {selectOptionsMap[key].required ? <span className="text-red-400">*</span> : ''}
                     </div>
                     <Select
                       className="rounded-[10px] leading-5 md:rounded-lg md:leading-[22px]"

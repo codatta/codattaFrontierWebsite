@@ -1,6 +1,7 @@
 export const selectOptionsMap = {
   country_of_residence: {
-    title: 'Country of Residence*',
+    title: 'Country of Residence',
+    required: true,
     placeholder: 'Select your country',
     options: [
       {
@@ -58,7 +59,8 @@ export const selectOptionsMap = {
     ]
   },
   most_proficient_language: {
-    title: 'Most Proficient Language*',
+    title: 'Most Proficient Language',
+    required: true,
     placeholder: 'Select your language',
     options: [
       {
@@ -108,7 +110,8 @@ export const selectOptionsMap = {
     ]
   },
   education_level: {
-    title: 'Education Level*',
+    required: true,
+    title: 'Education Level',
     placeholder: 'Select your education level',
     options: [
       {
@@ -130,7 +133,8 @@ export const selectOptionsMap = {
     ]
   },
   occupation: {
-    title: 'Occupation *',
+    required: true,
+    title: 'Occupation',
     placeholder: 'Select your occupation',
     options: [
       {
@@ -160,7 +164,8 @@ export const selectOptionsMap = {
     ]
   },
   large_model_familiarity: {
-    title: 'Large Language Model Familiarity *',
+    required: true,
+    title: 'Large Language Model Familiarity',
     placeholder: 'Select your familiarity level',
     options: [
       {
@@ -182,7 +187,8 @@ export const selectOptionsMap = {
     ]
   },
   coding_ability: {
-    title: 'Coding Ability*',
+    required: true,
+    title: 'Coding Ability',
     placeholder: 'Select your coding ability',
     options: [
       {
@@ -200,7 +206,8 @@ export const selectOptionsMap = {
     ]
   },
   blockchain_domain_knowledge: {
-    title: 'Blockchain Domain Knowledge*',
+    required: true,
+    title: 'Blockchain Domain Knowledge',
     placeholder: 'Select your blockchain knowledge',
     options: [
       {

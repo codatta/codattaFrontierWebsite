@@ -38,6 +38,7 @@ export type QuestionKey =
 export interface QuestionsMap<T> {
   title: string
   defaultKey: T
+  required?: boolean
   list: {
     key: T
     question: string
@@ -54,5 +55,6 @@ export interface Question {
   title: string
   question: string
   rightAnswer: AnswerKey
+  required?: boolean
   options: QuestionOption[]
 }

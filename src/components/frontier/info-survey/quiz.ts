@@ -13,8 +13,9 @@ import {
 } from './types'
 
 const LanguageQuestionsMap: QuestionsMap<MostProficientLanguageValue> = {
-  title: 'Most Proficient Language*',
+  title: 'Most Proficient Language',
   defaultKey: 'english',
+  required: true,
   list: [
     {
       key: 'english',
@@ -130,8 +131,9 @@ const LanguageQuestionsMap: QuestionsMap<MostProficientLanguageValue> = {
 }
 
 const EducationLevelQuestionsMap: QuestionsMap<EducationLevelValue> = {
-  title: 'Education Level*',
+  title: 'Education Level',
   defaultKey: 'high_school_or_below',
+  required: true,
   list: [
     {
       key: 'high_school_or_below',
@@ -190,7 +192,8 @@ const EducationLevelQuestionsMap: QuestionsMap<EducationLevelValue> = {
 }
 
 const OccupationQuestionsMap: QuestionsMap<OccupationValue> = {
-  title: 'Occupation*',
+  title: 'Occupation',
+  required: true,
   defaultKey: 'blockchain_professional',
   list: [
     {
@@ -260,7 +263,8 @@ const OccupationQuestionsMap: QuestionsMap<OccupationValue> = {
 }
 
 const LargeModelFamiliarityQuestionsMap: QuestionsMap<LargeModelFamiliarityValue> = {
-  title: 'Large Language Model Familiarity*',
+  title: 'Large Language Model Familiarity',
+  required: true,
   defaultKey: 'never_used',
   list: [
     {
@@ -314,7 +318,8 @@ const LargeModelFamiliarityQuestionsMap: QuestionsMap<LargeModelFamiliarityValue
 }
 
 const CodingAbilityQuestionsMap: QuestionsMap<CodingAbilityValue> = {
-  title: 'Coding Ability*',
+  title: 'Coding Ability',
+  required: true,
   defaultKey: 'no_coding_experience',
   list: [
     {
@@ -356,7 +361,8 @@ const CodingAbilityQuestionsMap: QuestionsMap<CodingAbilityValue> = {
 }
 
 const BlockchainDomainKnowledgeQuestionsMap: QuestionsMap<BlockchainDomainKnowledgeValue> = {
-  title: 'Blockchain Domain Knowledge*',
+  title: 'Blockchain Domain Knowledge',
+  required: true,
   defaultKey: 'understand_transaction_data',
   list: [
     {
@@ -436,6 +442,7 @@ export const getQuestion = (questionKey: QuestionKey, selectedValue: OptionValue
     title: questionsMap[questionKey].title,
     question: question?.question || '',
     options: question?.options || [],
-    rightAnswer: (question?.rightAnswer || '') as AnswerKey
+    rightAnswer: (question?.rightAnswer || '') as AnswerKey,
+    required: questionsMap[questionKey].required
   }
 }

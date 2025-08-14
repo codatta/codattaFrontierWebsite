@@ -251,6 +251,7 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
                 <SelectCard
                   key={item.key}
                   title={item.title}
+                  required={item.required}
                   question={item.question}
                   options={item.options}
                   selectedKey={answers[item.key]}
