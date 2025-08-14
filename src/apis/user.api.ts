@@ -125,9 +125,30 @@ export interface JourneyLevelItem {
   status: number
 }
 
-export interface TokenClaimItem {
+export interface RewardClaimSignParams {
+  reward_type: 'USDT' | 'XnYCoin'
+  chain_id: string
+  amount: number
+  address: string
+  token: string
+}
+
+export interface RewardClaimSignResponse {
+  signature: string
+  token: string
+  amount: number
+  expired_at: string
+  uid: string
+}
+
+export interface RewardRecordHistoryParams {
+  page_num: number
+  page_size: number
+}
+
+export interface RewardRecordHistoryItem {
   id: number
-  uid: number
+  uid: string
   claim_time: string
   tx_hash: string
   from_address: string
@@ -151,6 +172,11 @@ export interface FrontierTokenRewardItem {
   average_rating_name: string
   average_result: number
   tokens: FrontierTokenRewardTokenItem[]
+}
+export interface TokenClaimItem {
+  id: number
+  uid: number
+  status_name: string
 }
 
 class UserApi {
@@ -234,6 +260,19 @@ class UserApi {
     return data
   }
 
+  async getRewardClaimSign(params: RewardClaimSignParams) {
+    const { data } = await request.post<Response<RewardClaimSignResponse>>('/v2/user/reward/signature', params)
+    return data.data
+  }
+
+  async createRewardRecord(uid: string, gas: number) {
+    const { data } = await request.post('/v2/user/reward/record/create', {
+      uid,
+      gas
+    })
+    return data
+  }
+
   async getFrontierTokenReward(page: number, pageSize: number) {
     const { data } = await request.post<
       Response<{
@@ -248,6 +287,37 @@ class UserApi {
     })
 
     return data
+  }
+  async updateRewardRecord(uid: string, tx_hash: string) {
+    const { data } = await request.post<Response<{ flag: number; message: string }>>('/v2/user/reward/record/update', {
+      uid,
+      tx_hash
+    })
+    return data.data
+  }
+
+  async finishRewardRecord(uid: string, status: 2 | 3 | 4) {
+    // 2 - success
+    // 3 - finish
+    // 4 - cancel
+    const { data } = await request.post<Response<{ flag: number; message: string }>>('/v2/user/reward/record/finish', {
+      uid,
+      status
+    })
+    return data.data
+  }
+
+  async getRewardRecordHistory(page: number, pageSize: number) {
+    const { data } = await request.post<
+      Response<{
+        page_num: number
+        page_size: number
+        count: number
+        list: RewardRecordHistoryItem[]
+      }>
+    >('/v2/user/reward/record/list', { page_num: page, page_size: pageSize })
+
+    return data.data
   }
 }
 

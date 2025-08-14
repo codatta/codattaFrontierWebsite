@@ -1,19 +1,34 @@
-import { Button, message, Tabs, TabsProps, Spin, List, Pagination } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
+import { Button, Tabs, TabsProps } from 'antd'
+import { useMemo, useState } from 'react'
 import { ChevronUp } from 'lucide-react'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 
 import { useUserStore } from '@/stores/user.store'
-import { formatNumber } from '@/utils/str'
 import { cn } from '@udecode/cn'
-import userApi, { FrontierTokenRewardItem } from '@/apis/user.api'
-// import { RewardsDesc } from '@/apis/rewards.api'
+import TokenClaimModal from '@/components/settings/token-claim-modal'
+import ClaimHistory from '@/components/settings/assets-claim-history'
+import EarnedHistory from '@/components/settings/earned-history'
+
+const items: TabsProps['items'] = [
+  {
+    key: 'earned-history-tab',
+    label: 'Earned History',
+    children: <EarnedHistory />
+  },
+  {
+    key: 'claim-history-tab',
+    label: 'Claim History',
+    children: <ClaimHistory />
+  }
+]
 
 export default function DataAssets() {
+  const [showClaimModal, setShowClaimModal] = useState(false)
+
   const handleClaim = () => {
-    message.info('Coming soon!')
+    setShowClaimModal(true)
   }
 
   return (
@@ -28,7 +43,13 @@ export default function DataAssets() {
         </Button>
       </div>
       <TokenRewards />
-      <History />
+      <Tabs
+        destroyOnHidden
+        defaultActiveKey="1"
+        items={items}
+        className="flex-1 [&.ant-tabs-top>.ant-tabs-nav::before]:hidden"
+      />
+      <TokenClaimModal open={showClaimModal} onClose={() => setShowClaimModal(false)} />
     </div>
   )
 }
@@ -40,8 +61,8 @@ function TokenRewards() {
   const assets = useMemo(() => {
     const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
     const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
-    const xynAmount = formatNumber(Number(xyn?.amount ?? 0.0))
-    const usdtAmount = formatNumber(Number(usdt?.amount ?? 0.0))
+    const xynAmount = Number(xyn?.amount ?? 0.0).toFixed(2)
+    const usdtAmount = Number(usdt?.amount ?? 0.0).toFixed(2)
 
     return [
       {
@@ -85,118 +106,6 @@ function TokenRewards() {
           </li>
         ))}
       </ul>
-    </div>
-  )
-}
-
-const items: TabsProps['items'] = [
-  {
-    key: 'earned-history-tab',
-    label: 'Earned History',
-    children: <EarnedHistory />
-  },
-  {
-    key: 'claim-history-tab',
-    label: 'Claim History',
-    children: <EmptyHistory />
-  }
-]
-
-function History() {
-  const onChange = (key: string) => {
-    console.log(key)
-  }
-
-  return (
-    <Tabs
-      defaultActiveKey="1"
-      items={items}
-      onChange={onChange}
-      className="flex-1 [&.ant-tabs-top>.ant-tabs-nav::before]:hidden"
-    />
-  )
-}
-
-function EarnedHistory() {
-  const [loading, setLoading] = useState(false)
-  const [rewards, setRewards] = useState<FrontierTokenRewardItem[]>([])
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const pageSize = 20
-
-  async function getRewards(page: number, pageSize: number) {
-    setLoading(true)
-    try {
-      const res = await userApi.getFrontierTokenReward(page, pageSize)
-      setRewards(res.data.list)
-      setTotal(res.data.count)
-    } catch (err) {
-      message.error(err.message)
-    }
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    getRewards(page, pageSize)
-  }, [page])
-
-  return (
-    <Spin spinning={loading}>
-      <div>
-        {rewards?.length > 0 ? (
-          <List
-            split={false}
-            dataSource={rewards.slice()}
-            renderItem={(item) => (
-              <List.Item className="p-0">
-                <div className="w-full rounded-2xl border border-[#FFFFFF1F] p-6 md:flex">
-                  <div>
-                    <div className="mb-2 text-base font-bold">{item.frontier_name}</div>
-                    <div className="text-sm text-[#BBBBBE]">
-                      Total Submission Count: <span className="mr-3 font-bold text-white">{item.total_submission}</span>
-                      Average Submission Score: <span className="font-bold text-white">{item.average_rating_name}</span>
-                    </div>
-                  </div>
-                  <ul className="mt-2 flex gap-4 md:ml-auto md:mt-0 md:block">
-                    {item.tokens.map((asset) => (
-                      <li key={asset.reward_type} className="flex items-center justify-end gap-2 text-sm">
-                        <span>{asset.reward_type}</span>
-                        <span className="font-semibold text-[#875DFF]">+{asset.reward_amount}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </List.Item>
-            )}
-          />
-        ) : (
-          <EmptyHistory />
-        )}
-      </div>
-
-      <Pagination
-        className="mt-6"
-        align="center"
-        size="small"
-        hideOnSinglePage
-        defaultCurrent={1}
-        pageSize={pageSize}
-        onChange={(page) => setPage(page)}
-        total={total}
-        showSizeChanger={false}
-      />
-    </Spin>
-  )
-}
-
-// function ClaimHistory() {
-//   return <div className="h-[calc(100vh-400px)] bg-[blue]">ClaimHistory</div>
-// }
-
-function EmptyHistory() {
-  return (
-    <div className="flex h-[calc(100vh-600px)] items-center justify-center text-sm">
-      No relevant historical records available.
     </div>
   )
 }
