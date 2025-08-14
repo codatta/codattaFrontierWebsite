@@ -1,5 +1,6 @@
 import { Button } from 'antd'
 import { useEffect } from 'react'
+import { cn } from '@udecode/cn'
 
 import TaskTarget from '@/components/common/task-target'
 import CheckInModal from '@/components/checkin/checkin-modal'
@@ -8,7 +9,7 @@ import CheckSvg from '@/assets/icons/circle-check-big.svg'
 
 import { useCheckinStore, toggleCheckinModal, checkinStoreActions } from '@/stores/checkin.store'
 
-export default function Checkin() {
+export default function Checkin({ className }: { className?: string }) {
   const { days, done, loading } = useCheckinStore()
 
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function Checkin() {
   }, [])
 
   return (
-    <div className="px-6">
+    <div className={cn('px-4', className)}>
       {done ? (
         <Button
           className="h-[44px] w-full gap-0 rounded-full bg-transparent p-0 text-sm font-medium leading-[44px] text-white [&:disabled]:border-white [&:disabled]:text-white"

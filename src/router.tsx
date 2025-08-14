@@ -62,6 +62,7 @@ const FoodTpl000004 = lazy(() => import('@/views/frontiers/food_tpl_000004'))
 const FoodTpl000005 = lazy(() => import('@/views/frontiers/food_tpl_000005'))
 const FoodTplM2W1 = lazy(() => import('@/views/frontiers/food_tpl_m2_w1'))
 const FoodTplM2W234 = lazy(() => import('@/views/frontiers/food_tpl_m2_w234'))
+const FoodTplW9 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
 const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
 
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
@@ -214,11 +215,7 @@ export default function Router() {
           path="/frontier/project/FOOD_TPL_W8/:taskId/:questId"
           element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />}
         />
-        <Route path="/frontier/project/FOOD_TPL_W9/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W9" />} />
-        <Route
-          path="/frontier/project/FOOD_TPL_W9/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_W9" />}
-        />
+        <Route path="/frontier/project/FOOD_TPL_W9/:taskId/:questId" element={<FoodTplW9 templateId="FOOD_TPL_W9" />} />
         <Route
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
@@ -238,6 +235,10 @@ export default function Router() {
         <Route
           path="/frontier/project/ROBOTICS_TPL_W9/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W9" />}
+        />
+        <Route
+          path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
+          element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
         />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"

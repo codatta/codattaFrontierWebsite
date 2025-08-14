@@ -41,7 +41,7 @@ export default function Result({ type = 'ADOPT', onSubmitAgain }: { type: Result
 function MobileView({ type, onSubmitAgain }: { type: ResultType; onSubmitAgain: () => void }) {
   const result = ResultMap[type]
   return (
-    <div className="px-4 text-center">
+    <div className="px-6 text-center">
       <result.Icon className="mx-auto mt-[80px] block" />
       <h2 className="mt-8 text-2xl font-bold">{result.title}</h2>
       <p className="mt-6 text-base text-[#BBBBBE]">{result.description}</p>
