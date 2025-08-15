@@ -128,7 +128,7 @@ export interface JourneyLevelItem {
 export interface RewardClaimSignParams {
   reward_type: 'USDT' | 'XnYCoin'
   chain_id: string
-  amount: number
+  amount: string
   address: string
   token: string
 }
@@ -136,7 +136,7 @@ export interface RewardClaimSignParams {
 export interface RewardClaimSignResponse {
   signature: string
   token: string
-  amount: number
+  amount: number | string
   expired_at: string
   uid: string
 }
@@ -265,7 +265,7 @@ class UserApi {
     return data.data
   }
 
-  async createRewardRecord(uid: string, gas: number) {
+  async createRewardRecord(uid: string, gas: string) {
     const { data } = await request.post('/v2/user/reward/record/create', {
       uid,
       gas

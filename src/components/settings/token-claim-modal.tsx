@@ -18,7 +18,7 @@ import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
 
 interface Asset {
   type: string
-  amount: number
+  amount: string
   currency: string
   Icon?: React.ReactNode
 }
@@ -65,21 +65,19 @@ function SelectToken(props: { onSelect: (asset: Asset) => void }) {
   }, [])
 
   const assets = useMemo(() => {
-    const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
+    const xny = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
     const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
-    const xynAmount = Number(xyn?.amount ?? 0.0)
-    const usdtAmount = Number(usdt?.amount ?? 0.0)
 
     return [
       {
         type: 'XnYCoin',
-        amount: xynAmount,
+        amount: xny?.amount ?? '0.0',
         currency: 'XNY',
         Icon: <XnyIcon />
       },
       {
         type: 'USDT',
-        amount: usdtAmount,
+        amount: usdt?.amount ?? '0.0',
         currency: usdt?.currency ?? 'USDT',
         Icon: <USDTIcon />
       }
@@ -103,7 +101,7 @@ function SelectToken(props: { onSelect: (asset: Asset) => void }) {
             >
               {asset.Icon}
               <div className="text-right">
-                <div className="mb-1 text-[28px] font-bold">{asset.amount.toFixed(10)}</div>
+                <div className="mb-1 text-[28px] font-bold">{asset.amount}</div>
                 <div className="text-base text-[#BBBBBE]">{asset.currency}</div>
               </div>
             </li>
@@ -135,6 +133,7 @@ function ClaimConfirm({
 
   const showGasWarning = useMemo(() => {
     if (!estimateGas || !balance) return false
+
     return Number(estimateGas) > Number(balance)
   }, [estimateGas, balance])
 
@@ -226,7 +225,7 @@ function ClaimConfirm({
         chain: contract.chain
       })
       // create record to backend
-      await userApi.createRewardRecord(claimSignature.uid, Number(estimateGas))
+      await userApi.createRewardRecord(claimSignature.uid, estimateGas!)
 
       let tx = null
       try {
@@ -234,6 +233,7 @@ function ClaimConfirm({
         tx = await lastUsedWallet?.client?.writeContract(request)
       } catch (err) {
         await userApi.finishRewardRecord(claimSignature.uid, 4)
+        onClose()
         throw err
       }
 
@@ -260,21 +260,22 @@ function ClaimConfirm({
     if (!contract) return
     if (!address) return
 
-    console.log(asset.amount, Number(asset.amount))
-
-    console.log(import.meta.env.VITE_MODE === 'production' ? Number(asset.amount) : 0.01)
-
     try {
       const signResponse = await userApi.getRewardClaimSign({
         address: address! as string,
         // test env only supoort 0.01
-        amount: import.meta.env.VITE_MODE === 'production' ? Number(asset.amount) : 0.01,
+        amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : '0.01',
+        // amount: asset.amount,
         chain_id: contract?.chain.id.toString(),
         token: tokenConfig.tokenContractAddress,
         reward_type: asset.type as 'USDT' | 'XnYCoin'
       })
 
-      setClaimSignature(signResponse)
+      // convert amount to number
+      setClaimSignature({
+        ...signResponse,
+        amount: signResponse.amount.toString()
+      })
     } catch (err) {
       message.error(err.details || err.message)
       onClose()
