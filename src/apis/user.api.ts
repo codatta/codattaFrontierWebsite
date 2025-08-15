@@ -147,8 +147,8 @@ export interface RewardRecordHistoryParams {
 }
 
 export interface RewardRecordHistoryItem {
-  id: number
   uid: string
+  gmt_time: string
   claim_time: string
   tx_hash: string
   from_address: string

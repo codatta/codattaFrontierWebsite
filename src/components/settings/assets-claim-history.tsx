@@ -8,11 +8,12 @@ const statusColorMap = new Map<string, string>([
   ['Success', '#5DDD22'],
   ['Pending', '#FFA800'],
   ['Failed', '#D92B2B'],
-  ['Canceled', '#ffffff30']
+  ['Canceled', '#ffffff30'],
+  ['Not Started', '#ffffff30']
 ])
 
 function ClaimHistoryItem({ item }: { item: RewardRecordHistoryItem }) {
-  const claimTimeDate = item.claim_time?.split('.')[0]
+  const claimTimeDate = item.gmt_create?.split('.')[0]
   const claimTime = dayjs(claimTimeDate).format('YYYY-MM-DD HH:mm')
 
   return (
@@ -29,7 +30,7 @@ function ClaimHistoryItem({ item }: { item: RewardRecordHistoryItem }) {
             </div>
           )}
           <div>
-            ID: <span className="text-white">{item.id}</span>
+            ID: <span className="text-white">{item.uid}</span>
           </div>
         </div>
       </div>
@@ -76,7 +77,7 @@ export default function ClaimHistory() {
           <>
             <div className="flex flex-col gap-4">
               {rewardRecordHistory.map((item) => (
-                <ClaimHistoryItem item={item} key={item.id} />
+                <ClaimHistoryItem item={item} key={item.uid} />
               ))}
             </div>
 

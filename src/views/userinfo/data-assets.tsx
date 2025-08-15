@@ -10,6 +10,7 @@ import { cn } from '@udecode/cn'
 import TokenClaimModal from '@/components/settings/token-claim-modal'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
+import TokenClaimModalTest from '@/components/settings/token-claim-modal-test'
 
 const items: TabsProps['items'] = [
   {
@@ -26,10 +27,15 @@ const items: TabsProps['items'] = [
 
 export default function DataAssets() {
   const [showClaimModal, setShowClaimModal] = useState(false)
+  // const [showClaimModalTest, setShowClaimModalTest] = useState(false)
 
   const handleClaim = () => {
     setShowClaimModal(true)
   }
+
+  // const handleClaimTest = () => {
+  //   setShowClaimModalTest(true)
+  // }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -41,6 +47,9 @@ export default function DataAssets() {
         <Button type="primary" className="h-[38px] rounded-full text-sm leading-[36px]" onClick={handleClaim}>
           Claim Rewards
         </Button>
+        {/* <Button type="primary" className="h-[38px] rounded-full text-sm leading-[36px]" onClick={handleClaimTest}>
+          Claim Rewards Test
+        </Button> */}
       </div>
       <TokenRewards />
       <Tabs
@@ -50,6 +59,7 @@ export default function DataAssets() {
         className="flex-1 [&.ant-tabs-top>.ant-tabs-nav::before]:hidden"
       />
       <TokenClaimModal open={showClaimModal} onClose={() => setShowClaimModal(false)} />
+      {/* <TokenClaimModalTest open={showClaimModalTest} onClose={() => setShowClaimModalTest(false)} /> */}
     </div>
   )
 }

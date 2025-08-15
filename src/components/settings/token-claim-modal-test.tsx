@@ -225,14 +225,14 @@ function ClaimConfirm({
         chain: contract.chain
       })
       // create record to backend
-      await userApi.createRewardRecord(claimSignature.uid, estimateGas!)
+      // await userApi.createRewardRecord(claimSignature.uid, estimateGas!)
 
       let tx = null
       try {
         setClaimTip('Please check and approve the claim request in your wallet.')
         tx = await lastUsedWallet?.client?.writeContract(request)
       } catch (err) {
-        await userApi.finishRewardRecord(claimSignature.uid, 4)
+        // await userApi.finishRewardRecord(claimSignature.uid, 4)
         onClose()
         throw err
       }
@@ -240,12 +240,12 @@ function ClaimConfirm({
       setClaimTip('Waiting for transaction to be confirmed...')
       if (!tx) throw new Error('Transaction failed')
       // update tx_hash to backend
-      await userApi.updateRewardRecord(claimSignature.uid, tx)
+      // await userApi.updateRewardRecord(claimSignature.uid, tx)
       const receipt = await rpcClient.waitForTransactionReceipt({ hash: tx })
 
       // sync onchain status to backend
       const status = receipt.status === 'success' ? 2 : 3
-      userApi.finishRewardRecord(claimSignature.uid, status)
+      // userApi.finishRewardRecord(claimSignature.uid, status)
       if (status === 2) onSuccess()
     } catch (err) {
       message.error(err.details || err.message)
