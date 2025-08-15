@@ -10,7 +10,6 @@ import { cn } from '@udecode/cn'
 import TokenClaimModal from '@/components/settings/token-claim-modal'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
-import TokenClaimModalTest from '@/components/settings/token-claim-modal-test'
 
 const items: TabsProps['items'] = [
   {

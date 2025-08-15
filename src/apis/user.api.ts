@@ -148,7 +148,7 @@ export interface RewardRecordHistoryParams {
 
 export interface RewardRecordHistoryItem {
   uid: string
-  gmt_time: string
+  gmt_create: string
   claim_time: string
   tx_hash: string
   from_address: string

@@ -51,7 +51,7 @@ export default function ClaimHistory() {
   const [rewardRecordHistory, setRewardRecordHistory] = useState<RewardRecordHistoryItem[]>([])
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(5)
+  const [pageSize] = useState(10)
   const [total, setTotal] = useState(0)
 
   async function getRewardRecordHistory(page: number, pageSize: number) {
