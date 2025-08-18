@@ -28,7 +28,8 @@ export default function Form({
     front_view_images: [],
     side_view_images: [],
     app_type: '',
-    text_on_knob: ''
+    scale_type: '',
+    scale_value: ''
   })
   const canSubmit = useMemo(() => {
     return (
@@ -36,7 +37,8 @@ export default function Form({
       !!formData.front_view_images.length &&
       !!formData.side_view_images.length &&
       !!formData.app_type &&
-      !!formData.text_on_knob
+      !!formData.scale_type &&
+      !!formData.scale_value
     )
   }, [errors, formData])
   const [front_view_image_hash, side_view_image_hash] = useMemo(() => {
@@ -55,8 +57,11 @@ export default function Form({
     if (!formData.app_type) {
       newErrors.app_type = 'Appliance type is required'
     }
-    if (!formData.text_on_knob) {
-      newErrors.text_on_knob = 'Description on knob is required'
+    if (!formData.scale_type) {
+      newErrors.scale_type = 'Scale type is required'
+    }
+    if (!formData.scale_value) {
+      newErrors.scale_value = 'Scale value is required'
     }
 
     setErrors(newErrors)
@@ -67,7 +72,8 @@ export default function Form({
       front_view_images: [],
       side_view_images: [],
       app_type: '',
-      text_on_knob: ''
+      scale_type: '',
+      scale_value: ''
     })
   }
   const handleFormChange = (field: keyof FormData, value: string | number | { url: string; hash: string }[]) => {
@@ -111,7 +117,12 @@ export default function Form({
     <>
       <div className="mt-[22px] space-y-[22px] md:mt-[48px] md:space-y-[30px]">
         <div>
-          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+          <h3
+            className={cn(
+              'mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
+              isMobile ? 'px-4' : 'px-0'
+            )}
+          >
             Front View Photo<span className="text-red-400">*</span>
           </h3>
           <Upload
@@ -138,7 +149,12 @@ export default function Form({
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.front_view_images}</p>
         </div>
         <div>
-          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+          <h3
+            className={cn(
+              'mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
+              isMobile ? 'px-4' : 'px-0'
+            )}
+          >
             Side View Photo<span className="text-red-400">*</span>
           </h3>
           <Upload
@@ -165,7 +181,12 @@ export default function Form({
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.side_view_images}</p>
         </div>
         <div>
-          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+          <h3
+            className={cn(
+              'mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
+              isMobile ? 'px-4' : 'px-0'
+            )}
+          >
             Appliance type<span className="text-red-400">*</span>
           </h3>
           <Input
@@ -186,25 +207,58 @@ export default function Form({
           </p>
         </div>
         <div>
-          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Read the specific number/text on the knob<span className="text-red-400">*</span>
-          </h3>
-          <Input
-            isMobile={isMobile}
-            placeholder="For Example: 20 mins, Low heat"
-            maxLength={255}
-            value={formData.text_on_knob}
-            onChange={(value) => handleFormChange('text_on_knob', value)}
-          />
-          <p
+          <h3
             className={cn(
-              'mt-2 text-sm',
-              isMobile ? 'px-4' : 'px-0',
-              errors.text_on_knob ? 'text-red-400' : 'text-[#BBBBBE]'
+              'mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
+              isMobile ? 'px-4' : 'px-0'
             )}
           >
-            {errors.text_on_knob ? errors.text_on_knob : ``}
-          </p>
+            Read the exact value/marking indicated by the knob pointer
+          </h3>
+          <div className="rounded-xl border border-[#252532] px-4 py-2 md:flex md:gap-4 md:border-none md:bg-[#252532] md:p-4">
+            <div className="md:flex-1">
+              <h4 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white')}>
+                Scale Type<span className="text-red-400">*</span>
+              </h4>
+              <Input
+                isMobile={isMobile}
+                placeholder="For Example:Temperature, Speed"
+                maxLength={255}
+                value={formData.scale_type}
+                onChange={(value) => handleFormChange('scale_type', value)}
+              />
+              <p
+                className={cn(
+                  'mt-2 text-sm',
+                  isMobile ? 'px-4' : 'px-0',
+                  errors.scale_type ? 'text-red-400' : 'text-[#BBBBBE]'
+                )}
+              >
+                {errors.scale_type ? errors.scale_type : ``}
+              </p>
+            </div>
+            <div className="md:flex-1">
+              <h4 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white')}>
+                Scale Value<span className="text-red-400">*</span>
+              </h4>
+              <Input
+                isMobile={isMobile}
+                placeholder="For Example: 20 mins, Low heat"
+                maxLength={255}
+                value={formData.scale_value}
+                onChange={(value) => handleFormChange('scale_value', value)}
+              />
+              <p
+                className={cn(
+                  'mt-2 text-sm',
+                  isMobile ? 'px-4' : 'px-0',
+                  errors.scale_value ? 'text-red-400' : 'text-[#BBBBBE]'
+                )}
+              >
+                {errors.scale_value ? errors.scale_value : ``}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       <div className="pt-4">
