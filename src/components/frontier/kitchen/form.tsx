@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { cn } from '@udecode/cn'
 
 import { Button } from '@/components/booster/button'
@@ -45,7 +45,7 @@ export default function Form({
     return [formData.front_view_images[0]?.hash, formData.side_view_images[0]?.hash]
   }, [formData])
 
-  const validateForm = (): boolean => {
+  const validateForm = useCallback((): boolean => {
     const newErrors: Partial<Record<keyof FormData, string>> = {}
 
     if (formData.front_view_images.length === 0) {
@@ -53,6 +53,8 @@ export default function Form({
     }
     if (!formData.side_view_images.length) {
       newErrors.side_view_images = 'Please upload an image'
+    } else if (front_view_image_hash === side_view_image_hash) {
+      newErrors.side_view_images = 'Side view photo must be different from front view photo'
     }
     if (!formData.app_type) {
       newErrors.app_type = 'Appliance type is required'
@@ -66,7 +68,8 @@ export default function Form({
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
-  }
+  }, [formData, front_view_image_hash, side_view_image_hash])
+
   const resetForm = () => {
     setFormData({
       front_view_images: [],
