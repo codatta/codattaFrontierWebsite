@@ -78,6 +78,8 @@ const CryptoTpl000004 = lazy(() => import('@/views/frontiers/crypto_tpl_000004')
 const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_info_survey_basic'))
 const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
 
+const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -319,6 +321,14 @@ export default function Router() {
         <Route
           path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId/:questId"
           element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
+        />
+        <Route
+          path="/frontier/project/KITCHEN_TPL_W9/:taskId"
+          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
+        />
+        <Route
+          path="/frontier/project/KITCHEN_TPL_W9/:taskId/:questId"
+          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
         />
 
         <Route path="/app/booster" element={<BoosterLayout />}>
