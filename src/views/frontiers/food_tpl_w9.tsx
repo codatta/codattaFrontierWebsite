@@ -98,7 +98,25 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     }
   }
 
-  const validateForm = (updateErrors = true): boolean => {
+  const clearFormData = () => {
+    setFormData({
+      images: [],
+      foodName: '',
+      foodCategory: '',
+      brand: '',
+      foodType: '',
+      quantity: '',
+      foodWeight: undefined,
+      cookingMethod: '',
+      calories: undefined
+    })
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+    setErrors({})
+  }
+
+  const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof FoodFormData, string>> = {}
 
     if (formData.images.length === 0) {
@@ -134,9 +152,8 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       newErrors.calories = 'Calories is required'
     }
 
-    if (updateErrors) {
-      setErrors(newErrors)
-    }
+    setErrors(newErrors)
+
     return Object.keys(newErrors).length === 0
   }
 
@@ -157,6 +174,8 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       const resultData = res.data as unknown as {
         status: 'ADOPT' | 'PENDING' | 'REJECT'
       }
+
+      clearFormData()
 
       message.success('Submitted successfully!').then(() => {
         handleResultStatus(resultData?.status)
