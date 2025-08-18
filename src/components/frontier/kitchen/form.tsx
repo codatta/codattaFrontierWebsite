@@ -25,29 +25,32 @@ export default function Form({
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
   const [formData, setFormData] = useState<FormData>({
-    front_images: [],
-    multi_angle_images: [],
+    front_view_images: [],
+    side_view_images: [],
     app_type: '',
     text_on_knob: ''
   })
   const canSubmit = useMemo(() => {
     return (
       Object.values(errors).every((error) => !error) &&
-      !!formData.front_images.length &&
-      !!formData.multi_angle_images.length &&
+      !!formData.front_view_images.length &&
+      !!formData.side_view_images.length &&
       !!formData.app_type &&
       !!formData.text_on_knob
     )
   }, [errors, formData])
+  const [front_view_image_hash, side_view_image_hash] = useMemo(() => {
+    return [formData.front_view_images[0]?.hash, formData.side_view_images[0]?.hash]
+  }, [formData])
 
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof FormData, string>> = {}
 
-    if (formData.front_images.length === 0) {
-      newErrors.front_images = 'Please upload an image'
+    if (formData.front_view_images.length === 0) {
+      newErrors.front_view_images = 'Please upload an image'
     }
-    if (!formData.multi_angle_images.length) {
-      newErrors.multi_angle_images = 'Please upload an image'
+    if (!formData.side_view_images.length) {
+      newErrors.side_view_images = 'Please upload an image'
     }
     if (!formData.app_type) {
       newErrors.app_type = 'Appliance type is required'
@@ -61,8 +64,8 @@ export default function Form({
   }
   const resetForm = () => {
     setFormData({
-      front_images: [],
-      multi_angle_images: [],
+      front_view_images: [],
+      side_view_images: [],
       app_type: '',
       text_on_knob: ''
     })
@@ -78,6 +81,12 @@ export default function Form({
   useEffect(() => {
     resetForm()
   }, [resultType])
+
+  useEffect(() => {
+    if (!!front_view_image_hash && !!side_view_image_hash && side_view_image_hash === front_view_image_hash) {
+      setErrors((prev) => ({ ...prev, side_view_images: 'Side view photo must be different from front view photo' }))
+    }
+  }, [front_view_image_hash, side_view_image_hash])
 
   const handleSubmit = async () => {
     if (!validateForm()) return
@@ -100,14 +109,11 @@ export default function Form({
     <>
       <div className="mt-[22px] space-y-[22px] md:mt-[48px] md:space-y-[30px]">
         <div>
-          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Kitchen Appliance Knob Collection
-          </h3>
           <ul className="flex items-center gap-3">
             <li className="h-[120px] flex-1 overflow-hidden rounded-lg bg-[#EAEAEA] md:size-[140px] md:flex-initial">
               <img src={image1} alt="" className="mx-auto block h-full w-auto" />
             </li>
-            <li className="h-[120px] flex-1 overflow-hidden rounded-lg bg-[#EAEAEA] md:size-[140px] md:flex-initial">
+            <li className="h-[120px] flex-1 overflow-hidden rounded-lg bg-gradient-to-r from-[#E3E3E3] to-[#D6D6D6] md:size-[140px] md:flex-initial">
               <img src={image2} alt="" className="mx-auto block h-full w-auto" />
             </li>
           </ul>
@@ -117,8 +123,8 @@ export default function Form({
             Front View Photo<span className="text-red-400">*</span>
           </h3>
           <Upload
-            value={formData.front_images}
-            onChange={(images) => handleFormChange('front_images', images)}
+            value={formData.front_view_images}
+            onChange={(images) => handleFormChange('front_view_images', images)}
             isMobile={isMobile}
             description={
               <>
@@ -136,15 +142,15 @@ export default function Form({
               </>
             }
           />
-          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.front_images}</p>
+          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.front_view_images}</p>
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
-            Multi-angle Photo<span className="text-red-400">*</span>
+            Side View Photo<span className="text-red-400">*</span>
           </h3>
           <Upload
-            value={formData.multi_angle_images}
-            onChange={(images) => handleFormChange('multi_angle_images', images)}
+            value={formData.side_view_images}
+            onChange={(images) => handleFormChange('side_view_images', images)}
             isMobile={isMobile}
             description={
               <>
@@ -162,7 +168,7 @@ export default function Form({
               </>
             }
           />
-          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.multi_angle_images}</p>
+          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.side_view_images}</p>
         </div>
         <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>

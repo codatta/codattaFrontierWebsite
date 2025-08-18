@@ -129,27 +129,35 @@ export default function KitchenAppData({ templateId }: { templateId: string }) {
   return (
     <AuthChecker>
       <Spin spinning={pageLoading} className="min-h-screen">
-        <div className="mx-auto min-h-screen max-w-[1272px] px-6 py-3 md:py-8">
-          <h1 className="flex items-center justify-between text-center text-base font-bold">
-            {!isMobile ? (
-              <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
-                <ArrowLeft size={18} /> Back
-              </div>
-            ) : (
+        <div className="min-h-screen py-3 md:py-8">
+          <div className="border-[#FFFFFF1F] pb-3 md:border-b md:pb-8">
+            <h1 className="mx-auto flex max-w-[1272px] items-center justify-between px-6 text-center text-base font-bold">
+              {!isMobile ? (
+                <div
+                  className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]"
+                  onClick={onBack}
+                >
+                  <ArrowLeft size={18} /> Back
+                </div>
+              ) : (
+                <span></span>
+              )}
+              Kitchen Appliance Knob Collection
               <span></span>
-            )}
-            Submit Application Data
-            <span></span>
-          </h1>
-          {resultType ? (
-            isBnb ? (
-              <Result type={resultType} onSubmitAgain={onSubmitAgain} />
+            </h1>
+          </div>
+
+          <div className="mx-auto max-w-[1272px] px-6">
+            {resultType ? (
+              isBnb ? (
+                <Result type={resultType} onSubmitAgain={onSubmitAgain} />
+              ) : (
+                <SubmitSuccessModal points={rewardPoints} open={true} onClose={() => window.history.back()} />
+              )
             ) : (
-              <SubmitSuccessModal points={rewardPoints} open={true} onClose={() => window.history.back()} />
-            )
-          ) : (
-            <Form onSubmit={onSubmit} isMobile={isMobile} />
-          )}
+              <Form onSubmit={onSubmit} isMobile={isMobile} />
+            )}
+          </div>
         </div>
       </Spin>
     </AuthChecker>
