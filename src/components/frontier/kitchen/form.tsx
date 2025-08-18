@@ -111,16 +111,6 @@ export default function Form({
     <>
       <div className="mt-[22px] space-y-[22px] md:mt-[48px] md:space-y-[30px]">
         <div>
-          <ul className="flex items-center gap-3">
-            <li className="h-[120px] flex-1 overflow-hidden rounded-lg bg-[#EAEAEA] md:size-[140px] md:flex-initial">
-              <img src={image1} alt="" className="mx-auto block h-full w-auto" />
-            </li>
-            <li className="h-[120px] flex-1 overflow-hidden rounded-lg bg-gradient-to-r from-[#E3E3E3] to-[#D6D6D6] md:size-[140px] md:flex-initial">
-              <img src={image2} alt="" className="mx-auto block h-full w-auto" />
-            </li>
-          </ul>
-        </div>
-        <div>
           <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
             Front View Photo<span className="text-red-400">*</span>
           </h3>
@@ -128,6 +118,7 @@ export default function Form({
             value={formData.front_view_images}
             onChange={(images) => handleFormChange('front_view_images', images)}
             isMobile={isMobile}
+            icon={image1}
             description={
               <>
                 {isMobile ? (
@@ -154,6 +145,7 @@ export default function Form({
             value={formData.side_view_images}
             onChange={(images) => handleFormChange('side_view_images', images)}
             isMobile={isMobile}
+            icon={image2}
             description={
               <>
                 {isMobile ? (

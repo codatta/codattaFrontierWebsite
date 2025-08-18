@@ -16,12 +16,13 @@ interface UploadProps {
   value: UploadedImage[]
   error?: string
   description?: string | React.ReactNode
+  icon?: string
   isMobile?: boolean
   className?: string
   onChange: (value: UploadedImage[]) => void
 }
 
-const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, isMobile, className }) => {
+const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, isMobile, className, icon }) => {
   const [uploading, setUploading] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -105,51 +106,70 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
             <div className={cn('flex items-center gap-4 rounded-xl bg-[#252532] p-3', className)} onClick={handleClick}>
               <div
                 className={cn(
-                  'flex size-[100px] shrink-0 items-center justify-center rounded-lg bg-[#3A3A4A] transition-colors hover:bg-[#4a4a5a]',
+                  'relative size-[100px] shrink-0 overflow-hidden rounded-lg bg-[#3A3A4A] bg-gradient-to-r from-[#E3E3E3] to-[#D6D6D6] transition-colors hover:bg-[#4a4a5a]',
                   error && 'border border-red-500'
                 )}
               >
-                <Plus className="size-6" />
+                <img src={icon} alt="" className="mx-auto h-full w-auto" />
+                <div className="absolute inset-0 z-10 flex size-full items-center justify-center bg-[#000000]/10">
+                  <Plus className="size-6" />
+                </div>
               </div>
               <div className="flex-1 text-sm leading-relaxed text-[#868686]">
                 {description || 'Click to upload screenshot'}
               </div>
             </div>
           ) : (
-            <div
-              onClick={handleClick}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-              className={cn(
-                'flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-[#FFFFFF1F] py-9 text-center text-[#606067] transition-colors hover:border-dashed hover:border-[#875DFF]',
-                error && 'border-red-500'
-              )}
-            >
-              <Plus className="mb-3 size-6" />
-              <p className="text-sm">{description || 'Click to upload screenshot'}</p>
+            <div className="flex h-[130px] items-stretch gap-2">
+              <div
+                onClick={handleClick}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                className={cn(
+                  'flex size-full cursor-pointer flex-col items-center justify-center rounded-lg border border-[#FFFFFF1F] py-6 text-center text-[#606067] transition-colors hover:border-dashed hover:border-[#875DFF]',
+                  error && 'border-red-500'
+                )}
+              >
+                <Plus className="mb-3 size-6" />
+                <p className="text-sm">{description || 'Click to upload screenshot'}</p>
+              </div>
+              <div className="relative size-[130px] overflow-hidden rounded-lg bg-gradient-to-r from-[#E3E3E3] to-[#D6D6D6]">
+                <img src={icon} alt="" className="mx-auto h-full w-auto" />
+                <div className="absolute left-1 top-1 rounded-full bg-[#0000001F] px-1 text-xs font-semibold leading-5 text-[#1C1C26]">
+                  Example
+                </div>
+              </div>
             </div>
           )
         ) : (
-          <div className={cn('flex w-full items-center gap-3 rounded-lg px-4 py-6', className)}>
-            {imageFile && (
-              <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
-                <img src={createImagePreview(imageFile)} className="size-full object-cover" alt={imageFile.name} />
-              </div>
-            )}
-            <div className="flex w-full items-center justify-between">
-              <div className="w-full text-sm text-white">
-                <div className="mb-1 line-clamp-2 max-w-[180px] font-medium">{imageFile?.name}</div>
-                <div className="text-xs text-gray-400">
-                  {imageFile && `${(imageFile.size / 1024 / 1024).toFixed(2)} MB`}
+          <div className="flex items-center gap-2">
+            <div className={cn('flex w-full items-center gap-3 rounded-lg px-4 py-6', className)}>
+              {imageFile && (
+                <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
+                  <img src={createImagePreview(imageFile)} className="size-full object-cover" alt={imageFile.name} />
                 </div>
+              )}
+              <div className="flex w-full items-center justify-between">
+                <div className="w-full text-sm text-white">
+                  <div className="mb-1 line-clamp-2 max-w-[180px] font-medium">{imageFile?.name}</div>
+                  <div className="text-xs text-gray-400">
+                    {imageFile && `${(imageFile.size / 1024 / 1024).toFixed(2)} MB`}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="group rounded-full p-2 transition-colors hover:bg-white/10"
+                >
+                  <X className="size-5 text-gray-400 group-hover:text-red-400" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={removeImage}
-                className="group rounded-full p-2 transition-colors hover:bg-white/10"
-              >
-                <X className="size-5 text-gray-400 group-hover:text-red-400" />
-              </button>
+            </div>
+            <div className="relative hidden size-[130px] overflow-hidden rounded-lg bg-gradient-to-r from-[#E3E3E3] to-[#D6D6D6]">
+              <img src={icon} alt="" className="mx-auto h-full w-auto" />
+              <div className="absolute left-1 top-1 rounded-full bg-[#0000001F] px-1 text-xs font-semibold leading-5 text-[#1C1C26]">
+                Example
+              </div>
             </div>
           </div>
         )}

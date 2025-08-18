@@ -307,7 +307,9 @@ function Form({
 
   return (
     <div className="mt-5 px-6 text-white">
-      <h3 className="mb-2 mt-1 pl-4 font-normal text-[#BBBBBE]">Does the robotic arm touch an object?*</h3>
+      <h3 className="mb-2 mt-1 pl-4 font-normal text-[#BBBBBE]">
+        Does the robotic arm touch an object?<span className="text-red-400">*</span>
+      </h3>
       <div className="flex items-center gap-3 text-base">
         <button
           className="flex flex-1 flex-nowrap items-center justify-between rounded-xl bg-[#FFFFFF14] px-4 py-[10px]"
@@ -323,7 +325,9 @@ function Form({
         </button>
       </div>
       <div className={selected === 'no' ? 'hidden' : ''}>
-        <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Contact Target*</h3>
+        <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">
+          Contact Target<span className="text-red-400">*</span>
+        </h3>
         <textarea
           placeholder="Describe the target object that the robotic arm iscontacting..."
           className="w-full rounded-xl px-4 py-[10px] text-base text-black placeholder:text-[#77777D]"
@@ -333,7 +337,9 @@ function Form({
         ></textarea>
       </div>
 
-      <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">Robotic arm position*</h3>
+      <h3 className="mb-2 mt-[22px] pl-4 font-normal text-[#BBBBBE]">
+        Robotic arm position<span className="text-red-400">*</span>
+      </h3>
       <div className="rounded-xl bg-[#252532] px-4 py-[10px]">
         {/* <div className="text-base">Position({position})</div> */}
         <p className="mt-1 text-sm text-[#77777D]">Drag the rectangle in the image to mark the robotic arm position</p>
