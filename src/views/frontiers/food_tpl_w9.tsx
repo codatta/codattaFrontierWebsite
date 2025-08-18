@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { Plus, X } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 import { message, Spin } from 'antd'
 
 import MobileSelect, { SelectOption } from '@/components/mobile-ui/select'
+import { Button } from '@/components/booster/button'
 import AuthChecker from '@/components/app/auth-checker'
 import Result from '@/components/frontier/info-survey/result'
 
@@ -52,6 +53,19 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId } = useParams()
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
 
+  const allFieldsFilled = useMemo(() => {
+    return (
+      formData.images.length > 0 &&
+      formData.foodName.trim() !== '' &&
+      formData.foodCategory !== '' &&
+      formData.foodType !== '' &&
+      formData.quantity !== '' &&
+      formData.foodWeight !== undefined &&
+      formData.cookingMethod.trim() !== '' &&
+      formData.calories !== undefined
+    )
+  }, [formData])
+
   const foodCategories: SelectOption[] = [
     { label: 'Homemade food or snacks', value: 'Homemade food or snacks' },
     { label: 'Dine-out meals', value: 'Dine-out meals' }
@@ -84,7 +98,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     }
   }
 
-  const validateForm = (): boolean => {
+  const validateForm = (updateErrors = true): boolean => {
     const newErrors: Partial<Record<keyof FoodFormData, string>> = {}
 
     if (formData.images.length === 0) {
@@ -120,40 +134,38 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       newErrors.calories = 'Calories is required'
     }
 
-    setErrors(newErrors)
+    if (updateErrors) {
+      setErrors(newErrors)
+    }
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async () => {
-    if (!validateForm()) return
-    setIsSubmitting(true)
-
-    try {
-      await frontiterApi.submitTask(taskId!, {
-        templateId: templateId,
-        taskId: taskId,
-        data: formData
-      })
-
-      setFormData({
-        images: [],
-        foodName: '',
-        foodCategory: '',
-        brand: '',
-        foodType: '',
-        quantity: '',
-        foodWeight: undefined,
-        cookingMethod: '',
-        calories: undefined
-      })
-      if (fileInputRef.current) {
-        fileInputRef.current.value = ''
-      }
-      setResultType('PENDING')
-    } catch (error) {
-      message.error(error.message)
+    if (!validateForm()) {
+      message.error('Please fill in all required fields correctly.')
+      return
     }
-    setIsSubmitting(false)
+
+    setIsSubmitting(true)
+    try {
+      const res = await frontiterApi.submitTask(taskId!, {
+        data: formData,
+        templateId: templateId,
+        taskId: taskId
+      })
+
+      const resultData = res.data as unknown as {
+        status: 'ADOPT' | 'PENDING' | 'REJECT'
+      }
+
+      message.success('Submitted successfully!').then(() => {
+        handleResultStatus(resultData?.status)
+      })
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to submit!')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -461,20 +473,13 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
               {/* Submit Button */}
               <div className="pt-4">
-                <button
-                  type="button"
+                <Button
+                  text="Submit"
+                  className={`w-full rounded-full bg-primary py-4 text-lg font-medium text-white transition-all hover:from-purple-600 hover:to-purple-700 active:scale-[97%] disabled:cursor-not-allowed ${!allFieldsFilled ? 'opacity-50' : ''}`}
                   onClick={handleSubmit}
                   disabled={isSubmitting}
-                  className="w-full rounded-full bg-primary py-4 text-lg font-medium text-white transition-all hover:from-purple-600 hover:to-purple-700 active:scale-[97%] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isSubmitting ? (
-                    <div className="flex items-center justify-center py-1">
-                      <div className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                    </div>
-                  ) : (
-                    'Submit'
-                  )}
-                </button>
+                  loading={isSubmitting}
+                />
               </div>
             </div>
           </div>
