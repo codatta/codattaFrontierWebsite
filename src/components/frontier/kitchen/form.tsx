@@ -85,6 +85,8 @@ export default function Form({
   useEffect(() => {
     if (!!front_view_image_hash && !!side_view_image_hash && side_view_image_hash === front_view_image_hash) {
       setErrors((prev) => ({ ...prev, side_view_images: 'Side view photo must be different from front view photo' }))
+    } else {
+      setErrors((prev) => ({ ...prev, side_view_images: undefined }))
     }
   }, [front_view_image_hash, side_view_image_hash])
 
