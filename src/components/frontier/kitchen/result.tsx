@@ -30,7 +30,9 @@ const ResultMap: Record<ResultType, ResultMap> = {
   REJECT: {
     Icon: RejectIcon,
     title: <div className="text-[#D92B2B]">Audit Failed</div>,
-    description: <>Due to network fluctuations and system errors, please resubmit to receive your reward.</>
+    description: (
+      <>Unfortunately, your submission did not pass our audit. Please review the requirements and resubmit.</>
+    )
   }
 }
 
