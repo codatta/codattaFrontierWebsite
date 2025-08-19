@@ -112,7 +112,7 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
                 )}
               >
                 <img src={icon} alt="" className="mx-auto h-full w-auto" />
-                <div className="absolute inset-0 z-10 flex size-full items-center justify-center bg-[#000000]/10">
+                <div className="absolute inset-0 z-10 flex size-full items-center justify-center bg-[#000000]/40">
                   <Plus className="size-6" />
                 </div>
               </div>
