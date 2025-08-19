@@ -42,8 +42,9 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
       message.error('Image size must be less than 10MB')
       return
     }
-    if (!file.type.startsWith('image/')) {
-      message.error('Please upload an image file')
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      message.error('Please upload an image in PNG, JPEG, or JPG format.')
       return
     }
 
