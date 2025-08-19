@@ -40,8 +40,9 @@ const FoodUpload: React.FC<FoodUploadProps> = ({ value, onChange, error }) => {
       message.error('Image size must be less than 20MB')
       return
     }
-    if (!file.type.startsWith('image/')) {
-      message.error('Please upload an image file')
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      message.error('Please upload an image in PNG, JPEG, or JPG format.')
       return
     }
 
