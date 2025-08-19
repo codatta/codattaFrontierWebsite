@@ -44,14 +44,14 @@ export const frontiersStore = proxy<FrontierStore>({
     list: [],
     total: 0,
     listLoading: false,
-    page_size: 5,
+    page_size: 12,
     page: 1
   },
   historyPageData: {
     list: [],
     total: 0,
     listLoading: false,
-    page_size: 5,
+    page_size: 12,
     page: 1
   },
   userStatics: {
@@ -64,7 +64,7 @@ export const frontiersStore = proxy<FrontierStore>({
     list: [],
     total: 0,
     listLoading: false,
-    page_size: 5,
+    page_size: 12,
     page: 1
   }
 })

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { Pagination, Spin } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
@@ -16,6 +16,9 @@ const RoboticsTaskList: React.FC = () => {
   const {
     pageData: { page, page_size, total, list, listLoading }
   } = useSnapshot(frontiersStore)
+  const displayList = useMemo(() => {
+    return list?.filter((item) => !item.data_display?.hide)
+  }, [list])
 
   const goToForm = (data: unknown) => {
     // Create a mutable copy of the readonly object to avoid TypeScript errors
@@ -49,34 +52,32 @@ const RoboticsTaskList: React.FC = () => {
       <Spin spinning={listLoading}>
         <div className="mt-6">
           <div className="">
-            {list
-              ?.filter((item) => !item.data_display?.hide)
-              ?.map((item) => (
-                <div
-                  onClick={() => goToForm(item)}
-                  key={item.task_id}
-                  className="mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
-                >
-                  <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
-                    {item.data_display.template_id !== 'CMU_TPL_000001' && (
-                      <div className="flex w-full flex-none items-center justify-start gap-4 md:w-auto">
-                        {item.reward_info?.map((reward) => (
-                          <div className="flex items-center text-center md:flex-col">
-                            <img src={reward.reward_icon} alt="" className="size-8 md:size-12" />
-                            <span>{reward.reward_value}</span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                    <div className="order-first flex-auto break-all font-semibold md:order-last">{item.name}</div>
-                  </div>
-                  <div className="w-[88px] shrink-0 cursor-pointer rounded-full bg-[#875DFF] py-2 text-center text-xs text-[#FFFFFF]">
-                    Submit
-                  </div>
+            {displayList?.map((item) => (
+              <div
+                onClick={() => goToForm(item)}
+                key={item.task_id}
+                className="mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
+              >
+                <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
+                  {item.data_display.template_id !== 'CMU_TPL_000001' && (
+                    <div className="flex w-full flex-none items-center justify-start gap-4 md:w-auto">
+                      {item.reward_info?.map((reward) => (
+                        <div className="flex items-center text-center md:flex-col">
+                          <img src={reward.reward_icon} alt="" className="size-8 md:size-12" />
+                          <span>{reward.reward_value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="order-first flex-auto break-all font-semibold md:order-last">{item.name}</div>
                 </div>
-              ))}
+                <div className="w-[88px] shrink-0 cursor-pointer rounded-full bg-[#875DFF] py-2 text-center text-xs text-[#FFFFFF]">
+                  Submit
+                </div>
+              </div>
+            ))}
           </div>
-          {list?.length === 0 && (
+          {displayList?.length === 0 && (
             <div className="flex h-[calc(100vh_-_380px)] w-full items-center justify-center">
               <CustomEmpty />
             </div>
