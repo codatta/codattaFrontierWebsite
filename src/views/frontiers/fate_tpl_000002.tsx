@@ -1,5 +1,5 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Button, Form, Input, Select, Radio, message } from 'antd'
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
+import { Button, Form, Input, Select, Radio, message, Spin, Modal } from 'antd'
 import { Edit, Loader2, Plus, Trash2 } from 'lucide-react'
 import MobileBirthPicker from '@/components/common/mobile-birth-picker'
 import MobileLocationPicker from '@/components/common/mobile-location-picker'
@@ -12,9 +12,21 @@ import Result from '@/components/frontier/fate_tpl_02/result'
 
 const { Option } = Select
 
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
+
 const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [form] = Form.useForm()
 
+  const [pageLoading, setPageLoading] = useState(false)
   const [lifeEvents, setLifeEvents] = useState<LifeEvent[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [editingEvent, setEditingEvent] = useState<LifeEvent | null>(null)
@@ -25,7 +37,7 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const eventListRowCountRef = useRef(1)
   const [birthDateTime, setBirthDateTime] = useState<BirthDateTime | undefined>()
   const [birthLocation, setBirthLocation] = useState<LocationValue | undefined>()
-  const [showSuccessModal, setShowSuccessModal] = useState(true)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const { taskId } = useParams()
 
@@ -324,415 +336,453 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
     return category?.placeholder || 'Please enter description'
   }
 
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+      if (taskDetail.data.data_display.template_id !== templateId) {
+        message.error('Template not match!')
+        return
+      }
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
+      console.log('lastSubmission', lastSubmission)
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setPageLoading(false)
+    }
+  }, [taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
+
   return (
-    <div className="min-h-screen bg-[#1C1C26] text-white">
-      <div>
-        <div className="mx-auto mt-9 flex max-w-5xl items-center px-6 py-3 text-xs text-[#b0b0b0]">
-          <svg
-            className="mr-2"
-            width="14"
-            height="14"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            style={{ minWidth: 14, minHeight: 14 }}
-          >
-            <circle cx="8" cy="8" r="7" stroke="#b0b0b0" strokeWidth="1.2" fill="none" />
-            <rect x="7.25" y="3.5" width="1.5" height="6" rx="0.75" fill="#b0b0b0" />
-            <circle cx="8" cy="11.5" r="1" fill="#b0b0b0" />
-          </svg>
-          <span>
-            Your use of this service constitutes consent to process data per our{' '}
-            <a href="https://codatta.io/privacy" target="_blank" rel="noopener noreferrer">
-              Privacy Policy
-            </a>
-            .
-          </span>
+    <Spin spinning={pageLoading} className="min-h-screen">
+      <div className="min-h-screen bg-[#1C1C26] text-white">
+        <div>
+          <div className="mx-auto mt-9 flex max-w-5xl items-center px-6 py-3 text-xs text-[#b0b0b0]">
+            <svg
+              className="mr-2"
+              width="14"
+              height="14"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ minWidth: 14, minHeight: 14 }}
+            >
+              <circle cx="8" cy="8" r="7" stroke="#b0b0b0" strokeWidth="1.2" fill="none" />
+              <rect x="7.25" y="3.5" width="1.5" height="6" rx="0.75" fill="#b0b0b0" />
+              <circle cx="8" cy="11.5" r="1" fill="#b0b0b0" />
+            </svg>
+            <span>
+              Your use of this service constitutes consent to process data per our{' '}
+              <a href="https://codatta.io/privacy" target="_blank" rel="noopener noreferrer">
+                Privacy Policy
+              </a>
+              .
+            </span>
+          </div>
         </div>
-      </div>
 
-      <div className="mx-auto max-w-5xl p-6">
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          className="space-y-8"
-          size="large"
-          scrollToFirstError={true}
-        >
-          {/* Personal Data Section */}
-          <div className="">
-            <h2 className="mb-3 text-lg font-semibold">Personal Data</h2>
-
-            <div className="grid grid-cols-1 gap-0 md:grid-cols-3 md:gap-6">
-              <div>
-                <Form.Item
-                  name="birthLocation"
-                  label="Birth Location"
-                  validateTrigger={false}
-                  rules={[{ required: true, message: 'Please select birth location' }]}
-                >
-                  <MobileLocationPicker
-                    value={birthLocation}
-                    onChange={handleBirthLocationChange}
-                    placeholder="Select Birth Location"
-                  />
-                </Form.Item>
-              </div>
-
-              <div>
-                <Form.Item
-                  name="birthTime"
-                  label="Birth Time"
-                  rules={[{ required: true, message: 'Please select birth time' }]}
-                >
-                  <MobileBirthPicker
-                    value={birthDateTime}
-                    onChange={handleBirthDateTimeChange}
-                    placeholder="Select Birth Time"
-                  />
-                </Form.Item>
-              </div>
-
-              <div>
-                <Form.Item name="gender" label="Gender" rules={[{ required: true, message: 'Please select gender' }]}>
-                  <Radio.Group className="flex gap-6">
-                    <Radio value="male" className="text-white">
-                      <span className="text-white">Male</span>
-                    </Radio>
-                    <Radio value="female" className="text-white">
-                      <span className="text-white">Female</span>
-                    </Radio>
-                  </Radio.Group>
-                </Form.Item>
-              </div>
-            </div>
-
-            {/* Life Event Section */}
+        <div className="mx-auto max-w-5xl p-6">
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSubmit}
+            className="space-y-8"
+            size="large"
+            scrollToFirstError={true}
+          >
+            {/* Personal Data Section */}
             <div className="">
-              <div className="mb-6">
-                <label className="text-sm font-medium">Life Event</label>
-              </div>
+              <h2 className="mb-3 text-lg font-semibold">Personal Data</h2>
 
-              <div className="mb-6 rounded-2xl bg-[#252532] p-4">
-                {/* Life Stages Selection */}
-                <div className="mb-6">
-                  <label className="mb-3 block text-sm font-medium">
-                    <span className="text-red-400">*</span> Life Stages
-                  </label>
-                  <Select
-                    placeholder={birthDateTime ? 'Select Life Stages' : 'Please select birth time first'}
-                    value={currentLifeStage}
-                    onChange={setCurrentLifeStage}
-                    className="w-full"
-                    dropdownClassName="bg-[#252532]"
-                    disabled={!birthDateTime}
+              <div className="grid grid-cols-1 gap-0 md:grid-cols-3 md:gap-6">
+                <div>
+                  <Form.Item
+                    name="birthLocation"
+                    label="Birth Location"
+                    validateTrigger={false}
+                    rules={[{ required: true, message: 'Please select birth location' }]}
                   >
-                    {lifeStagesOptions.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
+                    <MobileLocationPicker
+                      value={birthLocation}
+                      onChange={handleBirthLocationChange}
+                      placeholder="Select Birth Location"
+                    />
+                  </Form.Item>
                 </div>
 
-                {/* Event List Form */}
+                <div>
+                  <Form.Item
+                    name="birthTime"
+                    label="Birth Time"
+                    rules={[{ required: true, message: 'Please select birth time' }]}
+                  >
+                    <MobileBirthPicker
+                      value={birthDateTime}
+                      onChange={handleBirthDateTimeChange}
+                      placeholder="Select Birth Time"
+                    />
+                  </Form.Item>
+                </div>
+
+                <div>
+                  <Form.Item name="gender" label="Gender" rules={[{ required: true, message: 'Please select gender' }]}>
+                    <Radio.Group className="flex gap-6">
+                      <Radio value="male" className="text-white">
+                        <span className="text-white">Male</span>
+                      </Radio>
+                      <Radio value="female" className="text-white">
+                        <span className="text-white">Female</span>
+                      </Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </div>
+              </div>
+
+              {/* Life Event Section */}
+              <div className="">
                 <div className="mb-6">
-                  <label className="mb-3 block text-sm font-medium">
-                    <span className="text-red-400">*</span> Event List
-                  </label>
-                  <div className="space-y-3">
-                    {eventListRows.map((row) => (
-                      <div key={row.id} className="flex gap-3">
-                        <div className="flex-1">
-                          <Select
-                            placeholder="Occurrence Year"
-                            value={row.category}
-                            onChange={(value) => handleUpdateEventListRow(row.id, 'category', value)}
-                            className="w-full"
-                            dropdownClassName="bg-[#252532]"
-                          >
-                            {eventCategories.map((category) => (
-                              <Option key={category.value} value={category.value}>
-                                {category.label}
-                              </Option>
-                            ))}
-                          </Select>
-                        </div>
-                        <div className="flex-1">
-                          <Select
-                            placeholder="Occurrence Year"
-                            value={row.occurrenceYear}
-                            onChange={(value) => handleUpdateEventListRow(row.id, 'occurrenceYear', value)}
-                            className="w-full"
-                            dropdownClassName="bg-[#252532]"
-                            disabled={!birthDateTime || !currentLifeStage}
-                          >
-                            {calculateYearOptions.map((year) => (
-                              <Option key={year} value={year}>
-                                {year}
-                              </Option>
-                            ))}
-                          </Select>
-                        </div>
-                        <div className="flex-[2]">
-                          <Input
-                            placeholder={getCategoryPlaceholder(row.category!)}
-                            value={row.description}
-                            onChange={(e) => handleUpdateEventListRow(row.id, 'description', e.target.value)}
-                            className="w-full"
+                  <label className="text-sm font-medium">Life Event</label>
+                </div>
+
+                <div className="mb-6 rounded-2xl bg-[#252532] p-4">
+                  {/* Life Stages Selection */}
+                  <div className="mb-6">
+                    <label className="mb-3 block text-sm font-medium">
+                      <span className="text-red-400">*</span> Life Stages
+                    </label>
+                    <Select
+                      placeholder={birthDateTime ? 'Select Life Stages' : 'Please select birth time first'}
+                      value={currentLifeStage}
+                      onChange={setCurrentLifeStage}
+                      className="w-full"
+                      dropdownClassName="bg-[#252532]"
+                      disabled={!birthDateTime}
+                    >
+                      {lifeStagesOptions.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  {/* Event List Form */}
+                  <div className="mb-6">
+                    <label className="mb-3 block text-sm font-medium">
+                      <span className="text-red-400">*</span> Event List
+                    </label>
+                    <div className="space-y-3">
+                      {eventListRows.map((row) => (
+                        <div key={row.id} className="flex gap-3">
+                          <div className="flex-1">
+                            <Select
+                              placeholder="Occurrence Year"
+                              value={row.category}
+                              onChange={(value) => handleUpdateEventListRow(row.id, 'category', value)}
+                              className="w-full"
+                              dropdownClassName="bg-[#252532]"
+                            >
+                              {eventCategories.map((category) => (
+                                <Option key={category.value} value={category.value}>
+                                  {category.label}
+                                </Option>
+                              ))}
+                            </Select>
+                          </div>
+                          <div className="flex-1">
+                            <Select
+                              placeholder="Occurrence Year"
+                              value={row.occurrenceYear}
+                              onChange={(value) => handleUpdateEventListRow(row.id, 'occurrenceYear', value)}
+                              className="w-full"
+                              dropdownClassName="bg-[#252532]"
+                              disabled={!birthDateTime || !currentLifeStage}
+                            >
+                              {calculateYearOptions.map((year) => (
+                                <Option key={year} value={year}>
+                                  {year}
+                                </Option>
+                              ))}
+                            </Select>
+                          </div>
+                          <div className="flex-[2]">
+                            <Input
+                              placeholder={getCategoryPlaceholder(row.category!)}
+                              value={row.description}
+                              onChange={(e) => handleUpdateEventListRow(row.id, 'description', e.target.value)}
+                              className="w-full"
+                            />
+                          </div>
+
+                          <Button
+                            type="text"
+                            icon={<Trash2 className="size-4" />}
+                            onClick={() => handleDeleteEventListRow(row.id)}
+                            disabled={eventListRows.length === 1}
                           />
                         </div>
+                      ))}
 
-                        <Button
-                          type="text"
-                          icon={<Trash2 className="size-4" />}
-                          onClick={() => handleDeleteEventListRow(row.id)}
-                          disabled={eventListRows.length === 1}
-                        />
-                      </div>
-                    ))}
+                      <Button
+                        type="link"
+                        icon={<Plus className="size-4" />}
+                        onClick={handleAddEventListRow}
+                        className="px-0 text-white"
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  </div>
 
+                  {/* Add Button */}
+                  <div className="flex gap-3">
                     <Button
-                      type="link"
-                      icon={<Plus className="size-4" />}
-                      onClick={handleAddEventListRow}
-                      className="px-0 text-white"
+                      onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
+                      shape="round"
+                      className="border border-white bg-transparent"
                     >
-                      Add
+                      <Plus className="size-4" /> {editingEvent ? 'Update Event' : 'Add Event'}
                     </Button>
                   </div>
                 </div>
 
-                {/* Add Button */}
-                <div className="flex gap-3">
-                  <Button
-                    onClick={editingEvent ? handleUpdateEvent : handleAddEvent}
-                    shape="round"
-                    className="border border-white bg-transparent"
-                  >
-                    <Plus className="size-4" /> {editingEvent ? 'Update Event' : 'Add Event'}
-                  </Button>
-                </div>
-              </div>
-
-              <Form.Item
-                className="mb-0"
-                label="Added Events"
-                name="lifeEvents"
-                rules={[
-                  {
-                    validator: validateLifeEvents
-                  }
-                ]}
-              >
-                {/* Added Events */}
-                <div className="space-y-3">
-                  {lifeEvents.length === 0 && (
-                    <div className="rounded-lg bg-[#252532]">
-                      <CustomEmpty />
-                    </div>
-                  )}
-
-                  {lifeEvents.map((event) => (
-                    <div key={event.id} className="rounded-lg bg-[#252532] p-4">
-                      <div className="mb-2 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="rounded bg-primary/20 px-2 py-1 text-xs text-primary">Life Stages</span>
-                          <span className="text-sm text-white">{event.lifeStage || '1 - 10 Years Old'}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            type="text"
-                            size="small"
-                            icon={<Edit className="size-3" />}
-                            onClick={() => handleEditEvent(event)}
-                            className="text-white hover:bg-white/10"
-                          ></Button>
-                          <Button
-                            type="text"
-                            size="small"
-                            icon={<Trash2 className="size-3" />}
-                            onClick={() => handleDeleteEvent(event.id)}
-                            className="hover:bg-red-500/10"
-                          />
-                        </div>
+                <Form.Item
+                  className="mb-0"
+                  label="Added Events"
+                  name="lifeEvents"
+                  rules={[
+                    {
+                      validator: validateLifeEvents
+                    }
+                  ]}
+                >
+                  {/* Added Events */}
+                  <div className="space-y-3">
+                    {lifeEvents.length === 0 && (
+                      <div className="rounded-lg bg-[#252532]">
+                        <CustomEmpty />
                       </div>
-                      <div className="space-y-2">
-                        {event.lifeEvents?.map((lifeEvent, index) => (
-                          <div key={`${lifeEvent.category}-${index}`}>
-                            <div className="mb-1 flex items-center gap-2">
-                              <span className="text-sm font-medium text-white">
-                                <span className="mr-2 rounded bg-primary/20 px-2 py-1 text-xs text-primary">
-                                  {lifeEvent.occurrenceYear}
-                                </span>
-                                Event List: {lifeEvent.category}
-                              </span>
-                            </div>
-                            <div className="text-sm text-gray-300">{lifeEvent.description}</div>
+                    )}
+
+                    {lifeEvents.map((event) => (
+                      <div key={event.id} className="rounded-lg bg-[#252532] p-4">
+                        <div className="mb-2 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="rounded bg-primary/20 px-2 py-1 text-xs text-primary">Life Stages</span>
+                            <span className="text-sm text-white">{event.lifeStage || '1 - 10 Years Old'}</span>
                           </div>
-                        ))}
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<Edit className="size-3" />}
+                              onClick={() => handleEditEvent(event)}
+                              className="text-white hover:bg-white/10"
+                            ></Button>
+                            <Button
+                              type="text"
+                              size="small"
+                              icon={<Trash2 className="size-3" />}
+                              onClick={() => handleDeleteEvent(event.id)}
+                              className="hover:bg-red-500/10"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          {event.lifeEvents?.map((lifeEvent, index) => (
+                            <div key={`${lifeEvent.category}-${index}`}>
+                              <div className="mb-1 flex items-center gap-2">
+                                <span className="text-sm font-medium text-white">
+                                  <span className="mr-2 rounded bg-primary/20 px-2 py-1 text-xs text-primary">
+                                    {lifeEvent.occurrenceYear}
+                                  </span>
+                                  Event List: {lifeEvent.category}
+                                </span>
+                              </div>
+                              <div className="text-sm text-gray-300">{lifeEvent.description}</div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
+                    ))}
+                  </div>
+                </Form.Item>
+              </div>
+            </div>
+
+            {/* Parental Data Section */}
+            <div className="">
+              <h2 className="mb-4 text-lg font-semibold">Parental Data</h2>
+
+              <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-6">
+                <div>
+                  <Form.Item name="parentalOccupations" label="Occupations">
+                    <Select placeholder="Occupations" className="w-full" dropdownClassName="bg-[#252532]">
+                      {occupationOptions.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+
+                <div>
+                  <Form.Item name="parentalHealth" label="Health">
+                    <Select placeholder="Health" className="w-full" dropdownClassName="bg-[#252532]">
+                      {healthOptions.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-4 text-sm font-medium">Emotional Relationship</div>
+                <div className="grid grid-cols-1 gap-4 rounded-2xl bg-[#252532] p-4 md:grid-cols-2">
+                  <div>
+                    <div className="text-sm">Biological Father</div>
+                    <Form.Item name="biologicalFatherClose" valuePropName="checked" className="mb-0">
+                      <Radio.Group className="flex gap-6">
+                        <Radio value={true} className="text-white">
+                          <span className="text-white">Close</span>
+                        </Radio>
+                        <Radio value={false} className="text-white">
+                          <span className="text-white">Not Close</span>
+                        </Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </div>
+
+                  <div>
+                    <div className="text-sm">Biological Mother</div>
+                    <Form.Item name="biologicalMotherClose" valuePropName="checked" className="mb-0">
+                      <Radio.Group className="flex gap-6">
+                        <Radio value={true} className="text-white">
+                          <span className="text-white">Close</span>
+                        </Radio>
+                        <Radio value={false} className="text-white">
+                          <span className="text-white">Not Close</span>
+                        </Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Child Data Section */}
+            <div className="">
+              <h2 className="mb-3 text-lg font-semibold">Child Data</h2>
+
+              <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-6">
+                <div>
+                  <Form.Item name="childOccupations" label="Occupations">
+                    <Select placeholder="Occupations" className="w-full" dropdownClassName="bg-[#252532]">
+                      {occupationOptions.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+
+                <div>
+                  <Form.Item name="childHealth" label="Health">
+                    <Select placeholder="Health" className="w-full" dropdownClassName="bg-[#252532]">
+                      {healthOptions.map((option) => (
+                        <Option key={option.value} value={option.value}>
+                          {option.label}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+              </div>
+
+              <div className="mb-6">
+                <div className="mb-4 text-sm font-medium">Emotional Relationship</div>
+
+                <div className="rounded-2xl bg-[#252532] p-4">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                      <div className="text-sm">First Child</div>
+                      <Form.Item name="firstChildClose" valuePropName="checked" className="mb-0">
+                        <Radio.Group className="flex gap-6">
+                          <Radio value={true} className="text-white">
+                            <span className="text-white">Close</span>
+                          </Radio>
+                          <Radio value={false} className="text-white">
+                            <span className="text-white">Not Close</span>
+                          </Radio>
+                        </Radio.Group>
+                      </Form.Item>
                     </div>
-                  ))}
-                </div>
-              </Form.Item>
-            </div>
-          </div>
 
-          {/* Parental Data Section */}
-          <div className="">
-            <h2 className="mb-4 text-lg font-semibold">Parental Data</h2>
-
-            <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-6">
-              <div>
-                <Form.Item name="parentalOccupations" label="Occupations">
-                  <Select placeholder="Occupations" className="w-full" dropdownClassName="bg-[#252532]">
-                    {occupationOptions.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-
-              <div>
-                <Form.Item name="parentalHealth" label="Health">
-                  <Select placeholder="Health" className="w-full" dropdownClassName="bg-[#252532]">
-                    {healthOptions.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-            </div>
-
-            <div>
-              <div className="mb-4 text-sm font-medium">Emotional Relationship</div>
-              <div className="grid grid-cols-1 gap-4 rounded-2xl bg-[#252532] p-4 md:grid-cols-2">
-                <div>
-                  <div className="text-sm">Biological Father</div>
-                  <Form.Item name="biologicalFatherClose" valuePropName="checked" className="mb-0">
-                    <Radio.Group className="flex gap-6">
-                      <Radio value={true} className="text-white">
-                        <span className="text-white">Close</span>
-                      </Radio>
-                      <Radio value={false} className="text-white">
-                        <span className="text-white">Not Close</span>
-                      </Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </div>
-
-                <div>
-                  <div className="text-sm">Biological Mother</div>
-                  <Form.Item name="biologicalMotherClose" valuePropName="checked" className="mb-0">
-                    <Radio.Group className="flex gap-6">
-                      <Radio value={true} className="text-white">
-                        <span className="text-white">Close</span>
-                      </Radio>
-                      <Radio value={false} className="text-white">
-                        <span className="text-white">Not Close</span>
-                      </Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Child Data Section */}
-          <div className="">
-            <h2 className="mb-3 text-lg font-semibold">Child Data</h2>
-
-            <div className="grid grid-cols-1 gap-0 md:grid-cols-2 md:gap-6">
-              <div>
-                <Form.Item name="childOccupations" label="Occupations">
-                  <Select placeholder="Occupations" className="w-full" dropdownClassName="bg-[#252532]">
-                    {occupationOptions.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-
-              <div>
-                <Form.Item name="childHealth" label="Health">
-                  <Select placeholder="Health" className="w-full" dropdownClassName="bg-[#252532]">
-                    {healthOptions.map((option) => (
-                      <Option key={option.value} value={option.value}>
-                        {option.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <div className="mb-4 text-sm font-medium">Emotional Relationship</div>
-
-              <div className="rounded-2xl bg-[#252532] p-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <div>
-                    <div className="text-sm">First Child</div>
-                    <Form.Item name="firstChildClose" valuePropName="checked" className="mb-0">
-                      <Radio.Group className="flex gap-6">
-                        <Radio value={true} className="text-white">
-                          <span className="text-white">Close</span>
-                        </Radio>
-                        <Radio value={false} className="text-white">
-                          <span className="text-white">Not Close</span>
-                        </Radio>
-                      </Radio.Group>
-                    </Form.Item>
+                    <div>
+                      <div className="text-sm">Second Child</div>
+                      <Form.Item name="secondChildClose" valuePropName="checked" className="mb-0">
+                        <Radio.Group className="flex gap-6">
+                          <Radio value={true} className="text-white">
+                            <span className="text-white">Close</span>
+                          </Radio>
+                          <Radio value={false} className="text-white">
+                            <span className="text-white">Not Close</span>
+                          </Radio>
+                        </Radio.Group>
+                      </Form.Item>
+                    </div>
                   </div>
-
                   <div>
-                    <div className="text-sm">Second Child</div>
-                    <Form.Item name="secondChildClose" valuePropName="checked" className="mb-0">
-                      <Radio.Group className="flex gap-6">
-                        <Radio value={true} className="text-white">
-                          <span className="text-white">Close</span>
-                        </Radio>
-                        <Radio value={false} className="text-white">
-                          <span className="text-white">Not Close</span>
-                        </Radio>
-                      </Radio.Group>
+                    <Form.Item name="moreChildInfo" label="More child data you want to share with us" className="mb-0">
+                      <Input placeholder="More Info" />
                     </Form.Item>
                   </div>
                 </div>
-                <div>
-                  <Form.Item name="moreChildInfo" label="More child data you want to share with us" className="mb-0">
-                    <Input placeholder="More Info" />
-                  </Form.Item>
-                </div>
               </div>
             </div>
-          </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-center pt-6">
-            <Button
-              type="primary"
-              shape="round"
-              className="min-w-40"
-              htmlType="submit"
-              disabled={isSubmitting}
-              size="large"
-            >
-              {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : 'Submit'}
-            </Button>
-          </div>
-        </Form>
+            {/* Submit Button */}
+            <div className="flex justify-center pt-6">
+              <Button
+                type="primary"
+                shape="round"
+                className="min-w-40"
+                htmlType="submit"
+                disabled={isSubmitting}
+                size="large"
+              >
+                {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : 'Submit'}
+              </Button>
+            </div>
+          </Form>
+        </div>
+        <Result open={showSuccessModal} onClose={() => window.history.back()} />
       </div>
-      <Result open={showSuccessModal} onClose={() => window.history.back()} />
-    </div>
+    </Spin>
   )
 }
 

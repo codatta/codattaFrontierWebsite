@@ -5,22 +5,41 @@ import TimeIcon from '@/assets/frontier/fate/time-icon.svg?react'
 import SuccessIcon from '@/assets/frontier/fate/success-icon.svg?react'
 
 import { usePositiveTimer } from '@/hooks/usePositiveTimer'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function SubmissionSuccessModal(props: { open: boolean; onClose: () => void }) {
   const { open, onClose } = props
+  // check the status of the report
+  const [status, setStatus] = useState<'get' | 'wait' | 'view'>('get')
+
+  const handleGetReport = () => {
+    setStatus('wait')
+  }
+
+  const handleViewReport = () => {
+    setStatus('view')
+  }
+
+  const checkReport = async () => {
+    console.log('checkReport')
+  }
+
+  useEffect(() => {
+    checkReport()
+  }, [])
 
   return (
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[600px]">
       <div className="text-white">
-        {/* <GetReport onClose={onClose} /> */}
-        <WaitReport onClose={onClose} />
+        {status === 'get' ? <GetReport onClose={onClose} onGetReport={handleGetReport} /> : null}
+        {status === 'wait' ? <WaitReport onClose={onClose} /> : null}
+        {status === 'view' ? <ViewReport onClose={onClose} onViewReport={handleViewReport} /> : null}
       </div>
     </Modal>
   )
 }
 
-function GetReport({ onClose }: { onClose: () => void }) {
+function GetReport({ onClose, onGetReport }: { onClose: () => void; onGetReport: () => void }) {
   return (
     <div className="text-white">
       <InfoIcon className="mx-auto size-[120px]" />
@@ -48,7 +67,7 @@ function GetReport({ onClose }: { onClose: () => void }) {
         <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
           Later
         </Button>
-        <Button type="primary" shape="round" size="large" onClick={onClose} className="w-[120px]">
+        <Button type="primary" shape="round" size="large" onClick={onGetReport} className="w-[120px]">
           Confirm
         </Button>
       </div>
@@ -62,10 +81,6 @@ function WaitReport({ onClose }: { onClose: () => void }) {
   useEffect(() => {
     start()
   }, [start])
-
-  useEffect(() => {
-    console.log(seconds, seconds)
-  }, [seconds])
 
   return (
     <div className="text-center text-white">
@@ -88,8 +103,28 @@ function WaitReport({ onClose }: { onClose: () => void }) {
         <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
           Later
         </Button>
-        <Button type="primary" shape="round" size="large" onClick={onClose} className="w-[120px]">
+        <Button type="primary" shape="round" size="large" className="w-[120px]" disabled={true}>
           Confirm
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function ViewReport({ onClose, onViewReport }: { onClose: () => void; onViewReport: () => void }) {
+  return (
+    <div className="text-center text-white">
+      <SuccessIcon className="mx-auto size-[120px]" />
+      <h3 className="mt-4 text-center text-2xl font-bold leading-7">Report Generated Successfully!</h3>
+      <p className="mt-4 text-base text-[#BBBBBE]">
+        This AI-generated report is for entertainment purposes only and does not constitute investment advice.
+      </p>
+      <div className="mt-12 flex items-center justify-center gap-4">
+        <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
+          Later
+        </Button>
+        <Button type="primary" shape="round" size="large" onClick={onViewReport} className="w-[120px]">
+          View Now
         </Button>
       </div>
     </div>
