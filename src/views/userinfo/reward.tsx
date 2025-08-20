@@ -7,6 +7,12 @@ import Empty from '@/components/common/empty'
 import { useUserStore } from '@/stores/user.store'
 import { RewardStoreActions, useRewardStore } from '@/stores/reward.store'
 
+const RewardTipMap = new Map<string, string>()
+RewardTipMap.set(
+  'EXTERNAL_airdrop-point-deduct-season-1',
+  'Codatta Points deducted for claiming the XNY token airdrop.'
+)
+
 export default function UserInfoReward() {
   const { info } = useUserStore()
   const reward = useMemo(
@@ -52,7 +58,10 @@ export function RewardRecords() {
                 <div className="flex w-full flex-col py-3">
                   <div className="flex items-center gap-1.5 leading-5">
                     {/* <NetworkIcon type={item.network} size={16} /> */}
-                    <div className="text-base">{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
+                    <div className="flex flex-col gap-1 text-base">
+                      <div>{dayjs(item.create_at * 1000).format('YYYY/MM/DD HH:mm:ss')}</div>
+                      <div className="text-sm text-white/40">{RewardTipMap.get(`${item.stage}_${item.task_id}`)}</div>
+                    </div>
                     <div className="ml-auto text-base font-medium text-primary">
                       {parseInt(item.amount?.amount)} {item.amount?.currency}
                     </div>
@@ -71,7 +80,6 @@ export function RewardRecords() {
       <Pagination
         className="mt-6"
         align="center"
-        size="small"
         hideOnSinglePage
         defaultCurrent={1}
         pageSize={pageSize}

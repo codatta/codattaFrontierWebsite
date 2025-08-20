@@ -29,4 +29,5 @@ export interface RewardsDesc {
   status: string
   transaction_txh: string | null
   stage: string
+  task_id: string
 }
