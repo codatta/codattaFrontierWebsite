@@ -70,7 +70,6 @@ export default function SettingsReward() {
         <Pagination
           className="mt-6"
           align="center"
-          size="small"
           hideOnSinglePage
           defaultCurrent={1}
           pageSize={pageSize}

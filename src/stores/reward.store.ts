@@ -12,7 +12,7 @@ export interface RewardStore {
 const rewardStore = proxy<RewardStore>({
   rewards: [],
   total_count: 0,
-  pageSize: 5,
+  pageSize: 15,
   loading: false
 })
 

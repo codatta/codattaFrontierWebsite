@@ -14,6 +14,7 @@ import { Loader2 } from 'lucide-react'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { keccak256, stringToHex } from 'viem'
 import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
+import { getAddress } from 'viem'
 
 interface Asset {
   type: string
@@ -154,7 +155,7 @@ function ClaimConfirm({
 
   const address = useMemo(() => {
     if (!lastUsedWallet) return null
-    return lastUsedWallet.address
+    return getAddress(lastUsedWallet.address!)
   }, [lastUsedWallet])
 
   async function getBalance(address: `0x${string}`) {
