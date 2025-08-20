@@ -194,7 +194,7 @@ export default function Form({
           </h3>
           <Input
             isMobile={isMobile}
-            placeholder="For example:Oven, Microwave"
+            placeholder="For example: Oven, Microwave"
             maxLength={255}
             value={formData.app_type}
             onChange={(value) => handleFormChange('app_type', value)}
@@ -225,7 +225,7 @@ export default function Form({
               </h4>
               <Input
                 isMobile={isMobile}
-                placeholder="For Example:Temperature, Time"
+                placeholder="For Example: Temperature, Time"
                 maxLength={255}
                 value={formData.scale_type}
                 onChange={(value) => handleFormChange('scale_type', value)}
@@ -246,7 +246,7 @@ export default function Form({
               </h4>
               <Input
                 isMobile={isMobile}
-                placeholder="For Example: 200°C, 20 Mins)"
+                placeholder="For Example: 200°C, 20 Mins"
                 maxLength={255}
                 value={formData.scale_value}
                 onChange={(value) => handleFormChange('scale_value', value)}
