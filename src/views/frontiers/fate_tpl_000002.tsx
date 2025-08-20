@@ -37,7 +37,7 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const eventListRowCountRef = useRef(1)
   const [birthDateTime, setBirthDateTime] = useState<BirthDateTime | undefined>()
   const [birthLocation, setBirthLocation] = useState<LocationValue | undefined>()
-  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(true)
 
   const { taskId } = useParams()
 

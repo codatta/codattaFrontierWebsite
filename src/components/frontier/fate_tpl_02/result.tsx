@@ -1,23 +1,23 @@
-import { Button, Modal } from 'antd'
+import { Button, message, Modal } from 'antd'
+import { useEffect, useState } from 'react'
 
 import InfoIcon from '@/assets/frontier/fate/info-icon.svg?react'
 import TimeIcon from '@/assets/frontier/fate/time-icon.svg?react'
 import SuccessIcon from '@/assets/frontier/fate/success-icon.svg?react'
 
+import Markdown from '@/components/common/markdown'
+
 import { usePositiveTimer } from '@/hooks/usePositiveTimer'
-import { useEffect, useState } from 'react'
+import { Copy } from 'lucide-react'
+import { mockReport } from './mock'
 
 export default function SubmissionSuccessModal(props: { open: boolean; onClose: () => void }) {
   const { open, onClose } = props
   // check the status of the report
-  const [status, setStatus] = useState<'get' | 'wait' | 'view'>('get')
+  const [status, setStatus] = useState<'get' | 'wait' | 'view'>('view')
 
   const handleGetReport = () => {
     setStatus('wait')
-  }
-
-  const handleViewReport = () => {
-    setStatus('view')
   }
 
   const checkReport = async () => {
@@ -33,7 +33,7 @@ export default function SubmissionSuccessModal(props: { open: boolean; onClose: 
       <div className="text-white">
         {status === 'get' ? <GetReport onClose={onClose} onGetReport={handleGetReport} /> : null}
         {status === 'wait' ? <WaitReport onClose={onClose} /> : null}
-        {status === 'view' ? <ViewReport onClose={onClose} onViewReport={handleViewReport} /> : null}
+        {status === 'view' ? <ViewReport onClose={onClose} /> : null}
       </div>
     </Modal>
   )
@@ -111,19 +111,47 @@ function WaitReport({ onClose }: { onClose: () => void }) {
   )
 }
 
-function ViewReport({ onClose, onViewReport }: { onClose: () => void; onViewReport: () => void }) {
-  return (
+function ViewReport({ onClose }: { onClose: () => void }) {
+  const [showReport, setShowReport] = useState(false)
+
+  const handleCopy = () => {
+    navigator.clipboard
+      .writeText(mockReport)
+      .then(() => {
+        message.success('Report copied to clipboard!')
+      })
+      .catch((err) => {
+        message.error('Failed to copy report.')
+        console.error('Failed to copy: ', err)
+      })
+  }
+
+  return showReport ? (
+    <div className="">
+      <div className="mt-4 flex items-center justify-center gap-2">
+        <h3 className="text-2xl font-bold leading-7">Report</h3>
+        <Button type="text" icon={<Copy className="size-4 text-gray-400" />} onClick={handleCopy} />
+      </div>
+
+      <div className="mt-4 rounded-xl bg-[#00000052] px-4 py-3">
+        <div className="max-h-[calc(100vh-300px)] overflow-y-scroll">
+          <Markdown>{mockReport}</Markdown>
+        </div>
+      </div>
+    </div>
+  ) : (
     <div className="text-center text-white">
       <SuccessIcon className="mx-auto size-[120px]" />
       <h3 className="mt-4 text-center text-2xl font-bold leading-7">Report Generated Successfully!</h3>
       <p className="mt-4 text-base text-[#BBBBBE]">
         This AI-generated report is for entertainment purposes only and does not constitute investment advice.
       </p>
+
       <div className="mt-12 flex items-center justify-center gap-4">
         <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
           Later
         </Button>
-        <Button type="primary" shape="round" size="large" onClick={onViewReport} className="w-[120px]">
+        <Button type="primary" shape="round" size="large" onClick={() => setShowReport(true)} className="w-[120px]">
           View Now
         </Button>
       </div>
