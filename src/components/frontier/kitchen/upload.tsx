@@ -144,7 +144,12 @@ const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, is
           )
         ) : (
           <div className="flex items-center gap-2">
-            <div className={cn('flex w-full items-center gap-3 rounded-lg px-4 py-6', className)}>
+            <div
+              className={cn(
+                'flex w-full items-center gap-3 rounded-xl bg-[#252532] px-3 py-3 md:border md:border-[#FFFFFF1F] md:bg-transparent',
+                className
+              )}
+            >
               {imageFile && (
                 <div className="size-24 shrink-0 overflow-hidden rounded-lg bg-white/10">
                   <img src={createImagePreview(imageFile)} className="size-full object-cover" alt={imageFile.name} />
