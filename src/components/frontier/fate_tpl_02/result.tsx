@@ -1,5 +1,6 @@
 import { Button, message, Modal } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
+import { Copy, Info } from 'lucide-react'
 
 import InfoIcon from '@/assets/frontier/fate/info-icon.svg?react'
 import TimeIcon from '@/assets/frontier/fate/time-icon.svg?react'
@@ -8,10 +9,8 @@ import SuccessIcon from '@/assets/frontier/fate/success-icon.svg?react'
 import Markdown from '@/components/common/markdown'
 
 import { usePositiveTimer } from '@/hooks/usePositiveTimer'
-import { Copy } from 'lucide-react'
 import frontiterApi from '@/apis/frontiter.api'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
-// import { mockReport } from './mock'
 
 export default function SubmissionSuccessModal(props: {
   open: boolean
@@ -55,6 +54,7 @@ export default function SubmissionSuccessModal(props: {
 function GetReport({ onClose, onCreateReport }: { onClose: () => void; onCreateReport: () => Promise<void> }) {
   const { points } = useUserStore()
   const remainingPoints = useMemo(() => (parseInt(points, 10) || 0) - 50, [points])
+  const isPointsEnough = useMemo(() => remainingPoints >= 0, [remainingPoints])
   const [loading, setLoading] = useState(false)
 
   const getUserInfo = async () => {
@@ -98,11 +98,18 @@ function GetReport({ onClose, onCreateReport }: { onClose: () => void; onCreateR
         </h4>
         <p className="flex items-center justify-between text-base">
           <span>Current points</span>
-          <span>{parseInt(points, 10) || 0}</span>
+          <span className={!isPointsEnough ? 'text-[#D92B2B]' : ''}>{parseInt(points, 10) || 0}</span>
         </p>
-        <p className={`flex items-center justify-between text-base ${remainingPoints < 0 ? 'text-red-400' : ''}`}>
+        <p className="flex items-center justify-between text-base">
           <span>Remaining</span>
-          <span>{remainingPoints}</span>
+          {!isPointsEnough ? (
+            <span className="flex items-center text-[#D92B2B]">
+              <Info className="mr-2 size-6 rotate-180" />
+              Insufficient points
+            </span>
+          ) : (
+            <span>{remainingPoints}</span>
+          )}
         </p>
       </div>
       <div className="mt-12 flex items-center justify-center gap-4">
@@ -114,7 +121,7 @@ function GetReport({ onClose, onCreateReport }: { onClose: () => void; onCreateR
           shape="round"
           size="large"
           onClick={handleCreateReport}
-          className="w-[120px]"
+          className={isPointsEnough ? 'w-[120px]' : 'w-[120px] opacity-50'}
           disabled={loading}
           loading={loading}
         >
