@@ -311,17 +311,13 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
       }
 
       const res = await frontiterApi.submitTask(taskId, submitData)
-      const resultData = res.data as unknown as {
-        data_submission: {
-          submission_id: string
-          lifelog_report: string
-        }
-      }
 
-      setSubmissionId(resultData?.data_submission?.submission_id ?? '')
-      setReport(resultData?.data_submission?.lifelog_report ?? '')
+      console.log('resultData', res)
+
+      setSubmissionId(res?.data?.submission_id ?? '')
+      setReport(res?.data?.data_submission?.lifelog_report ?? '')
     } catch (error) {
-      message.error('Please check all required fields')
+      message.error(error.message ? error.message : 'Please check all required fields')
     } finally {
       setIsSubmitting(false)
     }

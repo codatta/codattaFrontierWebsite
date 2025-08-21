@@ -55,24 +55,32 @@ export default function SubmissionSuccessModal(props: {
 function GetReport({ onClose, onCreateReport }: { onClose: () => void; onCreateReport: () => Promise<void> }) {
   const { points } = useUserStore()
   const remainingPoints = useMemo(() => (parseInt(points, 10) || 0) - 50, [points])
+  const [loading, setLoading] = useState(false)
 
-  const checkPoints = (): boolean => {
-    if ((parseInt(points, 10) || 0) < 50) {
-      message.error('You do not have enough points to redeem')
-      return false
+  const getUserInfo = async () => {
+    setLoading(true)
+    try {
+      await userStoreActions.getUserInfo()
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to get user info')
+    } finally {
+      setLoading(false)
     }
-
-    return true
   }
 
   const handleCreateReport = async () => {
-    if (!checkPoints()) return
+    if ((parseInt(points, 10) || 0) < 50) {
+      message.error('You do not have enough points to redeem')
+      return
+    }
     await onCreateReport()
   }
 
   useEffect(() => {
-    userStoreActions.getUserInfo()
-  }, [])
+    if (points === '' || parseInt(points, 10) < 50) {
+      getUserInfo()
+    }
+  }, [points])
 
   return (
     <div className="text-white">
@@ -101,7 +109,15 @@ function GetReport({ onClose, onCreateReport }: { onClose: () => void; onCreateR
         <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
           Later
         </Button>
-        <Button type="primary" shape="round" size="large" onClick={handleCreateReport} className="w-[120px]">
+        <Button
+          type="primary"
+          shape="round"
+          size="large"
+          onClick={handleCreateReport}
+          className="w-[120px]"
+          disabled={loading}
+          loading={loading}
+        >
           Confirm
         </Button>
       </div>
