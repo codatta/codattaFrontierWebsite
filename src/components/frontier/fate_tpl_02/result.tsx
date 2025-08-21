@@ -161,13 +161,13 @@ function ViewReport({ onClose, report }: { onClose: () => void; report: string }
   }
 
   return showReport ? (
-    <div className="">
+    <div className="flex min-h-[calc(100vh-200px)] flex-col">
       <div className="mt-4 flex items-center justify-center gap-2">
         <h3 className="text-2xl font-bold leading-7">Report</h3>
         <Button type="text" icon={<Copy className="size-4 text-gray-400" />} onClick={handleCopy} />
       </div>
 
-      <div className="mt-4 rounded-xl bg-[#00000052] px-4 py-3">
+      <div className="mt-4 flex-1 rounded-xl bg-[#00000052] px-4 py-3">
         <div className="max-h-[calc(100vh-300px)] overflow-y-scroll">
           <Markdown>{report}</Markdown>
         </div>

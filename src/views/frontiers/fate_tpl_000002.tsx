@@ -350,6 +350,7 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
       const submission = await frontiterApi.getLastSubmission(taskDetail.data.frontier_id, taskId!)
       setSubmissionId(submission?.submission_id ?? '')
+      setReport(submission?.data_submission?.lifelog_report ?? '')
       console.log('submission', submission?.submission_id)
     } catch (error) {
       Modal.error({
