@@ -1,7 +1,7 @@
 import frontierApi, {
   FrontierListItem,
   TaskDetail,
-  SubmissionStatics,
+  // SubmissionStatics,
   SubmissionRecord,
   FrontierActivityInfoItem,
   ActiveStatus
@@ -27,7 +27,6 @@ type FrontierStore = {
     page_size: number
     page: number
   }
-  userStatics: SubmissionStatics
   userRecords: {
     list: SubmissionRecord[]
     total: number
@@ -53,12 +52,6 @@ export const frontiersStore = proxy<FrontierStore>({
     listLoading: false,
     page_size: 8,
     page: 1
-  },
-  userStatics: {
-    total_submissions: 0,
-    total_rewards: 0,
-    on_chained: 0,
-    avg_score: 0
   },
   userRecords: {
     list: [],
@@ -156,11 +149,11 @@ export function useFrontierStore() {
   return useSnapshot(frontiersStore)
 }
 
-export const getFrontierUserStatics = debounce(async () => {
-  const res = await frontierApi.getSubmissionStatics()
-  frontiersStore.userStatics = Object.assign(frontiersStore.userStatics, res.data)
-  return res.data
-})
+// export const getFrontierUserStatics = debounce(async () => {
+//   const res = await frontierApi.getSubmissionStatics()
+//   frontiersStore.userStatics = Object.assign(frontiersStore.userStatics, res.data)
+//   return res.data
+// })
 
 export const getFrontierUserRecords = debounce(async (params: { page: number }) => {
   try {
@@ -187,6 +180,6 @@ export const frontierStoreActions = {
   getFrontierActivities,
   changeFrontiersFilter,
   changeFrontiersHistoryFilter,
-  getFrontierUserStatics,
+  // getFrontierUserStatics,
   getFrontierUserRecords
 }

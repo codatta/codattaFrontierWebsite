@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Button, message, Pagination, Spin } from 'antd'
-import { ChevronRight, Info } from 'lucide-react'
+import { Info } from 'lucide-react'
 import dayjs from 'dayjs'
 
 // Icons
@@ -12,8 +12,6 @@ import frontiterApi, { SubmissionRecord, SubmissionStatics } from '@/apis/fronti
 import { useNavigate } from 'react-router-dom'
 
 export default function DataProfile() {
-  const navigate = useNavigate()
-
   // Mock data - replace with API calls
   const [stats, setStats] = useState<SubmissionStatics>({
     total_submissions: 0,

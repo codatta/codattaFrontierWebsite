@@ -4,7 +4,7 @@ import { cn } from '@udecode/cn'
 import { message, Spin } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import LogoWhiteSvgImage from '@/assets/common/logo-white.svg'
 
 const resultColorMap = new Map<string, string>([
