@@ -16,6 +16,7 @@ const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const AppReferral = lazy(() => import('@/views/referral'))
 const NewJourney = lazy(() => import('@/views/new-journey'))
+const SubmissionDetail = lazy(() => import('@/views/frontiers/submission-detail'))
 
 // quest
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
@@ -140,6 +141,7 @@ export default function Router() {
             <Route index element={<ActivityGroup />} />
             <Route path=":categoryId" element={<Activity />} />
           </Route>
+
           <Route path="notification" element={<AppNotification />}></Route>
           <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
           <Route path="frontier/:frontier_id/history" element={<FrontierHistory />}></Route>
@@ -331,6 +333,8 @@ export default function Router() {
           path="/frontier/project/KITCHEN_TPL_W9/:taskId/:questId"
           element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
         />
+
+        <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
 
         <Route path="/app/booster" element={<BoosterLayout />}>
           <Route path=":week/read" element={<ReadTaskPage />} />

@@ -134,21 +134,28 @@ export interface CMUDataRequirements {
   }
 }
 
+export interface SubmissionReward {
+  reward_type: string
+  reward_amount: number
+}
+
 export interface SubmissionStatics {
   total_submissions: number
-  total_rewards: number
+  total_rewards: SubmissionReward[]
   on_chained: number
-  avg_score: number
+  claimable: SubmissionReward[]
 }
 
 export interface SubmissionRecord {
   submission_time: number
   frontier_name: string
-  score: string
-  reward: string
-  status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
-  on_chained: 0 | 1
+  task_name: string
+  result: number
+  rating_name: 'S' | 'A' | 'B' | 'C' | 'D'
+  status: 'ADOPT' | 'PENDING' | 'REFUSED'
   submission_id: string
+  rewards: SubmissionReward[]
+  data_submission?: string
 }
 
 export interface SubmissionLifeLogReport {
@@ -239,6 +246,10 @@ class frontier {
     })
     const lastSubmission = res.data[0]
     return lastSubmission
+  }
+  async getSubmissionDetail(submission_id: string): Promise<Response<SubmissionRecord>> {
+    const res = await this.request.get(`/v2/submission/user/detail`, { params: { submission_id } })
+    return res.data
   }
 }
 
