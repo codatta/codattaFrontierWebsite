@@ -1,5 +1,5 @@
 import { Button, message, Modal } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import InfoIcon from '@/assets/frontier/fate/info-icon.svg?react'
 import TimeIcon from '@/assets/frontier/fate/time-icon.svg?react'
@@ -9,37 +9,71 @@ import Markdown from '@/components/common/markdown'
 
 import { usePositiveTimer } from '@/hooks/usePositiveTimer'
 import { Copy } from 'lucide-react'
-import { mockReport } from './mock'
+import frontiterApi from '@/apis/frontiter.api'
+import { userStoreActions, useUserStore } from '@/stores/user.store'
+// import { mockReport } from './mock'
 
-export default function SubmissionSuccessModal(props: { open: boolean; onClose: () => void }) {
-  const { open, onClose } = props
+export default function SubmissionSuccessModal(props: {
+  open: boolean
+  onClose: () => void
+  submission_id: string
+  historyReport: string
+}) {
+  const { open, onClose, submission_id, historyReport } = props
   // check the status of the report
-  const [status, setStatus] = useState<'get' | 'wait' | 'view'>('view')
+  const [status, setStatus] = useState<'get' | 'wait' | 'view'>('get')
+  const [report, setReport] = useState<string>('')
 
-  const handleGetReport = () => {
+  const onCreateReport = async () => {
     setStatus('wait')
-  }
-
-  const checkReport = async () => {
-    console.log('checkReport')
+    const res = await frontiterApi.getSubmissionLifeLogReport(submission_id!)
+    const report = res.data?.content
+    if (report) {
+      setReport(report)
+      setStatus('view')
+    }
   }
 
   useEffect(() => {
-    checkReport()
-  }, [])
+    if (historyReport) {
+      setReport(historyReport)
+      setStatus('view')
+    }
+  }, [historyReport])
 
   return (
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[600px]">
       <div className="text-white">
-        {status === 'get' ? <GetReport onClose={onClose} onGetReport={handleGetReport} /> : null}
+        {status === 'get' ? <GetReport onClose={onClose} onCreateReport={onCreateReport} /> : null}
         {status === 'wait' ? <WaitReport onClose={onClose} /> : null}
-        {status === 'view' ? <ViewReport onClose={onClose} /> : null}
+        {status === 'view' ? <ViewReport onClose={onClose} report={report ?? ''} /> : null}
       </div>
     </Modal>
   )
 }
 
-function GetReport({ onClose, onGetReport }: { onClose: () => void; onGetReport: () => void }) {
+function GetReport({ onClose, onCreateReport }: { onClose: () => void; onCreateReport: () => Promise<void> }) {
+  const { points } = useUserStore()
+  const remainingPoints = useMemo(() => (parseInt(points, 10) || 0) - 50, [points])
+
+  const checkPoints = (): boolean => {
+    if ((parseInt(points, 10) || 0) < 50) {
+      message.error('You do not have enough points to redeem')
+      return false
+    }
+
+    return true
+  }
+
+  const handleCreateReport = async () => {
+    if (!checkPoints()) return
+    await onCreateReport()
+  }
+
+  useEffect(() => {
+    userStoreActions.getUserInfo()
+  }, [])
+
   return (
     <div className="text-white">
       <InfoIcon className="mx-auto size-[120px]" />
@@ -56,18 +90,18 @@ function GetReport({ onClose, onGetReport }: { onClose: () => void; onGetReport:
         </h4>
         <p className="flex items-center justify-between text-base">
           <span>Current points</span>
-          <span>240</span>
+          <span>{parseInt(points, 10) || 0}</span>
         </p>
-        <p className="flex items-center justify-between text-base">
+        <p className={`flex items-center justify-between text-base ${remainingPoints < 0 ? 'text-red-400' : ''}`}>
           <span>Remaining</span>
-          <span>190</span>
+          <span>{remainingPoints}</span>
         </p>
       </div>
       <div className="mt-12 flex items-center justify-center gap-4">
         <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
           Later
         </Button>
-        <Button type="primary" shape="round" size="large" onClick={onGetReport} className="w-[120px]">
+        <Button type="primary" shape="round" size="large" onClick={handleCreateReport} className="w-[120px]">
           Confirm
         </Button>
       </div>
@@ -111,12 +145,12 @@ function WaitReport({ onClose }: { onClose: () => void }) {
   )
 }
 
-function ViewReport({ onClose }: { onClose: () => void }) {
+function ViewReport({ onClose, report }: { onClose: () => void; report: string }) {
   const [showReport, setShowReport] = useState(false)
 
   const handleCopy = () => {
     navigator.clipboard
-      .writeText(mockReport)
+      .writeText(report)
       .then(() => {
         message.success('Report copied to clipboard!')
       })
@@ -135,7 +169,7 @@ function ViewReport({ onClose }: { onClose: () => void }) {
 
       <div className="mt-4 rounded-xl bg-[#00000052] px-4 py-3">
         <div className="max-h-[calc(100vh-300px)] overflow-y-scroll">
-          <Markdown>{mockReport}</Markdown>
+          <Markdown>{report}</Markdown>
         </div>
       </div>
     </div>

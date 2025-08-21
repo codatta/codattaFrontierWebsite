@@ -8,20 +8,8 @@ import frontiterApi from '@/apis/frontiter.api'
 import { useParams } from 'react-router-dom'
 import CustomEmpty from '@/components/common/empty'
 import Result from '@/components/frontier/fate_tpl_02/result'
-// import SubmitSuccessModal from '@/components/frontier/submit-success-modal'
 
 const { Option } = Select
-
-async function getLastSubmission(frontierId: string, taskIds: string) {
-  const res = await frontiterApi.getSubmissionList({
-    page_num: 1,
-    page_size: 1,
-    frontier_id: frontierId,
-    task_ids: taskIds
-  })
-  const lastSubmission = res.data[0]
-  return lastSubmission
-}
 
 const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [form] = Form.useForm()
@@ -37,7 +25,8 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
   const eventListRowCountRef = useRef(1)
   const [birthDateTime, setBirthDateTime] = useState<BirthDateTime | undefined>()
   const [birthLocation, setBirthLocation] = useState<LocationValue | undefined>()
-  const [showSuccessModal, setShowSuccessModal] = useState(true)
+  const [submission_id, setSubmissionId] = useState<string>('')
+  const [report, setReport] = useState<string>('')
 
   const { taskId } = useParams()
 
@@ -321,8 +310,16 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         data: values
       }
 
-      await frontiterApi.submitTask(taskId, submitData)
-      setShowSuccessModal(true)
+      const res = await frontiterApi.submitTask(taskId, submitData)
+      const resultData = res.data as unknown as {
+        data_submission: {
+          submission_id: string
+          lifelog_report: string
+        }
+      }
+
+      setSubmissionId(resultData?.data_submission?.submission_id ?? '')
+      setReport(resultData?.data_submission?.lifelog_report ?? '')
     } catch (error) {
       message.error('Please check all required fields')
     } finally {
@@ -351,8 +348,9 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
         return
       }
 
-      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
-      console.log('lastSubmission', lastSubmission)
+      const submission = await frontiterApi.getLastSubmission(taskDetail.data.frontier_id, taskId!)
+      setSubmissionId(submission?.submission_id ?? '')
+      console.log('submission', submission?.submission_id)
     } catch (error) {
       Modal.error({
         title: 'Error',
@@ -780,10 +778,17 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
             </div>
           </Form>
         </div>
-        <Result open={showSuccessModal} onClose={() => window.history.back()} />
+        <Result
+          open={!!submission_id}
+          onClose={() => window.history.back()}
+          submission_id={submission_id}
+          historyReport={report}
+        />
       </div>
     </Spin>
   )
 }
 
 export default FateForm
+
+// http://localhost:5175/frontier/project/FATE_TPL_000002/8313254025400100348

@@ -48,7 +48,7 @@ export interface TaskDetail {
     hide?: boolean
   }
   questions?: CMUDataRequirements[]
-  data_submission?: { [key: string]: unknown }
+  data_submission?: { [key: string]: unknown; lifelog_report?: string }
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
@@ -151,6 +151,11 @@ export interface SubmissionRecord {
   submission_id: string
 }
 
+export interface SubmissionLifeLogReport {
+  user_score: number
+  content: string
+}
+
 class frontier {
   constructor(private request: AxiosInstance) {}
 
@@ -159,8 +164,8 @@ class frontier {
     return res.data
   }
 
-  async submitTask(taskId: string, data: object) {
-    const res = await this.request.post<Response<null>>('/v2/frontier/task/submit', {
+  async submitTask(taskId: string, data: object): Promise<Response<TaskDetail>> {
+    const res = await this.request.post<Response<TaskDetail>>('/v2/frontier/task/submit', {
       task_id: taskId,
       data_submission: data
     })
@@ -213,6 +218,27 @@ class frontier {
   async getSubmissionRecords(params: TPagination): Promise<PaginationResponse<SubmissionRecord[]>> {
     const res = await this.request.post('/v2/submission/user/records', params)
     return res.data
+  }
+
+  async getSubmissionLifeLogReport(submission_id: string): Promise<Response<SubmissionLifeLogReport>> {
+    const res = await this.request.post(`/v2/submission/lifelog/report`, { submission_id })
+    return res.data
+  }
+
+  // async getSubmissionDetail(submission_id: string): Promise<Response<TaskDetail>> {
+  //   const res = await this.request.post(`/v2/submission/detail`, { submission_id })
+  //   return res.data
+  // }
+
+  async getLastSubmission(frontierId: string, taskIds: string): Promise<TaskDetail> {
+    const res = await this.getSubmissionList({
+      page_num: 1,
+      page_size: 1,
+      frontier_id: frontierId,
+      task_ids: taskIds
+    })
+    const lastSubmission = res.data[0]
+    return lastSubmission
   }
 }
 
