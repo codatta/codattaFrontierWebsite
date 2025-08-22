@@ -4,10 +4,12 @@ import { cn } from '@udecode/cn'
 
 import type { Exchange, Network, Currency } from '@/components/frontier/crypto/consts'
 import Select from '@/components/frontier/crypto/select'
-// import Input from '@/components/frontier/crypto/input'
+import Input from '@/components/frontier/crypto/input'
 import Upload from '@/components/frontier/crypto/upload'
 import { Button } from '@/components/booster/button'
 import { SelectOption } from '@/components/mobile-ui/select'
+
+import { validateTxHash } from './util'
 
 // import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
 
@@ -15,7 +17,7 @@ interface WithdrawFormData {
   exchange: Exchange
   network: Network
   currency: Currency
-  // transactionHash: string
+  transactionHash: string
   // sourceAddress: string
   images: { url: string; hash: string }[]
 }
@@ -44,7 +46,7 @@ export default function WithdrawForm({
       exchange: '' as Exchange,
       network: '' as Network,
       currency: '' as Currency,
-      // transactionHash: '',
+      transactionHash: '',
       // sourceAddress: '',
       images: []
     }),
@@ -59,7 +61,7 @@ export default function WithdrawForm({
       !!formData.exchange &&
       !!formData.network &&
       !!formData.currency &&
-      // !!formData.transactionHash &&
+      !!formData.transactionHash &&
       // !!formData.sourceAddress &&
       formData.images?.length > 0
     )
@@ -80,9 +82,9 @@ export default function WithdrawForm({
     if (!formData.currency) {
       newErrors.currency = 'Currency is required'
     }
-    // if (!formData.transactionHash || !validateTxHash(formData.transactionHash)) {
-    //   newErrors.transactionHash = 'Please provide a valid transaction hash'
-    // }
+    if (!formData.transactionHash || !validateTxHash(formData.transactionHash)) {
+      newErrors.transactionHash = 'Please provide a valid transaction hash'
+    }
     // if (!formData.sourceAddress || !validateCryptoAddress(formData.sourceAddress)) {
     //   newErrors.sourceAddress = 'Please provide a valid address'
     // }
@@ -185,6 +187,27 @@ export default function WithdrawForm({
             }
           />
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.images}</p>
+        </div>
+        <div>
+          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+            Transaction Hash in the Screenshot<span className="text-red-400">*</span>
+          </h3>
+          <Input
+            isMobile={isMobile}
+            placeholder="Enter the transaction hash in the screenshot"
+            maxLength={255}
+            value={formData.transactionHash}
+            onChange={(value) => handleFormChange('transactionHash', value)}
+          />
+          <p
+            className={cn(
+              'mt-2 text-sm',
+              isMobile ? 'px-4' : 'px-0',
+              errors.transactionHash ? 'text-red-400' : 'text-[#BBBBBE]'
+            )}
+          >
+            {errors.transactionHash ? errors.transactionHash : ``}
+          </p>
         </div>
       </div>
       <Button
