@@ -3,11 +3,13 @@ import { cn } from '@udecode/cn'
 
 import type { Exchange, Network, Currency } from '@/components/frontier/crypto/consts'
 import Select from '@/components/frontier/crypto/select'
-// import Input from '@/components/frontier/crypto/input'
+import Input from '@/components/frontier/crypto/input'
 import Upload from '@/components/frontier/crypto/upload'
 import { Button } from '@/components/booster/button'
 import { DepositFormData } from './types'
 import { SelectOption } from '@/components/mobile-ui/select'
+
+import { validateCryptoAddress } from './util'
 
 // import { validateCryptoAddress, validateTxHash } from '@/components/frontier/crypto/util'
 
@@ -41,7 +43,7 @@ export default function DepositForm({
     currency: '' as Currency,
     // transactionHash: '',
     // depositAddressTransactionHash: '',
-    // depositAddress: '',
+    depositAddress: '',
     images: []
   })
   const canSubmit = useMemo(() => {
@@ -50,7 +52,7 @@ export default function DepositForm({
       !!formData.exchange &&
       !!formData.network &&
       !!formData.currency &&
-      // !!formData.depositAddress &&
+      !!formData.depositAddress &&
       formData.images?.length > 0
     )
   }, [errors, formData])
@@ -73,9 +75,9 @@ export default function DepositForm({
     // if (!formData.transactionHash || !validateTxHash(formData.transactionHash)) {
     //   newErrors.transactionHash = 'Please provide a valid transaction hash'
     // }
-    // if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
-    //   newErrors.depositAddress = 'Please provide a valid address'
-    // }
+    if (!formData.depositAddress || !validateCryptoAddress(formData.depositAddress)) {
+      newErrors.depositAddress = 'Please provide a valid address'
+    }
     // if (formData.depositAddressTransactionHash && !validateTxHash(formData.depositAddressTransactionHash)) {
     //   newErrors.depositAddressTransactionHash = 'Please provide a valid deposit address transaction hash'
     // }
@@ -88,10 +90,10 @@ export default function DepositForm({
       images: [],
       exchange: '' as Exchange,
       network: '' as Network,
-      currency: '' as Currency
+      currency: '' as Currency,
       // transactionHash: '',
       // depositAddressTransactionHash: '',
-      // depositAddress: ''
+      depositAddress: ''
     })
   }
   const handleFormChange = (field: keyof DepositFormData, value: string | number | { url: string; hash: string }[]) => {
@@ -233,6 +235,19 @@ export default function DepositForm({
             }
           />
           <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.images}</p>
+        </div>
+        <div>
+          <h3 className={cn('mb-2 text-sm text-[#BBBBBE] md:text-base md:text-white', isMobile ? 'px-4' : 'px-0')}>
+            Deposit Address in the Screenshot<span className="text-red-400">*</span>
+          </h3>
+          <Input
+            isMobile={isMobile}
+            placeholder="Enter the deposit address in the screenshot"
+            value={formData.depositAddress}
+            maxLength={255}
+            onChange={(value) => handleFormChange('depositAddress', value)}
+          />
+          <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.depositAddress}</p>
         </div>
       </div>
       <Button
