@@ -257,8 +257,8 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
   return (
     <>
       {/* Desktop Layout */}
-      <div className="grid-cols-12 items-center gap-4 border-b border-white/5 py-4 text-sm transition-colors hover:bg-[#252532] md:grid">
-        <div className="col-span-2">{dayjs(submission.submission_time).format('YYYY-MM-DD')}</div>
+      <div className="hidden grid-cols-12 items-center gap-4 border-b border-white/5 py-4 text-sm transition-colors hover:bg-[#252532] md:grid">
+        <div className="col-span-2">{dayjs(submission.submission_time * 1000).format('YYYY-MM-DD')}</div>
         <div className="col-span-2 font-medium">{submission.frontier_name}</div>
         <div className="col-span-3">{submission.task_name}</div>
         <div className="col-span-1">
@@ -270,13 +270,15 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
         </div>
 
         <div className="col-span-2 text-sm font-medium">
-          {submission.rewards.map((reward) => {
-            return (
-              <span key={reward.reward_type}>
-                {reward.reward_amount} {reward.reward_type}
-              </span>
-            )
-          })}
+          {submission.rewards
+            .filter((reward) => reward.reward_type !== 'POINTS')
+            .map((reward) => {
+              return (
+                <span key={reward.reward_type}>
+                  {reward.reward_amount} {reward.reward_type}
+                </span>
+              )
+            })}
         </div>
 
         <div className="col-span-2">
@@ -290,7 +292,7 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
       </div>
 
       {/* Mobile Layout */}
-      <div className="rounded-2xl bg-[#1A1A24] py-4 transition-colors hover:bg-[#252532] md:hidden">
+      <div className="rounded-2xl py-4 transition-colors md:hidden">
         <div className="mb-3 flex items-center justify-between">
           <div className="text-sm text-[#BBBBBE]">{dayjs(submission.submission_time).format('YYYY-MM-DD')}</div>
           <span
@@ -303,10 +305,17 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
         <div className="mb-2 text-sm font-medium">{submission.frontier_name}</div>
 
         <div className="mb-3 text-sm text-[#BBBBBE]">{submission.task_name}</div>
-
         <div className="flex items-center justify-between">
           <div className="text-sm font-medium">
-            {submission.rewards.map((reward) => reward.reward_amount).join(', ')}
+            {submission.rewards
+              .filter((reward) => reward.reward_type !== 'POINTS')
+              .map((reward) => {
+                return (
+                  <span key={reward.reward_type}>
+                    {reward.reward_amount} {reward.reward_type}
+                  </span>
+                )
+              })}
           </div>
           <button
             className="flex items-center gap-1 text-sm text-[#875DFF] hover:text-[#7B52E6]"
