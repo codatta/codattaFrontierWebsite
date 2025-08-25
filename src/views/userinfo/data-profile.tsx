@@ -25,7 +25,7 @@ export default function DataProfile() {
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const pageSize = 2
+  const pageSize = 12
 
   const handlePageChange = (page: number) => {
     setPage(page)
