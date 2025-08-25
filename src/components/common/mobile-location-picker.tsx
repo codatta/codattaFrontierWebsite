@@ -342,7 +342,9 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
 
                 {/* Province Selection */}
                 <div>
-                  <label className="mb-3 block text-sm font-medium text-gray-300">Province/State</label>
+                  <label className="mb-3 block text-sm font-medium text-gray-300">
+                    Province/State <span className="text-red-400">*</span>
+                  </label>
                   <select
                     value={tempValue.province || ''}
                     onChange={(e) => {
@@ -369,7 +371,9 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
 
                 {/* City Selection */}
                 <div>
-                  <label className="mb-3 block text-sm font-medium text-gray-300">City</label>
+                  <label className="mb-3 block text-sm font-medium text-gray-300">
+                    City <span className="text-red-400">*</span>
+                  </label>
                   <select
                     value={tempValue.city || ''}
                     onChange={(e) => handleCityChange(e.target.value)}

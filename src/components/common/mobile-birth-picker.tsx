@@ -180,7 +180,9 @@ const MobileBirthPicker: React.FC<MobileBirthPickerProps> = ({
               <div className="space-y-6 p-6">
                 {/* Date Section */}
                 <div>
-                  <h4 className="mb-3 text-sm font-medium text-gray-300">Date</h4>
+                  <h4 className="mb-3 text-sm font-medium text-gray-300">
+                    Date<span className="text-red-400">*</span>
+                  </h4>
                   <div className="grid grid-cols-3 gap-3">
                     {/* Year */}
                     <div className="pr-1">
@@ -234,7 +236,9 @@ const MobileBirthPicker: React.FC<MobileBirthPickerProps> = ({
 
                 {/* Time Section */}
                 <div>
-                  <h4 className="mb-3 text-sm font-medium text-gray-300">Time</h4>
+                  <h4 className="mb-3 text-sm font-medium text-gray-300">
+                    Time<span className="text-red-400">*</span>
+                  </h4>
                   <div className="grid grid-cols-2 gap-3">
                     {/* Hour */}
                     <div>
