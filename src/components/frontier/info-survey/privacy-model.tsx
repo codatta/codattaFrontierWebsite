@@ -13,7 +13,7 @@ export default function PrivacyModel({ onClose }: { onClose: () => void }) {
   return (
     <Modal footer={null} centered closeIcon={false} width={300} open={true}>
       <div className="py-1 text-center">
-        <h2 className="text-xl font-bold">Privacy Consent</h2>
+        <h2 className="text-xl font-bold">Data Privacy and Consent</h2>
         <div className="mt-5 max-h-[300px] overflow-y-auto text-sm leading-[22px] text-[#BBBBBE]">
           By joining the Codatta Booster Campaign, you consent to the collection and use of your personal information.
           Participation is voluntary, and your information will remain confidential. Your response will be used
