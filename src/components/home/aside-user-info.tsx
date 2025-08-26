@@ -25,7 +25,7 @@ export default function UserInfoSection() {
     const points = info?.user_assets?.find((asset) => asset.asset_type === 'POINTS')?.balance
     const xynAmount = formatNumber(Number(xyn?.amount ?? 0))
     const usdtAmount = formatNumber(Number(usdt?.amount ?? 0))
-    const pointsAmount = formatNumber(Number(points?.amount || 0))
+    const pointsAmount = formatNumber(parseInt(String(points?.amount ?? '0')))
 
     return [
       {
