@@ -87,6 +87,8 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
       setResultType('REJECT')
     } else if (status === 'ADOPT') {
       setResultType('ADOPT')
+    } else {
+      setPrivacyModalOpen(true)
     }
   }
 
@@ -341,7 +343,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                 disabled={isSubmitting}
                 loading={isSubmitting}
               />
-              <PrivacyModel open={privacyModalOpen} onClose={() => setPrivacyModalOpen(false)} />
+              {privacyModalOpen && <PrivacyModel onClose={() => setPrivacyModalOpen(false)} />}
             </div>
           )}
         </div>

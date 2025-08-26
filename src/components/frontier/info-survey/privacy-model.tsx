@@ -4,14 +4,14 @@ import { Button } from '@/components/booster/button'
 import { useCountdown } from '@/hooks/use-countdown'
 import { useState } from 'react'
 
-export default function PrivacyModel({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function PrivacyModel({ onClose }: { onClose: () => void }) {
   const [disabled, setDisabled] = useState(true)
   const [seconds] = useCountdown(6, () => {
     setDisabled(false)
   })
 
   return (
-    <Modal open={open} onCancel={onClose} footer={null} centered closeIcon={false} width={300}>
+    <Modal open={true} onCancel={onClose} footer={null} centered closeIcon={false} width={300}>
       <div className="py-1 text-center">
         <h2 className="text-xl font-bold">Privacy Consent</h2>
         <div className="mt-5 max-h-[300px] overflow-y-auto text-sm leading-[22px] text-[#BBBBBE]">
