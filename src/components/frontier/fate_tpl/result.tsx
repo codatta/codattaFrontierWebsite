@@ -147,7 +147,7 @@ function WaitReport({ onClose }: { onClose: () => void }) {
         Generating your comprehensive life blueprint analysis... This may take up to a few minutes for complex charts.
       </p>
       <p className="mt-4 text-base text-[#875DFF]">Time elapsed: {seconds}s</p>
-      <div className="mt-4 overflow-hidden rounded-xl bg-[#00000052] px-4 py-3 text-center text-sm leading-[22px] text-[#BBBBBE]">
+      {/* <div className="mt-4 overflow-hidden rounded-xl bg-[#00000052] px-4 py-3 text-center text-sm leading-[22px] text-[#BBBBBE]">
         <p>Our Al is analyzing multiple aspects of your personality including:</p>
         <ul className="flex list-disc flex-col items-center text-[#BBBBBE]">
           <li>Core personality traits and behavioral patterns</li>
@@ -155,7 +155,7 @@ function WaitReport({ onClose }: { onClose: () => void }) {
           <li>Personal growth opportunities and life timing</li>
           <li>Relationship style and wellness recommendations</li>
         </ul>
-      </div>
+      </div> */}
       <div className="mt-12 flex items-center justify-center gap-4">
         <Button type="text" shape="round" size="large" onClick={onClose} className="w-[120px]">
           Later
