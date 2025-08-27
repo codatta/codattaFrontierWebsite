@@ -40,7 +40,7 @@ function ClaimHistoryItem({ item }: { item: RewardRecordHistoryItem }) {
           {item.status_name}
         </div>
         <div className="ml-auto min-w-[160px] rounded-full bg-primary/20 px-4 py-1 text-center text-primary lg:ml-0">
-          {item.asset_type} <strong>+{item.balance.toFixed(6)}</strong>
+          {item.asset_type == 'XnYCoin' ? 'XNY' : item.asset_type} <strong>+{item.balance.toFixed(6)}</strong>
         </div>
       </div>
     </div>

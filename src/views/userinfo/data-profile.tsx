@@ -97,7 +97,7 @@ function DataProfileReward(props: { rewards: { reward_type: string; reward_amoun
       {rewardList.map((reward) => (
         <div key={reward.reward_type}>
           <span className="text-2xl font-bold">{Number(reward.reward_amount).toLocaleString()}</span>
-          <span className="ml-2">{reward.reward_type}</span>
+          <span className="ml-2">{reward.reward_type == 'XnYCoin' ? 'XNY' : reward.reward_type}</span>
         </div>
       ))}
     </div>
@@ -275,7 +275,7 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
             .map((reward) => {
               return (
                 <span key={reward.reward_type}>
-                  {reward.reward_amount} {reward.reward_type}
+                  {reward.reward_amount} {reward.reward_type == 'XnYCoin' ? 'XNY' : reward.reward_type}
                 </span>
               )
             })}
@@ -312,7 +312,7 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
               .map((reward) => {
                 return (
                   <span key={reward.reward_type}>
-                    {reward.reward_amount} {reward.reward_type}
+                    {reward.reward_amount} {reward.reward_type == 'XnYCoin' ? 'XNY' : reward.reward_type}
                   </span>
                 )
               })}
