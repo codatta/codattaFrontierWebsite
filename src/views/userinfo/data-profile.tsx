@@ -17,7 +17,7 @@ export default function DataProfile() {
     total_submissions: 0,
     total_rewards: [],
     on_chained: 0,
-    claimable: []
+    claimable_rewards: []
   })
 
   const [submissions, setSubmissions] = useState<SubmissionRecord[]>([])
