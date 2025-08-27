@@ -166,7 +166,7 @@ function StatsCards({ stats }: { stats: SubmissionStatics }) {
             <div className="text-base font-bold">Claimable on</div>
           </div>
           <div className="flex items-center gap-4">
-            <DataProfileReward rewards={stats.claimable}></DataProfileReward>
+            <DataProfileReward rewards={stats.claimable_rewards}></DataProfileReward>
           </div>
           <Button
             type="primary"
