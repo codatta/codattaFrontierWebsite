@@ -85,11 +85,11 @@ export default function DataProfile() {
 function DataProfileReward(props: { rewards: { reward_type: string; reward_amount: number }[] }) {
   const { rewards } = props
   const rewardList = useMemo(() => {
-    if (rewards && rewards.length > 0) return rewards
+    if (rewards && rewards.length > 0) return rewards.sort((a, b) => a.reward_type.localeCompare(b.reward_type))
     else
       return [
-        { reward_type: 'XNY', reward_amount: 0 },
-        { reward_type: 'USDT', reward_amount: 0 }
+        { reward_type: 'USDT', reward_amount: 0 },
+        { reward_type: 'XNY', reward_amount: 0 }
       ]
   }, [rewards])
   return (
