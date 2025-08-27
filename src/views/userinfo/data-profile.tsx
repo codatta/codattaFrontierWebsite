@@ -259,8 +259,8 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
       {/* Desktop Layout */}
       <div className="hidden grid-cols-12 items-center gap-4 border-b border-white/5 py-4 text-sm transition-colors hover:bg-[#252532] md:grid">
         <div className="col-span-2">{dayjs(submission.submission_time * 1000).format('YYYY-MM-DD')}</div>
-        <div className="col-span-2 font-medium">{submission.frontier_name}</div>
-        <div className="col-span-3">{submission.task_name}</div>
+        <div className="col-span-2 truncate font-medium">{submission.frontier_name}</div>
+        <div className="col-span-3 truncate">{submission.task_name}</div>
         <div className="col-span-1">
           <span
             className={`inline-flex h-8 w-8 items-center justify-center rounded-full font-bold ${getScoreColor(submission.rating_name)}`}
