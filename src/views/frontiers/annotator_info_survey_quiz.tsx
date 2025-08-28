@@ -140,14 +140,14 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
         status: ResultType
       }
 
-      message.success('Submitted successfully!').then(() => {
+      await message.success('Submitted successfully!').then(() => {
         handleResultStatus(resultData?.status)
       })
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit!')
-    } finally {
-      setIsSubmitting(false)
     }
+
+    setIsSubmitting(false)
   }
 
   const handleResultStatus = (status: string = '') => {
