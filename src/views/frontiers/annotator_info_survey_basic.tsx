@@ -9,6 +9,7 @@ import Input from '@/components/frontier/info-survey/input'
 import Select from '@/components/frontier/info-survey/select'
 import { selectOptionsMap } from '@/components/frontier/info-survey/basic'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
+import PrivacyModel from '@/components/frontier/info-survey/privacy-model'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import { isValidEmail } from '@/utils/str'
@@ -47,6 +48,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
   const [resultType, setResultType] = useState<ResultType | null>(null)
+  const [privacyModalOpen, setPrivacyModalOpen] = useState(false)
   const isMobile = useIsMobile()
   const [formData, setFormData] = useState<SurveyFormData>({
     email: '',
@@ -85,6 +87,8 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
       setResultType('REJECT')
     } else if (status === 'ADOPT') {
       setResultType('ADOPT')
+    } else {
+      setPrivacyModalOpen(true)
     }
   }
 
@@ -116,6 +120,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
           }, 0)
 
         setRewardPoints(totalRewards)
+        setPrivacyModalOpen(true)
       }
     } catch (error) {
       Modal.error({
@@ -235,6 +240,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
 
   const onSubmitAgain = () => {
     setResultType(null)
+    setPrivacyModalOpen(true)
   }
 
   useEffect(() => {
@@ -337,6 +343,7 @@ export default function AnnotatorInfoSurveyBasic({ templateId }: { templateId: s
                 disabled={isSubmitting}
                 loading={isSubmitting}
               />
+              {privacyModalOpen && <PrivacyModel onClose={() => setPrivacyModalOpen(false)} />}
             </div>
           )}
         </div>

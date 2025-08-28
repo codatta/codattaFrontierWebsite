@@ -15,8 +15,6 @@ import { EXCHANGE_OPTIONS, NETWORK_OPTIONS_W7, CURRENCY_OPTIONS_W7 } from '@/com
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
 
-// TODO change when w8 is ready
-
 async function getLastSubmission(frontierId: string, taskIds: string) {
   const res = await frontiterApi.getSubmissionList({
     page_num: 1,
