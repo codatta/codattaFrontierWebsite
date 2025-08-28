@@ -89,6 +89,9 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
 
       return
     }
+    if (isSubmitting) return
+
+    console.log('onSubmit')
 
     setIsSubmitting(true)
     try {
