@@ -4,6 +4,7 @@ import { cn } from '@udecode/cn'
 import { Button } from '@/components/booster/button'
 import Input from './input'
 import Upload from './upload'
+import Tips from './tips'
 
 import image1 from '@/assets/frontier/kitchen/image_1.png'
 import image2 from '@/assets/frontier/kitchen/image_2.png'
@@ -122,11 +123,12 @@ export default function Form({
         <div>
           <h3
             className={cn(
-              'mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
+              'mb-2 flex items-center text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
               isMobile ? 'px-4' : 'px-0'
             )}
           >
-            Front View Photo<span className="text-red-400">*</span>
+            Front View Photo<span className="mr-1 text-red-400">*</span>
+            <Tips isMobile={isMobile} />
           </h3>
           <Upload
             value={formData.front_view_images}
@@ -137,13 +139,17 @@ export default function Form({
               <>
                 {isMobile ? (
                   <>
-                    <p>Click to upload screenshot</p>
-                    <p>Knob face must be clearly visible with legible markings</p>
+                    <p>Click to upload screenshot.</p>
+                    <p>
+                      Knob face must be clearly visible with legible markings Clear real photo, Only one knob per image.
+                    </p>
                   </>
                 ) : (
                   <>
-                    <p>Click to upload screenshot or drag and drop</p>
-                    <p>Knob face must be clearly visible with legible markings</p>
+                    <p>Click to upload screenshot or drag and drop.</p>
+                    <p>
+                      Knob face must be clearly visible with legible markings Clear real photo, Only one knob per image.
+                    </p>
                   </>
                 )}
               </>
@@ -154,11 +160,12 @@ export default function Form({
         <div>
           <h3
             className={cn(
-              'mb-2 text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
+              'mb-2 flex items-center text-sm text-[#BBBBBE] md:text-base md:font-bold md:text-white',
               isMobile ? 'px-4' : 'px-0'
             )}
           >
-            Side View Photo<span className="text-red-400">*</span>
+            Side View Photo<span className="mr-1 text-red-400">*</span>
+            <Tips isMobile={isMobile} />
           </h3>
           <Upload
             value={formData.side_view_images}
@@ -169,13 +176,17 @@ export default function Form({
               <>
                 {isMobile ? (
                   <>
-                    <p>Click to upload screenshot</p>
-                    <p>Side view must clearly show pointer-marking alignment.</p>
+                    <p>Click to upload screenshot.</p>
+                    <p>
+                      Knob face must be clearly visible with legible markings Clear real photo, Only one knob per image.
+                    </p>
                   </>
                 ) : (
                   <>
-                    <p>Click to upload screenshot or drag and drop</p>
-                    <p>Side view must clearly show pointer-marking alignment.</p>
+                    <p>Click to upload screenshot or drag and drop.</p>
+                    <p>
+                      Knob face must be clearly visible with legible markings Clear real photo, Only one knob per image.
+                    </p>
                   </>
                 )}
               </>
