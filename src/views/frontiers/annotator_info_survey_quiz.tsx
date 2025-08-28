@@ -89,6 +89,9 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
 
       return
     }
+    if (isSubmitting) return
+
+    console.log('onSubmit')
 
     setIsSubmitting(true)
     try {
@@ -137,14 +140,14 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
         status: ResultType
       }
 
-      message.success('Submitted successfully!').then(() => {
+      await message.success('Submitted successfully!').then(() => {
         handleResultStatus(resultData?.status)
       })
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit!')
-    } finally {
-      setIsSubmitting(false)
     }
+
+    setIsSubmitting(false)
   }
 
   const handleResultStatus = (status: string = '') => {
@@ -235,7 +238,7 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
             ) : (
               <div className="w-[60px]" />
             )}
-            <span>Annotator Information Survey</span>
+            <span>Annotator Knowledge Test</span>
             <div className="w-[60px]" />
           </h1>
           <hr className="hidden border-[#FFFFFF1F] md:block" />
