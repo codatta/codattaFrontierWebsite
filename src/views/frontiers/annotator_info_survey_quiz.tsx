@@ -238,7 +238,7 @@ export default function AnnotatorInfoSurveySkills({ templateId }: Props) {
             ) : (
               <div className="w-[60px]" />
             )}
-            <span>Annotator Information Survey</span>
+            <span>Annotator Knowledge Test</span>
             <div className="w-[60px]" />
           </h1>
           <hr className="hidden border-[#FFFFFF1F] md:block" />
