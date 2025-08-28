@@ -165,7 +165,7 @@ function InfoList() {
   ]
 
   const handleClick = (link: string) => {
-    if (['/app/settings/data-profile', '/app/settings/onchain'].includes(link)) {
+    if (['/app/settings/onchain'].includes(link)) {
       message.info('Coming soon!')
       return
     }

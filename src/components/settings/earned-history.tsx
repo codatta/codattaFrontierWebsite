@@ -45,7 +45,7 @@ export default function EarnedHistory() {
                   <ul className="mt-2 flex gap-4 md:ml-auto md:mt-0 md:block">
                     {item.tokens.map((asset) => (
                       <li key={asset.reward_type} className="flex items-center justify-end gap-2 text-sm">
-                        <span>{asset.reward_type}</span>
+                        <span>{asset.reward_type == 'XnYCoin' ? 'XNY' : asset.reward_type}</span>
                         <span className="font-semibold text-[#875DFF]">+{asset.reward_amount}</span>
                       </li>
                     ))}

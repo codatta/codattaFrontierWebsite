@@ -1,19 +1,19 @@
 import { Empty, message, Table } from 'antd'
 import type { TableProps, TablePaginationConfig } from 'antd'
-import dayjs from 'dayjs'
+// import dayjs from 'dayjs'
 import React, { useEffect, useState } from 'react'
 
-import BookIcon from '@/assets/userinfo/book-icon.svg?react'
-import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
+// import BookIcon from '@/assets/userinfo/book-icon.svg?react'
+// import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
 // import LevelASvg from '@/assets/userinfo/level-a-icon.svg?react'
 // import LevelBSvg from '@/assets/userinfo/level-b-icon.svg?react'
 // import LevelCSvg from '@/assets/userinfo/level-c-icon.svg?react'
 // import LevelDSvg from '@/assets/userinfo/level-d-icon.svg?react'
 // import LevelSSvg from '@/assets/userinfo/level-s-icon.svg?react'
 
-import { getFrontierUserRecords, getFrontierUserStatics, useFrontierStore } from '@/stores/frontier.store'
+import { getFrontierUserRecords, useFrontierStore } from '@/stores/frontier.store'
 
-import { SubmissionRecord } from '@/apis/frontiter.api'
+// import { SubmissionRecord } from '@/apis/frontiter.api'
 
 export default function UserInfoData() {
   return (
@@ -27,15 +27,15 @@ export default function UserInfoData() {
 }
 
 function TotalView() {
-  const { userStatics } = useFrontierStore()
+  // const { userStatics } = useFrontierStore()
 
   useEffect(() => {
-    getFrontierUserStatics()
+    // getFrontierUserStatics()
   }, [])
 
   return (
     <div className="mb-6 flex items-center gap-6">
-      <div className="flex min-w-[60px] flex-1 items-center justify-between rounded-2xl bg-[#252532] px-6 py-7">
+      {/* <div className="flex min-w-[60px] flex-1 items-center justify-between rounded-2xl bg-[#252532] px-6 py-7">
         <div className="flex items-center gap-4">
           <BookIcon />
           <span className="text-base font-bold">Total Submissions</span>
@@ -48,7 +48,7 @@ function TotalView() {
           <span className="text-base font-bold">Onchained</span>
         </div>
         <span className="text-[32px] font-bold leading-[48px]">{userStatics.on_chained}</span>
-      </div>
+      </div> */}
     </div>
   )
 }
@@ -174,15 +174,15 @@ function RecordView() {
       <Table<DataType>
         className="[&_.ant-table-placeholder]:border-b-0 [&_.ant-table]:bg-transparent"
         columns={columns}
-        dataSource={userRecords.list.map((r: SubmissionRecord) => ({
-          id: r.submission_id,
-          key: r.submission_id,
-          time: dayjs(r.submission_time * 1000).format('YYYY/MM/DD HH:mm'),
-          frontier_name: r.frontier_name,
-          score: r.score,
-          reward: r.reward,
-          on_chained: !!r.on_chained
-        }))}
+        // dataSource={userRecords.list.map((r: SubmissionRecord) => ({
+        //   id: r.submission_id,
+        //   key: r.submission_id,
+        //   time: dayjs(r.submission_time * 1000).format('YYYY/MM/DD HH:mm'),
+        //   frontier_name: r.frontier_name,
+        //   score: r.score,
+        //   reward: r.reward,
+        //   on_chained: !!r.on_chained
+        // }))}
         rowKey="key"
         loading={userRecords.listLoading}
         pagination={{
