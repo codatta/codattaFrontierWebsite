@@ -163,7 +163,7 @@ function StatsCards({ stats }: { stats: SubmissionStatics }) {
             <img src={ClaimableIcon} className="h-6 w-6" />
           </div>
           <div className="flex-1">
-            <div className="text-base font-bold">Claimable on</div>
+            <div className="text-base font-bold">Claimable</div>
           </div>
           <div className="flex items-center gap-4">
             <DataProfileReward rewards={stats.claimable_rewards}></DataProfileReward>
