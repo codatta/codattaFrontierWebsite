@@ -1,19 +1,66 @@
-import { Button, Input } from 'antd'
+import { Button, Input, message } from 'antd'
 import { cn } from '@udecode/cn'
 import { Info } from 'lucide-react'
-
-import { useCountdown } from '@/hooks/use-countdown'
 import { useState } from 'react'
 
-export function EmailTask({ className }: { className?: string }) {
-  const [seconds, setSeconds] = useCountdown(60)
-  const [loading, setLoading] = useState(false)
+import { useCountdown } from '@/hooks/use-countdown'
+import { isValidGoogleEmail } from '@/utils/str'
+import userApi from '@/apis/user.api'
 
-  const onSendCode = () => {
-    setLoading(true)
-    setTimeout(() => {
+export function EmailTask({ className, taskId }: { className?: string; taskId: string }) {
+  const [loading, setLoading] = useState(false)
+  const [isValidEmail, setIsValidEmail] = useState(false)
+  const [email, setEmail] = useState('')
+  const [code, setCode] = useState('')
+  const [seconds, , restart, stop] = useCountdown(60, {
+    onTimeout: () => {
       setLoading(false)
-    }, 3000)
+    },
+    autoStart: false
+  })
+  const disabled = seconds > 0 && seconds < 60
+
+  const onSendCode = async () => {
+    if (!isValidEmail) {
+      message.error('Please enter a valid Google email')
+      return
+    }
+    setLoading(true)
+    try {
+      const res = await userApi.getVerificationCode({ email })
+      console.log('res', res)
+      message.success('Verification code sent successfully!')
+      restart()
+    } catch (error) {
+      message.error(error.message || 'An unexpected error occurred')
+      stop()
+    }
+    setLoading(false)
+  }
+
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value?.trim()
+    setEmail(email)
+    setIsValidEmail(isValidGoogleEmail(email))
+  }
+
+  const onCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCode(e.target.value?.trim())
+  }
+
+  const canSubmit = isValidEmail && code.length === 6
+
+  const onSubmit = async () => {
+    try {
+      const res = await userApi.checkEmail({ email, code, task_id: taskId })
+      console.log('res', res)
+      message.success('Verification code sent successfully!')
+      restart()
+    } catch (error) {
+      message.error(error.message || 'An unexpected error occurred')
+      stop()
+    }
+    setLoading(false)
   }
 
   return (
@@ -27,22 +74,26 @@ export function EmailTask({ className }: { className?: string }) {
         </div>
       </div>
       <Input
-        placeholder="Provide your signup Google account"
+        placeholder="Enter your Google account"
+        size="large"
+        className="mt-2"
+        onChange={onEmailChange}
+        value={email}
         suffix={
-          <Button
-            className="text-[#875DFF] hover:!bg-none"
-            onClick={onSendCode}
-            disabled={loading}
-            loading={loading}
-            type="text"
-          >
-            Send Code
+          <Button type="text" ghost disabled={disabled || !isValidEmail} loading={loading} onClick={onSendCode}>
+            {disabled ? `${seconds}s` : 'Send Code'}
           </Button>
         }
-        className="mt-3 h-[44px]"
       />
+      <h3 className="mt-3 text-base font-bold">Verification Code*</h3>
+      <Input placeholder="Enter the 6-digit code" size="large" onChange={onCodeChange} value={code} className="mt-2" />
 
-      <Button type="primary" className="mt-3 h-[48px] w-[240px] rounded-full">
+      <Button
+        size="large"
+        className={cn('mt-3 h-[48px] w-[240px] rounded-full', !canSubmit && 'opacity-30')}
+        type="primary"
+        onClick={onSubmit}
+      >
         Submit
       </Button>
     </div>

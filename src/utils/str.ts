@@ -52,3 +52,9 @@ export function isValidEmail(email: string = ''): boolean {
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   return emailRegex.test(String(email).toLowerCase())
 }
+
+export function isValidGoogleEmail(email: string = ''): boolean {
+  if (!isValidEmail(email)) return false
+  const domain = email.split('@')[1]
+  return domain === 'gmail.com' || domain === 'google.com'
+}

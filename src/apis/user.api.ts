@@ -319,6 +319,24 @@ class UserApi {
 
     return data.data
   }
+
+  async getVerificationCode({ account_type, email, opt }: { account_type?: string; email?: string; opt?: string }) {
+    const res = await request.post<Response<string>>('/v2/user/get_code', {
+      account_type: account_type ?? 'email',
+      email: email ?? '',
+      opt: opt ?? 'verify'
+    })
+    return res.data
+  }
+
+  async checkEmail({ email, code, task_id }: { email: string; code: string; task_id: string }) {
+    const res = await request.post<Response<{ flag: boolean; info: string }>>('/v2/user/check_email', {
+      email,
+      code,
+      task_id
+    })
+    return res.data
+  }
 }
 
 export default new UserApi(request)
