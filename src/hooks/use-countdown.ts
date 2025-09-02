@@ -1,20 +1,22 @@
 import { useState, useEffect, useCallback } from 'react'
 
-export const useCountdown = (initialSeconds: number, onTimeout?: () => void): [number, boolean, () => void] => {
+export const useCountdown = (
+  initialSeconds: number,
+  options?: { onTimeout?: () => void; autoStart?: boolean }
+): [number, boolean, () => void] => {
+  const { onTimeout, autoStart = true } = options || {}
   const [seconds, setSeconds] = useState(initialSeconds)
-  const [ended, setEnded] = useState(true)
+  const [isReady, setIsReady] = useState(autoStart)
+  const [ended, setEnded] = useState(false)
 
   const restart = useCallback(() => {
-    setEnded(false)
     setSeconds(initialSeconds)
+    setEnded(false)
+    setIsReady(true)
   }, [initialSeconds])
 
   useEffect(() => {
-    restart()
-  }, [restart])
-
-  useEffect(() => {
-    if (ended) {
+    if (!isReady || ended) {
       return
     }
 
@@ -29,7 +31,7 @@ export const useCountdown = (initialSeconds: number, onTimeout?: () => void): [n
     }, 1000)
 
     return () => clearTimeout(timer)
-  }, [seconds, onTimeout, ended])
+  }, [seconds, onTimeout, ended, isReady])
 
   return [seconds, ended, restart]
 }
