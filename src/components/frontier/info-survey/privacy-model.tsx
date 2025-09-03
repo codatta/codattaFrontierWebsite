@@ -6,10 +6,8 @@ import { useState } from 'react'
 
 export default function PrivacyModel({ onClose }: { onClose: () => void }) {
   const [disabled, setDisabled] = useState(true)
-  const [seconds] = useCountdown(6, {
-    onTimeout: () => {
-      setDisabled(false)
-    }
+  const [seconds] = useCountdown(6, () => {
+    setDisabled(false)
   })
 
   return (
