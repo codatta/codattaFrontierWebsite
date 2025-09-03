@@ -4,7 +4,7 @@ import { Info } from 'lucide-react'
 import { useState } from 'react'
 
 import { useCountdown } from '@/hooks/use-countdown'
-import { isValidGoogleEmail, isValidEmail } from '@/utils/str'
+import { isValidGoogleEmail } from '@/utils/str'
 import userApi from '@/apis/user.api'
 import runes from 'runes2'
 
@@ -31,7 +31,7 @@ export function EmailTask({
   const isCounting = seconds > 0 && seconds < 60
 
   const onSendCode = async () => {
-    if (!isValidEmail) {
+    if (!validEmail) {
       message.error('Please enter a valid Google email')
       return
     }
