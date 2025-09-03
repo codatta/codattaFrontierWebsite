@@ -10,7 +10,7 @@ export function DownloadTask({ className }: { className?: string }) {
 
   const onCopied = () => {
     message.success({
-      content: 'Link copied to clipboard!'
+      content: 'Download link copied to clipboard!'
     })
   }
 

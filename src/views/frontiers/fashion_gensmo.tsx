@@ -1,43 +1,101 @@
-import { Button, Input, Rate, Spin } from 'antd'
-import { ArrowLeft, Info } from 'lucide-react'
-import { useState } from 'react'
+import { Button, Form, Input, Rate, Spin, message, Modal } from 'antd'
+import { ArrowLeft, Info, Loader2 } from 'lucide-react'
+import { useState, useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
+import runes from 'runes2'
+import { cn } from '@udecode/cn'
 
 import { RulesModal } from '@/components/frontier/fashion-gensmo/rules-model'
+import ResultModel from '@/components/frontier/fashion-gensmo/result-model'
 import { DownloadTask } from '@/components/frontier/fashion-gensmo/download-task'
 import { EmailTask } from '@/components/frontier/fashion-gensmo/email-task'
 
 import task3Img from '@/assets/frontier/fashion-gensmo/task-3.png'
 import task4Img from '@/assets/frontier/fashion-gensmo/task-4.png'
 import task5Img from '@/assets/frontier/fashion-gensmo/task-5.png'
-import runes from 'runes2'
-import { cn } from '@udecode/cn'
+
+import frontiterApi from '@/apis/frontiter.api'
+import { ResultType } from '@/components/frontier/fashion-gensmo/types'
 
 const FashionGensmo: React.FC<{ templateId: string }> = ({ templateId }) => {
+  const [form] = Form.useForm()
   const [pageLoading, setPageLoading] = useState(false)
   const [showRulesModal, setShowRulesModal] = useState(false)
   const { taskId } = useParams()
-  const [form, setForm] = useState({
-    search_agent_rating: 0,
-    try_on_rating: 0,
-    post_rating: 0,
-    feedback: ''
-  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [verifiedEmail, setVerifiedEmail] = useState('')
+  const [result, setResult] = useState<ResultType | null>(null)
 
   const onBack = () => {
     window.history.back()
   }
 
-  const onRateChange = (key: string, value: number) => {
-    setForm({
-      ...form,
-      [key]: value
-    })
+  const handleSubmit = async () => {
+    setIsSubmitting(true)
+    try {
+      if (!taskId) throw new Error('Task ID is required')
+      if (!verifiedEmail) throw new Error('Please verify your email first')
+
+      const values = await form.validateFields()
+      const submitData = {
+        taskId,
+        templateId,
+        data: values
+      }
+      await frontiterApi.submitTask(taskId, submitData)
+      setResult('ADOPT')
+    } catch (error) {
+      console.error(error)
+      message.error(error.message ? error.message : 'Please check all required fields')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const onSubmit = () => {
-    console.log('form', form)
+  const handleEmailVerified = (email: string) => {
+    console.log('email', email)
+    setVerifiedEmail(email)
   }
+
+  const handleSubmitAgain = () => {
+    window.location.reload()
+  }
+
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+      if (taskDetail.data.data_display.template_id !== templateId) {
+        message.error('Template not match!')
+        return
+      }
+
+      const submission = await frontiterApi.getLastSubmission(taskDetail.data.frontier_id, taskId!)
+      setResult((submission?.status as ResultType) ?? null)
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setPageLoading(false)
+    }
+  }, [taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   return (
     <Spin spinning={pageLoading} className="min-h-screen">
@@ -56,10 +114,14 @@ const FashionGensmo: React.FC<{ templateId: string }> = ({ templateId }) => {
             </Button>
           </h1>
         </div>
-        <div className="mx-auto max-w-[1272px] space-y-6 px-6 py-12">
+        <Form form={form} className="mx-auto max-w-[1272px] space-y-6 px-6 py-12">
           <h3 className="text-xl font-bold">Day1</h3>
           <DownloadTask className="overflow-hidden rounded-2xl border-[#00000029] bg-[#252532] p-6" />
-          <EmailTask className="overflow-hidden rounded-2xl border-[#00000029] bg-[#252532] p-6" taskId={taskId!} />
+          <EmailTask
+            className="overflow-hidden rounded-2xl border-[#00000029] bg-[#252532] p-6"
+            taskId={taskId!}
+            onEmailVerified={handleEmailVerified}
+          />
           <section className="overflow-hidden rounded-2xl border-[#00000029] bg-[#252532] p-6">
             <div className="flex items-center gap-2">
               <span className="rounded-full bg-[#875DFF33] px-3 py-[2px] text-sm font-semibold text-[#875DFF]">
@@ -104,56 +166,65 @@ const FashionGensmo: React.FC<{ templateId: string }> = ({ templateId }) => {
             <div className="mt-3 grid grid-cols-3 gap-4">
               <div>
                 <div className="font-semibold">Search/Agent Rating</div>
-                <Rate
-                  onChange={(val) => onRateChange('search_agent_rating', val)}
-                  value={form.search_agent_rating}
-                  className="mt-2 text-xl text-[#FCC800]"
-                />
+                <Form.Item
+                  name="search_agent_rating"
+                  rules={[{ required: true, message: 'Please rate the search/agent feature' }]}
+                  className="!mb-0"
+                >
+                  <Rate className="mt-2 text-xl text-[#FCC800]" />
+                </Form.Item>
               </div>
               <div>
                 <div className="font-semibold">Try-on Rating</div>
-                <Rate
-                  onChange={(val) => onRateChange('try_on_rating', val)}
-                  value={form.try_on_rating}
-                  className="mt-2 text-xl"
-                />
+                <Form.Item
+                  name="try_on_rating"
+                  rules={[{ required: true, message: 'Please rate the try-on feature' }]}
+                  className="!mb-0"
+                >
+                  <Rate className="mt-2 text-xl" />
+                </Form.Item>
               </div>
               <div>
                 <div className="font-semibold">Post Rating</div>
-                <Rate
-                  onChange={(val) => onRateChange('post_rating', val)}
-                  value={form.post_rating}
-                  className="mt-2 text-xl"
-                />
+                <Form.Item
+                  name="post_rating"
+                  rules={[{ required: true, message: 'Please rate the post feature' }]}
+                  className="!mb-0"
+                >
+                  <Rate className="mt-2 text-xl" />
+                </Form.Item>
               </div>
             </div>
-            <div>
-              <div className="mt-3 font-semibold">Suggestions for the above features</div>
-              <Input.TextArea
-                className="mt-2 rounded-lg border-[#FFFFFF1F]"
-                placeholder="Enter your feedback"
-                rows={2}
-                count={{
-                  show: false,
-                  max: 255,
-                  strategy: (txt) => runes(txt).length,
-                  exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join('')
-                }}
-                value={form.feedback}
-                onChange={(e) => setForm({ ...form, feedback: e.target.value })}
-              />
-            </div>
+            <Form.Item name="feedback" rules={[{ required: false, message: 'Please provide feedback' }]}>
+              <div>
+                <div className="mt-3 font-semibold">Suggestions for the above features</div>
+                <Input.TextArea
+                  className="mt-2 rounded-lg border-[#FFFFFF1F]"
+                  placeholder="Enter your feedback"
+                  rows={2}
+                  count={{
+                    show: false,
+                    max: 255,
+                    strategy: (txt) => runes(txt).length,
+                    exceedFormatter: (txt, { max }) => runes(txt).slice(0, max).join('')
+                  }}
+                />
+              </div>
+            </Form.Item>
           </section>
           <Button
             type="primary"
-            className={cn('mx-auto mt-12 block h-[48px] w-[240px] rounded-full', form.feedback ? '' : 'opacity-30')}
-            onClick={onSubmit}
+            htmlType="submit"
+            disabled={isSubmitting}
+            className={cn('mx-auto mt-12 block h-[48px] w-[240px] rounded-full')}
+            onClick={handleSubmit}
           >
-            Submit
+            {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : 'Submit'}
           </Button>
-        </div>
+        </Form>
       </div>
       <RulesModal show={showRulesModal} onClose={() => setShowRulesModal(false)} />
+      {result && <ResultModel type={result} onSubmitAgain={handleSubmitAgain} onGotIt={onBack} />}
     </Spin>
   )
 }

@@ -321,21 +321,21 @@ class UserApi {
   }
 
   async getVerificationCode({ account_type, email, opt }: { account_type?: string; email?: string; opt?: string }) {
-    const res = await request.post<Response<string>>('/v2/user/get_code', {
+    const { data } = await request.post<Response<string>>('/v2/user/get_code', {
       account_type: account_type ?? 'email',
       email: email ?? '',
       opt: opt ?? 'verify'
     })
-    return res.data
+    return data.data
   }
 
   async checkEmail({ email, code, task_id }: { email: string; code: string; task_id: string }) {
-    const res = await request.post<Response<{ flag: boolean; info: string }>>('/v2/user/check_email', {
+    const { data } = await request.post<Response<{ flag: boolean; info: string }>>('/v2/frontier/email/check', {
       email,
       code,
       task_id
     })
-    return res.data
+    return data.data
   }
 }
 
