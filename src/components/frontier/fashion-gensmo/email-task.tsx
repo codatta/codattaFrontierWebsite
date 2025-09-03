@@ -22,12 +22,13 @@ export function EmailTask({
   const [email, setEmail] = useState('')
   const [verifiedEmail, setVerifiedEmail] = useState('')
   const [code, setCode] = useState('')
-  const [seconds, , restart, stop] = useCountdown(60, {
-    onTimeout: () => {
+  const [seconds, , restart] = useCountdown(
+    60,
+    () => {
       setLoading(false)
     },
-    autoStart: false
-  })
+    false
+  )
   const isCounting = seconds > 0 && seconds < 60
 
   const onSendCode = async () => {
@@ -44,7 +45,6 @@ export function EmailTask({
       restart()
     } catch (error) {
       message.error(error.message || 'An unexpected error occurred')
-      stop()
     }
     setLoading(false)
   }
@@ -53,7 +53,6 @@ export function EmailTask({
     const email = e.target.value?.trim()
     setEmail(email)
     setValidEmail(isValidGoogleEmail(email))
-    // setValidEmail(isValidEmail(email))
   }
 
   const onCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {

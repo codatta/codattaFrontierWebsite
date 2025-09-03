@@ -40,7 +40,7 @@ export function Button({
   disabled?: boolean
   loading?: boolean
 }) {
-  const [remainSeconds, ended, restart] = useCountdown(seconds)
+  const [remainSeconds, ended, restart] = useCountdown(seconds, null, false)
   const isButtonDisabled = !ended || disabled || loading
 
   useEffect(() => {
@@ -49,6 +49,8 @@ export function Button({
 
   function handleClick() {
     if (isButtonDisabled) return
+
+    restart()
     onClick()
   }
 
