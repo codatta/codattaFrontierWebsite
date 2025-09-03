@@ -7,7 +7,7 @@ export function RulesModal({ show, onClose, usdt = 5 }: { show: boolean; onClose
       list: [
         {
           key: 'How to Earn',
-          val: 'Complete all tasks for 2 consecutive days'
+          val: 'Complete all tasks for 2 consecutive days.Single-day completion ineligible. '
         },
         {
           key: 'Important',
