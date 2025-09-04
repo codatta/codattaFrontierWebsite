@@ -76,8 +76,12 @@ const FashionGensmo: React.FC<{ templateId: string }> = ({ templateId }) => {
         return
       }
 
+      // const submission = await frontiterApi.getLastSubmission(taskDetail.data.frontier_id, taskId!)
+      // setResult((submission?.status as ResultType) ?? null)
       const submission = await frontiterApi.getLastSubmission(taskDetail.data.frontier_id, taskId!)
-      setResult((submission?.status as ResultType) ?? null)
+      if (submission) {
+        setResult('ADOPT')
+      }
     } catch (error) {
       Modal.error({
         title: 'Error',
