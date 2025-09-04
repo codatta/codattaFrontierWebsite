@@ -6,7 +6,7 @@ import logo from '@/assets/frontier/fashion-gensmo/logo.svg'
 import CopyToClipboard from 'react-copy-to-clipboard'
 
 export function DownloadTask({ className }: { className?: string }) {
-  const link = 'https://apps.apple.com/us/app/gensmo-your-fashion-ai-agent/id6636520663?mt=8'
+  const link = 'https://gensmo.onelink.me/038u?af_xp=custom&pid=coddata'
 
   const onCopied = () => {
     message.success({
