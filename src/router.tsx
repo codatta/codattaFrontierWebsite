@@ -83,6 +83,8 @@ const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_i
 
 const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
 
+const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -361,6 +363,10 @@ export default function Router() {
         <Route
           path="/frontier/project/KITCHEN_TPL_W10/:taskId/:questId"
           element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
+        />
+        <Route
+          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId"
+          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
