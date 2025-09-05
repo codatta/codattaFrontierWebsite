@@ -40,7 +40,10 @@ const FashionGensmo: React.FC<{ templateId: string }> = ({ templateId }) => {
       const submitData = {
         taskId,
         templateId,
-        data: values
+        data: {
+          ...values,
+          email: verifiedEmail
+        }
       }
       await frontiterApi.submitTask(taskId, submitData)
       setResult('ADOPT')
