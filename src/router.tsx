@@ -70,8 +70,8 @@ const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
-// const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001_deprecated'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
+const FashionGensmo = lazy(() => import('@/views/frontiers/fashion_gensmo'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
@@ -367,6 +367,10 @@ export default function Router() {
         <Route
           path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId"
           element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
+        />
+        <Route
+          path="/frontier/project/FASHION_GENSMO/:taskId"
+          element={<FashionGensmo templateId="FASHION_GENSMO" />}
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>

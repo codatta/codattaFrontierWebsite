@@ -80,6 +80,7 @@ export interface FrontierListItem {
     template_id: string
     gif_resource?: string
     open_cum_dialog?: number
+    hide?: boolean
   }
 }
 
