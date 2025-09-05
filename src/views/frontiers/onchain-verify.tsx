@@ -1,5 +1,4 @@
 import AuthChecker from '@/components/app/auth-checker'
-import PageHeader from '@/components/frontier/onchain-verify/page-header'
 import ValidationForm from '@/components/frontier/onchain-verify/validation-form'
 import TaskSelect from '@/components/frontier/onchain-verify/task-select'
 import TaskDataVerify from '@/components/frontier/onchain-verify/task-data-verify'
@@ -14,7 +13,7 @@ import TaskComplete from '@/components/frontier/onchain-verify/task-complete'
 type TStep = 'task-select' | 'data-submit' | 'data-verify' | 'no-submit' | 'task-complete'
 
 // 0 Not started, 1 In progress, 2 Completed, 3 Failed, 4 Cancelled
-type TOnChainStatus = 0 | 1 | 2 | 3 | 4
+// type TOnChainStatus = 0 | 1 | 2 | 3 | 4
 
 export interface ValidationFormData {
   jsonData: string
@@ -23,7 +22,7 @@ export interface ValidationFormData {
   submissionId: string
 }
 
-export default function (props: { templateId: string }) {
+export default function (_props: { templateId: string }) {
   const [step, setStep] = useState<TStep>()
   const [loading, setLoading] = useState(false)
   const { taskId, questId } = useParams()
