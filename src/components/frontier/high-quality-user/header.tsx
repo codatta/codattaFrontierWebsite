@@ -1,6 +1,9 @@
 import { ArrowLeft } from 'lucide-react'
 
-export default function Header({ title, isMobile }: { title: string; isMobile: boolean }) {
+import { useIsMobile } from '@/hooks/use-is-mobile'
+
+export default function Header({ title }: { title: string }) {
+  const isMobile = useIsMobile()
   const onBack = () => {
     window.history.back()
   }

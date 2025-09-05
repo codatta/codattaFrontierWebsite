@@ -10,8 +10,8 @@ export default function Access({ isGranted, onStart }: { isGranted: boolean; onS
 
 function AccessDenied() {
   return (
-    <div className="mx-auto mt-[60px] max-w-[600px] px-6 text-sm leading-[22px] text-white md:mt-[100px] md:rounded-2xl md:bg-[#252532] md:px-10 md:pb-12 md:pt-6">
-      <DeniedIcon className="mx-auto block size-[120px]" />
+    <>
+      <DeniedIcon className="mx-auto mt-[60px] block size-[120px] md:mt-0" />
       <h2 className="mt-8 text-center text-2xl font-bold">We appreciate your interest!</h2>
       <p className="mt-3 text-center text-base text-[#BBBBBE]">
         Access to this task is by invitation only, based on special contribution criteria.
@@ -24,7 +24,7 @@ function AccessDenied() {
           during previous Codatta booster campaigns.
         </p>
       </div>
-    </div>
+    </>
   )
 }
 
@@ -38,8 +38,8 @@ function AccessGranted({ onStart }: { onStart: () => void }) {
       <div className="absolute left-0 top-0 h-0 w-full">
         <img src={grantedBg} className="h-auto w-full" />
       </div>
-      <div className="relative mx-auto mt-[60px] max-w-[600px] px-6 text-sm leading-[22px] text-white md:mt-[100px] md:rounded-2xl md:bg-[#252532] md:px-10 md:pb-12 md:pt-6">
-        <GrantedIcon className="mx-auto block size-[120px]" />
+      <div className="relative">
+        <GrantedIcon className="mx-auto mt-[60px] block size-[120px] md:mt-0" />
         <h2 className="mt-8 text-center text-2xl font-bold">🎊 Congratulations!</h2>
         <p className="mt-3 text-center text-base text-[#BBBBBE]">
           You have been granted exclusive access to our high-value tasks.
