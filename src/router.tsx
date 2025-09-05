@@ -82,6 +82,7 @@ const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_
 const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
 
 const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
+const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -361,6 +362,14 @@ export default function Router() {
         <Route
           path="/frontier/project/KITCHEN_TPL_W10/:taskId/:questId"
           element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER/:taskId"
+          element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER/:taskId/:questId"
+          element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>

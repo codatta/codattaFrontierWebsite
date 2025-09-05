@@ -1,0 +1,23 @@
+import { ArrowLeft } from 'lucide-react'
+
+export default function Header({ title, isMobile }: { title: string; isMobile: boolean }) {
+  const onBack = () => {
+    window.history.back()
+  }
+
+  return (
+    <div className="border-[#FFFFFF1F] py-3 md:border-b md:py-6">
+      <h1 className="mx-auto flex max-w-[1272px] items-center justify-between px-6 text-center text-base font-bold">
+        {!isMobile ? (
+          <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
+            <ArrowLeft size={18} /> Back
+          </div>
+        ) : (
+          <span></span>
+        )}
+        {title}
+        <span></span>
+      </h1>
+    </div>
+  )
+}
