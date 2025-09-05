@@ -56,6 +56,7 @@ export interface TaskDetail {
   status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
   result: 'S' | 'A' | 'B' | 'C' | 'D'
+  chain_status: 0 | 1 | 2 | 3 | 4
 }
 
 export interface FrontierListItem {
@@ -156,12 +157,22 @@ export interface SubmissionRecord {
   status: 'ADOPT' | 'PENDING' | 'REFUSED'
   submission_id: string
   rewards: SubmissionReward[]
-  data_submission?: string
+  data_submission?: {
+    data: { [key: string]: unknown }
+    taskId: string
+    templateId: string
+  }
 }
 
 export interface SubmissionLifeLogReport {
   user_score: number
   content: string
+}
+
+export interface GenerateFingerprintParams {
+  address: string
+  quality: 'S' | 'A' | 'B' | 'C' | 'D'
+  submit_data: unknown
 }
 
 class frontier {
@@ -248,8 +259,14 @@ class frontier {
     const lastSubmission = res.data[0]
     return lastSubmission
   }
+
   async getSubmissionDetail(submission_id: string): Promise<Response<SubmissionRecord>> {
     const res = await this.request.get(`/v2/submission/user/detail`, { params: { submission_id } })
+    return res.data
+  }
+
+  async generateFingerprint(params: GenerateFingerprintParams): Promise<Response<{ fingerprint: string }>> {
+    const res = await this.request.post('/v2/chain/gen/fingerprint', params)
     return res.data
   }
 }
