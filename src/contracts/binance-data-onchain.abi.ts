@@ -1,5 +1,5 @@
 import { Abi, Chain, defineChain } from 'viem'
-import { base, bsc } from 'viem/chains'
+import { base } from 'viem/chains'
 
 const TESTNET = defineChain({
   id: 2368,

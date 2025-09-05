@@ -9,7 +9,6 @@ import DoubleCheckSVG from '@/assets/frontier/onchain-verify/check-double-fill.s
 import LoaderSVG from '@/assets/frontier/onchain-verify/loader-line.svg'
 import CloseSVG from '@/assets/frontier/onchain-verify/close-line.svg'
 import boosterApi from '@/apis/booster.api'
-import PageHeader from './page-header-back'
 import PageHeaderBack from './page-header-back'
 
 // Step 1: Calculating Local Fingerprint
