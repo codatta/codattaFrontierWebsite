@@ -319,6 +319,24 @@ class UserApi {
 
     return data.data
   }
+
+  async getVerificationCode({ account_type, email, opt }: { account_type?: string; email?: string; opt?: string }) {
+    const { data } = await request.post<Response<string>>('/v2/user/get_code', {
+      account_type: account_type ?? 'email',
+      email: email ?? '',
+      opt: opt ?? 'verify'
+    })
+    return data.data
+  }
+
+  async checkEmail({ email, code, task_id }: { email: string; code: string; task_id: string }) {
+    const { data } = await request.post<Response<{ flag: boolean; info: string }>>('/v2/frontier/email/check', {
+      email,
+      code,
+      task_id
+    })
+    return data.data
+  }
 }
 
 export default new UserApi(request)
