@@ -23,7 +23,7 @@ const ResultMap: Record<ResultType, ResultMap> = {
     description: (
       <>
         The <span className="font-bold text-[#FFA800]">💎5 USDT</span> will be distributed
-        <br /> within 3 business days after approval.
+        <br /> within 7 days after approval.
       </>
     )
   },

@@ -33,7 +33,7 @@ export function RulesModal({ show, onClose, usdt = 5 }: { show: boolean; onClose
       list: [
         {
           key: 'Processing Time',
-          val: 'Rewards will be distributed within 3 business days after approval'
+          val: 'Rewards will be distributed within 7 days after approval'
         },
         {
           key: 'Task Reset',
