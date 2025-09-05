@@ -6,7 +6,7 @@ export default function Header({ title, isMobile }: { title: string; isMobile: b
   }
 
   return (
-    <div className="border-[#FFFFFF1F] py-3 md:border-b md:py-6">
+    <div className="relative z-10 border-[#FFFFFF1F] py-3 md:border-b md:py-6">
       <h1 className="mx-auto flex max-w-[1272px] items-center justify-between px-6 text-center text-base font-bold">
         {!isMobile ? (
           <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
