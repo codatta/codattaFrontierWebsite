@@ -319,6 +319,21 @@ class UserApi {
 
     return data.data
   }
+
+  async isHighQualityUser(): Promise<boolean> {
+    const { data } = await request.get<Response<{ quality_type: number }>>('/v2/h5/quest/user/quality')
+    return data.data.quality_type === 1
+  }
+
+  async getTgGroupInviteLink() {
+    const { data } = await request.get<Response<{ link: string }>>('/v2/h5/tg/group/link')
+    return data.data
+  }
+
+  async isJoinedTgGroup(): Promise<boolean> {
+    const { data } = await request.get<Response<{ flag: number }>>('/v2/h5/tg/group/status')
+    return data.data.flag === 1
+  }
 }
 
 export default new UserApi(request)
