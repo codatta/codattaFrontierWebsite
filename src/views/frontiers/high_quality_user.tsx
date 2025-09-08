@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { cn } from '@udecode/cn'
-import { message, Spin } from 'antd'
+import { message, Modal, Spin } from 'antd'
 
 import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/header'
@@ -10,22 +10,41 @@ import Task1 from '@/components/frontier/high-quality-user/task-1'
 import TaskRead from '@/components/frontier/high-quality-user/task-read'
 import Task2 from '@/components/frontier/high-quality-user/task-2'
 import Result from '@/components/frontier/high-quality-user/result'
+import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 
-import type { FormData, ResultType } from '@/components/frontier/high-quality-user/types'
+import type { ResultType } from '@/components/frontier/high-quality-user/types'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
 import userApi from '@/apis/user.api'
+
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
 
 export default function HighQualityUser({ templateId }: { templateId: string }) {
   const { taskId, questId } = useParams()
   const isMobile = useIsMobile()
   const isBnb = questId?.toLocaleUpperCase().includes('TASK')
 
+  const [rewardPoints, setRewardPoints] = useState(0)
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true)
+  const [isSubmited, setIsSubmited] = useState<boolean>(false)
   const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(false)
-  const [viewType, setViewType] = useState<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2'>('ACCESS')
+  const [viewType, setViewType] = useState<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2'>('TASK2')
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
+  const title = useMemo(() => {
+    if (viewType === 'ACCESS') return isHighQualityUser ? ' Access Granted' : 'Access Denied'
+    if (viewType === 'TASK1') return 'Join Exclusive Telegram Group'
+    return 'Model Comparison Challenge'
+  }, [isHighQualityUser, viewType])
 
   const handleResultStatus = (status: string = '') => {
     status = status.toLocaleUpperCase()
@@ -38,77 +57,16 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
     }
   }
 
-  async function getLastSubmission(frontierId: string) {
-    const res = await frontiterApi.getSubmissionList({
-      page_num: 1,
-      page_size: 1,
-      frontier_id: frontierId,
-      task_ids: taskId
-    })
-    const lastSubmission = res.data[0]
-    return lastSubmission
-  }
-
-  async function checkTaskBasicInfo(taskId: string, templateId: string) {
-    const res = await frontiterApi.getTaskDetail(taskId)
-    const { data_display } = res.data
-    if (data_display.template_id !== templateId) {
-      console.log(data_display.template_id, templateId)
-      throw new Error('Template not match!')
-    }
-    return res.data
-  }
-
   function onSubmitAgain() {
     setResultType(null)
   }
 
-  async function checkTaskStatus() {
-    setIsPageLoading(true)
-    try {
-      if (!taskId || !templateId) throw new Error('Task ID or template ID is required!')
-      const taskDetail = await checkTaskBasicInfo(taskId, templateId)
-      const lastSubmission = await getLastSubmission(taskDetail.frontier_id)
-
-      if (!lastSubmission) {
-        const isHighQualityUser = await userApi.isHighQualityUser()
-        setIsHighQualityUser(isHighQualityUser)
-        setViewType('ACCESS')
-        console.log('isHighQualityUser', isHighQualityUser)
-      } else {
-        handleResultStatus(lastSubmission?.status)
-      }
-    } catch (err) {
-      message.error(err.message)
-    }
-    setIsPageLoading(false)
-  }
-
-  useEffect(() => {
-    checkTaskStatus()
-  }, [])
-
-  const handleSubmit = async (data: FormData): Promise<boolean> => {
+  const handleSubmit = async (formData: unknown): Promise<boolean> => {
     try {
       const res = await frontiterApi.submitTask(taskId!, {
         templateId: templateId,
         taskId: taskId,
-        data: Object.assign(
-          { source: isBnb ? 'binance' : 'codatta' },
-          {
-            question: data.question,
-            answer: [
-              {
-                name: 'chat_gpt_4o',
-                images: data.chatGPT4oImage
-              },
-              {
-                name: 'qwen_3',
-                images: data.qwen3Image
-              }
-            ]
-          }
-        )
+        data: Object.assign({ source: isBnb ? 'binance' : 'codatta' }, formData)
       })
 
       const resultData = res.data as unknown as {
@@ -125,19 +83,80 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
     return true
   }
 
-  console.log(taskId, questId)
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setIsPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+      if (taskDetail.data.data_display.template_id !== templateId) {
+        message.error('Template not match!')
+        return
+      }
+
+      const totalRewards = taskDetail.data.reward_info
+        .filter((item) => {
+          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+        })
+        .reduce((acc, cur) => {
+          return acc + cur.reward_value
+        }, 0)
+
+      setRewardPoints(totalRewards)
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
+
+      if (!lastSubmission) {
+        const isHighQualityUser = await userApi.isHighQualityUser()
+        setIsHighQualityUser(isHighQualityUser)
+        setViewType('ACCESS')
+      } else {
+        setIsSubmited(true)
+        handleResultStatus(lastSubmission?.status)
+      }
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setIsPageLoading(false)
+    }
+  }, [taskId, templateId, isBnb])
+
+  const onBack = () => {
+    window.history.back()
+  }
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
   return (
     <AuthChecker>
       <Spin spinning={isPageLoading} className="min-h-screen">
         <div className="relative min-h-screen overflow-hidden">
-          <Header title="Join Exclusive Telegram Group" />
+          <Header title={title} />
           <div
             className={cn(
               'mx-auto max-w-[600px] px-6 text-sm leading-[22px] text-white md:max-w-[1272px] md:rounded-2xl md:bg-[#252532] md:px-10 md:pb-12 md:pt-6',
               viewType === 'TASK2' && 'md:bg-transparent'
             )}
           >
-            {resultType && <Result type={resultType} onSubmitAgain={onSubmitAgain} />}
+            {resultType &&
+              (isBnb || isSubmited ? (
+                <Result type={resultType} onSubmitAgain={onSubmitAgain} />
+              ) : (
+                <SubmitSuccessModal points={rewardPoints} open={true} onClose={onBack} />
+              ))}
             {!resultType && (
               <>
                 {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('TASK1')} />}

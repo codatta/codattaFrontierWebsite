@@ -1,6 +1,11 @@
 import { Button } from 'antd'
 
+import { useCountdown } from '@/hooks/use-countdown'
+
 export default function Read({ onNext }: { onNext: () => void }) {
+  const [count] = useCountdown(6)
+  const canSubmit = count === 0
+
   const items = [
     {
       title: 'Factual Q&A:',
@@ -19,6 +24,7 @@ export default function Read({ onNext }: { onNext: () => void }) {
       des: "Success here is your path to qualifying for next week's high-value rewards."
     }
   ]
+
   return (
     <>
       <h2 className="mt-4 text-center text-2xl font-bold md:mt-6">
@@ -45,10 +51,11 @@ export default function Read({ onNext }: { onNext: () => void }) {
       </div>
       <Button
         type="primary"
+        disabled={!canSubmit}
         className="mt-8 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-12 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
         onClick={onNext}
       >
-        I Understand
+        I Understand{!canSubmit ? `(${count}s)` : ''}
       </Button>
     </>
   )

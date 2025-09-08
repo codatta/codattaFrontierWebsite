@@ -62,52 +62,54 @@ export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobi
         </p>
       </div>
 
-      {link && !isMobile ? (
-        <Popover content={<QRCode value={link} bordered={false} />}>
+      <div className="mt-8 space-y-6 md:flex md:items-center md:justify-center md:gap-6 md:space-y-0">
+        {!isMobile ? (
+          <Popover content={<QRCode value={link} bordered={false} />}>
+            <Button
+              type="primary"
+              loading={joinLoading}
+              disabled={joinLoading || verified}
+              className="block h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+              onClick={handleJoinTelegram}
+            >
+              {link ? 'Try Again' : 'Join Now'}
+            </Button>
+          </Popover>
+        ) : (
           <Button
             type="primary"
             loading={joinLoading}
             disabled={joinLoading || verified}
-            className="mt-8 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-12 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+            className="block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
             onClick={handleJoinTelegram}
           >
-            Join Now
+            {link ? 'Try Again' : 'Join Now'}
           </Button>
-        </Popover>
-      ) : (
-        <Button
-          type="primary"
-          loading={joinLoading}
-          disabled={joinLoading || verified}
-          className="mt-8 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-12 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-          onClick={handleJoinTelegram}
-        >
-          Join Now
-        </Button>
-      )}
+        )}
 
-      {link &&
-        (verified ? (
-          <Button
-            type="primary"
-            loading={verifyLoading}
-            disabled={verifyLoading}
-            className="mt-3 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-6 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-            onClick={handleNext}
-          >
-            Next
-          </Button>
-        ) : (
-          <Button
-            type="primary"
-            loading={verifyLoading}
-            disabled={verifyLoading}
-            className="mt-3 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-6 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-            onClick={handleVerifyTelegram}
-          >
-            Verify
-          </Button>
-        ))}
+        {link &&
+          (verified ? (
+            <Button
+              type="primary"
+              loading={verifyLoading}
+              disabled={verifyLoading}
+              className="block h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+              onClick={handleNext}
+            >
+              Next
+            </Button>
+          ) : (
+            <Button
+              type="primary"
+              loading={verifyLoading}
+              disabled={verifyLoading}
+              className="block h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+              onClick={handleVerifyTelegram}
+            >
+              Verify
+            </Button>
+          ))}
+      </div>
     </>
   )
 }

@@ -14,22 +14,22 @@ export default function ArenaForm({
 }: {
   isMobile: boolean
   resultType?: 'ADOPT' | 'PENDING' | 'REJECT' | null
-  onNext: (data: FormData) => Promise<boolean>
+  onNext: (data: unknown) => Promise<boolean>
 }) {
   const [loading, setLoading] = useState(false)
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
   const [formData, setFormData] = useState<FormData>({
     question: '',
-    chatGPT4oImage: [],
-    qwen3Image: []
+    chat_gpt_4o: [],
+    qwen_3: []
   })
   const canSubmit = useMemo(() => {
     return (
       Object.values(errors).every((error) => !error) &&
       !!formData.question &&
-      formData.chatGPT4oImage?.length > 0 &&
-      formData.qwen3Image?.length > 0
+      formData.chat_gpt_4o?.length > 0 &&
+      formData.qwen_3?.length > 0
     )
   }, [errors, formData])
 
@@ -39,11 +39,11 @@ export default function ArenaForm({
     if (!formData.question) {
       newErrors.question = 'Question is required'
     }
-    if (formData.chatGPT4oImage.length === 0) {
-      newErrors.chatGPT4oImage = 'Please upload an image for ChatGPT-4o'
+    if (formData.chat_gpt_4o.length === 0) {
+      newErrors.chat_gpt_4o = 'Please upload an image for ChatGPT-4o'
     }
-    if (formData.qwen3Image.length === 0) {
-      newErrors.qwen3Image = 'Please upload an image for Qwen-3'
+    if (formData.qwen_3.length === 0) {
+      newErrors.qwen_3 = 'Please upload an image for Qwen-3'
     }
 
     setErrors(newErrors)
@@ -52,8 +52,8 @@ export default function ArenaForm({
   const resetForm = () => {
     setFormData({
       question: '',
-      chatGPT4oImage: [],
-      qwen3Image: []
+      chat_gpt_4o: [],
+      qwen_3: []
     })
   }
   const handleFormChange = (field: keyof FormData, value: string | { url: string; hash: string }[]) => {
@@ -72,7 +72,13 @@ export default function ArenaForm({
     if (!validateForm()) return
 
     setLoading(true)
-    const res = await onNext(formData)
+    const res = await onNext({
+      question: formData.question,
+      answer: {
+        chat_gpt_4o: formData.chat_gpt_4o,
+        qwen_3: formData.qwen_3
+      }
+    })
     if (res) {
       resetForm()
     }
@@ -100,8 +106,8 @@ export default function ArenaForm({
             ChatGPT-4o Image<span className="text-red-400">*</span>
           </h3>
           <Upload
-            value={formData.chatGPT4oImage}
-            onChange={(images) => handleFormChange('chatGPT4oImage', images)}
+            value={formData.chat_gpt_4o}
+            onChange={(images) => handleFormChange('chat_gpt_4o', images)}
             isMobile={isMobile}
             description={
               <div className="text-left text-[#606067] md:text-center md:text-sm">
@@ -110,15 +116,15 @@ export default function ArenaForm({
             }
             className="border-none bg-[#252532]"
           />
-          <p className={cn('mt-2 text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.chatGPT4oImage}</p>
+          <p className={cn('mt-2 text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.chat_gpt_4o}</p>
         </div>
         <div className="mt-4 md:mt-8">
           <h3 className={cn('mb-2', isMobile ? 'px-4' : 'px-0 text-base font-bold text-white')}>
             Qwen-3 Image<span className="text-red-400">*</span>
           </h3>
           <Upload
-            value={formData.qwen3Image}
-            onChange={(images) => handleFormChange('qwen3Image', images)}
+            value={formData.qwen_3}
+            onChange={(images) => handleFormChange('qwen_3', images)}
             isMobile={isMobile}
             description={
               <div className="text-left text-[#606067] md:text-center md:text-sm">
@@ -126,7 +132,7 @@ export default function ArenaForm({
               </div>
             }
           />
-          <p className={cn('mt-2 text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.qwen3Image}</p>
+          <p className={cn('mt-2 text-red-400', isMobile ? 'px-4' : 'px-0')}>{errors.qwen_3}</p>
         </div>
       </div>
       <Button
