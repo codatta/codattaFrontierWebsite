@@ -1,12 +1,18 @@
 import { Button, message, Popover, QRCode } from 'antd'
 import UserApi from '@/apis/user.api'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { useCountdown } from '@/hooks/use-countdown'
 
 export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobile: boolean }) {
   const [joinLoading, setJoinLoading] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [link, setLink] = useState('')
   const [verified, setVerified] = useState(false)
+  const [count, _, restart] = useCountdown(30, null, false)
+  const [isFirstJoin, setisFirstJoin] = useState(true)
+  const isCounting = useMemo(() => {
+    return count !== 0 && count !== 30
+  }, [count])
 
   const handleJoinTelegram = async () => {
     setJoinLoading(true)
@@ -15,6 +21,8 @@ export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobi
       const link = await UserApi.getTgGroupInviteLink()
 
       if (link) {
+        restart()
+        setisFirstJoin(false)
         setLink(link.link)
         window.open(link.link, '_blank')
       }
@@ -68,22 +76,24 @@ export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobi
             <Button
               type="primary"
               loading={joinLoading}
-              disabled={joinLoading || verified}
+              disabled={joinLoading || verified || isCounting}
               className="block h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
               onClick={handleJoinTelegram}
             >
-              {link ? 'Try Again' : 'Join Now'}
+              {isFirstJoin ? 'Join Now' : 'Try Again'}
+              {isCounting ? `(${count}s)` : ''}
             </Button>
           </Popover>
         ) : (
           <Button
             type="primary"
             loading={joinLoading}
-            disabled={joinLoading || verified}
+            disabled={joinLoading || verified || isCounting}
             className="block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
             onClick={handleJoinTelegram}
           >
-            {link ? 'Try Again' : 'Join Now'}
+            {isFirstJoin ? 'Join Now' : 'Try Again'}
+            {isCounting ? `(${count}s)` : ''}
           </Button>
         )}
 
