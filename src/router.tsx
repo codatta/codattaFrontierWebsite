@@ -83,6 +83,7 @@ const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_
 const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
 
 const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
+const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
 
 const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
@@ -382,11 +383,28 @@ export default function Router() {
           element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
         />
         <Route
+          path="/frontier/project/HIGH_QUALITY_USER/:taskId"
+          element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
+        />
+
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER/:taskId/:questId"
+          element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
+        />
+        <Route
+          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId"
+          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
+        />
+        <Route
           path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId"
           element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
         />
         <Route
           path="/frontier/project/FASHION_GENSMO/:taskId"
+          element={<FashionGensmo templateId="FASHION_GENSMO" />}
+        />
+        <Route
+          path="/frontier/project/FASHION_GENSMO/:taskId/:questId"
           element={<FashionGensmo templateId="FASHION_GENSMO" />}
         />
 
