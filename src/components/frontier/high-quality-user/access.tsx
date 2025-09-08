@@ -4,8 +4,8 @@ import grantedBg from '@/assets/frontier/high-quality-user/granted-bg.png'
 
 import { Button } from 'antd'
 
-export default function Access({ isGranted, onStart }: { isGranted: boolean; onStart: () => void }) {
-  return isGranted ? <AccessGranted onStart={onStart} /> : <AccessDenied />
+export default function Access({ isGranted, onNext }: { isGranted: boolean; onNext: () => void }) {
+  return isGranted ? <AccessGranted onStart={onNext} /> : <AccessDenied />
 }
 
 function AccessDenied() {

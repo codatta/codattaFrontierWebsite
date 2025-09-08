@@ -16,13 +16,12 @@ interface UploadProps {
   value: UploadedImage[]
   error?: string
   description?: string | React.ReactNode
-  icon?: string
   isMobile?: boolean
   className?: string
   onChange: (value: UploadedImage[]) => void
 }
 
-const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, isMobile, className, icon }) => {
+const Upload: React.FC<UploadProps> = ({ value, onChange, error, description, isMobile, className }) => {
   const [uploading, setUploading] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)

@@ -1,8 +1,8 @@
-import { Button, message } from 'antd'
+import { Button, message, Popover, QRCode } from 'antd'
 import UserApi from '@/apis/user.api'
 import { useState } from 'react'
 
-export default function Task1({ onJoinedTelegram }: { onJoinedTelegram: () => void }) {
+export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobile: boolean }) {
   const [joinLoading, setJoinLoading] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [link, setLink] = useState('')
@@ -33,7 +33,7 @@ export default function Task1({ onJoinedTelegram }: { onJoinedTelegram: () => vo
 
       if (isJoined) {
         message.success('You have joined the telegram group')
-        onJoinedTelegram()
+        onNext()
       } else {
         message.error('Telegram join not detected. Please try again or contact support.')
       }
@@ -62,15 +62,29 @@ export default function Task1({ onJoinedTelegram }: { onJoinedTelegram: () => vo
         </p>
       </div>
 
-      <Button
-        type="primary"
-        loading={joinLoading}
-        disabled={joinLoading || verified}
-        className="mt-8 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-12 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-        onClick={handleJoinTelegram}
-      >
-        Join Now
-      </Button>
+      {link && !isMobile ? (
+        <Popover content={<QRCode value={link} bordered={false} />}>
+          <Button
+            type="primary"
+            loading={joinLoading}
+            disabled={joinLoading || verified}
+            className="mt-8 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-12 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+            onClick={handleJoinTelegram}
+          >
+            Join Now
+          </Button>
+        </Popover>
+      ) : (
+        <Button
+          type="primary"
+          loading={joinLoading}
+          disabled={joinLoading || verified}
+          className="mt-8 block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:mt-12 md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+          onClick={handleJoinTelegram}
+        >
+          Join Now
+        </Button>
+      )}
 
       {link &&
         (verified ? (

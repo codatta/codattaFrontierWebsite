@@ -7,8 +7,8 @@ import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/header'
 import Access from '@/components/frontier/high-quality-user/access'
 import Task1 from '@/components/frontier/high-quality-user/task-1'
+import TaskRead from '@/components/frontier/high-quality-user/task-read'
 import Task2 from '@/components/frontier/high-quality-user/task-2'
-import Form from '@/components/frontier/high-quality-user/form'
 import Result from '@/components/frontier/high-quality-user/result'
 
 import type { FormData, ResultType } from '@/components/frontier/high-quality-user/types'
@@ -24,7 +24,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
 
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true)
   const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(false)
-  const [viewType, setViewType] = useState<'ACCESS' | 'TASK1' | 'TASK2' | 'FORM'>('FORM')
+  const [viewType, setViewType] = useState<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2'>('ACCESS')
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
 
   const handleResultStatus = (status: string = '') => {
@@ -134,16 +134,16 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
           <div
             className={cn(
               'mx-auto max-w-[600px] px-6 text-sm leading-[22px] text-white md:max-w-[1272px] md:rounded-2xl md:bg-[#252532] md:px-10 md:pb-12 md:pt-6',
-              viewType === 'FORM' && 'md:bg-transparent'
+              viewType === 'TASK2' && 'md:bg-transparent'
             )}
           >
             {resultType && <Result type={resultType} onSubmitAgain={onSubmitAgain} />}
             {!resultType && (
               <>
-                {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onStart={() => setViewType('TASK1')} />}
-                {viewType === 'TASK1' && <Task1 onJoinedTelegram={() => setViewType('TASK2')} />}
-                {viewType === 'TASK2' && <Task2 onJoinedTelegram={() => setViewType('FORM')} />}
-                {viewType === 'FORM' && <Form isMobile={isMobile} onSubmit={handleSubmit} />}
+                {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('TASK1')} />}
+                {viewType === 'TASK1' && <Task1 onNext={() => setViewType('TASK_READ')} isMobile={isMobile} />}
+                {viewType === 'TASK_READ' && <TaskRead onNext={() => setViewType('TASK2')} />}
+                {viewType === 'TASK2' && <Task2 onNext={handleSubmit} isMobile={isMobile} />}
               </>
             )}
           </div>
