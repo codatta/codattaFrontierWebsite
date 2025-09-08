@@ -65,6 +65,7 @@ const FoodTplM2W1 = lazy(() => import('@/views/frontiers/food_tpl_m2_w1'))
 const FoodTplM2W234 = lazy(() => import('@/views/frontiers/food_tpl_m2_w234'))
 const FoodTplW9 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
 const FoodTplW10 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
+const FoodTplW11 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
 const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
 
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
@@ -83,6 +84,8 @@ const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_i
 
 const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
 const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
+
+const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -228,6 +231,10 @@ export default function Router() {
           element={<FoodTplW10 templateId="FOOD_TPL_W10" />}
         />
         <Route
+          path="/frontier/project/FOOD_TPL_W11/:taskId/:questId"
+          element={<FoodTplW11 templateId="FOOD_TPL_W11" />}
+        />
+        <Route
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
         />
@@ -249,6 +256,10 @@ export default function Router() {
         />
         <Route
           path="/frontier/project/ROBOTICS_TPL_W10/:taskId/:questId"
+          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W10" />}
+        />
+        <Route
+          path="/frontier/project/ROBOTICS_TPL_W11/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W10" />}
         />
         <Route
@@ -328,6 +339,14 @@ export default function Router() {
           element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W10" />}
         />
         <Route
+          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W11/:taskId/:questId"
+          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W11" />}
+        />
+        <Route
+          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W11/:taskId/:questId"
+          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W11" />}
+        />
+        <Route
           path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId"
           element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
         />
@@ -367,9 +386,18 @@ export default function Router() {
           path="/frontier/project/HIGH_QUALITY_USER/:taskId"
           element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
         />
+
         <Route
           path="/frontier/project/HIGH_QUALITY_USER/:taskId/:questId"
           element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
+        />
+        <Route
+          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId"
+          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
+        />
+        <Route
+          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId"
+          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
         />
         <Route
           path="/frontier/project/FASHION_GENSMO/:taskId"
@@ -378,6 +406,11 @@ export default function Router() {
         <Route
           path="/frontier/project/FASHION_GENSMO/:taskId/:questId"
           element={<FashionGensmo templateId="FASHION_GENSMO" />}
+        />
+
+        <Route
+          path="/frontier/project/KITCHEN_TPL_W11/:taskId/:questId"
+          element={<KitchenAppData templateId="KITCHEN_TPL_W11" />}
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
