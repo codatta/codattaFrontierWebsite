@@ -36,7 +36,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
 
   const [rewardPoints, setRewardPoints] = useState(0)
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true)
-  const [isSubmited, setIsSubmited] = useState<boolean>(false)
+  // const [isSubmited, setIsSubmited] = useState<boolean>(false)
   const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(false)
   const [viewType, setViewType] = useState<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2'>('TASK2')
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
@@ -115,7 +115,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
         setIsHighQualityUser(isHighQualityUser)
         setViewType('ACCESS')
       } else {
-        setIsSubmited(true)
+        // setIsSubmited(true)
         handleResultStatus(lastSubmission?.status)
       }
     } catch (error) {
@@ -152,7 +152,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
             )}
           >
             {resultType &&
-              (isBnb || isSubmited ? (
+              (isBnb ? (
                 <Result type={resultType} onSubmitAgain={onSubmitAgain} />
               ) : (
                 <SubmitSuccessModal points={rewardPoints} open={true} onClose={onBack} />
