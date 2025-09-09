@@ -45,7 +45,7 @@ export default function ArenaForm({
     } else {
       const validCharsRegex = /^[a-zA-Z0-9\s.,?!;:'"()[\]{}\-_+=@#$%^&*<>/\\]+$/
       if (!validCharsRegex.test(formData.question)) {
-        newErrors.question = 'Question can only contain English characters, common punctuation, and numbers'
+        newErrors.question = 'Only English characters are allowed'
       }
     }
     if (formData.chat_gpt_4o.length === 0) {
@@ -93,7 +93,7 @@ export default function ArenaForm({
       if (!validCharsRegex.test(formData.question)) {
         setErrors((prev) => ({
           ...prev,
-          question: 'Only English characters and numbers are allowed'
+          question: 'Only English characters are allowed'
         }))
       }
     }
