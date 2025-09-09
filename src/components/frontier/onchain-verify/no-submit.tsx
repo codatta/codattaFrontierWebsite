@@ -16,10 +16,10 @@ export default function NoSubmit() {
           </div>
           <div className="flex items-start gap-3 text-[#BBBBBE]">
             <div className="w-[60px] shrink-0 rounded-full bg-[#875DFF]/10 text-center text-[#875DFF]">Step 2</div>
-            <p>Return to this page to verify your completion.</p>
+            <p>Return to this page to verify your completion after 24 hours.</p>
           </div>
         </div>
-        <div className="px-4 text-center">Return to this page to verify your completion.</div>
+        <div className="px-4 text-center">Please complete your deposit hot wallet data annotation task first.</div>
       </div>
     </>
   )
