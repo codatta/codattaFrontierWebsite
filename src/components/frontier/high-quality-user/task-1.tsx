@@ -2,6 +2,7 @@ import { Button, message, Popover, QRCode } from 'antd'
 import UserApi from '@/apis/user.api'
 import { useMemo, useState } from 'react'
 import { useCountdown } from '@/hooks/use-countdown'
+import { cn } from '@udecode/cn'
 
 export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobile: boolean }) {
   const [joinLoading, setJoinLoading] = useState(false)
@@ -15,6 +16,8 @@ export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobi
   }, [count])
 
   const handleJoinTelegram = async () => {
+    if (isCounting) return
+
     setJoinLoading(true)
 
     try {
@@ -71,31 +74,37 @@ export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobi
       </div>
 
       <div className="mt-8 space-y-6 md:flex md:items-center md:justify-center md:gap-6 md:space-y-0">
-        {!isMobile ? (
-          <Popover content={<QRCode value={link} bordered={false} />}>
-            <Button
-              type="primary"
-              loading={joinLoading}
-              disabled={joinLoading || verified || isCounting}
-              className="block h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-              onClick={handleJoinTelegram}
-            >
-              {isFirstJoin ? 'Join Now' : 'Try Again'}
-              {isCounting ? `(${count}s)` : ''}
-            </Button>
-          </Popover>
-        ) : (
+        <>
+          <div className="hidden md:block">
+            <Popover content={<QRCode value={link} bordered={false} />}>
+              <div>
+                <Button
+                  type="primary"
+                  loading={joinLoading}
+                  disabled={joinLoading || verified}
+                  className={cn(
+                    'h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal',
+                    isCounting ? 'cursor-not-allowed opacity-25' : ''
+                  )}
+                  onClick={handleJoinTelegram}
+                >
+                  {isFirstJoin ? 'Join Now' : 'Try Again'}
+                  {isCounting ? `(${count}s)` : ''}
+                </Button>
+              </div>
+            </Popover>
+          </div>
           <Button
             type="primary"
             loading={joinLoading}
             disabled={joinLoading || verified || isCounting}
-            className="block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+            className="block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:hidden md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
             onClick={handleJoinTelegram}
           >
             {isFirstJoin ? 'Join Now' : 'Try Again'}
             {isCounting ? `(${count}s)` : ''}
           </Button>
-        )}
+        </>
 
         {link &&
           (verified ? (
