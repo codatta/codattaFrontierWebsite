@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { useCountdown } from '@/hooks/use-countdown'
 import { cn } from '@udecode/cn'
 
-export default function Task1({ onNext, isMobile }: { onNext: () => void; isMobile: boolean }) {
+export default function Task1({ onNext }: { onNext: () => void; isMobile?: boolean }) {
   const [joinLoading, setJoinLoading] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [link, setLink] = useState('')
