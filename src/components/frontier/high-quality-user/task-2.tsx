@@ -42,6 +42,11 @@ export default function ArenaForm({
 
     if (!formData.question) {
       newErrors.question = 'Question is required'
+    } else {
+      const validCharsRegex = /^[a-zA-Z0-9\s.,?!;:'"()[\]{}\-_+=@#$%^&*<>/\\]+$/
+      if (!validCharsRegex.test(formData.question)) {
+        newErrors.question = 'Only English characters are allowed'
+      }
     }
     if (formData.chat_gpt_4o.length === 0) {
       newErrors.chat_gpt_4o = 'Please upload an image for ChatGPT-4o'
@@ -82,7 +87,17 @@ export default function ArenaForm({
         setErrors((prev) => ({ ...prev, qwen_3: undefined }))
       }
     }
-  }, [chat_gpt_4o_hash, qwen_3_hash])
+
+    if (formData.question && typeof formData.question === 'string') {
+      const validCharsRegex = /^[a-zA-Z0-9\s.,?!;:'"()[\]{}\-_+=@#$%^&*<>/\\]+$/
+      if (!validCharsRegex.test(formData.question)) {
+        setErrors((prev) => ({
+          ...prev,
+          question: 'Only English characters are allowed'
+        }))
+      }
+    }
+  }, [chat_gpt_4o_hash, qwen_3_hash, formData.question])
 
   const handleSubmit = async () => {
     if (!validateForm()) return
