@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { cn } from '@udecode/cn'
 
 import Input from './input'
@@ -24,6 +24,10 @@ export default function ArenaForm({
     chat_gpt_4o: [],
     qwen_3: []
   })
+  const [chat_gpt_4o_hash, qwen_3_hash] = useMemo(() => {
+    return [formData.chat_gpt_4o[0]?.hash, formData.qwen_3[0]?.hash]
+  }, [formData])
+
   const canSubmit = useMemo(() => {
     return (
       Object.values(errors).every((error) => !error) &&
@@ -33,7 +37,7 @@ export default function ArenaForm({
     )
   }, [errors, formData])
 
-  const validateForm = (): boolean => {
+  const validateForm = useCallback((): boolean => {
     const newErrors: Partial<Record<keyof FormData, string>> = {}
 
     if (!formData.question) {
@@ -44,11 +48,13 @@ export default function ArenaForm({
     }
     if (formData.qwen_3.length === 0) {
       newErrors.qwen_3 = 'Please upload an image for Qwen-3'
+    } else if (chat_gpt_4o_hash === qwen_3_hash) {
+      newErrors.qwen_3 = 'Qwen-3 image must be different from ChatGPT-4o image'
     }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
-  }
+  }, [formData, chat_gpt_4o_hash, qwen_3_hash])
   const resetForm = () => {
     setFormData({
       question: '',
@@ -67,6 +73,16 @@ export default function ArenaForm({
   useEffect(() => {
     resetForm()
   }, [resultType])
+
+  useEffect(() => {
+    if (qwen_3_hash) {
+      if (chat_gpt_4o_hash === qwen_3_hash) {
+        setErrors((prev) => ({ ...prev, qwen_3: 'Qwen-3 image must be different from ChatGPT-4o image' }))
+      } else {
+        setErrors((prev) => ({ ...prev, qwen_3: undefined }))
+      }
+    }
+  }, [chat_gpt_4o_hash, qwen_3_hash])
 
   const handleSubmit = async () => {
     if (!validateForm()) return
