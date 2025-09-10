@@ -3,6 +3,28 @@ import { Button, message, Spin } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 import PageHeader from './page-header'
+import { cn } from '@udecode/cn'
+
+function SubmissionResultLevel({ result }: { result: 'S' | 'A' | 'B' | 'C' | 'D' }) {
+  const resultColorMap = {
+    S: 'bg-[#E7B231]',
+    A: 'bg-[#54F0B7]',
+    B: 'bg-[#5CB0FF]',
+    C: 'bg-[#F0A254]',
+    D: 'bg-[#F07354]'
+  }
+
+  return (
+    <div
+      className={cn(
+        'flex size-8 items-center justify-center rounded-full font-bold text-black',
+        resultColorMap[result]
+      )}
+    >
+      {result}
+    </div>
+  )
+}
 
 export default function TaskSelect(props: { taskData: TaskDetail; onSelect: () => void }) {
   const { taskData } = props
@@ -62,7 +84,9 @@ export default function TaskSelect(props: { taskData: TaskDetail; onSelect: () =
           </div>
           <div>
             <h3 className="mb-1 font-bold">Quality</h3>
-            <p className="text-[#BBBBBE]">{taskData.result}</p>
+            <p className="text-[#BBBBBE]">
+              <SubmissionResultLevel result={taskData.result} />
+            </p>
           </div>
         </div>
         <div className="mb-4 flex flex-col gap-2 rounded-xl bg-[#252532] p-4">

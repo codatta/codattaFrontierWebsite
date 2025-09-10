@@ -143,7 +143,7 @@ export default function ValidationForm(props: {
           {/* JSON Input Area */}
           <div className="relative">
             <textarea
-              className={`w-full rounded-lg bg-white/5 p-4 text-white placeholder-gray-400 focus:outline-none focus:ring-2 ${
+              className={`w-full rounded-lg bg-white/5 p-4 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 ${
                 jsonError ? 'border-red-500 focus:ring-red-500' : 'focus:ring-purple-500'
               }`}
               rows={8}
