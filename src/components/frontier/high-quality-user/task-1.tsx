@@ -1,6 +1,7 @@
 import { Button, message, Popover, QRCode } from 'antd'
 import UserApi from '@/apis/user.api'
 import { useMemo, useState } from 'react'
+import CopyToClipboard from 'react-copy-to-clipboard'
 import { useCountdown } from '@/hooks/use-countdown'
 import { cn } from '@udecode/cn'
 
@@ -35,6 +36,12 @@ export default function Task1({ onNext }: { onNext: () => void; isMobile?: boole
     } finally {
       setJoinLoading(false)
     }
+  }
+
+  const onCopied = () => {
+    message.success({
+      content: 'Telegram group invite link copied to clipboard!'
+    })
   }
 
   const handleVerifyTelegram = async () => {
@@ -94,16 +101,35 @@ export default function Task1({ onNext }: { onNext: () => void; isMobile?: boole
               </div>
             </Popover>
           </div>
-          <Button
-            type="primary"
-            loading={joinLoading}
-            disabled={joinLoading || verified || isCounting}
-            className="block h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:hidden md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-            onClick={handleJoinTelegram}
-          >
-            {isFirstJoin ? 'Join Now' : 'Try Again'}
-            {isCounting ? `(${count}s)` : ''}
-          </Button>
+          <div className="block md:hidden">
+            <Button
+              type="primary"
+              loading={joinLoading}
+              disabled={joinLoading || verified || isCounting}
+              className="h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+              onClick={handleJoinTelegram}
+            >
+              {isFirstJoin ? 'Join Now' : 'Try Again'}
+              {isCounting ? `(${count}s)` : ''}
+            </Button>
+            {link && (
+              <>
+                <p className="mt-2 text-center text-base text-[#BBBBBE]">Or</p>
+                <CopyToClipboard text={link} onCopy={onCopied}>
+                  <Button
+                    type="primary"
+                    className="mt-3 h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+                  >
+                    Copy Invite Link
+                  </Button>
+                </CopyToClipboard>
+                <p className="mt-2 text-center text-base text-[#BBBBBE]">
+                  If <span className="font-bold text-white">Join Now</span> doesn't work, click the button above to copy
+                  the group invite link and open it in your browser.
+                </p>
+              </>
+            )}
+          </div>
         </>
 
         {link &&
