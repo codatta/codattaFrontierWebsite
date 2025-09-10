@@ -58,7 +58,7 @@ export default function TaskSelect(props: { taskData: TaskDetail; onSelect: () =
 
           <div>
             <h3 className="mb-1 font-bold">Frontier</h3>
-            <p className="text-[#BBBBBE]">Food Science</p>
+            <p className="text-[#BBBBBE]">CEX Hot Wallet</p>
           </div>
           <div>
             <h3 className="mb-1 font-bold">Quality</h3>
