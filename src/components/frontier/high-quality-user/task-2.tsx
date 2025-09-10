@@ -167,7 +167,7 @@ export default function ArenaForm({
         </div>
       </div>
       <Button
-        text={`Task Completed`}
+        text={`Submit`}
         onClick={handleSubmit}
         className={cn(
           'mt-5 w-full rounded-full bg-primary px-4 text-base font-bold leading-[44px] text-white md:mx-auto md:mt-[60px] md:w-[240px] md:text-sm md:font-normal',
