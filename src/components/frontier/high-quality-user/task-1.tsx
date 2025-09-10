@@ -105,17 +105,18 @@ export default function Task1({ onNext }: { onNext: () => void; isMobile?: boole
             </Popover>
           </div>
           <div className="block md:hidden">
-            <Button
-              type="primary"
-              loading={joinLoading}
-              disabled={joinLoading || verified || isCounting}
-              className="h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-              onClick={handleJoinTelegram}
-            >
-              {isFirstJoin ? 'Join Now' : 'Try Again'}
-              {isCounting ? `(${count}s)` : ''}
-            </Button>
-            {link && (
+            {!link ? (
+              <Button
+                type="primary"
+                loading={joinLoading}
+                disabled={joinLoading || verified || isCounting}
+                className="h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
+                onClick={handleJoinTelegram}
+              >
+                {isFirstJoin ? 'Join Now' : 'Try Again'}
+                {isCounting ? `(${count}s)` : ''}
+              </Button>
+            ) : (
               <div className="mt-4 rounded-xl bg-[#252532] p-4">
                 <CopyToClipboard text={link} onCopy={onCopied}>
                   <div className="flex items-center justify-between gap-3 rounded-xl border border-[#FFFFFF1F] px-4 py-3">
