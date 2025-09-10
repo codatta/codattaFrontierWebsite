@@ -17,6 +17,7 @@ import type { ResultType } from '@/components/frontier/high-quality-user/types'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
 import userApi from '@/apis/user.api'
+import { useSessionStorage } from '@uidotdev/usehooks'
 
 async function getLastSubmission(frontierId: string, taskIds: string) {
   const res = await frontiterApi.getSubmissionList({
@@ -38,7 +39,10 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true)
   // const [isSubmited, setIsSubmited] = useState<boolean>(false)
   const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(false)
-  const [viewType, setViewType] = useState<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2'>('TASK2')
+  const [viewType, setViewType] = useSessionStorage<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2' | ''>(
+    'high_quality_user_state',
+    ''
+  )
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
   const title = useMemo(() => {
     if (viewType === 'ACCESS') return isHighQualityUser ? ' Access Granted' : 'Access Denied'
@@ -74,6 +78,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
       }
 
       message.success('Submitted successfully!').then(() => {
+        setViewType('')
         handleResultStatus(resultData?.status)
       })
     } catch (error) {
@@ -113,7 +118,10 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
       if (!lastSubmission) {
         const isHighQualityUser = await userApi.isHighQualityUser()
         setIsHighQualityUser(isHighQualityUser)
-        setViewType('ACCESS')
+
+        if (!viewType) {
+          setViewType('ACCESS')
+        }
       } else {
         // setIsSubmited(true)
         handleResultStatus(lastSubmission?.status)
@@ -131,7 +139,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
     } finally {
       setIsPageLoading(false)
     }
-  }, [taskId, templateId, isBnb])
+  }, [taskId, templateId, isBnb, viewType])
 
   const onBack = () => {
     window.history.back()
@@ -140,6 +148,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
   useEffect(() => {
     checkTaskStatus()
   }, [checkTaskStatus])
+
   return (
     <AuthChecker>
       <Spin spinning={isPageLoading} className="min-h-screen">
@@ -162,7 +171,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
                 {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('TASK1')} />}
                 {viewType === 'TASK1' && <Task1 onNext={() => setViewType('TASK_READ')} isMobile={isMobile} />}
                 {viewType === 'TASK_READ' && <TaskRead onNext={() => setViewType('TASK2')} />}
-                {viewType === 'TASK2' && <Task2 onNext={handleSubmit} isMobile={isMobile} />}
+                {(viewType === 'TASK2' || !viewType) && <Task2 onNext={handleSubmit} isMobile={isMobile} />}
               </>
             )}
           </div>
