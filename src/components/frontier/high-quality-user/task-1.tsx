@@ -1,14 +1,17 @@
 import { Button, message, Popover, QRCode } from 'antd'
-import UserApi from '@/apis/user.api'
+import { Copy, Link } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import CopyToClipboard from 'react-copy-to-clipboard'
-import { useCountdown } from '@/hooks/use-countdown'
 import { cn } from '@udecode/cn'
+import { useSessionStorage } from '@uidotdev/usehooks'
+import CopyToClipboard from 'react-copy-to-clipboard'
+
+import { useCountdown } from '@/hooks/use-countdown'
+import UserApi from '@/apis/user.api'
 
 export default function Task1({ onNext }: { onNext: () => void; isMobile?: boolean }) {
   const [joinLoading, setJoinLoading] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
-  const [link, setLink] = useState('')
+  const [link, setLink] = useSessionStorage('tg_group_invite_link', '')
   const [verified, setVerified] = useState(false)
   const [count, _, restart] = useCountdown(30, null, false)
   const [isFirstJoin, setisFirstJoin] = useState(true)
@@ -113,21 +116,21 @@ export default function Task1({ onNext }: { onNext: () => void; isMobile?: boole
               {isCounting ? `(${count}s)` : ''}
             </Button>
             {link && (
-              <>
-                <p className="mt-2 text-center text-base text-[#BBBBBE]">Or</p>
+              <div className="mt-4 rounded-xl bg-[#252532] p-4">
                 <CopyToClipboard text={link} onCopy={onCopied}>
-                  <Button
-                    type="primary"
-                    className="mt-3 h-[44px] w-full rounded-full text-base font-bold md:h-[40px] md:w-[240px] md:text-sm md:font-normal"
-                  >
-                    Copy Invite Link
-                  </Button>
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-[#FFFFFF1F] px-4 py-3">
+                    <div className="flex flex-1 items-center gap-2 overflow-hidden text-base font-bold text-[#875DFF]">
+                      <Link className="size-6 text-[#875DFF]" />
+                      <span className="overflow-hidden text-ellipsis">{link}</span>
+                    </div>
+                    <Copy className="size-6 text-white" />
+                  </div>
                 </CopyToClipboard>
                 <p className="mt-2 text-center text-base text-[#BBBBBE]">
-                  If <span className="font-bold text-white">Join Now</span> doesn't work, click the button above to copy
-                  the group invite link and open it in your browser.
+                  If <span className="font-bold text-white">Join Now</span> doesn't work, copy the invite link above and
+                  open it in your browser.
                 </p>
-              </>
+              </div>
             )}
           </div>
         </>
