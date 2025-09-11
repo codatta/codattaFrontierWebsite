@@ -32,7 +32,7 @@ export default function Read({ onNext }: { onNext: () => void }) {
   ]
 
   return (
-    <>
+    <div className="md:mt-[80px] md:bg-[#252532]">
       <h2 className="mt-4 text-center text-2xl font-bold md:mt-6">Find the AI's Mistake</h2>
       <div className="mt-4 rounded-xl bg-[#252532] px-4 py-[10px] text-center text-base md:mt-6 md:border md:border-[#FFFFFF1F] md:px-3 md:py-[22px]">
         Discover a question that LLM Model answers incorrectly. Earn rewards for finding factual errors in AI models!
@@ -55,6 +55,6 @@ export default function Read({ onNext }: { onNext: () => void }) {
       >
         I Understand{!canSubmit ? `(${count}s)` : ''}
       </Button>
-    </>
+    </div>
   )
 }

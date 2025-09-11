@@ -1,3 +1,153 @@
-export default function HighQualityUserV2Task1({ templateId }: { templateId: string }) {
-  return <div></div>
+import { message, Modal, Spin } from 'antd'
+import { cn } from '@udecode/cn'
+import { useCallback, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+
+import AuthChecker from '@/components/app/auth-checker'
+import Header from '@/components/frontier/high-quality-user/v2/header'
+import Task from '@/components/frontier/high-quality-user/v2/task-1'
+import Result from '@/components/frontier/high-quality-user/v2/result'
+import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
+import { ResultType } from '@/components/frontier/high-quality-user/v2/types'
+
+import { useIsMobile } from '@/hooks/use-is-mobile'
+import frontiterApi from '@/apis/frontiter.api'
+import userApi from '@/apis/user.api'
+
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
+  const lastSubmission = res.data[0]
+  return lastSubmission
 }
+
+export default function HighQualityUserV2Task1({ templateId }: { templateId: string }) {
+  const { taskId, questId = '' } = useParams()
+  const isBnb = questId?.toLocaleUpperCase().includes('TASK')
+  const isMobile = useIsMobile()
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
+  const [rewardPoints, setRewardPoints] = useState(0)
+
+  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
+
+  const handleResultStatus = (status: string = '') => {
+    status = status.toLocaleUpperCase()
+    if (['PENDING', 'SUBMITTED'].includes(status)) {
+      setResultType('PENDING')
+    } else if (status === 'REFUSED') {
+      setResultType('REJECT')
+    } else if (status === 'ADOPT') {
+      setResultType('ADOPT')
+    }
+  }
+
+  function onSubmitAgain() {
+    setResultType(null)
+  }
+
+  const onBack = () => {
+    window.history.back()
+  }
+
+  const handleSubmit = async (formData: unknown): Promise<boolean> => {
+    try {
+      const res = await frontiterApi.submitTask(taskId!, {
+        templateId: templateId,
+        taskId: taskId,
+        data: Object.assign({ source: isBnb ? 'binance' : 'codatta' }, formData)
+      })
+
+      const resultData = res.data as unknown as {
+        status: ResultType
+      }
+
+      message.success('Submitted successfully!').then(() => {
+        handleResultStatus(resultData?.status)
+      })
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to submit!')
+      return false
+    }
+    return true
+  }
+
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setIsPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+      if (taskDetail.data.data_display.template_id !== templateId) {
+        message.error('Template not match!')
+        return
+      }
+
+      const totalRewards = taskDetail.data.reward_info
+        .filter((item) => {
+          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+        })
+        .reduce((acc, cur) => {
+          return acc + cur.reward_value
+        }, 0)
+
+      setRewardPoints(totalRewards)
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
+
+      if (lastSubmission) {
+        handleResultStatus(lastSubmission?.status)
+      }
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setIsPageLoading(false)
+    }
+  }, [taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
+
+  return (
+    <AuthChecker>
+      <Spin spinning={isPageLoading} className="min-h-screen">
+        <div className="relative min-h-screen overflow-hidden md:pb-12">
+          <Header title="Join in Codatta Webapp" />
+          <div
+            className={cn(
+              'mx-auto max-w-[600px] px-6 pb-6 text-sm leading-[22px] text-white md:mt-[80px] md:rounded-2xl md:bg-[#252532] md:px-10 md:py-[48px] md:pb-12'
+            )}
+          >
+            {resultType ? (
+              isBnb ? (
+                <Result type={resultType} onSubmitAgain={onSubmitAgain} />
+              ) : (
+                <SubmitSuccessModal points={rewardPoints} open={true} onClose={onBack} />
+              )
+            ) : (
+              <Task onNext={handleSubmit} isMobile={isMobile} />
+            )}
+          </div>
+        </div>
+      </Spin>
+    </AuthChecker>
+  )
+}
+
+// http://localhost:5175/frontier/project/HIGH_QUALITY_USER_TASK1/8503403681300101316/task-12-qualitya1time

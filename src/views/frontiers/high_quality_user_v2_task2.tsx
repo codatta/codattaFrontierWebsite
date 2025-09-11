@@ -29,7 +29,7 @@ async function getLastSubmission(frontierId: string, taskIds: string) {
 
 export default function HighQualityUserV2Task2({ templateId }: { templateId: string }) {
   const { taskId, questId = '' } = useParams()
-  const isBnb = templateId.toLocaleUpperCase().includes('TASK')
+  const isBnb = questId?.toLocaleUpperCase().includes('TASK')
   const isMobile = useIsMobile()
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
   const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(true)
@@ -146,8 +146,8 @@ export default function HighQualityUserV2Task2({ templateId }: { templateId: str
           <Header title={title} />
           <div
             className={cn(
-              'mx-auto max-w-[600px] px-6 text-sm leading-[22px] text-white md:max-w-[1272px] md:rounded-2xl md:bg-[#252532] md:px-10 md:pb-12 md:pt-6',
-              viewType === 'TASK' && 'md:bg-transparent'
+              'mx-auto max-w-[600px] px-6 text-sm leading-[22px] text-white md:mt-[80px] md:rounded-2xl md:bg-[#252532] md:px-10 md:pb-12 md:pt-6',
+              viewType === 'TASK' && 'md:mt-12 md:max-w-[1272px] md:bg-transparent'
             )}
           >
             {resultType &&
