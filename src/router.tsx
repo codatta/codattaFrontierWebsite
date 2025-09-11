@@ -84,6 +84,8 @@ const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_i
 
 const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
 const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
+const HighQualityUserV2Task1 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task1'))
+const HighQualityUserV2Task2 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task2'))
 
 const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
@@ -390,6 +392,22 @@ export default function Router() {
         <Route
           path="/frontier/project/HIGH_QUALITY_USER/:taskId/:questId"
           element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER_TASK1/:taskId"
+          element={<HighQualityUserV2Task1 templateId="HIGH_QUALITY_USER_TASK1" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER_TASK1/:taskId/:questId"
+          element={<HighQualityUserV2Task1 templateId="HIGH_QUALITY_USER_TASK1" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId"
+          element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId/:questId"
+          element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
         />
         <Route
           path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId"
