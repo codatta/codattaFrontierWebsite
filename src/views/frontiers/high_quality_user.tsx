@@ -31,7 +31,7 @@ async function getLastSubmission(frontierId: string, taskIds: string) {
 }
 
 export default function HighQualityUser({ templateId }: { templateId: string }) {
-  const { taskId, questId } = useParams()
+  const { taskId, questId = '' } = useParams()
   const isMobile = useIsMobile()
   const isBnb = questId?.toLocaleUpperCase().includes('TASK')
 
@@ -139,7 +139,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
     } finally {
       setIsPageLoading(false)
     }
-  }, [taskId, templateId, isBnb, viewType])
+  }, [taskId, templateId, viewType, setViewType])
 
   const onBack = () => {
     window.history.back()

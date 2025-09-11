@@ -1,7 +1,7 @@
-import { Spin } from 'antd'
-import { useMemo, useState } from 'react'
+import { message, Modal, Spin } from 'antd'
 import { cn } from '@udecode/cn'
-import { useSessionStorage } from '@uidotdev/usehooks'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/v2/header'
@@ -12,8 +12,23 @@ import Result from '@/components/frontier/high-quality-user/v2/result'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
+import frontiterApi from '@/apis/frontiter.api'
+import { ResultType } from '@/components/frontier/high-quality-user/v2/types'
+import userApi from '@/apis/user.api'
+
+async function getLastSubmission(frontierId: string, taskIds: string) {
+  const res = await frontiterApi.getSubmissionList({
+    page_num: 1,
+    page_size: 1,
+    frontier_id: frontierId,
+    task_ids: taskIds
+  })
+  const lastSubmission = res.data[0]
+  return lastSubmission
+}
 
 export default function HighQualityUserV2Task2({ templateId }: { templateId: string }) {
+  const { taskId, questId = '' } = useParams()
   const isBnb = templateId.toLocaleUpperCase().includes('TASK')
   const isMobile = useIsMobile()
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
@@ -29,17 +44,100 @@ export default function HighQualityUserV2Task2({ templateId }: { templateId: str
     return "Find the AI's Mistake"
   }, [isHighQualityUser, viewType])
 
-  function onSubmitAgain(): void {
-    throw new Error('Function not implemented.')
+  const handleResultStatus = (status: string = '') => {
+    status = status.toLocaleUpperCase()
+    if (['PENDING', 'SUBMITTED'].includes(status)) {
+      setResultType('PENDING')
+    } else if (status === 'REFUSED') {
+      setResultType('REJECT')
+    } else if (status === 'ADOPT') {
+      setResultType('ADOPT')
+    }
   }
 
-  function onBack(): void {
-    throw new Error('Function not implemented.')
+  function onSubmitAgain() {
+    setResultType(null)
+  }
+
+  const onBack = () => {
+    window.history.back()
   }
 
   const handleSubmit = async (formData: unknown): Promise<boolean> => {
-    throw new Error('Function not implemented.')
+    try {
+      const res = await frontiterApi.submitTask(taskId!, {
+        templateId: templateId,
+        taskId: taskId,
+        data: Object.assign({ source: isBnb ? 'binance' : 'codatta' }, formData)
+      })
+
+      const resultData = res.data as unknown as {
+        status: ResultType
+      }
+
+      message.success('Submitted successfully!').then(() => {
+        handleResultStatus(resultData?.status)
+      })
+    } catch (error) {
+      message.error(error.message ? error.message : 'Failed to submit!')
+      return false
+    }
+    return true
   }
+
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setIsPageLoading(true)
+
+    try {
+      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
+      if (taskDetail.data.data_display.template_id !== templateId) {
+        message.error('Template not match!')
+        return
+      }
+
+      const totalRewards = taskDetail.data.reward_info
+        .filter((item) => {
+          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+        })
+        .reduce((acc, cur) => {
+          return acc + cur.reward_value
+        }, 0)
+
+      setRewardPoints(totalRewards)
+
+      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
+
+      if (!lastSubmission) {
+        const isHighQualityUser = await userApi.isHighQualityUser()
+        setIsHighQualityUser(isHighQualityUser)
+
+        setViewType('ACCESS')
+      } else {
+        handleResultStatus(lastSubmission?.status)
+      }
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setIsPageLoading(false)
+    }
+  }, [taskId, templateId, setViewType])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   return (
     <AuthChecker>
