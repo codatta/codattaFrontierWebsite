@@ -12,7 +12,7 @@ import { ResultType } from '@/components/frontier/high-quality-user/v2/types'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
-import userApi from '@/apis/user.api'
+// import userApi from '@/apis/user.api'
 
 async function getLastSubmission(frontierId: string, taskIds: string) {
   const res = await frontiterApi.getSubmissionList({
