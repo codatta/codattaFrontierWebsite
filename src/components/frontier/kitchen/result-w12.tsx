@@ -21,7 +21,15 @@ const ResultMap: Record<ResultType, ResultMap> = {
   ADOPT: {
     Icon: ApprovedIcon,
     title: <div>🎉 Submission Successful!</div>,
-    description: <>To receive your reward, please verify the task on the Binance Wallet campaign page.</>
+    description: <>To receive your reward, please verify the task on the Binance Wallet campaign page.</>,
+    extra: (
+      <div className="mt-6 rounded-xl bg-[#252532] p-4 text-base font-bold">
+        Earn more $XNY tokens by joining exclusive campaigns on our desktop site:{' '}
+        <a target="_blank" href="https://app.codatta.io" rel="noreferrer" className="font-normal text-[#875DFF]">
+          https://app.codatta.io
+        </a>
+      </div>
+    )
   },
   PENDING: {
     Icon: PendingIcon,
@@ -48,6 +56,7 @@ function MobileView({ type, onSubmitAgain }: { type: ResultType; onSubmitAgain: 
       <result.Icon className="mx-auto mt-[80px] block" />
       <h2 className="mt-8 text-2xl font-bold">{result.title}</h2>
       <p className="mt-6 text-base text-[#BBBBBE]">{result.description}</p>
+      {result.extra}
       {type === 'REJECT' ? (
         <Button className="mt-6 min-w-[120px] bg-white !px-6 text-black" onClick={onSubmitAgain} text="Submit Again" />
       ) : null}

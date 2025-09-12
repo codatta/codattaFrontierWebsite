@@ -1,14 +1,16 @@
+import { useEffect, useState } from 'react'
+import { message, Spin } from 'antd'
+import { useParams } from 'react-router-dom'
+
 import AuthChecker from '@/components/app/auth-checker'
 import ValidationForm from '@/components/frontier/onchain-verify/validation-form'
 import TaskSelect from '@/components/frontier/onchain-verify/task-select'
 import TaskDataVerify from '@/components/frontier/onchain-verify/task-data-verify'
 import NoSubmit from '@/components/frontier/onchain-verify/no-submit'
-import { useEffect, useState } from 'react'
-import { message, Spin } from 'antd'
-import { useParams } from 'react-router-dom'
+import TaskComplete from '@/components/frontier/onchain-verify/task-complete'
+
 import frontiterApi, { TaskDetail } from '@/apis/frontiter.api'
 import boosterApi from '@/apis/booster.api'
-import TaskComplete from '@/components/frontier/onchain-verify/task-complete'
 
 type TStep = 'task-select' | 'data-submit' | 'data-verify' | 'no-submit' | 'task-complete'
 
