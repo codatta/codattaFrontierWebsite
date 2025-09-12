@@ -14,6 +14,7 @@ interface ResultMap {
   Icon: React.ComponentType<IconProps>
   title: JSX.Element
   description: JSX.Element
+  extra?: JSX.Element
 }
 
 const ResultMap: Record<ResultType, ResultMap> = {
