@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { message, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 
@@ -24,19 +24,28 @@ export interface ValidationFormData {
   submissionId: string
 }
 
-export default function (_props: { templateId: string }) {
+export default function OnchainVerify(_props: { templateId: string }) {
   const [step, setStep] = useState<TStep>()
   const [loading, setLoading] = useState(false)
   const { taskId, questId } = useParams()
   const [taskData, setTaskData] = useState<TaskDetail>()
   const [verifyData, setVerifyData] = useState<ValidationFormData>()
 
-  async function getTaskData(taskId: string) {
+  const taskIds = useMemo(() => {
+    if (!taskId) return []
+    if (questId === 'task-11-fingerprint-quiz') {
+      return [taskId, '8495393491800107878']
+    } else {
+      return [taskId]
+    }
+  }, [taskId, questId])
+
+  async function getTaskData(taskIdsArray: string[], questId: string) {
     setLoading(true)
     try {
       const [submissionData, taskInfo] = await Promise.all([
         frontiterApi.getSubmissionList({
-          task_ids: taskId,
+          task_ids: taskIdsArray.join(','),
           page_num: 1,
           page_size: 5
         }),
@@ -61,9 +70,9 @@ export default function (_props: { templateId: string }) {
   }
 
   useEffect(() => {
-    if (!taskId) return
-    getTaskData(taskId)
-  }, [taskId])
+    if (!taskIds || taskIds.length === 0) return
+    getTaskData(taskIds, questId!)
+  }, [taskIds, questId])
 
   return (
     <AuthChecker>
