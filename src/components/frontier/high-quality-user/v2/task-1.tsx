@@ -5,13 +5,8 @@ import { useEffect, useMemo } from 'react'
 
 import { useUserStore, userStoreActions } from '@/stores/user.store'
 
-export default function Task1({
-  onNext,
-  isMobile
-}: {
-  isMobile: boolean
-  onNext: (data: unknown) => Promise<boolean>
-}) {
+// eslint-disable-next-line prettier/prettier
+export default function Task1({ onNext, isMobile }: { isMobile: boolean; onNext: (data: { email: string }) => Promise<boolean> }) {
   const { info } = useUserStore()
   const email = useMemo(() => info?.accounts_data?.find((account) => account.account_type === 'email')?.account, [info])
   const link = `${window.location.protocol}//${window.location.host}/app/settings/personal`
