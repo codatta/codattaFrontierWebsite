@@ -6,68 +6,26 @@ import { useParams } from 'react-router-dom'
 import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/v2/header'
 import Task from '@/components/frontier/high-quality-user/v2/task-1'
-import Result from '@/components/frontier/high-quality-user/v2/result'
-import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
-import { ResultType } from '@/components/frontier/high-quality-user/v2/types'
+import TaskComplete from '@/components/frontier/high-quality-user/v2/task-complete'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
-import frontiterApi from '@/apis/frontiter.api'
-// import userApi from '@/apis/user.api'
-
-async function getLastSubmission(frontierId: string, taskIds: string) {
-  const res = await frontiterApi.getSubmissionList({
-    page_num: 1,
-    page_size: 1,
-    frontier_id: frontierId,
-    task_ids: taskIds
-  })
-  const lastSubmission = res.data[0]
-  return lastSubmission
-}
+import boosterApi from '@/apis/booster.api'
 
 export default function HighQualityUserV2Task1({ templateId }: { templateId: string }) {
-  const { taskId, questId = '' } = useParams()
-  const isBnb = questId?.toLocaleUpperCase().includes('TASK')
+  const { questId = '' } = useParams()
   const isMobile = useIsMobile()
   const [isPageLoading, setIsPageLoading] = useState<boolean>(false)
-  const [rewardPoints, setRewardPoints] = useState(0)
 
-  const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
-
-  const handleResultStatus = (status: string = '') => {
-    status = status.toLocaleUpperCase()
-    if (['PENDING', 'SUBMITTED'].includes(status)) {
-      setResultType('PENDING')
-    } else if (status === 'REFUSED') {
-      setResultType('REJECT')
-    } else if (status === 'ADOPT') {
-      setResultType('ADOPT')
-    }
-  }
-
-  function onSubmitAgain() {
-    setResultType(null)
-  }
-
-  const onBack = () => {
-    window.history.back()
-  }
+  const [view, setView] = useState<'task-form' | 'task-complete'>('task-form')
 
   const handleSubmit = async (formData: unknown): Promise<boolean> => {
     try {
-      const res = await frontiterApi.submitTask(taskId!, {
-        templateId: templateId,
-        taskId: taskId,
-        data: Object.assign({ source: isBnb ? 'binance' : 'codatta' }, formData)
-      })
-
-      const resultData = res.data as unknown as {
-        status: ResultType
+      const res = await boosterApi.submitTask(questId!, JSON.stringify(formData))
+      if (res.data?.status === 1) {
+        setView('task-complete')
+      } else {
+        message.error(res.data?.info || 'Failed to submit!')
       }
-
-      message.success('Submitted successfully!').then(() => {
-        handleResultStatus(resultData?.status)
-      })
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit!')
       return false
@@ -76,7 +34,7 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
   }
 
   const checkTaskStatus = useCallback(async () => {
-    if (!taskId || !templateId) {
+    if (!questId || !templateId) {
       message.error('Task ID or template ID is required!')
       return
     }
@@ -84,26 +42,9 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
     setIsPageLoading(true)
 
     try {
-      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
-      if (taskDetail.data.data_display.template_id !== templateId) {
-        message.error('Template not match!')
-        return
-      }
-
-      const totalRewards = taskDetail.data.reward_info
-        .filter((item) => {
-          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
-        })
-        .reduce((acc, cur) => {
-          return acc + cur.reward_value
-        }, 0)
-
-      setRewardPoints(totalRewards)
-
-      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
-
-      if (lastSubmission) {
-        handleResultStatus(lastSubmission?.status)
+      const taskInfo = await boosterApi.getTaskInfo(questId!)
+      if (taskInfo.data?.status === 2) {
+        setView('task-complete')
       }
     } catch (error) {
       Modal.error({
@@ -118,7 +59,7 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
     } finally {
       setIsPageLoading(false)
     }
-  }, [taskId, templateId])
+  }, [questId, templateId])
 
   useEffect(() => {
     checkTaskStatus()
@@ -127,27 +68,23 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
   return (
     <AuthChecker>
       <Spin spinning={isPageLoading} className="min-h-screen">
-        <div className="relative min-h-screen overflow-hidden md:pb-12">
-          <Header title="Join in Codatta Webapp" />
-          <div
-            className={cn(
-              'mx-auto max-w-[600px] px-6 pb-6 text-sm leading-[22px] text-white md:mt-[80px] md:rounded-2xl md:bg-[#252532] md:px-10 md:py-[48px] md:pb-12'
-            )}
-          >
-            {resultType ? (
-              isBnb ? (
-                <Result type={resultType} onSubmitAgain={onSubmitAgain} />
-              ) : (
-                <SubmitSuccessModal points={rewardPoints} open={true} onClose={onBack} />
-              )
-            ) : (
+        {view === 'task-complete' ? (
+          <TaskComplete title="Join in Codatta Webapp" />
+        ) : (
+          <div className="relative min-h-screen overflow-hidden md:pb-12">
+            <Header title="Join in Codatta Webapp" />
+            <div
+              className={cn(
+                'mx-auto max-w-[600px] px-6 pb-6 text-sm leading-[22px] text-white md:mt-[80px] md:rounded-2xl md:bg-[#252532] md:px-10 md:py-[48px] md:pb-12'
+              )}
+            >
               <Task onNext={handleSubmit} isMobile={isMobile} />
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </Spin>
     </AuthChecker>
   )
 }
 
-// http://localhost:5175/frontier/project/HIGH_QUALITY_USER_TASK1/8503403681300101316/task-12-qualitya1time
+// http://localhost:5175/frontier/project/HIGH_QUALITY_USER_TASK1/task-12-email-quiz

@@ -422,11 +422,7 @@ export default function Router() {
           element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
         />
         <Route
-          path="/frontier/project/HIGH_QUALITY_USER_TASK1/:taskId"
-          element={<HighQualityUserV2Task1 templateId="HIGH_QUALITY_USER_TASK1" />}
-        />
-        <Route
-          path="/frontier/project/HIGH_QUALITY_USER_TASK1/:taskId/:questId"
+          path="/frontier/project/HIGH_QUALITY_USER_TASK1/:questId"
           element={<HighQualityUserV2Task1 templateId="HIGH_QUALITY_USER_TASK1" />}
         />
         <Route
