@@ -325,8 +325,9 @@ class UserApi {
     return data.data.quality_type === 1
   }
 
-  async getTgGroupInviteLink() {
-    const { data } = await request.get<Response<{ link: string }>>('/v2/h5/tg/group/link')
+  async getTgGroupInviteLink(group_type: string = '') {
+    // codatta | ''
+    const { data } = await request.get<Response<{ link: string }>>('/v2/h5/tg/group/link', { params: { group_type } })
     return data.data
   }
 
