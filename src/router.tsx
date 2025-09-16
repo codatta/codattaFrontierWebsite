@@ -90,6 +90,7 @@ const KitchenAppDataW12 = lazy(() => import('@/views/frontiers/kitchen_app_data_
 const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
 const HighQualityUserV2Task1 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task1'))
 const HighQualityUserV2Task2 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task2'))
+const HighQualityUserV2Task3 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task3'))
 
 const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
@@ -432,6 +433,10 @@ export default function Router() {
         <Route
           path="/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId/:questId"
           element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
+        />
+        <Route
+          path="/frontier/project/HIGH_QUALITY_USER_TASK3/:questId"
+          element={<HighQualityUserV2Task3 templateId="HIGH_QUALITY_USER_TASK3" />}
         />
         <Route
           path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId"
