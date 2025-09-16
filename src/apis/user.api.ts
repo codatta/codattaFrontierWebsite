@@ -331,8 +331,8 @@ class UserApi {
     return data.data
   }
 
-  async isJoinedTgGroup(): Promise<boolean> {
-    const { data } = await request.get<Response<{ flag: number }>>('/v2/h5/tg/group/status')
+  async isJoinedTgGroup(group_type: string = ''): Promise<boolean> {
+    const { data } = await request.get<Response<{ flag: number }>>('/v2/h5/tg/group/status', { params: { group_type } })
     return data.data.flag === 1
   }
   async getVerificationCode({ account_type, email, opt }: { account_type?: string; email?: string; opt?: string }) {
