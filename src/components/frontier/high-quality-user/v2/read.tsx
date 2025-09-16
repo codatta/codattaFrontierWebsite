@@ -23,6 +23,7 @@ export default function Read({ onNext }: { onNext: () => void }) {
             🏆 S-Grade Bonus: Claim your <span className="text-[#FFA800]">extra xny reward</span> on Codatta within 15
             days!
           </p>
+          <p className="mt-2">📧 Email Notification: Reward notices will be sent via your linked email address.</p>
           <p className="mt-2">
             🔓 Premium Access: Unlock future high-value tasks with greater rewards on Codatta WebApp!
           </p>
