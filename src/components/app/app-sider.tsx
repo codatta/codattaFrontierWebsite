@@ -112,11 +112,6 @@ const menuItems: MenuItem[] = [
     label: 'Home',
     key: '/app'
   },
-  // {
-  //   icon: <IconJourney color={'white'} size={24} />,
-  //   key: '/app/journey',
-  //   label: 'New Journey'
-  // },
   {
     icon: <IconQuest color={'white'} size={24} />,
     key: '/app/quest',

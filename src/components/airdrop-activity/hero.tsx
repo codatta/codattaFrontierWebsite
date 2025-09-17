@@ -1,5 +1,6 @@
 import { CalendarDays, ArrowRight } from 'lucide-react'
 import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
+import { Link } from 'react-router'
 
 export default function AirdropActivityHero() {
   return (
@@ -62,9 +63,12 @@ export default function AirdropActivityHero() {
               <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
                 <p className="text-sm font-medium text-white/70">Leaderboard</p>
 
-                <button className="inline-flex h-8 items-center justify-center rounded-full bg-[#8A6BFF] px-1 py-2 text-sm font-semibold text-white transition hover:bg-[#7b5bf5]">
+                <Link
+                  to="/app/airdrop/leaderboard"
+                  className="inline-flex h-8 items-center justify-center rounded-full bg-[#8A6BFF] px-1 py-2 text-sm font-semibold text-white transition hover:bg-[#7b5bf5]"
+                >
                   View Rankings
-                </button>
+                </Link>
                 <p className="text-xs text-white/80">Current Season</p>
               </div>
             </div>
