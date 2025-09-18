@@ -14,6 +14,7 @@ export default function Task({ onNext }: { onNext: () => void; isMobile?: boolea
   const [link, setLink] = useSessionStorage('tg_group_invite_link', '')
   const [verified, setVerified] = useState(false)
   const [count, _, restart] = useCountdown(30, null, false)
+  const [_2, end2, restart2] = useCountdown(5, null, false)
   const [isFirstJoin, setisFirstJoin] = useState(true)
   const isCounting = useMemo(() => {
     return count !== 0 && count !== 30
@@ -29,6 +30,7 @@ export default function Task({ onNext }: { onNext: () => void; isMobile?: boolea
 
       if (link) {
         restart()
+        restart2()
         setisFirstJoin(false)
         setLink(link.link)
         window.open(link.link, '_blank')
@@ -50,9 +52,9 @@ export default function Task({ onNext }: { onNext: () => void; isMobile?: boolea
   const handleVerifyTelegram = async () => {
     setVerifyLoading(true)
     try {
-      const isJoined = await UserApi.isJoinedTgGroup()
+      const isJoined = await UserApi.isJoinedTgGroup('codatta')
 
-      if (isJoined) {
+      if (isJoined || (end2 && link)) {
         message.success('You have joined the telegram group')
         setVerified(true)
         onNext()
