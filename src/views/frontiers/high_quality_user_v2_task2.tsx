@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 
 import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/v2/header'
-import Access from '@/components/frontier/high-quality-user/v2/access'
+// import Access from '@/components/frontier/high-quality-user/v2/access'
 import Read from '@/components/frontier/high-quality-user/v2/read'
 import Task from '@/components/frontier/high-quality-user/v2/task-2'
 import Result from '@/components/frontier/high-quality-user/v2/result'
@@ -14,7 +14,7 @@ import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
 import { ResultType } from '@/components/frontier/high-quality-user/v2/types'
-import userApi from '@/apis/user.api'
+// import userApi from '@/apis/user.api'
 
 async function getLastSubmission(frontierId: string, taskIds: string) {
   const res = await frontiterApi.getSubmissionList({
@@ -113,10 +113,11 @@ export default function HighQualityUserV2Task2({ templateId }: { templateId: str
       const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
 
       if (!lastSubmission) {
-        const isHighQualityUser = await userApi.isHighQualityUser()
-        setIsHighQualityUser(isHighQualityUser)
-
-        setViewType('ACCESS')
+        // const isHighQualityUser = await userApi.isHighQualityUser()
+        // setIsHighQualityUser(isHighQualityUser)
+        // setViewType('ACCESS')
+        setIsHighQualityUser(true)
+        setViewType('READ')
       } else {
         handleResultStatus(lastSubmission?.status)
       }
@@ -158,7 +159,7 @@ export default function HighQualityUserV2Task2({ templateId }: { templateId: str
               ))}
             {!resultType && (
               <>
-                {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('READ')} />}
+                {/* {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('READ')} />} */}
                 {viewType === 'READ' && <Read onNext={() => setViewType('TASK')} />}
                 {viewType === 'TASK' && <Task onNext={handleSubmit} isMobile={isMobile} />}
               </>

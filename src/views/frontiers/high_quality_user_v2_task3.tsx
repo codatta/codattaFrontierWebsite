@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 
 import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/v2/header'
-import Task from '@/components/frontier/high-quality-user/v2/task-1'
+import Task from '@/components/frontier/high-quality-user/v2/task-3'
 import TaskComplete from '@/components/frontier/high-quality-user/v2/task-complete'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
@@ -18,9 +18,9 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
 
   const [view, setView] = useState<'task-form' | 'task-complete'>('task-form')
 
-  const handleSubmit = async (formData: unknown): Promise<boolean> => {
+  const handleSubmit = async (): Promise<boolean> => {
     try {
-      const res = await boosterApi.submitTask(questId!, JSON.stringify(formData))
+      const res = await boosterApi.submitTask(questId!, JSON.stringify({}))
       if (res.data?.status === 1) {
         setView('task-complete')
       } else {
@@ -69,10 +69,10 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
     <AuthChecker>
       <Spin spinning={isPageLoading} className="min-h-screen">
         {view === 'task-complete' ? (
-          <TaskComplete title="Join in Codatta Webapp" />
+          <TaskComplete title="Join Codatta on Telegram" />
         ) : (
           <div className="relative min-h-screen overflow-hidden md:pb-12">
-            <Header title="Join in Codatta Webapp" />
+            <Header title="Join Codatta on Telegram" />
             <div
               className={cn(
                 'mx-auto max-w-[600px] px-6 pb-6 text-sm leading-[22px] text-white md:mt-[80px] md:rounded-2xl md:bg-[#252532] md:px-10 md:py-[48px] md:pb-12'
@@ -87,4 +87,4 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
   )
 }
 
-// http://localhost:5175/frontier/project/HIGH_QUALITY_USER_TASK1/task-12-email-quiz
+// http://localhost:5175/frontier/project/HIGH_QUALITY_USER_TASK3/task-12-codattatg-quiz

@@ -325,13 +325,14 @@ class UserApi {
     return data.data.quality_type === 1
   }
 
-  async getTgGroupInviteLink() {
-    const { data } = await request.get<Response<{ link: string }>>('/v2/h5/tg/group/link')
+  async getTgGroupInviteLink(group_type: string = '') {
+    // codatta | ''
+    const { data } = await request.get<Response<{ link: string }>>('/v2/h5/tg/group/link', { params: { group_type } })
     return data.data
   }
 
-  async isJoinedTgGroup(): Promise<boolean> {
-    const { data } = await request.get<Response<{ flag: number }>>('/v2/h5/tg/group/status')
+  async isJoinedTgGroup(group_type: string = ''): Promise<boolean> {
+    const { data } = await request.get<Response<{ flag: number }>>('/v2/h5/tg/group/status', { params: { group_type } })
     return data.data.flag === 1
   }
   async getVerificationCode({ account_type, email, opt }: { account_type?: string; email?: string; opt?: string }) {
