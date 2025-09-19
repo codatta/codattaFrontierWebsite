@@ -1,10 +1,10 @@
 import { Button, message, Modal } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
+import { CodattaConnect } from 'codatta-connect'
+import { Mail } from 'lucide-react'
 
 import { useUserStore, userStoreActions } from '@/stores/user.store'
-import { Mail } from 'lucide-react'
 import { shortenAddress } from '@/utils/wallet-address'
-import { CodattaConnect } from 'codatta-connect'
 import accountApi from '@/apis/account.api'
 
 export default function Task1({
@@ -83,7 +83,7 @@ export default function Task1({
             open={showWalletConnectModal}
             onCancel={() => setShowWalletConnectModal(false)}
             footer={null}
-            width={463}
+            width={400}
             centered
             styles={{ content: { padding: 0 } }}
             destroyOnClose
