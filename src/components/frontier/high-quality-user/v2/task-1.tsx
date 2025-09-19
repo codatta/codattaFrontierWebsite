@@ -7,6 +7,8 @@ import { useUserStore, userStoreActions } from '@/stores/user.store'
 import { shortenAddress } from '@/utils/wallet-address'
 import accountApi from '@/apis/account.api'
 
+import CodattaLogoWhite from '@/assets/common/logo-white.svg'
+
 export default function Task1({
   onNext,
   isMobile
@@ -58,21 +60,10 @@ export default function Task1({
     userStoreActions.getUserInfo()
   }, [])
 
-  useEffect(() => {
-    if (showWalletConnectModal) {
-      setTimeout(() => {
-        const el = document.querySelector('.xc-text-xl')
-        if (el) {
-          el.textContent = 'Bind Email'
-        }
-      }, 100)
-    }
-  }, [showWalletConnectModal])
-
   return (
     <>
       <div>
-        <h2 className="mt-4 text-center text-2xl font-bold">Bind Email</h2>
+        <h2 className="mt-4 text-center text-2xl font-bold">Connect Email</h2>
         <img
           src={isMobile ? '/codatta-banner.png' : '/codatta-banner-pc.png'}
           alt="high quality user task1 banner"
@@ -121,6 +112,12 @@ export default function Task1({
             showMoreWallets: false,
             showTonConnect: false
           }}
+          header={
+            <div>
+              <img src={CodattaLogoWhite} className="mb-3 h-8" alt="" />
+              <h1 className="mb-8 text-lg font-bold">Bind Email</h1>
+            </div>
+          }
         ></CodattaConnect>
       </Modal>
     </>
