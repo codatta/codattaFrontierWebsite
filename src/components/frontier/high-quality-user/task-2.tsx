@@ -142,7 +142,7 @@ export default function ArenaForm({
             isMobile={isMobile}
             description={
               <div className="text-left text-[#606067] md:text-center md:text-sm">
-                <p>Submit a screenshot of the model's response</p>
+                <p>Submit a screenshot that includes both the question and the model's answer.</p>
               </div>
             }
             className="border-none bg-[#252532]"
@@ -159,7 +159,7 @@ export default function ArenaForm({
             isMobile={isMobile}
             description={
               <div className="text-left text-[#606067] md:text-center md:text-sm">
-                <p>Submit a screenshot of the model's response</p>
+                <p>Submit a screenshot that includes both the question and the model's answer.</p>
               </div>
             }
           />

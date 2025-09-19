@@ -79,7 +79,7 @@ export default function Task1({
               className="mt-8 h-[44px] w-full rounded-full text-base font-bold"
               onClick={() => setShowWalletConnectModal(true)}
             >
-              <Mail size={16} className="mr-2"></Mail> Bind Email
+              <Mail size={16} className="mr-2"></Mail> Collect Email
             </Button>
           </>
         ) : (
@@ -115,7 +115,7 @@ export default function Task1({
           header={
             <div>
               <img src={CodattaLogoWhite} className="mb-3 h-8" alt="" />
-              <h1 className="mb-8 text-lg font-bold">Bind Email</h1>
+              <h1 className="mb-8 text-lg font-bold">Collect Email</h1>
             </div>
           }
         ></CodattaConnect>

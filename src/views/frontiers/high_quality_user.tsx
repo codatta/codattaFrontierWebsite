@@ -5,7 +5,7 @@ import { message, Modal, Spin } from 'antd'
 
 import AuthChecker from '@/components/app/auth-checker'
 import Header from '@/components/frontier/high-quality-user/header'
-import Access from '@/components/frontier/high-quality-user/access'
+// import Access from '@/components/frontier/high-quality-user/access'
 import Task1 from '@/components/frontier/high-quality-user/task-1'
 import TaskRead from '@/components/frontier/high-quality-user/task-read'
 import Task2 from '@/components/frontier/high-quality-user/task-2'
@@ -16,7 +16,7 @@ import type { ResultType } from '@/components/frontier/high-quality-user/types'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import frontiterApi from '@/apis/frontiter.api'
-import userApi from '@/apis/user.api'
+// import userApi from '@/apis/user.api'
 import { useSessionStorage } from '@uidotdev/usehooks'
 
 async function getLastSubmission(frontierId: string, taskIds: string) {
@@ -38,17 +38,14 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
   const [rewardPoints, setRewardPoints] = useState(0)
   const [isPageLoading, setIsPageLoading] = useState<boolean>(true)
   // const [isSubmited, setIsSubmited] = useState<boolean>(false)
-  const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(false)
-  const [viewType, setViewType] = useSessionStorage<'ACCESS' | 'TASK1' | 'TASK_READ' | 'TASK2' | ''>(
-    'high_quality_user_state',
-    ''
-  )
+  // const [isHighQualityUser, setIsHighQualityUser] = useState<boolean>(false)
+  const [viewType, setViewType] = useSessionStorage<'TASK1' | 'TASK_READ' | 'TASK2' | ''>('high_quality_user_state', '')
   const [resultType, setResultType] = useState<'ADOPT' | 'PENDING' | 'REJECT' | null>(null)
   const title = useMemo(() => {
-    if (viewType === 'ACCESS') return isHighQualityUser ? ' Access Granted' : 'Access Denied'
+    // if (viewType === 'ACCESS') return isHighQualityUser ? ' Access Granted' : 'Access Denied'
     if (viewType === 'TASK1') return 'Join Exclusive Telegram Group'
     return 'Model Comparison Challenge'
-  }, [isHighQualityUser, viewType])
+  }, [viewType])
 
   const handleResultStatus = (status: string = '') => {
     status = status.toLocaleUpperCase()
@@ -116,11 +113,11 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
       const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
 
       if (!lastSubmission) {
-        const isHighQualityUser = await userApi.isHighQualityUser()
-        setIsHighQualityUser(isHighQualityUser)
+        // const isHighQualityUser = await userApi.isHighQualityUser()
+        // setIsHighQualityUser(isHighQualityUser)
 
         if (!viewType) {
-          setViewType('ACCESS')
+          setViewType('TASK1')
         }
       } else {
         // setIsSubmited(true)
@@ -168,7 +165,7 @@ export default function HighQualityUser({ templateId }: { templateId: string }) 
               ))}
             {!resultType && (
               <>
-                {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('TASK1')} />}
+                {/* {viewType === 'ACCESS' && <Access isGranted={isHighQualityUser} onNext={() => setViewType('TASK1')} />} */}
                 {viewType === 'TASK1' && <Task1 onNext={() => setViewType('TASK_READ')} isMobile={isMobile} />}
                 {viewType === 'TASK_READ' && <TaskRead onNext={() => setViewType('TASK2')} />}
                 {(viewType === 'TASK2' || !viewType) && <Task2 onNext={handleSubmit} isMobile={isMobile} />}
