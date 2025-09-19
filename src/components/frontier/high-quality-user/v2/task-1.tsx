@@ -88,7 +88,7 @@ export default function Task1({
               className="mt-8 h-[44px] w-full rounded-full text-base font-bold"
               onClick={() => setShowWalletConnectModal(true)}
             >
-              <Mail size={16} className="mr-2"></Mail> Connect Email
+              <Mail size={16} className="mr-2"></Mail> Bind Email
             </Button>
           </>
         ) : (
