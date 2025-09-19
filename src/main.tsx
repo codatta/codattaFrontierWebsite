@@ -7,7 +7,7 @@ import '@/lab/telegram.sdk.js'
 import AntdTheme from '@/styles/antd.theme'
 import '@/styles/tailwind.css'
 import '@/styles/global.css'
-import 'codatta-connect/dist/style.css'
+import 'codatta-connect/dist/codatta-connect.css'
 
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
