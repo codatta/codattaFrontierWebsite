@@ -7,8 +7,6 @@ import { useUserStore, userStoreActions } from '@/stores/user.store'
 import { shortenAddress } from '@/utils/wallet-address'
 import accountApi from '@/apis/account.api'
 
-import CodattaLogoWhite from '@/assets/common/logo-white.svg'
-
 export default function Task1({
   onNext,
   isMobile
@@ -79,7 +77,7 @@ export default function Task1({
               className="mt-8 h-[44px] w-full rounded-full text-base font-bold"
               onClick={() => setShowWalletConnectModal(true)}
             >
-              <Mail size={16} className="mr-2"></Mail> Collect Email
+              <Mail size={16} className="mr-2"></Mail> Connect Email
             </Button>
           </>
         ) : (
@@ -114,8 +112,7 @@ export default function Task1({
           }}
           header={
             <div>
-              <img src={CodattaLogoWhite} className="mb-3 h-8" alt="" />
-              <h1 className="mb-8 text-lg font-bold">Collect Email</h1>
+              <h1 className="mb-4 text-base font-bold">Connect Email</h1>
             </div>
           }
         ></CodattaConnect>
