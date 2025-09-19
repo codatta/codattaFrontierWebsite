@@ -58,6 +58,17 @@ export default function Task1({
     userStoreActions.getUserInfo()
   }, [])
 
+  useEffect(() => {
+    if (showWalletConnectModal) {
+      setTimeout(() => {
+        const el = document.querySelector('.xc-text-xl')
+        if (el) {
+          el.textContent = 'Bind Email'
+        }
+      }, 100)
+    }
+  }, [showWalletConnectModal])
+
   return (
     <>
       <div>
@@ -93,7 +104,6 @@ export default function Task1({
         )}
       </div>
       <Modal
-        // className="!max-w-[400px] [&_.ant-modal-content]:rounded-3xl [&_.ant-modal-content]:bg-[#252532]"
         className="[&_.xc-box-content]:!w-auto"
         open={showWalletConnectModal}
         onCancel={() => setShowWalletConnectModal(false)}
