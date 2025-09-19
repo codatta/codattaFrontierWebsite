@@ -64,7 +64,7 @@ export default function Task1({
       <img
         src={isMobile ? '/codatta-banner.png' : '/codatta-banner-pc.png'}
         alt="high quality user task1 banner"
-        className="mt-4 h-[188px]"
+        className="mt-4 block aspect-[684/376] md:aspect-[1040/376]"
       />
       <p className="mt-4 rounded-xl bg-[#252532] px-4 py-[10px] text-center text-base text-white md:mt-6 md:border md:border-[#FFFFFF1F] md:bg-transparent md:text-left md:text-[#BBBBBE]">
         Bind your email to be the first to receive updates on upcoming high-reward tasks.
