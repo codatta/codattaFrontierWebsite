@@ -59,57 +59,60 @@ export default function Task1({
   }, [])
 
   return (
-    <div>
-      <h2 className="mt-4 text-center text-2xl font-bold">Bind Email</h2>
-      <img
-        src={isMobile ? '/codatta-banner.png' : '/codatta-banner-pc.png'}
-        alt="high quality user task1 banner"
-        className="mt-4 block aspect-[684/376] md:aspect-[1040/376]"
-      />
-      <p className="mt-4 rounded-xl bg-[#252532] px-4 py-[10px] text-center text-base text-white md:mt-6 md:border md:border-[#FFFFFF1F] md:bg-transparent md:text-left md:text-[#BBBBBE]">
-        Bind your email to be the first to receive updates on upcoming high-reward tasks.
-      </p>
-      {!email && !newEmail ? (
-        <>
-          <Button
-            type="primary"
-            className="mt-8 h-[44px] w-full rounded-full text-base font-bold"
-            onClick={() => setShowWalletConnectModal(true)}
-          >
-            <Mail size={16} className="mr-2"></Mail> Connect Email
-          </Button>
-          <Modal
-            className="relative !max-w-[400px] [&_.ant-modal-content]:rounded-3xl [&_.ant-modal-content]:bg-[#252532]"
-            open={showWalletConnectModal}
-            onCancel={() => setShowWalletConnectModal(false)}
-            footer={null}
-            width={400}
-            centered
-            styles={{ content: { padding: 0 } }}
-            destroyOnClose
-          >
-            <CodattaConnect
-              onEmailConnect={handleEmailConnect}
-              config={{
-                showEmailSignIn: true,
-                showFeaturedWallets: false,
-                showMoreWallets: false,
-                showTonConnect: false
-              }}
-            ></CodattaConnect>
-          </Modal>
-        </>
-      ) : (
-        <>
-          <div className="flex items-center gap-2 rounded-lg border border-white/10 px-4 py-2">
-            <Mail size={16}></Mail>
-            <div className="truncate">{shortenAddress(email || newEmail, 16)}</div>
-          </div>
-          <Button type="primary" className="mt-8 h-[44px] w-full rounded-full text-base font-bold" onClick={onVerify}>
-            Confirm
-          </Button>
-        </>
-      )}
-    </div>
+    <>
+      <div>
+        <h2 className="mt-4 text-center text-2xl font-bold">Bind Email</h2>
+        <img
+          src={isMobile ? '/codatta-banner.png' : '/codatta-banner-pc.png'}
+          alt="high quality user task1 banner"
+          className="mt-4 block aspect-[684/376] md:aspect-[1040/376]"
+        />
+        <p className="mt-4 rounded-xl bg-[#252532] px-4 py-[10px] text-center text-base text-white md:mt-6 md:border md:border-[#FFFFFF1F] md:bg-transparent md:text-left md:text-[#BBBBBE]">
+          Bind your email to be the first to receive updates on upcoming high-reward tasks.
+        </p>
+        {!email && !newEmail ? (
+          <>
+            <Button
+              type="primary"
+              className="mt-8 h-[44px] w-full rounded-full text-base font-bold"
+              onClick={() => setShowWalletConnectModal(true)}
+            >
+              <Mail size={16} className="mr-2"></Mail> Connect Email
+            </Button>
+          </>
+        ) : (
+          <>
+            <div className="mt-4 flex items-center gap-2 rounded-lg border border-white/10 p-4">
+              <Mail size={16}></Mail>
+              <div className="truncate">{shortenAddress(email || newEmail, 16)}</div>
+            </div>
+            <Button type="primary" className="mt-8 h-[44px] w-full rounded-full text-base font-bold" onClick={onVerify}>
+              Confirm
+            </Button>
+          </>
+        )}
+      </div>
+      <Modal
+        // className="!max-w-[400px] [&_.ant-modal-content]:rounded-3xl [&_.ant-modal-content]:bg-[#252532]"
+        className="[&_.xc-box-content]:!w-auto"
+        open={showWalletConnectModal}
+        onCancel={() => setShowWalletConnectModal(false)}
+        footer={null}
+        width={360}
+        centered
+        styles={{ content: { padding: 0 } }}
+        destroyOnClose
+      >
+        <CodattaConnect
+          onEmailConnect={handleEmailConnect}
+          config={{
+            showEmailSignIn: true,
+            showFeaturedWallets: false,
+            showMoreWallets: false,
+            showTonConnect: false
+          }}
+        ></CodattaConnect>
+      </Modal>
+    </>
   )
 }
