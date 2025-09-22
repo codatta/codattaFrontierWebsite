@@ -63,6 +63,7 @@ export interface FrontierListItem {
   creator_id: string
   description: {
     frontier_desc: string
+    hide?: boolean
   }
   frontier_id: string
   logo_url: string
