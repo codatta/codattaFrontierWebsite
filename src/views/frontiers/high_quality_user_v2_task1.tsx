@@ -69,10 +69,10 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
     <AuthChecker>
       <Spin spinning={isPageLoading} className="min-h-screen">
         {view === 'task-complete' ? (
-          <TaskComplete title="Join in Codatta Webapp" />
+          <TaskComplete title="Connect Email" />
         ) : (
           <div className="relative min-h-screen overflow-hidden md:pb-12">
-            <Header title="Join in Codatta Webapp" />
+            <Header title="" />
             <div
               className={cn(
                 'mx-auto max-w-[600px] px-6 pb-6 text-sm leading-[22px] text-white md:mt-[80px] md:rounded-2xl md:bg-[#252532] md:px-10 md:py-[48px] md:pb-12'

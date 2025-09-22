@@ -61,7 +61,7 @@ export default function Task1({
   return (
     <>
       <div>
-        <h2 className="mt-4 text-center text-2xl font-bold">Bind Email</h2>
+        <h2 className="mt-4 text-center text-2xl font-bold">Connect Email</h2>
         <img
           src={isMobile ? '/codatta-banner.png' : '/codatta-banner-pc.png'}
           alt="high quality user task1 banner"
@@ -93,12 +93,11 @@ export default function Task1({
         )}
       </div>
       <Modal
-        // className="!max-w-[400px] [&_.ant-modal-content]:rounded-3xl [&_.ant-modal-content]:bg-[#252532]"
         className="[&_.xc-box-content]:!w-auto"
         open={showWalletConnectModal}
         onCancel={() => setShowWalletConnectModal(false)}
         footer={null}
-        width={360}
+        width={350}
         centered
         styles={{ content: { padding: 0 } }}
         destroyOnClose
@@ -111,6 +110,11 @@ export default function Task1({
             showMoreWallets: false,
             showTonConnect: false
           }}
+          header={
+            <div>
+              <h1 className="mb-4 text-base font-bold">Connect Email</h1>
+            </div>
+          }
         ></CodattaConnect>
       </Modal>
     </>
