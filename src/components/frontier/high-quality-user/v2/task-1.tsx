@@ -97,7 +97,7 @@ export default function Task1({
         open={showWalletConnectModal}
         onCancel={() => setShowWalletConnectModal(false)}
         footer={null}
-        width={360}
+        width={350}
         centered
         styles={{ content: { padding: 0 } }}
         destroyOnClose
