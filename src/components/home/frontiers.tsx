@@ -24,7 +24,9 @@ const Frontiers = () => {
         return (
           !['FOOD_TPL_000002', 'FOOD_TPL_000003', 'FOOD_TPL_000004', 'FOOD_TPL_000005'].includes(
             item.template_ext?.template_id || ''
-          ) && !item.template_ext?.hide
+          ) &&
+          !item.template_ext?.hide &&
+          !item.description.hide
         )
       })
       .map((item) => {
