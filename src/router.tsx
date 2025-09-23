@@ -94,6 +94,10 @@ const HighQualityUserV2Task3 = lazy(() => import('@/views/frontiers/high_quality
 
 const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
+const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_model_comparison'))
+const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
+const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -191,6 +195,18 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
+          <Route
+            path="AIRDROP_MODEL_COMPARISON/:taskId"
+            element={<AirdropModelComparison templateId="AIRDROP_MODEL_COMPARISON" />}
+          />
+          <Route
+            path="AIRDROP_EXPERT_ANSWER_PROVISION/:taskId"
+            element={<AirdropExpertAnswerProvision templateId="AIRDROP_EXPERT_ANSWER_PROVISION" />}
+          />
+          <Route
+            path="AIRDROP_BAD_CASE_ANALYSIS/:taskId"
+            element={<AirdropBadCaseAnalysis templateId="AIRDROP_BAD_CASE_ANALYSIS" />}
+          />
         </Route>
         <Route
           path="/frontier/project/FOOD_TPL_000002/:taskId/:questId"
