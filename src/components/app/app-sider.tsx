@@ -13,12 +13,14 @@ import IconReferral from '@/assets/icons/app-nav/referral.svg'
 import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
+import AirdropIcon from '@/assets/icons/app-nav/airdrop.svg'
 
 import { ReactNode, useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import AppUser from '@/components/app/app-user'
 import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
+import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 
 export interface MenuItem {
   icon: ReactNode
@@ -359,17 +361,28 @@ function LogoSection() {
   )
 }
 
-export type AppSiderProps = {
-  dynamicMenuItems?: MenuItem[] // API response data for dynamic menu items
-}
+export default function AppSider() {
+  const { hasAirdropActivity } = useAirdropActivityStore()
+  const [extraAppMenuItems, setExtraAppMenuItems] = useState<MenuItem[]>([])
 
-export default function AppSider(props: AppSiderProps) {
-  const { dynamicMenuItems } = props
+  useEffect(() => {
+    if (hasAirdropActivity) {
+      setExtraAppMenuItems([
+        {
+          icon: <AirdropIcon color="white" />,
+          label: 'Airdrop',
+          isDynamic: true,
+          key: '/app/airdrop',
+          priority: 2.5
+        }
+      ])
+    }
+  }, [hasAirdropActivity])
 
   return (
     <div className="flex size-full flex-col py-6">
       <LogoSection />
-      <AppNav className="flex-1" dynamicMenuItems={dynamicMenuItems} />
+      <AppNav className="flex-1" dynamicMenuItems={extraAppMenuItems} />
       <AppUser />
     </div>
   )

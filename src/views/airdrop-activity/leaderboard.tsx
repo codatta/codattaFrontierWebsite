@@ -1,13 +1,15 @@
 import descriptionBgp from '@/assets/leaderboard/description-bg.png'
-import { rankStore } from '@/stores/rank.store'
 import { cn } from '@udecode/cn'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { Empty } from 'antd'
+import { Empty, message, Pagination, Spin } from 'antd'
 import { Link, useNavigate } from 'react-router-dom'
-import { useSnapshot } from 'valtio'
 import GoldMedal from '@/assets/leaderboard/gold-medal.svg'
 import SilverMedal from '@/assets/leaderboard/silver-medal.svg'
 import BronzeMedal from '@/assets/leaderboard/bronze-medal.svg'
+import { useEffect, useState } from 'react'
+import airdropApi, { AirdropSeasonRankItem } from '@/apis/airdrop-actvitiy'
+import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
+import TransitionEffect from '@/components/common/transition-effect'
 
 function Headerback() {
   const navigate = useNavigate()
@@ -22,18 +24,18 @@ function Headerback() {
 function UserRank(props: { rank: number; className: string }) {
   const { rank } = props
   return (
-    <div className={`relative w-[112px] shrink-0`}>
+    <div className={`relative flex w-full justify-center`}>
       {rank <= 3 && (
         <div className="flex items-center">
           <div
             className={cn(
-              'w-1px h-32px',
-              rank === 1 && 'bg-#FCC800',
-              rank === 2 && 'bg-#CCCCCB',
-              rank === 3 && 'bg-#FC8800'
+              'absolute left-0 h-[40px] w-[2px] rounded-b-full rounded-t-full',
+              rank === 1 && 'bg-[#FCC800]',
+              rank === 2 && 'bg-[#CCCCCB]',
+              rank === 3 && 'bg-[#FC8800]'
             )}
           ></div>
-          <div className="ml-6 w-9 text-center">
+          <div className="w-9 text-center">
             {rank === 1 && <img src={GoldMedal} alt="" />}
             {rank === 2 && <img src={SilverMedal} alt="" />}
             {rank === 3 && <img src={BronzeMedal} alt="" />}
@@ -41,7 +43,7 @@ function UserRank(props: { rank: number; className: string }) {
         </div>
       )}
 
-      {rank > 3 && <div className="ml-6 w-9 text-center">{rank > 99 ? '99+' : rank}</div>}
+      {rank > 3 && <div className="w-9 text-center">{rank > 99 ? '99+' : rank}</div>}
     </div>
   )
 }
@@ -73,7 +75,10 @@ function UserAvatar(props: { rank: number; avatar: string; className: string }) 
   )
 }
 
-function LeaderboardHeader() {
+function LeaderboardHeader(props: { userRank: number }) {
+  const { userRank } = props
+  const { currentAirdropInfo } = useAirdropActivityStore()
+
   return (
     <div
       className="relative flex w-full items-center gap-[60px] rounded-2xl bg-[length:auto_100%] bg-center bg-repeat px-[60px] py-[34px]"
@@ -82,63 +87,69 @@ function LeaderboardHeader() {
       <div className="flex shrink-0 flex-col items-center gap-1">
         <span>Current Ranking</span>
         <div className="flex items-center gap-1 rounded-full bg-gradient-to-b from-[#FFEA98] to-[#FCC800] px-6 py-1.5 text-2xl font-bold text-black">
-          🏆{222}
+          🏆 {userRank}
         </div>
         <Link to={{ pathname: '/app/airdrop/ranking-history' }} className="flex items-center gap-1">
           History <ArrowRight size={14}></ArrowRight>
         </Link>
       </div>
       <div>
-        <h2 className="mb-2 text-3xl font-bold">Season Leaderboard</h2>
-        <p className="text-sm text-gray-500">
-          Descriptive copy descriptive copy descriptive copy desc riptive copy descriptive copy descriptive copy desc
-          riptive copy descriptive copy descriptive copy
-        </p>
+        <h2 className="mb-2 text-3xl font-bold">{currentAirdropInfo?.name}</h2>
+        <p className="text-sm text-gray-500">{currentAirdropInfo?.description}</p>
       </div>
     </div>
   )
 }
 
-function LeaderboardTable() {
-  const { contributorsRank } = useSnapshot(rankStore)
+function LeaderboardTable(props: { list: AirdropSeasonRankItem[] }) {
+  const { list } = props
 
   return (
     <div className={`relative w-full rounded-2xl text-white`}>
-      <div className="mb-1 mt-6 flex w-full items-center justify-end gap-6 border-b border-b-[#ffffff1f] py-2 text-sm font-normal text-gray-400">
-        <div className="relative w-6 shrink-0">
-          <div className="ml-6 w-9 text-center">#</div>
-        </div>
-        <div className="relative mr-auto h-[22px] w-9 shrink-0 text-sm">User</div>
-        <div className="my-2 flex flex-1 items-center overflow-hidden text-ellipsis text-left"></div>
-        <div className="flex w-[108px] gap-0.5">Reward</div>
+      {/* Use CSS Grid to ensure column alignment */}
+      <div className="mb-1 mt-6 grid grid-cols-[112px_auto_1fr_108px_108px] gap-3 border-b border-b-[#ffffff1f] py-2 text-sm font-normal text-gray-400">
+        <div className="text-center">Rank</div>
+        <div className="text-center">User</div>
+        <div className="text-left">Name</div>
+        <div className="text-center">Score</div>
+        <div className="text-center">Reward</div>
       </div>
       <ul className="box-border min-h-[290px] overflow-y-auto pt-3 text-sm">
-        {contributorsRank.length <= 0 ? (
+        {list.length <= 0 ? (
           <div className="flex h-full items-center justify-center">
             <Empty />
           </div>
         ) : (
-          contributorsRank.map((user, index) => (
+          list.map((user, index) => (
             <li
               key={user.user_id}
               className={cn(
-                'mb-1 flex h-[60px] w-full items-center justify-end gap-3 rounded-lg',
+                'mb-1 grid h-[60px] grid-cols-[112px_auto_1fr_108px_108px] items-center gap-3 rounded-lg px-0',
                 user.rank === 1 && 'bg-gradient-to-r from-[#FCC800]/[0.16] to-40%',
                 user.rank === 2 && 'bg-gradient-to-r from-[#CCCCCB]/[0.16] to-40%',
                 user.rank === 3 && 'bg-gradient-to-r from-[#FC8800]/[0.16] to-40%'
               )}
             >
-              <UserRank rank={user.rank} className="mr-auto" />
-              <UserAvatar rank={user.rank || index + 4} className="mr-auto" avatar={user.avatar}></UserAvatar>
+              <div className="flex justify-center">
+                <UserRank rank={user.rank} className="" />
+              </div>
+              <div className="flex justify-center">
+                <UserAvatar rank={user.rank || index + 4} className="" avatar={user.image_url}></UserAvatar>
+              </div>
               <div
                 className={cn(
-                  'flex flex-1 items-center overflow-hidden text-ellipsis text-left',
-                  user.flag && 'text-primary'
+                  'flex items-center overflow-hidden text-ellipsis text-left',
+                  user.rank === 1 && 'text-[#FCC800]',
+                  user.rank === 2 && 'text-[#CCCCCB]',
+                  user.rank === 3 && 'text-[#FC8800]'
                 )}
               >
-                {user.email}
+                {user.user_name}
               </div>
-              <div className="w-[108px] shrink-0">{user.contribute}</div>
+              <div className="text-center">{user.score.toLocaleString()}</div>
+              <div className="text-center font-bold text-primary">
+                {user.reward_amount} {user.reward_type}
+              </div>
             </li>
           ))
         )}
@@ -148,11 +159,55 @@ function LeaderboardTable() {
 }
 
 export default function AirdropLeaderboard() {
+  const [leaderboard, setLeaderboard] = useState<AirdropSeasonRankItem[]>([])
+  const [total, setTotal] = useState(0)
+  const { currentAirdropSeasonId } = useAirdropActivityStore()
+  const [page, setPage] = useState(1)
+  const [pageSize] = useState(24)
+  const [loading, setLoading] = useState(false)
+  const [userRank, setUserRank] = useState(0)
+
+  async function getLeaderboard(seasonId: string, page: number, pageSize: number) {
+    setLoading(true)
+    try {
+      const res = await airdropApi.getAirdropSeasonRanks({
+        season_id: seasonId,
+        page_num: page,
+        page_size: pageSize
+      })
+      setLeaderboard(res.data.list)
+      setTotal(res.data.count)
+      setUserRank(res.data.user_rank)
+    } catch (err) {
+      message.error(err.message)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    if (!currentAirdropSeasonId) return
+    getLeaderboard(currentAirdropSeasonId, page, pageSize)
+  }, [currentAirdropSeasonId, page, pageSize])
+
   return (
-    <div>
+    <TransitionEffect>
       <Headerback></Headerback>
-      <LeaderboardHeader />
-      <LeaderboardTable></LeaderboardTable>
-    </div>
+      <LeaderboardHeader userRank={userRank} />
+      <Spin spinning={loading}>
+        <LeaderboardTable list={leaderboard}></LeaderboardTable>
+        <div className="mt-12 flex items-center">
+          <Pagination
+            current={page}
+            total={total}
+            hideOnSinglePage
+            pageSize={pageSize}
+            onChange={(page) => setPage(page)}
+          />
+          <Link to="/app/airdrop/activity-history" className="ml-auto rounded-full bg-primary px-4 py-2">
+            Current Submission
+          </Link>
+        </div>
+      </Spin>
+    </TransitionEffect>
   )
 }

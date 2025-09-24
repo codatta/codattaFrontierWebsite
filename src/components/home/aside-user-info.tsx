@@ -52,9 +52,9 @@ export default function UserInfoSection() {
     ]
   }, [info])
 
-  useEffect(() => {
-    userStoreActions.getUserInfo()
-  }, [])
+  // useEffect(() => {
+  //   // userStoreActions.getUserInfo()
+  // }, [])
 
   return (
     <div className="relative bg-[#252532] pt-6 text-center">
