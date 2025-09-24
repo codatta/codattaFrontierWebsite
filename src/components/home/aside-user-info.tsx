@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import { cn } from '@udecode/cn'
 import { ChevronRight } from 'lucide-react'
 
@@ -12,7 +12,7 @@ import gridTextureImage from '@/assets/home/grid-texture.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg'
 
-import { useUserStore, userStoreActions } from '@/stores/user.store'
+import { useUserStore } from '@/stores/user.store'
 import { formatNumber } from '@/utils/str'
 import { useNavigate } from 'react-router-dom'
 

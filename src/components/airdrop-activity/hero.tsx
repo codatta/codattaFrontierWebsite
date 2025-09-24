@@ -2,7 +2,6 @@ import { CalendarDays, Loader2 } from 'lucide-react'
 import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
 import { Link } from 'react-router'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
-import { Spin } from 'antd'
 
 export default function AirdropActivityHero() {
   const { currentAirdropInfo } = useAirdropActivityStore()

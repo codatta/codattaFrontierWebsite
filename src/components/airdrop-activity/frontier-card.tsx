@@ -1,5 +1,4 @@
 import { AirdropFrontierItem, AirdropFrontierTaskItem } from '@/apis/airdrop-actvitiy'
-import { TaskReward } from '@/apis/task.api'
 import RewardBgIcon from '@/assets//task/reward-bg-icon.png'
 import { Avatar } from 'antd'
 import { useNavigate } from 'react-router-dom'

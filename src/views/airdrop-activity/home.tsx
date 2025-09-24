@@ -2,20 +2,19 @@ import AirdropActivityHero from '@/components/airdrop-activity/hero'
 import AirdropActivityFrontierCard from '@/components/airdrop-activity/frontier-card'
 import { useEffect, useState } from 'react'
 import { airdropActivityActions, useAirdropActivityStore } from '@/stores/airdrop-activity.store'
-import { message, Pagination } from 'antd'
+import { message } from 'antd'
 import TransitionEffect from '@/components/common/transition-effect'
 
 export default function AirdropActivityHome() {
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
+  const [page] = useState(1)
   const { currentAirdropSeasonId, currentAirdropFrontierList } = useAirdropActivityStore()
 
   const pageSize = 20
 
   async function fetchAirdropFrontierList(seasonId: string, page: number, pageSize: number) {
     try {
-      const res = await airdropActivityActions.getAirdropFrontierList(seasonId, page, pageSize)
-      setTotal(res.count)
+      await airdropActivityActions.getAirdropFrontierList(seasonId, page, pageSize)
+      // setTotal(res.count)
     } catch (err) {
       message.error(err.message)
     }
