@@ -6,8 +6,9 @@ import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useMemo } from 'react'
 import { Clock, Users2 } from 'lucide-react'
+import RewardIcon from '@/assets/airdrop-activity/ponit-icon.webp'
 
-const RewardTag = ({ reward }: { reward: { score: number } }) => (
+const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
   <div
     className="relative flex size-[50px] items-center justify-center"
     style={{
@@ -15,13 +16,7 @@ const RewardTag = ({ reward }: { reward: { score: number } }) => (
       backgroundSize: 'contain'
     }}
   >
-    <Avatar
-      className="absolute z-[1]"
-      src={reward.score}
-      size={30}
-      shape="square"
-      style={{ left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
-    />
+    <Avatar src={reward.icon} size={42} shape="square" />
     <p className="absolute bottom-px right-px rounded-bl-none rounded-br-md rounded-tl-md rounded-tr-none bg-[#5734BB] px-[3px] text-xs leading-[15px]">
       {reward.score}
     </p>
@@ -91,7 +86,7 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
             <div className="flex items-center gap-4">
               {/* Quest Icon with Points */}
               <div className="relative">
-                <RewardTag reward={{ score: task.score }}></RewardTag>
+                <RewardTag reward={{ score: task.score, icon: RewardIcon }}></RewardTag>
               </div>
 
               {/* Quest Title */}
