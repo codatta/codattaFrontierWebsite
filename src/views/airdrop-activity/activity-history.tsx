@@ -58,7 +58,7 @@ function AirdropActivityHistoryHeader() {
       </div>
       <div className="flex flex-auto flex-wrap items-center justify-center gap-2">
         <div className="text-nowrap rounded-full border px-2 py-0.5">Total Points</div>
-        <div className="text-nowrap text-2xl font-bold text-[#FCC800]">{totalScore.toLocaleString()}</div>
+        <div className="text-nowrap text-2xl font-bold text-[#FCC800]">{totalScore?.toLocaleString()}</div>
       </div>
     </div>
   )
