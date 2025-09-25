@@ -10,37 +10,37 @@ import { categoryList, modelList } from '../const'
 import Upload, { type UploadedImage } from '../UploadImg'
 
 const QUESTION_MAX_LENGTH = 2000
-const MODEL_ANSWER_MAX_LENGTH = 3000
-const ERROR_ANALYSIS_MAX_LENGTH = 2000
+const MODEL_ANSWER_MAX_LENGTH = 5000
+const CORRECT_ANSWER_MAX_LENGTH = 3000
 
-interface BadCaseFormData {
-  model?: string
+interface ExpertAnswerFormData {
   question?: string
-  category?: string
-  other_category?: string
+  domain?: string
+  other_domain?: string
+  model?: string
   model_answer?: string
   model_answer_screenshots: UploadedImage[]
-  error_analysis?: string
+  correct_answer?: string
 }
 
-export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData) => Promise<void> }) {
-  const [formData, setFormData] = useState<BadCaseFormData>({
-    model: undefined,
-    other_category: undefined,
+export default function MyForm({ onSubmit }: { onSubmit: (data: ExpertAnswerFormData) => Promise<void> }) {
+  const [formData, setFormData] = useState<ExpertAnswerFormData>({
+    domain: undefined,
+    other_domain: undefined,
     question: undefined,
     model_answer: undefined,
     model_answer_screenshots: [],
-    error_analysis: undefined
+    correct_answer: undefined
   })
-  const [errors, setErrors] = useState<Partial<Record<keyof BadCaseFormData, string>>>({})
+  const [errors, setErrors] = useState<Partial<Record<keyof ExpertAnswerFormData, string>>>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const updateFormData = (field: keyof BadCaseFormData, value: string | UploadedImage[]) => {
+  const updateFormData = (field: keyof ExpertAnswerFormData, value: string | UploadedImage[]) => {
     setFormData((prev) => {
       const newFormData = { ...prev, [field]: value }
 
-      if (field === 'category' && value !== 'other') {
-        newFormData.other_category = undefined
+      if (field === 'domain' && value !== 'other') {
+        newFormData.other_domain = undefined
       }
 
       return newFormData
@@ -58,16 +58,10 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
 
   const validateForm = useCallback(
     (updateErrors = true) => {
-      const newErrors: Partial<Record<keyof BadCaseFormData, string>> = {}
+      const newErrors: Partial<Record<keyof ExpertAnswerFormData, string>> = {}
       let isValid = true
 
-      const fieldsToValidate: (keyof BadCaseFormData)[] = [
-        'model',
-        'category',
-        'question',
-        'model_answer',
-        'error_analysis'
-      ]
+      const fieldsToValidate: (keyof ExpertAnswerFormData)[] = ['domain', 'question', 'model_answer', 'correct_answer']
 
       for (const key of fieldsToValidate) {
         if (!formData[key]) {
@@ -76,8 +70,8 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
         }
       }
 
-      if (formData.category === 'other' && !formData.other_category) {
-        newErrors.other_category = 'This field is required.'
+      if (formData.domain === 'other' && !formData.other_domain) {
+        newErrors.other_domain = 'This field is required.'
         isValid = false
       }
 
@@ -91,8 +85,8 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
         isValid = false
       }
 
-      if (formData.error_analysis && formData.error_analysis.length > ERROR_ANALYSIS_MAX_LENGTH) {
-        newErrors.error_analysis = `Error analysis cannot exceed ${ERROR_ANALYSIS_MAX_LENGTH} characters.`
+      if (formData.correct_answer && formData.correct_answer.length > CORRECT_ANSWER_MAX_LENGTH) {
+        newErrors.correct_answer = `Correct answer cannot exceed ${CORRECT_ANSWER_MAX_LENGTH} characters.`
         isValid = false
       }
 
@@ -129,7 +123,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
     className,
     required = true
   }: {
-    name: keyof BadCaseFormData
+    name: keyof ExpertAnswerFormData
     label: string
     component: React.ReactNode
     className?: string
@@ -152,6 +146,44 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
       <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
         <ul className="space-y-6">
           {renderField({
+            name: 'question',
+            label: 'Question',
+            component: (
+              <TextField
+                placeholder="Please enter the question or problem statement"
+                value={formData.question}
+                onChange={(value) => updateFormData('question', value)}
+                maxLength={QUESTION_MAX_LENGTH}
+                showCount
+              />
+            )
+          })}
+
+          {renderField({
+            name: 'domain',
+            label: 'Domain',
+            component: (
+              <SelectField
+                placeholder="Please select a domain"
+                value={formData.domain}
+                onChange={(value) => updateFormData('domain', value)}
+                options={categoryList}
+              />
+            )
+          })}
+          {formData.domain === 'other' &&
+            renderField({
+              name: 'other_domain',
+              label: '',
+              component: (
+                <InputField
+                  placeholder="Enter your custom domain"
+                  value={formData.other_domain}
+                  onChange={(value) => updateFormData('other_domain', value)}
+                />
+              )
+            })}
+          {renderField({
             name: 'model',
             label: 'Model',
             component: (
@@ -164,43 +196,6 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
             )
           })}
 
-          {renderField({
-            name: 'category',
-            label: 'Category',
-            component: (
-              <SelectField
-                placeholder="Please select a category"
-                value={formData.category}
-                onChange={(value) => updateFormData('category', value)}
-                options={categoryList}
-              />
-            )
-          })}
-          {formData.category === 'other' &&
-            renderField({
-              name: 'other_category',
-              label: '',
-              component: (
-                <InputField
-                  placeholder="Enter your custom category"
-                  value={formData.other_category}
-                  onChange={(value) => updateFormData('other_category', value)}
-                />
-              )
-            })}
-          {renderField({
-            name: 'question',
-            label: 'Question',
-            component: (
-              <TextField
-                placeholder="Please describe in detail the question or request posed by the user"
-                value={formData.question}
-                onChange={(value) => updateFormData('question', value)}
-                maxLength={QUESTION_MAX_LENGTH}
-                showCount
-              />
-            )
-          })}
           {renderField({
             name: 'model_answer',
             label: 'Model Answer',
@@ -234,14 +229,14 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: BadCaseFormData)
             )
           })}
           {renderField({
-            name: 'error_analysis',
-            label: 'Error Analysis',
+            name: 'correct_answer',
+            label: 'Correct Answer',
             component: (
               <TextField
                 placeholder="Please analyze and identify the specific reasons for the AI's incorrect answer"
-                value={formData.error_analysis}
-                onChange={(value) => updateFormData('error_analysis', value)}
-                maxLength={ERROR_ANALYSIS_MAX_LENGTH}
+                value={formData.correct_answer}
+                onChange={(value) => updateFormData('correct_answer', value)}
+                maxLength={CORRECT_ANSWER_MAX_LENGTH}
                 showCount
               />
             )

@@ -91,4 +91,3 @@ export default function AirdropModelComparison({ templateId }: { templateId: str
 }
 
 // http://localhost:5175/frontier/project/AIRDROP_MODEL_COMPARISON/8608441980300101771
-// http://localhost:5175/frontier/project/CRYPTO_TPL_DEPOSIT/8088437676800107826/task-6-crypto1time
