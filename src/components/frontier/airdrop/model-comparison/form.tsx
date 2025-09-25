@@ -3,12 +3,16 @@ import { message } from 'antd'
 import { FileTextOutlined } from '@ant-design/icons'
 
 import { Button } from '@/components/booster/button'
-import TextField from './TextField'
-import SelectField from './SelectField'
-import InputField from './input'
+import TextField from '../TextField'
+import SelectField from '../SelectField'
+import InputField from '../input'
 import { ExpertRedline } from './guideline'
-import { domainList, modelList } from './const'
-import Upload, { type UploadedImage } from './UploadImg'
+import { domainList, modelList } from '../const'
+import Upload, { type UploadedImage } from '../UploadImg'
+
+const QUESTION_MAX_LENGTH = 2000
+const MODEL_ANSWER_MAX_LENGTH = 5000
+const CORRECT_ANSWER_MAX_LENGTH = 2000
 
 interface ComparisonFormData {
   domain?: string
@@ -110,22 +114,22 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ComparisonFormDa
         isValid = false
       }
 
-      if (formData.question && formData.question.length > 2000) {
-        newErrors.question = 'Question cannot exceed 2000 characters.'
+      if (formData.question && formData.question.length > QUESTION_MAX_LENGTH) {
+        newErrors.question = `Question cannot exceed ${QUESTION_MAX_LENGTH} characters.`
         isValid = false
       }
 
-      if (formData.model_a_answer && formData.model_a_answer.length > 5000) {
-        newErrors.model_a_answer = 'Answer cannot exceed 5000 characters.'
+      if (formData.model_a_answer && formData.model_a_answer.length > MODEL_ANSWER_MAX_LENGTH) {
+        newErrors.model_a_answer = `Answer cannot exceed ${MODEL_ANSWER_MAX_LENGTH} characters.`
         isValid = false
       }
 
-      if (formData.model_b_answer && formData.model_b_answer.length > 5000) {
-        newErrors.model_b_answer = 'Answer cannot exceed 5000 characters.'
+      if (formData.model_b_answer && formData.model_b_answer.length > MODEL_ANSWER_MAX_LENGTH) {
+        newErrors.model_b_answer = `Answer cannot exceed ${MODEL_ANSWER_MAX_LENGTH} characters.`
         isValid = false
       }
-      if (formData.correct_answer && formData.correct_answer.length > 2000) {
-        newErrors.correct_answer = 'Correct answer cannot exceed 2000 characters.'
+      if (formData.correct_answer && formData.correct_answer.length > CORRECT_ANSWER_MAX_LENGTH) {
+        newErrors.correct_answer = `Correct answer cannot exceed ${CORRECT_ANSWER_MAX_LENGTH} characters.`
         isValid = false
       }
 
@@ -222,7 +226,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ComparisonFormDa
                 placeholder="Please enter the question or problem statement for comparison"
                 value={formData.question}
                 onChange={(value) => updateFormData('question', value)}
-                maxLength={2000}
+                maxLength={QUESTION_MAX_LENGTH}
                 showCount
               />
             )
@@ -255,7 +259,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ComparisonFormDa
                   placeholder="Please paste Model A's text answer"
                   value={formData.model_a_answer}
                   onChange={(value) => updateFormData('model_a_answer', value)}
-                  maxLength={5000}
+                  maxLength={MODEL_ANSWER_MAX_LENGTH}
                   showCount
                 />
               )
@@ -308,7 +312,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ComparisonFormDa
                   placeholder="Please paste Model B's text answer"
                   value={formData.model_b_answer}
                   onChange={(value) => updateFormData('model_b_answer', value)}
-                  maxLength={5000}
+                  maxLength={MODEL_ANSWER_MAX_LENGTH}
                   showCount
                 />
               )
@@ -345,7 +349,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ComparisonFormDa
                   placeholder="Please provide your own answer or explanation"
                   value={formData.correct_answer}
                   onChange={(value) => updateFormData('correct_answer', value)}
-                  maxLength={2000}
+                  maxLength={CORRECT_ANSWER_MAX_LENGTH}
                   showCount
                 />
               )

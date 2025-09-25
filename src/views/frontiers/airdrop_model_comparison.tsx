@@ -73,7 +73,7 @@ export default function AirdropModelComparison({ templateId }: { templateId: str
               <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
                 <ArrowLeft size={18} /> Back
               </div>
-              Kitchen Appliance Knob Collection
+              Model Comparison and Correction
               <span></span>
             </h1>
           </div>
