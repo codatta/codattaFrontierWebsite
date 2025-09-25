@@ -8,6 +8,7 @@ import AuthChecker from '@/components/app/auth-checker'
 
 import { userStoreActions } from '@/stores/user.store'
 import { channelStoreActions, useChannelStore } from '@/stores/channel.store'
+import { airdropActivityActions } from '@/stores/airdrop-activity.store'
 
 export default function AppLayout({ className }: { className?: string }) {
   const { relatedInfo } = useChannelStore()
@@ -18,6 +19,7 @@ export default function AppLayout({ className }: { className?: string }) {
 
   useEffect(() => {
     userStoreActions.getUserInfo()
+    airdropActivityActions.getAirdropNameList()
   }, [])
 
   return (

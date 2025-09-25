@@ -21,6 +21,10 @@ const SubmissionDetail = lazy(() => import('@/views/frontiers/submission-detail'
 // quest
 const ActivityGroup = lazy(() => import('@/views/quest/activity-group'))
 const Activity = lazy(() => import('@/views/quest/activity'))
+const AirdropActivity = lazy(() => import('@/views/airdrop-activity/home'))
+const AirdropLeaderboard = lazy(() => import('@/views/airdrop-activity/leaderboard'))
+const AirdropRankingHistory = lazy(() => import('@/views/airdrop-activity/ranking-history'))
+const AirdropActivityHistory = lazy(() => import('@/views/airdrop-activity/activity-history'))
 
 // user info
 const UserInfo = lazy(() => import('@/views/userinfo/index'))
@@ -140,6 +144,12 @@ export default function Router() {
           <Route index element={<Home />} />
           <Route path="referral" element={<AppReferral />}></Route>
           <Route path="journey" element={<NewJourney />} />
+          <Route path="airdrop">
+            <Route index element={<AirdropActivity />} />
+            <Route path="leaderboard" element={<AirdropLeaderboard />} />
+            <Route path="ranking-history" element={<AirdropRankingHistory />} />
+            <Route path="activity-history" element={<AirdropActivityHistory />} />
+          </Route>
 
           <Route path="settings" element={<UserInfoLayout />}>
             <Route index element={<UserInfo />} />

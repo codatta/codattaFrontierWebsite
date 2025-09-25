@@ -17,12 +17,20 @@ function authRequestInterceptor(config: InternalAxiosRequestConfig) {
 }
 
 function baseResponseInterceptor(res: AxiosResponse) {
-  if (res.data?.success !== true || res.data?.errorCode !== 0) {
+  const isResTypeA = Object.getOwnPropertyNames(res.data).includes('code')
+  const isResTypeB = Object.getOwnPropertyNames(res.data).includes('success')
+
+  if (isResTypeA && res.data?.code !== '000000') {
+    const error = new AxiosError(res.data?.message, res.data?.code, res.config, res.request, res)
+    return Promise.reject(error)
+  }
+
+  if (isResTypeB && res.data?.success !== true) {
     const error = new AxiosError(res.data?.errorMessage, res.data?.errorCode, res.config, res.request, res)
     return Promise.reject(error)
-  } else {
-    return res
   }
+
+  return res
 }
 
 function errorResponseInterceptor(err: AxiosError) {
@@ -59,6 +67,17 @@ export interface PaginationResponse<T> extends Response<T> {
   total_count: number
   total_page: number
   page: number
+}
+
+export interface DataPaginationRes<T> {
+  data: {
+    page_num: number
+    page_size: number
+    count: number
+    list: T[]
+  }
+  code: string
+  message: string
 }
 
 export interface TPagination {

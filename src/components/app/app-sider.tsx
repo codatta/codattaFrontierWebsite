@@ -2,7 +2,7 @@ import { useUserStore } from '@/stores/user.store'
 
 import { cn } from '@udecode/cn'
 import { Badge, Flex } from 'antd'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import ImageLogo from '@/assets/images/logo-white.png'
 import IconHome from '@/assets/icons/app-nav/home.svg'
@@ -13,23 +13,55 @@ import IconReferral from '@/assets/icons/app-nav/referral.svg'
 import IconMail from '@/assets/icons/app-nav/email.svg'
 import IconSetting from '@/assets/icons/app-nav/setting.svg'
 import IconGitbook from '@/assets/icons/app-nav/gitbook.svg'
-// import IconJourney from '@/assets/icons/app-nav/journey.svg'
+import AirdropIcon from '@/assets/icons/app-nav/airdrop.svg'
 
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import AppUser from '@/components/app/app-user'
 import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
+import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 
-interface MenuItem {
+export interface MenuItem {
   icon: ReactNode
   label: string | ReactNode
   key: string
   style?: object
+  id?: string
+  isDynamic?: boolean // Flag to identify dynamically inserted menu items
+  insertAfter?: string // Specify which menu item to insert after
+  priority?: number // Priority, smaller numbers appear first
 }
 
-function AppNavItem(props: { item: MenuItem; selectedKeys: string[]; onClick: (item: MenuItem) => void }) {
-  const { item, selectedKeys, onClick } = props
+// Animation variants configuration
+const menuItemVariants = {
+  hidden: {
+    opacity: 0,
+    height: 0,
+    y: -20,
+    transition: { duration: 0.2, ease: 'easeInOut' }
+  },
+  visible: {
+    opacity: 1,
+    height: 'auto',
+    y: 0,
+    transition: { duration: 0.2, ease: 'easeOut' }
+  },
+  exit: {
+    opacity: 0,
+    height: 0,
+    y: -20,
+    transition: { duration: 0.2, ease: 'easeInOut' }
+  }
+}
+
+function AppNavItem(props: {
+  item: MenuItem
+  selectedKeys: string[]
+  onClick: (item: MenuItem) => void
+  isDynamic?: boolean
+}) {
+  const { item, selectedKeys, onClick, isDynamic = false } = props
   const { icon, label, key, style } = props.item
   const [active, setActive] = useState(false)
 
@@ -41,7 +73,7 @@ function AppNavItem(props: { item: MenuItem; selectedKeys: string[]; onClick: (i
     onClick(item)
   }
 
-  return (
+  const itemContent = (
     <div
       style={style}
       className={cn('group relative', ['/arena', '/app/leaderboard'].includes(key) ? 'hidden md:block' : '')}
@@ -59,6 +91,17 @@ function AppNavItem(props: { item: MenuItem; selectedKeys: string[]; onClick: (i
       </div>
     </div>
   )
+
+  // If it's a dynamic menu item, wrap with animation
+  if (isDynamic) {
+    return (
+      <motion.div variants={menuItemVariants} initial="hidden" animate="visible" exit="exit" layout>
+        {itemContent}
+      </motion.div>
+    )
+  }
+
+  return itemContent
 }
 
 function AnimationDot(props: { show: boolean; customClass?: string }) {
@@ -106,38 +149,38 @@ const QuestLabel = () => {
   )
 }
 
-const menuItems: MenuItem[] = [
+// Base menu items configuration
+const baseMenuItems: MenuItem[] = [
   {
     icon: <IconHome color={'white'} size={24} />,
     label: 'Home',
-    key: '/app'
+    key: '/app',
+    priority: 1
   },
-  // {
-  //   icon: <IconJourney color={'white'} size={24} />,
-  //   key: '/app/journey',
-  //   label: 'New Journey'
-  // },
   {
     icon: <IconQuest color={'white'} size={24} />,
     key: '/app/quest',
-    label: <QuestLabel />
+    label: <QuestLabel />,
+    priority: 2
   },
   {
     icon: <IconArena color={'white'} size={24} />,
     key: '/arena',
-    label: 'Arena'
+    label: 'Arena',
+    priority: 3
   },
   {
     icon: <IconReferral color={'white'} size={24} />,
     key: '/app/referral',
-    label: 'Referral'
+    label: 'Referral',
+    priority: 4
   },
   {
     icon: <IconEcosystem color={'white'} size={24} />,
     key: '/app/leaderboard',
-    label: 'Leaderboard'
+    label: 'Leaderboard',
+    priority: 5
   },
-
   {
     icon: <IconGitbook color="white" />,
     key: 'https://docs.xny.ai/xny/codatta',
@@ -146,7 +189,8 @@ const menuItems: MenuItem[] = [
         <span>Documentation</span>
         <ArrowUpRight strokeWidth={1.25} size={20} />
       </div>
-    )
+    ),
+    priority: 6
   },
   {
     icon: <IconMail color={'white'} size={24} />,
@@ -154,37 +198,92 @@ const menuItems: MenuItem[] = [
     label: <NotificationMenu />,
     style: {
       marginTop: 'auto'
-    }
+    },
+    priority: 7
   },
-  // {
-  //   icon: <IconSetting color={'white'} size={24} />,
-  //   key: '/app/settings/account',
-  //   label: 'User Settings'
-  // },
   {
     icon: <IconSetting color={'white'} size={24} />,
     key: '/app/settings',
-    label: 'User Info'
+    label: 'User Info',
+    priority: 8
   }
 ]
 
-export type AppNavProps = {
-  className?: string
+// Dynamic menu items management hook
+function useDynamicMenuItems(dynamicMenuItems?: MenuItem[]) {
+  const [dynamicItems, setDynamicItems] = useState<MenuItem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Handle API response and add dynamic menu items
+  const addDynamicMenuItems = useCallback((items: MenuItem[]) => {
+    setIsLoading(true)
+
+    // Simulate API delay
+    setTimeout(() => {
+      setDynamicItems((prev) => {
+        const newItems = items.filter((item) => !prev.some((existing) => existing.id === item.id))
+        return [...prev, ...newItems]
+      })
+      setIsLoading(false)
+    }, 0)
+  }, [])
+
+  // Remove dynamic menu items
+  const removeDynamicMenuItems = useCallback((itemIds: string[]) => {
+    setDynamicItems((prev) => prev.filter((item) => !itemIds.includes(item.id || '')))
+  }, [])
+
+  // Listen for API response changes
+  useEffect(() => {
+    if (dynamicMenuItems) {
+      addDynamicMenuItems(dynamicMenuItems)
+    }
+  }, [dynamicMenuItems, addDynamicMenuItems])
+
+  return {
+    dynamicItems,
+    isLoading,
+    addDynamicMenuItems,
+    removeDynamicMenuItems
+  }
 }
 
-const allItems = menuItems.flatMap((item) => [item])
+export type AppNavProps = {
+  className?: string
+  dynamicMenuItems?: MenuItem[] // API response data for dynamic menu items
+}
 
-function AppNav(_props: AppNavProps) {
+// Merge base menu items and dynamic menu items
+function useMergedMenuItems(dynamicItems: MenuItem[]) {
+  return useMemo(() => {
+    const allItems = [...baseMenuItems, ...dynamicItems]
+
+    // Sort by priority
+    return allItems.sort((a, b) => (a.priority || 999) - (b.priority || 999))
+  }, [dynamicItems])
+}
+
+function AppNav(props: AppNavProps) {
+  const { dynamicMenuItems } = props
   const navigate = useNavigate()
   const location = useLocation()
+
+  // Use dynamic menu items hook
+  const { dynamicItems, isLoading } = useDynamicMenuItems(dynamicMenuItems)
+
+  // Merge menu items
+  const allMenuItems = useMergedMenuItems(dynamicItems)
+
   const selectedKeys = useMemo(
-    () => [
-      [...allItems.filter(({ key }) => location.pathname.startsWith(key as string))].sort(
-        (a, b) => (b.key as string).length - (a.key as string).length
-      )[0].key as string
-    ],
-    [location]
+    () =>
+      [
+        [...allMenuItems.filter(({ key }) => location.pathname.startsWith(key as string))].sort(
+          (a, b) => (b.key as string).length - (a.key as string).length
+        )[0]?.key as string
+      ].filter(Boolean),
+    [location, allMenuItems]
   )
+
   function handleMenuClick(item: MenuItem) {
     if (/https?:/.test(item.key)) {
       trackEvent(TRACK_CATEGORY.LINK_CLICK, { method: 'click', contentType: item.key })
@@ -197,9 +296,36 @@ function AppNav(_props: AppNavProps) {
 
   return (
     <div className="relative flex flex-1 flex-col">
-      {menuItems.map((item) => {
-        return <AppNavItem key={item.key} item={item} selectedKeys={selectedKeys} onClick={handleMenuClick} />
-      })}
+      <AnimatePresence mode="popLayout">
+        {allMenuItems.map((item) => {
+          const isDynamic = item.isDynamic || false
+          return (
+            <AppNavItem
+              key={item.id || item.key}
+              item={item}
+              selectedKeys={selectedKeys}
+              onClick={handleMenuClick}
+              isDynamic={isDynamic}
+            />
+          )
+        })}
+      </AnimatePresence>
+
+      {/* Loading indicator */}
+      {isLoading && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex items-center justify-center py-2"
+        >
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+            className="size-4 rounded-full border-2 border-primary border-t-transparent"
+          />
+        </motion.div>
+      )}
     </div>
   )
 }
@@ -236,10 +362,27 @@ function LogoSection() {
 }
 
 export default function AppSider() {
+  const { hasAirdropActivity } = useAirdropActivityStore()
+  const [extraAppMenuItems, setExtraAppMenuItems] = useState<MenuItem[]>([])
+
+  useEffect(() => {
+    if (hasAirdropActivity) {
+      setExtraAppMenuItems([
+        {
+          icon: <AirdropIcon color="white" />,
+          label: 'Airdrop',
+          isDynamic: true,
+          key: '/app/airdrop',
+          priority: 2.5
+        }
+      ])
+    }
+  }, [hasAirdropActivity])
+
   return (
     <div className="flex size-full flex-col py-6">
       <LogoSection />
-      <AppNav className="flex-1" />
+      <AppNav className="flex-1" dynamicMenuItems={extraAppMenuItems} />
       <AppUser />
     </div>
   )
