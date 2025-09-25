@@ -195,18 +195,6 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
-          <Route
-            path="AIRDROP_MODEL_COMPARISON/:taskId"
-            element={<AirdropModelComparison templateId="AIRDROP_MODEL_COMPARISON" />}
-          />
-          <Route
-            path="AIRDROP_EXPERT_ANSWER_PROVISION/:taskId"
-            element={<AirdropExpertAnswerProvision templateId="AIRDROP_EXPERT_ANSWER_PROVISION" />}
-          />
-          <Route
-            path="AIRDROP_BAD_CASE_ANALYSIS/:taskId"
-            element={<AirdropBadCaseAnalysis templateId="AIRDROP_BAD_CASE_ANALYSIS" />}
-          />
         </Route>
         <Route
           path="/frontier/project/FOOD_TPL_000002/:taskId/:questId"
@@ -477,6 +465,19 @@ export default function Router() {
         <Route
           path="/frontier/project/FASHION_GENSMO/:taskId/:questId"
           element={<FashionGensmo templateId="FASHION_GENSMO" />}
+        />
+
+        <Route
+          path="/frontier/project/AIRDROP_MODEL_COMPARISON/:taskId"
+          element={<AirdropModelComparison templateId="AIRDROP_MODEL_COMPARISON" />}
+        />
+        <Route
+          path="/frontier/project/AIRDROP_EXPERT_ANSWER_PROVISION/:taskId"
+          element={<AirdropExpertAnswerProvision templateId="AIRDROP_EXPERT_ANSWER_PROVISION" />}
+        />
+        <Route
+          path="/frontier/project/AIRDROP_BAD_CASE_ANALYSIS/:taskId"
+          element={<AirdropBadCaseAnalysis templateId="AIRDROP_BAD_CASE_ANALYSIS" />}
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
