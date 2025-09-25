@@ -94,6 +94,10 @@ const HighQualityUserV2Task3 = lazy(() => import('@/views/frontiers/high_quality
 
 const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
+const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_model_comparison'))
+const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
+const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -461,6 +465,19 @@ export default function Router() {
         <Route
           path="/frontier/project/FASHION_GENSMO/:taskId/:questId"
           element={<FashionGensmo templateId="FASHION_GENSMO" />}
+        />
+
+        <Route
+          path="/frontier/project/AIRDROP_MODEL_COMPARISON/:taskId"
+          element={<AirdropModelComparison templateId="AIRDROP_MODEL_COMPARISON" />}
+        />
+        <Route
+          path="/frontier/project/AIRDROP_EXPERT_ANSWER_PROVISION/:taskId"
+          element={<AirdropExpertAnswerProvision templateId="AIRDROP_EXPERT_ANSWER_PROVISION" />}
+        />
+        <Route
+          path="/frontier/project/AIRDROP_BAD_CASE_ANALYSIS/:taskId"
+          element={<AirdropBadCaseAnalysis templateId="AIRDROP_BAD_CASE_ANALYSIS" />}
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
