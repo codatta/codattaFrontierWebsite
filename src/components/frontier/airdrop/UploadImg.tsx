@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Plus, X, Eye, AlertCircle } from 'lucide-react'
+import { Plus, Trash, Eye, AlertCircle, X } from 'lucide-react'
 import { message, Spin } from 'antd'
 import { cn } from '@udecode/cn'
 
@@ -29,7 +29,6 @@ const Upload: React.FC<UploadProps> = ({
   onChange,
   error,
   description,
-  className,
   maxCount = 5
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -130,13 +129,13 @@ const Upload: React.FC<UploadProps> = ({
     setPreviewOpen(true)
   }
 
-  const uploadButton = (
+  const UploadButton = () => (
     <div
       onClick={() => fileInputRef.current?.click()}
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       className={cn(
-        'flex aspect-[1/1] w-full cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
+        'mt-4 flex h-[130px] min-w-[212px] flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
         !value.length && 'aspect-auto block border-solid py-6',
         error && 'border-red-500'
       )}
@@ -148,49 +147,36 @@ const Upload: React.FC<UploadProps> = ({
 
   return (
     <>
-      {value.length ? (
-        <div className={cn('grid grid-cols-3 gap-4 md:grid-cols-5', className)}>
-          {value.map((image) => (
-            <div key={image.hash} className="group relative aspect-[1/1] w-full overflow-hidden rounded-lg">
-              <img src={image.url} className="size-full object-cover" alt="upload preview" />
+      <div className="flex gap-4">
+        {value.map((image) => (
+          <div
+            key={image.hash}
+            className="group relative mt-4 h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
+          >
+            <img src={image.url} className="size-full object-cover" alt="upload preview" />
 
-              {/* Centered Preview Icon on Hover */}
-              <div
-                className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
-                onClick={() => handlePreview(image)}
-              >
-                <Eye className="size-6 text-white" />
-              </div>
-
-              {/* Top-right Delete Icon on Hover */}
-              <button
-                type="button"
-                onClick={() => removeImage(image.hash)}
-                className="absolute right-1 top-1 rounded-full bg-black/50 p-1 text-white opacity-0 transition-all hover:bg-red-500 group-hover:opacity-100"
-              >
-                <X className="size-4" />
-              </button>
-
-              {image.status === 'uploading' && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/70">
-                  <Spin />
-                </div>
-              )}
-
-              {image.status === 'error' && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 text-white">
-                  <AlertCircle className="size-6" />
-                  <span className="mt-1 text-xs">Error</span>
-                </div>
-              )}
+            {/* Centered Preview Icon on Hover */}
+            <div className="absolute inset-0 flex items-center justify-center gap-5 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+              <Eye className="size-6 cursor-pointer text-white" onClick={() => handlePreview(image)} />{' '}
+              <Trash className="size-4 cursor-pointer text-white" onClick={() => removeImage(image.hash)} />
             </div>
-          ))}
 
-          {value.length < maxCount && uploadButton}
-        </div>
-      ) : (
-        uploadButton
-      )}
+            {image.status === 'uploading' && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/70">
+                <Spin />
+              </div>
+            )}
+
+            {image.status === 'error' && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-red-900/80 text-white">
+                <AlertCircle className="size-6" />
+                <span className="mt-1 text-xs">Error</span>
+              </div>
+            )}
+          </div>
+        ))}
+        {value.length < maxCount && <UploadButton />}
+      </div>
 
       {/* Hidden file input */}
       <input
