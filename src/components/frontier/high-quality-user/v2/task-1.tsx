@@ -12,7 +12,7 @@ export default function Task1({
   isMobile
 }: {
   isMobile: boolean
-  onNext: (data: { email: string }) => Promise<boolean>
+  onNext: (data: { email: string; showResult: boolean }) => Promise<boolean>
 }) {
   const [showWalletConnectModal, setShowWalletConnectModal] = useState(false)
   const { info } = useUserStore()
@@ -31,7 +31,7 @@ export default function Task1({
         .success({
           content: 'Email bound successfully!'
         })
-        .then(() => onNext({ email: newEmail }))
+        .then(() => onNext({ email: newEmail, showResult: true }))
     }
 
     message.info({
@@ -51,6 +51,7 @@ export default function Task1({
       setNewEmail(email)
       userStoreActions.getUserInfo()
       setShowWalletConnectModal(false)
+      onNext({ email: email, showResult: false })
     })
   }
 
