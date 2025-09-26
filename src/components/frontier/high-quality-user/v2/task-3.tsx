@@ -8,7 +8,7 @@ import CopyToClipboard from 'react-copy-to-clipboard'
 import { useCountdown } from '@/hooks/use-countdown'
 import UserApi from '@/apis/user.api'
 
-export default function Task({ onNext }: { onNext: () => void; isMobile?: boolean }) {
+export default function Task({ onNext }: { onNext: (showResult: boolean) => void; isMobile?: boolean }) {
   const [joinLoading, setJoinLoading] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [link, setLink] = useSessionStorage('tg_group_invite_link', '')
@@ -26,14 +26,18 @@ export default function Task({ onNext }: { onNext: () => void; isMobile?: boolea
     setJoinLoading(true)
 
     try {
-      const link = await UserApi.getTgGroupInviteLink('codatta')
+      // const link = await UserApi.getTgGroupInviteLink('codatta')
+      const link = location.host.includes('app.codatta.io')
+        ? 'https://t.me/+JgjrfV-lSXM2OWRl'
+        : 'https://t.me/codatta_io/1'
 
       if (link) {
         restart()
         restart2()
         setisFirstJoin(false)
-        setLink(link.link)
-        window.open(link.link, '_blank')
+        setLink(link)
+        onNext(false)
+        window.open(link, '_blank')
       }
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to get telegram group invite link')
@@ -44,9 +48,11 @@ export default function Task({ onNext }: { onNext: () => void; isMobile?: boolea
   }
 
   const onCopied = () => {
-    message.success({
-      content: 'Telegram group invite link copied to clipboard!'
-    })
+    message
+      .success({
+        content: 'Telegram group invite link copied to clipboard!'
+      })
+      .then(() => onNext(false))
   }
 
   const handleVerifyTelegram = async () => {
@@ -57,7 +63,7 @@ export default function Task({ onNext }: { onNext: () => void; isMobile?: boolea
       if (isJoined || (end2 && link)) {
         message.success('You have joined the telegram group')
         setVerified(true)
-        onNext()
+        onNext(true)
       } else {
         message.error('Telegram join not detected. Please try again or contact support.')
       }

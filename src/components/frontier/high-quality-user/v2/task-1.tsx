@@ -1,62 +1,52 @@
-import { Button, message, Modal } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
-import { CodattaConnect } from 'codatta-connect'
+import { Button, Input, message } from 'antd'
+import { useEffect, useState } from 'react'
 import { Mail } from 'lucide-react'
 
 import { useUserStore, userStoreActions } from '@/stores/user.store'
-import { shortenAddress } from '@/utils/wallet-address'
-import accountApi from '@/apis/account.api'
+import { isValidEmail } from '@/utils/str'
+import { cn } from '@udecode/cn'
 
 export default function Task1({
   onNext,
   isMobile
 }: {
   isMobile: boolean
-  onNext: (data: { email: string }) => Promise<boolean>
+  onNext: (data: { email: string; showResult: boolean }) => Promise<boolean>
 }) {
-  const [showWalletConnectModal, setShowWalletConnectModal] = useState(false)
   const { info } = useUserStore()
-  const email = useMemo(() => info?.accounts_data?.find((account) => account.account_type === 'email')?.account, [info])
-  const [newEmail, setNewEmail] = useState('')
+  const [email, setEmail] = useState('')
+  const [validEmail, setValidEmail] = useState(true)
+
   const onVerify = async () => {
-    let newEmail: string | undefined = email
-
-    if (!newEmail) {
-      const res = await userStoreActions.getUserInfo()
-      newEmail = res.accounts_data?.find((account) => account.account_type === 'email')?.account
-    }
-
-    if (newEmail) {
+    if (email && validEmail) {
       return message
         .success({
           content: 'Email bound successfully!'
         })
-        .then(() => onNext({ email: newEmail }))
+        .then(() => onNext({ email: email, showResult: true }))
     }
 
     message.info({
       content: 'Please bind email first!'
     })
   }
-  async function handleEmailConnect(email: string, code: string) {
-    console.log(email, code)
-    await accountApi.bindEmail({
-      connector: 'codatta_email',
-      account_type: 'email',
-      account_enum: 'C',
-      email: email,
-      email_code: code
-    })
-    message.success('Email bind success.').then(() => {
-      setNewEmail(email)
-      userStoreActions.getUserInfo()
-      setShowWalletConnectModal(false)
-    })
+  const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const email = e.target.value?.trim()
+    setEmail(email)
+    setValidEmail(isValidEmail(email))
   }
 
   useEffect(() => {
     userStoreActions.getUserInfo()
   }, [])
+
+  useEffect(() => {
+    const email = info?.accounts_data?.find((account) => account.account_type === 'email')?.account
+    if (email) {
+      setEmail(email)
+      setValidEmail(true)
+    }
+  }, [info])
 
   return (
     <>
@@ -70,53 +60,25 @@ export default function Task1({
         <p className="mt-4 rounded-xl bg-[#252532] px-4 py-[10px] text-center text-base text-white md:mt-6 md:border md:border-[#FFFFFF1F] md:bg-transparent md:text-left md:text-[#BBBBBE]">
           Bind your email to be the first to receive updates on upcoming high-reward tasks.
         </p>
-        {!email && !newEmail ? (
-          <>
-            <Button
-              type="primary"
-              className="mt-8 h-[44px] w-full rounded-full text-base font-bold"
-              onClick={() => setShowWalletConnectModal(true)}
-            >
-              <Mail size={16} className="mr-2"></Mail> Connect Email
-            </Button>
-          </>
-        ) : (
-          <>
-            <div className="mt-4 flex items-center gap-2 rounded-lg border border-white/10 p-4">
-              <Mail size={16}></Mail>
-              <div className="truncate">{shortenAddress(email || newEmail, 16)}</div>
-            </div>
-            <Button type="primary" className="mt-8 h-[44px] w-full rounded-full text-base font-bold" onClick={onVerify}>
-              Confirm
-            </Button>
-          </>
-        )}
+        <div className="mt-4">
+          <Input
+            placeholder="Enter Your Email (e.g., your@gmail.com)"
+            size="large"
+            className="mt-2 !rounded-lg !bg-none !px-4 !py-3 !text-white placeholder:!text-[#606067]"
+            onChange={onEmailChange}
+            value={email}
+            prefix={<Mail size={16}></Mail>}
+          />
+          {!validEmail ? (
+            <p className={cn('mt-2 text-sm text-red-400', isMobile ? 'px-4' : 'px-0')}>
+              Please enter a valid email address.
+            </p>
+          ) : null}
+        </div>
+        <Button type="primary" className="mt-8 h-[44px] w-full rounded-full text-base font-bold" onClick={onVerify}>
+          Confirm
+        </Button>
       </div>
-      <Modal
-        className="[&_.xc-box-content]:!w-auto"
-        open={showWalletConnectModal}
-        onCancel={() => setShowWalletConnectModal(false)}
-        footer={null}
-        width={350}
-        centered
-        styles={{ content: { padding: 0 } }}
-        destroyOnClose
-      >
-        <CodattaConnect
-          onEmailConnect={handleEmailConnect}
-          config={{
-            showEmailSignIn: true,
-            showFeaturedWallets: false,
-            showMoreWallets: false,
-            showTonConnect: false
-          }}
-          header={
-            <div>
-              <h1 className="mb-4 text-base font-bold">Connect Email</h1>
-            </div>
-          }
-        ></CodattaConnect>
-      </Modal>
     </>
   )
 }

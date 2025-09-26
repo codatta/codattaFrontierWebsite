@@ -18,13 +18,16 @@ export default function HighQualityUserV2Task1({ templateId }: { templateId: str
 
   const [view, setView] = useState<'task-form' | 'task-complete'>('task-form')
 
-  const handleSubmit = async (): Promise<boolean> => {
+  const handleSubmit = async (showResult: boolean): Promise<boolean> => {
     try {
       const res = await boosterApi.submitTask(questId!, JSON.stringify({}))
-      if (res.data?.status === 1) {
-        setView('task-complete')
-      } else {
-        message.error(res.data?.info || 'Failed to submit!')
+
+      if (showResult) {
+        if (res.data?.status === 1) {
+          setView('task-complete')
+        } else {
+          message.error(res.data?.info || 'Failed to submit!')
+        }
       }
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to submit!')
