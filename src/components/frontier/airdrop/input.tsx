@@ -15,7 +15,7 @@ interface InputProps {
 // PC Input Component using antd
 const PCInput: React.FC<InputProps> = ({ value, onChange, placeholder, className, maxLength, showCount }) => {
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(e.target.value)
+    onChange?.(e.target.value.trimStart())
   }
 
   return (
