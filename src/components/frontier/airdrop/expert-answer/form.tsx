@@ -29,6 +29,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ExpertAnswerForm
     other_domain: undefined,
     question: undefined,
     model_answer: undefined,
+    model: undefined,
     model_answer_screenshots: [],
     correct_answer: undefined
   })
@@ -61,7 +62,13 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ExpertAnswerForm
       const newErrors: Partial<Record<keyof ExpertAnswerFormData, string>> = {}
       let isValid = true
 
-      const fieldsToValidate: (keyof ExpertAnswerFormData)[] = ['domain', 'question', 'model_answer', 'correct_answer']
+      const fieldsToValidate: (keyof ExpertAnswerFormData)[] = [
+        'domain',
+        'question',
+        'model_answer',
+        'correct_answer',
+        'model'
+      ]
 
       for (const key of fieldsToValidate) {
         if (!formData[key]) {
