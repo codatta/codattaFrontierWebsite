@@ -23,7 +23,7 @@ export default function TextField({
   showCount
 }: TextFieldProps) {
   const onHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange?.(e.target.value)
+    onChange?.(e.target.value.trimStart())
   }
 
   return (
