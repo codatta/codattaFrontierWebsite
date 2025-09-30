@@ -1,61 +1,69 @@
-import { Flag } from 'lucide-react'
-
 export default function Guideline() {
   const list = {
-    criteria: {
-      title: 'Question Criteria:',
-      list: [
-        'Comprehensive Analysis: Provide thorough analysis of the question, considering all relevant aspects and potential approaches.',
-        'Clear Structure: Organize your answer with clear headings, bullet points, and logical flow.',
-        'Evidence-Based: Support your arguments with concrete examples, data, or references where applicable.',
-        'Practical Application: Include practical implications and real-world applications of your answer.'
-      ]
+    task_description: {
+      des: (
+        <>
+          This project aims to discover and correct specific errors made by large models when answering objective
+          questions. You are required to submit an objective question, an incorrect answer from an AI model (text +
+          screenshot), and directly provide the standard answer for that question. The correct answer you provide will
+          serve as a 'gold standard' to help us evaluate and correct the model's knowledge gaps.
+        </>
+      )
     },
-    standards: {
-      title: 'Evaluation Standards:',
+    evaluation_criteria: {
+      des: 'Your submission will be automatically given a quality score from D to S based on the following criteria:',
       list: [
-        'Accuracy: Ensure all information provided is factually correct and up-to-date.',
-        'Completeness: Address all parts of the question comprehensively.',
-        'Clarity: Use clear, concise language that is easy to understand.',
-        'Originality: Provide original insights and avoid generic responses.'
+        {
+          label: 'D',
+          des: 'The submitted answer text severely mismatches the screenshot content, or the submission contains invalid information like gibberish, ads, etc.'
+        },
+        {
+          label: 'C',
+          des: 'The submitted question is subjective (e.g., seeking opinions or suggestions) rather than an objective question with a single standard answer.'
+        },
+        {
+          label: 'B',
+          des: "The model's answer is already mostly correct, and your provided 'correct answer' has no substantial difference from it (e.g., only fixing format, units, or wording)."
+        },
+        {
+          label: 'A',
+          des: "The 'correct answer' you provided is partially correct but is incomplete or fails to fully address the core of the question."
+        },
+        {
+          label: 'S',
+          des: "The model's answer contains a critical error, and the 'correct answer' you provided accurately and completely corrects it."
+        }
       ]
-    },
-    note: 'Note: Focus on providing value through detailed, well-reasoned responses that demonstrate deep understanding of the subject matter.'
+    }
   }
 
   return (
     <div className="py-[30px] text-sm leading-[22px] text-[#8D8D93]">
       <h2 className="text-lg font-bold text-white">
-        <span>💡 Answering Approach</span>
+        <span>📋 Guidelines</span>
       </h2>
-      <h3 className="mb-2 mt-4 font-semibold text-white">{list.criteria.title}</h3>
-      <ol className="list-inside list-decimal">
-        {list.criteria.list.map((item, index) => (
-          <li key={`criteria-${index}`}>{item}</li>
-        ))}
-      </ol>
-      <h3 className="mb-2 mt-3 font-semibold text-white">{list.standards.title}</h3>
-      <ul className="list-inside list-disc">
-        {list.standards.list.map((item, index) => (
-          <li key={`standards-${index}`}>{item}</li>
+      <h3 className="mb-2 mt-4 font-semibold text-white">📋 Task Description </h3>
+      <p className="mt-2 leading-[22px]">{list.task_description.des}</p>
+      <h3 className="mb-2 mt-3 font-semibold text-white">📝 Evaluation Criteria</h3>
+      <p className="mt-2 leading-[22px]">{list.evaluation_criteria.des}</p>
+      <ul className="mt-2 leading-[22px]">
+        {list.evaluation_criteria.list.map((item, index) => (
+          <li key={`standards-${index}`}>
+            {item.label}: {item.des}
+          </li>
         ))}
       </ul>
-      <p className="mt-4 flex items-center gap-1">
-        <Flag className="size-[14px]" />
-        {list.note}
-      </p>
     </div>
   )
 }
 
 export const ExpertRedline = () => {
   const list = [
-    'Maliciously circumventing or cracking task rules, submitting a large amount of invalid data, or falsely reporting task duration (including time-based and fixed-price tasks);',
-    'Engaging in obvious cheating behavior, directly submitting AI-generated content, and failing to perform any manual review, modification, or annotation;',
-    "Maliciously claiming tasks, massively claiming tasks outside one's professional field;",
-    'Engaging in dishonest behaviors such as plagiarism or delegating tasks to others;',
-    'Engaging in uncivilized behaviors such as verbal abuse or personal attacks against others;',
-    'Disseminating question banks or task rules, or disclosing any related private information.'
+    'Maliciously circumventing or cracking task rules; submitting a large amount of invalid or low-quality data',
+    'Engaging in obvious cheating behavior by directly submitting AI-generated content without performing any manual review, modification, or annotation',
+    'Engaging in dishonest behaviors such as plagiarism or delegating tasks to others',
+    'Engaging in uncivilized behaviors such as verbal abuse or personal attacks against others',
+    'Disseminating question banks or task rules, or disclosing any related confidential information'
   ]
   return (
     <div className="py-[30px] text-sm leading-[22px] text-[#8D8D93]">
