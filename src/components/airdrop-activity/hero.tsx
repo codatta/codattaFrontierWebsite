@@ -68,11 +68,11 @@ export default function AirdropActivityHero() {
 
                 {/* Points Reward */}
                 <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
-                  <p className="text-sm font-medium text-white/70">Points Reward</p>
+                  <p className="text-sm font-medium text-white/70">Points Rewards</p>
                   <p className="text-3xl font-extrabold text-white md:text-2xl">
-                    {currentAirdropInfo?.reward.reward_amount}
+                    {currentAirdropInfo?.total_point_reward}
                   </p>
-                  <p className="text-xs text-white/80">{currentAirdropInfo?.reward.reward_type}</p>
+                  <p className="text-xs text-white/80">POINTS</p>
                 </div>
 
                 {/* Participants */}
