@@ -30,7 +30,7 @@ export default function AirdropActivityHome() {
       <div className="mb-12">
         <AirdropActivityHero></AirdropActivityHero>
       </div>
-      <h2 className="mb-6 text-xl font-bold">Frontier</h2>
+      <h2 className="mb-6 text-xl font-bold">Frontiers</h2>
       <div className="mb-6 flex flex-col gap-4">
         {currentAirdropFrontierList?.map((item) => (
           <AirdropActivityFrontierCard key={item.frontier_id} frontier={item} />
