@@ -149,10 +149,10 @@ function LeaderboardTable(props: { list: AirdropSeasonRankItem[] }) {
               </div>
               <div className="text-center">{user.score.toLocaleString()}</div>
               <div className="text-center font-bold text-primary">
-                {user.reward_amount} {user.reward_type}
+                {user.reward_amount ? `${user.reward_amount} ${user.reward_type}` : '-'}
               </div>
               <div className="text-center">
-                {user.point_reward_amount} {user.point_reward_type}
+                {user.point_reward_amount ? `${user.point_reward_amount} ${user.point_reward_type}` : '-'}
               </div>
             </li>
           ))
