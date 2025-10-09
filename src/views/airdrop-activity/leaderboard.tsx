@@ -208,7 +208,7 @@ export default function AirdropLeaderboard() {
             onChange={(page) => setPage(page)}
           />
           <Link to="/app/airdrop/activity-history" className="ml-auto rounded-full bg-primary px-4 py-2">
-            Current Submission
+            All Submissions
           </Link>
         </div>
       </Spin>
