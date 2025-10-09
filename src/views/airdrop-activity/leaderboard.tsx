@@ -107,7 +107,7 @@ function LeaderboardTable(props: { list: AirdropSeasonRankItem[] }) {
   return (
     <div className={`relative w-full rounded-2xl text-white`}>
       {/* Use CSS Grid to ensure column alignment */}
-      <div className="mb-1 mt-6 grid grid-cols-[112px_auto_1fr_108px_108px_108px] gap-3 border-b border-b-[#ffffff1f] py-2 text-sm font-normal text-gray-400">
+      <div className="mb-1 mt-6 grid grid-cols-[112px_36px_1fr_108px_108px_108px] gap-3 border-b border-b-[#ffffff1f] py-2 text-sm font-normal text-gray-400">
         <div className="text-center">Rank</div>
         <div className="text-center">User</div>
         <div className="text-left">Name</div>
@@ -125,7 +125,7 @@ function LeaderboardTable(props: { list: AirdropSeasonRankItem[] }) {
             <li
               key={user.user_id}
               className={cn(
-                'mb-1 grid h-[60px] grid-cols-[112px_auto_1fr_108px_108px_108px] items-center gap-3 rounded-lg px-0',
+                'mb-1 grid h-[60px] grid-cols-[112px_36px_1fr_108px_108px_108px] items-center gap-3 rounded-lg px-0',
                 user.rank === 1 && 'bg-gradient-to-r from-[#FCC800]/[0.16] to-40%',
                 user.rank === 2 && 'bg-gradient-to-r from-[#CCCCCB]/[0.16] to-40%',
                 user.rank === 3 && 'bg-gradient-to-r from-[#FC8800]/[0.16] to-40%'
