@@ -72,6 +72,8 @@ export interface AirdropSeasonRankItem {
   score: number
   reward_type: RewardType
   reward_amount: number
+  point_reward_type: 'POINTS'
+  point_reward_amount: number
 }
 
 export interface AirdropRankHistoryItem {

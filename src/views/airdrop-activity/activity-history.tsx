@@ -236,7 +236,7 @@ export default function AirdropActivityHistory() {
       <div className="mb-6 flex gap-2 text-[#BBBBBE]">
         <Info></Info>
         <span>
-          season event points and records will be cleared after the start of the next cycle's activity, and submitted
+          season event diamond and records will be cleared after the start of the next cycle's activity, and submitted
           records can be viewed in the corresponding frontier.
         </span>
       </div>
