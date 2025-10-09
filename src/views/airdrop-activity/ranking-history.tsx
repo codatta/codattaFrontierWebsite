@@ -50,18 +50,22 @@ function RankingHistoryItem(props: { item: AirdropRankHistoryItem }) {
       <div>
         <div className="inline-flex items-center gap-8 rounded-md bg-[#252532] p-3">
           <span>Ranking: #{item.user_rank}</span>
-          <span>
-            Reward{' '}
-            <span className="font-bold text-primary">
-              {item.reward_amount} {item.reward_type}
+          {item.reward_amount > 0 && (
+            <span>
+              Reward{' '}
+              <span className="font-bold text-primary">
+                {item.reward_amount} {item.reward_type}
+              </span>
             </span>
-          </span>
-          <span>
-            Point{' '}
-            <span className="font-bold text-primary">
-              {item.point_reward_amount} {item.point_reward_type}
+          )}
+          {item.point_reward_amount > 0 && (
+            <span>
+              Point{' '}
+              <span className="font-bold text-primary">
+                {item.point_reward_amount} {item.point_reward_type}
+              </span>
             </span>
-          </span>
+          )}
         </div>
       </div>
       <div className="text-right">
