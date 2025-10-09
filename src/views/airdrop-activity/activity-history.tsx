@@ -57,7 +57,7 @@ function AirdropActivityHistoryHeader() {
         <h1 className="text-nowrap text-2xl font-bold">{currentAirdropInfo?.name}</h1>
       </div>
       <div className="flex flex-auto flex-wrap items-center justify-center gap-2">
-        <div className="text-nowrap rounded-full border px-2 py-0.5">Total Points</div>
+        <div className="text-nowrap rounded-full border px-2 py-0.5">Event Diamond</div>
         <div className="text-nowrap text-2xl font-bold text-[#FCC800]">{totalScore?.toLocaleString()}</div>
       </div>
     </div>
@@ -112,7 +112,7 @@ function HistoryItem({ item }: { item: AirdropActivityHistoryItem }) {
         {getStatusDisplay(item.status)}
       </div>
       <div>
-        <p className="mb-1.5 text-[#BBBBBE]">Points</p>
+        <p className="mb-1.5 text-[#BBBBBE]">Event Diamond</p>
         {getPointsDisplay(item.status, item.score)}
       </div>
     </div>
