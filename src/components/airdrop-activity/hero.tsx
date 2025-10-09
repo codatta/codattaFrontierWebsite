@@ -66,20 +66,20 @@ export default function AirdropActivityHero() {
                   <p className="text-xs text-white/80"> {currentAirdropInfo?.total_rewards[0].reward_type}</p>
                 </div>
 
+                {/* Points Reward */}
+                <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
+                  <p className="text-sm font-medium text-white/70">Points Reward</p>
+                  <p className="text-3xl font-extrabold text-white md:text-2xl">
+                    {currentAirdropInfo?.reward.reward_amount}
+                  </p>
+                  <p className="text-xs text-white/80">{currentAirdropInfo?.reward.reward_type}</p>
+                </div>
+
                 {/* Participants */}
                 <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
                   <p className="text-sm font-medium text-white/70">Participants</p>
                   <p className="text-3xl font-extrabold text-white md:text-2xl">{currentAirdropInfo?.participants}</p>
                   <p className="text-xs text-white/80">All Experts Joined</p>
-                </div>
-
-                {/* Top 10 Reward */}
-                <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
-                  <p className="text-sm font-medium text-white/70">{currentAirdropInfo?.reward.name}</p>
-                  <p className="text-3xl font-extrabold text-white md:text-2xl">
-                    {currentAirdropInfo?.reward.reward_amount}
-                  </p>
-                  <p className="text-xs text-white/80">{currentAirdropInfo?.reward.reward_type}</p>
                 </div>
 
                 {/* Leaderboard */}

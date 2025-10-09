@@ -38,8 +38,8 @@ function RankingHistoryItem(props: { item: AirdropRankHistoryItem }) {
   const status = getStatus()
 
   return (
-    <div className="grid grid-cols-4 items-center rounded-2xl border border-white/5 p-6 leading-[24px]">
-      <div className="col-span-2">
+    <div className="grid grid-cols-[auto_480px_108px] items-center rounded-2xl border border-white/5 p-6 leading-[24px]">
+      <div>
         <p className="mb-[6px] text-base font-bold text-white">{item.name}</p>
         <div className="flex items-center gap-6 text-[#BBBBBE]">
           <div className="flex items-center gap-1">
@@ -48,13 +48,21 @@ function RankingHistoryItem(props: { item: AirdropRankHistoryItem }) {
         </div>
       </div>
       <div>
-        <p className="mb-[6px]">Ranking: #{item.user_rank}</p>
-        <p>
-          Reward:{' '}
-          <span className="font-bold text-primary">
-            {item.reward_amount} {item.reward_type}
+        <div className="inline-flex items-center gap-8 rounded-md bg-[#252532] p-3">
+          <span>Ranking: #{item.user_rank}</span>
+          <span>
+            Reward{' '}
+            <span className="font-bold text-primary">
+              {item.reward_amount} {item.reward_type}
+            </span>
           </span>
-        </p>
+          <span>
+            Point{' '}
+            <span className="font-bold text-primary">
+              {item.point_reward_amount} {item.point_reward_type}
+            </span>
+          </span>
+        </div>
       </div>
       <div className="text-right">
         <div className="flex items-center justify-end gap-1">

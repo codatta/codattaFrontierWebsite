@@ -6,7 +6,7 @@ import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useMemo } from 'react'
 import { Clock, Users2 } from 'lucide-react'
-import RewardIcon from '@/assets/airdrop-activity/ponit-icon.webp'
+import RewardIcon from '@/assets/airdrop-activity/diamond.webp'
 
 const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
   <div
