@@ -67,7 +67,6 @@ const FoodTplW9 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
 const FoodTplW10 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
 const FoodTplW11 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
 const FoodTplW12 = lazy(() => import('@/views/frontiers/food_tpl_w12'))
-const FoodTplM10 = lazy(() => import('@/views/frontiers/food_tpl_m10'))
 const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
 const RoboticsTplW12 = lazy(() => import('@/views/frontiers/robitcs_tpl_w12'))
 
@@ -98,6 +97,7 @@ const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_model_comparison'))
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
+const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -250,7 +250,7 @@ export default function Router() {
           path="/frontier/project/FOOD_TPL_W12/:taskId/:questId"
           element={<FoodTplW12 templateId="FOOD_TPL_W12" />}
         />
-        <Route path="/frontier/project/FOOD_TPL_M10/:taskId" element={<FoodTplM10 templateId="FOOD_TPL_M10" />} />
+        <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
         <Route
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
           element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
