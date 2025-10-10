@@ -263,18 +263,17 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
               />
               {errors.calories && <p className="text-sm text-red-400">{errors.calories}</p>}
             </div>
-
-            <div className="mt-12 bg-[#FFFFFF0A]">
-              <div className="mx-auto max-w-[1320px] px-6">
-                <ExpertRedline />
-              </div>
-            </div>
-            <Button
-              text="Submit"
-              className={`h-[44px] w-full rounded-full text-base font-bold ${!allFieldsFilled && 'opacity-50'} md:mx-auto md:w-[240px]`}
-              onClick={handleSubmit}
-            />
           </div>
+          <div className="mt-12 bg-[#D92B2B0A]">
+            <div className="mx-auto max-w-[1320px] px-6">
+              <ExpertRedline />
+            </div>
+          </div>
+          <Button
+            text="Submit"
+            className={`h-[44px] w-full rounded-full text-base font-bold ${!allFieldsFilled && 'opacity-50'} md:mx-auto md:w-[240px]`}
+            onClick={handleSubmit}
+          />
           <SubmitSuccessModal points={rewardPoints} open={modalShow} onClose={() => window.history.back()} />
         </div>
       </Spin>
