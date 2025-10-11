@@ -37,6 +37,7 @@ export interface AirdropActivityInfo {
   reward: AirdropRewardInfo
   description: string
   total_point_reward: number
+  rules_link: string
 }
 
 export interface AirdropNameItem {

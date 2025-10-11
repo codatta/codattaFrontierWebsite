@@ -1,4 +1,4 @@
-import { CalendarDays, Loader2 } from 'lucide-react'
+import { CalendarDays, Loader2, BookText } from 'lucide-react'
 import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
 import { Link } from 'react-router'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
@@ -32,8 +32,19 @@ export default function AirdropActivityHero() {
             <div className="flex flex-col justify-between">
               <div>
                 {/* pill */}
-                <div className="mb-2 inline-flex items-center whitespace-nowrap rounded-full bg-gradient-to-b from-[#FFE37E] to-[#FFCF4E] px-5 py-2 text-sm font-semibold text-[#1E1E2A] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.08)]">
-                  {currentAirdropInfo?.title}
+                <div className="flex items-center">
+                  <div className="mb-2 inline-flex items-center whitespace-nowrap rounded-full bg-gradient-to-b from-[#FFE37E] to-[#FFCF4E] px-5 py-2 text-sm font-semibold text-[#1E1E2A] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.08)]">
+                    {currentAirdropInfo?.title}
+                  </div>
+                  {!currentAirdropInfo?.rules_link && (
+                    <a
+                      href={currentAirdropInfo?.rules_link}
+                      className="ml-auto flex items-center gap-2 rounded-full border px-4 py-2"
+                    >
+                      <BookText size={14}></BookText>
+                      Rules
+                    </a>
+                  )}
                 </div>
 
                 <h1 className="mt-3 text-2xl font-extrabold leading-tight text-white md:text-[32px]">
