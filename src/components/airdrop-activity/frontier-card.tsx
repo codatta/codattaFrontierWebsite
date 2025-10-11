@@ -40,21 +40,26 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
     <div className="overflow-hidden rounded-2xl border border-white/5 bg-[#1C1C26] text-white">
       {/* Challenge Overview Section */}
       <div className="bg-[#252532] p-6">
-        <h1 className="mb-2 text-xl font-bold text-white">{frontier.name}</h1>
-        <p className="mb-3 text-sm text-primary">{frontier.title}</p>
-
+        <a href={`/app/frontier/${frontier.frontier_id}`}>
+          <h1 className="mb-2 inline text-xl font-bold text-white transition-all hover:cursor-pointer hover:text-primary">
+            {frontier.name}
+          </h1>
+        </a>
+        <p className="my-3 text-sm text-primary">{frontier.title}</p>
         <p className="mb-3 text-sm leading-relaxed text-gray-400">{frontier.description}</p>
-
         <div className="flex flex-wrap items-center gap-6">
           {/* Reward Button */}
           <div className="mr-auto">
             {frontier.reward_amount && (
-              <div className="flex items-center gap-2 rounded-full border-2 border-black bg-gradient-to-b from-[#FFEA98] to-[#FCC800] px-4 py-2">
+              <a
+                href={`/app/frontier/${frontier.frontier_id}`}
+                className="flex items-center gap-2 rounded-full border-2 border-black bg-gradient-to-b from-[#FFEA98] to-[#FCC800] px-4 py-2"
+              >
                 <div className="flex size-4 items-center justify-center rounded-full bg-black">
                   <span className="text-xs font-bold text-yellow-400">{rewardImage}</span>
                 </div>
                 <span className="text-sm font-bold text-black">{frontier.reward_amount}</span>
-              </div>
+              </a>
             )}
           </div>
 
