@@ -27,12 +27,12 @@ export default function AirdropActivityHero() {
         </div>
       ) : (
         <div className="relative p-5 md:px-10 md:py-8">
-          <div className="grid grid-cols-1 items-end gap-6 2xl:grid-cols-[1fr,720px]">
+          <div className="grid grid-cols-1 items-end gap-6">
             {/* Left content */}
             <div className="flex flex-col justify-between">
               <div>
                 {/* pill */}
-                <div className="inline-flex items-center rounded-full bg-gradient-to-b from-[#FFE37E] to-[#FFCF4E] px-5 py-2 text-sm font-semibold text-[#1E1E2A] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.08)]">
+                <div className="mb-2 inline-flex items-center whitespace-nowrap rounded-full bg-gradient-to-b from-[#FFE37E] to-[#FFCF4E] px-5 py-2 text-sm font-semibold text-[#1E1E2A] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.08)]">
                   {currentAirdropInfo?.title}
                 </div>
 
@@ -40,9 +40,7 @@ export default function AirdropActivityHero() {
                   {currentAirdropInfo?.name}
                 </h1>
 
-                <p className="mb-3 line-clamp-2 max-w-xl text-sm text-white/70 md:text-sm">
-                  {currentAirdropInfo?.description}
-                </p>
+                <p className="mb-3 text-sm text-white/70 md:text-sm">{currentAirdropInfo?.description}</p>
               </div>
 
               {/* date */}
