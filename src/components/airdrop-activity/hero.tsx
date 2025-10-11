@@ -40,6 +40,7 @@ export default function AirdropActivityHero() {
                     <a
                       href={currentAirdropInfo?.rules_link}
                       className="ml-auto flex items-center gap-2 rounded-full border px-4 py-2"
+                      target="_blank"
                     >
                       <BookText size={14}></BookText>
                       Rules
