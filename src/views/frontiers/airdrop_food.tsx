@@ -227,7 +227,7 @@ const FoodForm: React.FC<{ templateId: string }> = ({ templateId }) => {
                 value={formData.foodWeight}
                 onChange={(e) => updateFormData('foodWeight', e)}
                 placeholder="Enter weight in grams"
-                className="w-full rounded-lg bg-white/5 px-1 py-3 text-white transition-colors placeholder:text-gray-500 focus:border-blue-500 focus:outline-none"
+                className="w-full rounded-lg bg-white/5 px-1 py-3 text-white transition-colors focus:border-blue-500 focus:outline-none [&_.input:placeholder]:text-gray-500"
                 maxLength={64}
               />
               {errors.foodWeight && <p className="text-sm text-red-400">{errors.foodWeight}</p>}
