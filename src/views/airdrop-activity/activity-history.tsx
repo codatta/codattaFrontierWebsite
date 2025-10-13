@@ -253,6 +253,7 @@ export default function AirdropActivityHistory() {
           current={page}
           total={total}
           pageSize={pageSize}
+          showSizeChanger={false}
           hideOnSinglePage
           onChange={(page) => setPage(page)}
         ></Pagination>
