@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react'
 import airdropApi, { AirdropSeasonRankItem } from '@/apis/airdrop-actvitiy'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 import TransitionEffect from '@/components/common/transition-effect'
+import { getTokenName } from '@/utils/token-name'
 
 function Headerback() {
   const navigate = useNavigate()
@@ -149,7 +150,7 @@ function LeaderboardTable(props: { list: AirdropSeasonRankItem[] }) {
               </div>
               <div className="text-center">{user.score.toLocaleString()}</div>
               <div className="text-center font-bold text-primary">
-                {user.reward_amount ? `${user.reward_amount} ${user.reward_type}` : '-'}
+                {user.reward_amount ? `${user.reward_amount} ${getTokenName(user.reward_type)}` : '-'}
               </div>
               <div className="text-center">
                 {user.point_reward_amount ? `${user.point_reward_amount} ${user.point_reward_type}` : '-'}

@@ -55,12 +55,12 @@ export default function ActivityInfo({ className }: { className?: string }) {
                 <div className="flex items-center gap-1 text-base font-bold">
                   {item.reward_asset_type == 'USDT' ? (
                     <div className="flex items-center gap-1">
-                      <USDTCoinIcon></USDTCoinIcon>
+                      <USDTCoinIcon className="size-6"></USDTCoinIcon>
                     </div>
                   ) : null}
-                  {item.reward_asset_type == 'XNY' ? (
+                  {item.reward_asset_type == 'XnYCoin' ? (
                     <div>
-                      <XNYCoinIcon></XNYCoinIcon>
+                      <XNYCoinIcon className="size-6"></XNYCoinIcon>
                     </div>
                   ) : null}
                   <div className="text-lg font-bold text-[#FCC800]">{formatNumber(item.total_asset_amount || 0)}</div>

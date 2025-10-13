@@ -58,7 +58,7 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
                 <div className="flex size-4 items-center justify-center rounded-full bg-black">
                   <span className="text-xs font-bold text-yellow-400">{rewardImage}</span>
                 </div>
-                <span className="text-sm font-bold text-black">{frontier.reward_amount}</span>
+                <span className="text-sm font-bold text-black">{frontier.reward_amount.toLocaleString()}</span>
               </a>
             )}
           </div>
