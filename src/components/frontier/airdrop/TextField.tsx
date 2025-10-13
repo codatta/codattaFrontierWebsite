@@ -23,7 +23,7 @@ export default function TextField({
   showCount
 }: TextFieldProps) {
   const onHandleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange?.(e.target.value)
+    onChange?.(e.target.value.trimStart())
   }
 
   return (
@@ -34,7 +34,7 @@ export default function TextField({
       rows={rows}
       maxLength={maxLength}
       showCount={showCount}
-      className={cn('!w-full !rounded-lg !bg-none !px-4 !py-3 !text-white placeholder:!text-[#606067]', className)}
+      className={cn('!w-full !rounded-lg !bg-none !px-1 !py-3 !text-white placeholder:!text-[#606067]', className)}
     />
   )
 }

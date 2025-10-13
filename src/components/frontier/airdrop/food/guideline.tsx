@@ -3,35 +3,36 @@ export default function Guideline() {
     task_description: {
       des: (
         <>
-          This project aims to discover and correct specific errors made by large models when answering objective
-          questions. You are required to submit an objective question, an incorrect answer from an AI model (text +
-          screenshot), and directly provide the standard answer for that question. The correct answer you provide will
-          serve as a 'gold standard' to help us evaluate and correct the model's knowledge gaps.
+          This project aims to co-create a high-quality food nutrition database through the food photos you take and
+          your precise annotations. You are required to submit a clear, aesthetically pleasing photo of a ready-to-eat
+          dish. Please note: raw ingredients such as raw meat, raw fish, unprocessed vegetables, or unopened packaged
+          products do not meet the requirements. Additionally, please provide an accurate food name, quantity, cooking
+          method, and estimated calories for the food in the photo.
         </>
       )
     },
     evaluation_criteria: {
-      des: 'Your submission will be automatically given a quality score from D to S based on the following criteria:',
+      des: 'Your submission will be comprehensively reviewed by the system, combining both image and text information, and given a quality score from D to S based on the following criteria:',
       list: [
         {
           label: 'D',
-          des: 'The submitted answer text severely mismatches the screenshot content, or the submission contains invalid information like gibberish, ads, etc.'
+          des: 'The submitted image URL is invalid or inaccessible; there is no clearly discernible food in the picture; or the food is a non-ready-to-eat raw ingredient (e.g., raw meat, raw fish).'
         },
         {
           label: 'C',
-          des: 'The submitted question is subjective (e.g., seeking opinions or suggestions) rather than an objective question with a single standard answer.'
+          des: 'The annotated text information is gibberish, an ad, or completely unrelated to food.'
         },
         {
           label: 'B',
-          des: "The model's answer is already mostly correct, and your provided 'correct answer' has no substantial difference from it (e.g., only fixing format, units, or wording)."
+          des: "The annotated information contains obvious errors relative to the image content. For example: the food name doesn't match the picture, or the quantity, cooking method, or calorie values severely deviate from common sense."
         },
         {
           label: 'A',
-          des: "The 'correct answer' you provided is partially correct but is incomplete or fails to fully address the core of the question."
+          des: 'The annotated information is generally accurate, but the image quality is poor, such as a blurry main subject, poor composition, dim lighting, or a cluttered background.'
         },
         {
           label: 'S',
-          des: "The model's answer contains a critical error, and the 'correct answer' you provided accurately and completely corrects it."
+          des: 'A perfect submission-the image is clear and aesthetically pleasing, and all annotated information is accurate, reasonable, and complete.'
         }
       ]
     }
