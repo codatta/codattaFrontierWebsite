@@ -16,6 +16,11 @@ export default function AirdropActivityHero() {
     })
   }
 
+  function getTokenName(token: string) {
+    if (token === 'XnYCoin') return 'XNY Token'
+    return token
+  }
+
   return (
     <section
       style={{ backgroundImage: `url(${HeroBgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
@@ -40,6 +45,7 @@ export default function AirdropActivityHero() {
                     <a
                       href={currentAirdropInfo?.rules_link}
                       className="ml-auto flex items-center gap-2 rounded-full border px-4 py-2"
+                      target="_blank"
                     >
                       <BookText size={14}></BookText>
                       Rules
@@ -70,16 +76,19 @@ export default function AirdropActivityHero() {
                 <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
                   <p className="text-sm font-medium text-white/70">Total Rewards</p>
                   <p className="text-3xl font-extrabold text-[#FFDF37] md:text-2xl">
-                    {currentAirdropInfo?.total_rewards[0].reward_amount}
+                    {currentAirdropInfo?.total_rewards[0].reward_amount.toLocaleString()}
                   </p>
-                  <p className="text-xs text-white/80"> {currentAirdropInfo?.total_rewards[0].reward_type}</p>
+                  <p className="text-xs text-white/80">
+                    {' '}
+                    {getTokenName(currentAirdropInfo?.total_rewards[0].reward_type)}
+                  </p>
                 </div>
 
                 {/* Points Reward */}
                 <div className="flex flex-col gap-0.5 rounded-xl bg-white/0 p-[18px] text-center transition-none hover:bg-black/70">
                   <p className="text-sm font-medium text-white/70">Points Reward</p>
                   <p className="text-3xl font-extrabold text-white md:text-2xl">
-                    {currentAirdropInfo?.total_point_reward}
+                    {currentAirdropInfo?.total_point_reward.toLocaleString()}
                   </p>
                   <p className="text-xs text-white/80">POINTS</p>
                 </div>

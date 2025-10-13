@@ -5,6 +5,7 @@ import airdropApi, { AirdropRankHistoryItem } from '@/apis/airdrop-actvitiy'
 import { Empty, message, Spin } from 'antd'
 import { Pagination } from 'antd'
 import dayjs from 'dayjs'
+import { getTokenName } from '@/utils/token-name'
 
 function Headerback() {
   const navigate = useNavigate()
@@ -54,7 +55,7 @@ function RankingHistoryItem(props: { item: AirdropRankHistoryItem }) {
             Reward{' '}
             {item.reward_amount > 0 ? (
               <span className="font-bold text-primary">
-                {item.reward_amount} {item.reward_type}
+                {item.reward_amount} {getTokenName(item.reward_type)}
               </span>
             ) : (
               <span className="font-bold text-[#77777D]">No Reward</span>
@@ -124,6 +125,7 @@ export default function RankingHistory() {
             current={page}
             total={total}
             // hideOnSinglePage
+            showSizeChanger={false}
             pageSize={pageSize}
             onChange={(page) => setPage(page)}
           />
