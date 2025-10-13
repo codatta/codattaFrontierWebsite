@@ -240,7 +240,7 @@ export default function MyForm({ onSubmit }: { onSubmit: (data: ExpertAnswerForm
             label: 'Correct Answer',
             component: (
               <TextField
-                placeholder="Please analyze and identify the specific reasons for the AI's incorrect answer"
+                placeholder="Please provide the correct answer or solution"
                 value={formData.correct_answer}
                 onChange={(value) => updateFormData('correct_answer', value)}
                 maxLength={CORRECT_ANSWER_MAX_LENGTH}
