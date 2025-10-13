@@ -44,7 +44,7 @@ function UserRank(props: { rank: number; className: string }) {
         </div>
       )}
 
-      {rank > 3 && <div className="w-9 text-center">{rank > 99 ? '99+' : rank}</div>}
+      {rank > 3 && <div className="w-9 text-center">{rank}</div>}
     </div>
   )
 }
