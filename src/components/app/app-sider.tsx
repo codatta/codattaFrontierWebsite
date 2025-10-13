@@ -370,7 +370,13 @@ export default function AppSider() {
       setExtraAppMenuItems([
         {
           icon: <AirdropIcon color="white" />,
-          label: 'Airdrop',
+          label: (
+            <div className="flex items-center gap-2">
+              <span>Airdrop</span>
+              {/* red animate dot */}
+              <AnimationDot show={true} customClass="bg-red-500" />
+            </div>
+          ),
           isDynamic: true,
           key: '/app/airdrop',
           priority: 2.5

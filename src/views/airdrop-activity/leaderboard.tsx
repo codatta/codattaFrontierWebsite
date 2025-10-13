@@ -168,7 +168,7 @@ export default function AirdropLeaderboard() {
   const [total, setTotal] = useState(0)
   const { currentAirdropSeasonId } = useAirdropActivityStore()
   const [page, setPage] = useState(1)
-  const [pageSize] = useState(24)
+  const [pageSize] = useState(48)
   const [loading, setLoading] = useState(false)
   const [userRank, setUserRank] = useState(0)
 
@@ -205,6 +205,7 @@ export default function AirdropLeaderboard() {
             current={page}
             total={total}
             hideOnSinglePage
+            showSizeChanger={false}
             pageSize={pageSize}
             onChange={(page) => setPage(page)}
           />
