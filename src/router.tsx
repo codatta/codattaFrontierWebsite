@@ -8,6 +8,7 @@ import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
 import BoosterLayout from '@/layouts/booster-layout'
 import { trackPageView } from './utils/track'
+import GlobalModalHost from './components/app/global-modal-host'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -501,6 +502,7 @@ export default function Router() {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <GlobalModalHost />
     </BrowserRouter>
   )
 }

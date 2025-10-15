@@ -1,11 +1,10 @@
 import { AxiosInstance } from 'axios'
 import request, { PaginationResponse, TPagination } from './request'
-import { data } from 'react-router-dom'
 
 interface Response<T> {
   data: T
   success: true
-  errorCode: 0
+  errorCode: number
   errorMessage: string
 }
 
@@ -189,6 +188,7 @@ class frontier {
       task_id: taskId,
       data_submission: data
     })
+
     return res.data
   }
 
@@ -212,7 +212,7 @@ class frontier {
   }
 
   async getFrontiers(): Promise<Response<FrontierListItem[]>> {
-    const res = await this.request.post('/v2/frontier/list ', data)
+    const res = await this.request.post('/v2/frontier/list')
     return res.data
   }
 

@@ -1,3 +1,4 @@
+import { appStoreActions } from '@/stores/app.store'
 import { authRedirect } from '@/utils/auth-redirect'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import cookies from 'js-cookie'
@@ -26,6 +27,18 @@ function baseResponseInterceptor(res: AxiosResponse) {
   }
 
   if (isResTypeB && res.data?.success !== true) {
+    if (res.data.errorCode === 6019) {
+      appStoreActions.openModal({
+        type: 'error',
+        title: 'Submission Restricted',
+        content:
+          'Our system has detected a violation of the data submission policy. Your data submission access has been suspended for 14 days.Please review the rules carefully before your next submission. \n For assistance or to appeal, please contact us at \n support@codatta.io.'
+      })
+
+      const error = new AxiosError('Submission Restricted', res.data?.errorCode, res.config, res.request, res)
+      return Promise.reject(error)
+    }
+
     const error = new AxiosError(res.data?.errorMessage, res.data?.errorCode, res.config, res.request, res)
     return Promise.reject(error)
   }
