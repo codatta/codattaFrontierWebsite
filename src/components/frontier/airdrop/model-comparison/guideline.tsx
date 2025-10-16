@@ -1,5 +1,3 @@
-import { Info } from 'lucide-react'
-
 export default function Guideline() {
   const list = {
     task_description: {
