@@ -36,6 +36,7 @@ const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
 const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
 const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
+const UserInfoDid = lazy(() => import('@/views/userinfo/did'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
@@ -163,6 +164,7 @@ export default function Router() {
             <Route path="onchain" element={<UserInfoOnchain />} />
             <Route path="data-profile" element={<UserInfoDataProfile />} />
             <Route path="data-assets" element={<UserInfoDataAssets />} />
+            <Route path="did" element={<UserInfoDid />} />
           </Route>
 
           <Route path="quest">
