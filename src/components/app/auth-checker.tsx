@@ -19,17 +19,17 @@ export default function ExtensionChecker(props: { children: React.ReactNode }) {
     userStoreActions.logout()
   }
 
-  useEffect(() => {
-    if (!lastUsedWallet) return
+  // useEffect(() => {
+  //   if (!lastUsedWallet) return
 
-    lastUsedWallet.provider?.on('accountsChanged', handleLogout)
-    lastUsedWallet.provider?.on('disconnect', handleLogout)
+  //   lastUsedWallet.provider?.on('accountsChanged', handleLogout)
+  //   lastUsedWallet.provider?.on('disconnect', handleLogout)
 
-    return () => {
-      lastUsedWallet.provider?.removeListener('accountsChanged', handleLogout)
-      lastUsedWallet.provider?.removeListener('disconnect', handleLogout)
-    }
-  }, [lastUsedWallet])
+  //   return () => {
+  //     lastUsedWallet.provider?.removeListener('accountsChanged', handleLogout)
+  //     lastUsedWallet.provider?.removeListener('disconnect', handleLogout)
+  //   }
+  // }, [lastUsedWallet])
 
   if (isLogin) return <>{props.children}</>
   else {

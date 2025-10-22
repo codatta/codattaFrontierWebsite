@@ -1,5 +1,5 @@
-import { Button } from 'antd'
-import { useMemo, useState } from 'react'
+import { Button, Modal, Spin } from 'antd'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import CheckboxIcon from '@/assets/common/checkbox-circle-line.svg?react'
 import ConnectedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
@@ -9,6 +9,9 @@ import PendingIcon from '@/assets/userinfo/loader-line-icon.svg?react'
 import FailIcon from '@/assets/userinfo/close-line-icon.svg?react'
 
 import { shortenAddress } from '@/utils/wallet-address'
+import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
+import { getAddress } from 'viem'
+import { base, mainnet, bsc, arbitrum, optimism, polygon, sepolia } from 'viem/chains'
 
 export default function UserInfoDid() {
   const onBaseNetworkConnected = () => {}
@@ -16,24 +19,73 @@ export default function UserInfoDid() {
   return (
     <div>
       <h3 className="mb-1 text-[32px] font-bold leading-[48px]">Register DID</h3>
-      {/* <ChooseEvmWalletView onBaseNetworkConnected={onBaseNetworkConnected} /> */}
-      <RegisterDidView />
+      <ChooseEvmWalletView onBaseNetworkConnected={onBaseNetworkConnected} />
+      {/* <RegisterDidView /> */}
     </div>
   )
 }
 
 function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnected: () => void }) {
-  const [address, setAddress] = useState('0x9fA1jljljeejjerlrjelrkj')
-  const [network, setNetwork] = useState('Base')
+  const [loading, setLoading] = useState(false)
+  const [network, setNetwork] = useState('')
+  const [address, setAddress] = useState('')
+  const [showWallet, setShowWallet] = useState(false)
   const isBaseNetwork = useMemo(() => network.toLocaleLowerCase() === 'base', [network])
 
-  const onSwitchToBase = () => {
-    setNetwork('Base')
+  const { lastUsedWallet } = useCodattaConnectContext()
+
+  const getWalletInfo = useCallback(async () => {
+    if (!lastUsedWallet || !lastUsedWallet.address) {
+      return
+    }
+
+    try {
+      const address = getAddress(lastUsedWallet.address!)
+      setAddress(address)
+
+      const chainId = await lastUsedWallet.getChain()
+      if (!chainId) throw new Error('Chain not found')
+
+      const supportedChains = [mainnet, base, bsc, arbitrum, optimism, polygon, sepolia]
+      const currentChain = supportedChains.find((chain) => chain.id === chainId)
+
+      if (currentChain) {
+        setNetwork(currentChain.name)
+      } else {
+        setNetwork('Unknown Network')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+
+    console.log('chainId', base.id, base.name)
+  }, [lastUsedWallet])
+
+  const onSwitchToBase = async () => {
+    const res = await lastUsedWallet?.switchChain(base)
+    await getWalletInfo()
+    console.log('re', res)
   }
+
+  const handleOnEvmWalletConnect = async (connectInfo: EmvWalletConnectInfo) => {
+    setShowWallet(false)
+    getWalletInfo()
+    console.log(connectInfo)
+  }
+
+  useEffect(() => {
+    getWalletInfo()
+  }, [getWalletInfo, lastUsedWallet])
+
+  useEffect(() => {
+    if (!lastUsedWallet || !lastUsedWallet.connected) {
+      setShowWallet(true)
+    }
+  }, [lastUsedWallet])
 
   function View1() {
     return (
-      <>
+      <Spin spinning={loading}>
         <div className="mt-6 rounded-2xl bg-[#875DFF1A] p-6">
           <div className="flex items-center justify-between border-b border-b-[#FFFFFF1F] pb-3">
             <span className="text-lg font-bold">Address: {shortenAddress(address, 8)}</span>
@@ -44,10 +96,26 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
             <span className="font-bold">wallet extension</span> will prompt for confirmation.
           </p>
         </div>
+        <Modal
+          open={showWallet}
+          onCancel={() => setShowWallet(false)}
+          width={468}
+          footer={null}
+          styles={{ content: { padding: 0 } }}
+          destroyOnHidden
+          maskClosable={false}
+          closable={!loading}
+        >
+          <CodattaConnect
+            config={{ showTonConnect: false, showFeaturedWallets: true }}
+            onEvmWalletConnect={handleOnEvmWalletConnect}
+          ></CodattaConnect>
+        </Modal>
+
         <Button type="primary" className="mx-auto my-12 block h-[40px] w-[240px] rounded-full" onClick={onSwitchToBase}>
           Switch to Base
         </Button>
-      </>
+      </Spin>
     )
   }
 
@@ -79,6 +147,7 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
 }
 
 function RegisterDidView() {
+  const [loading, setLoading] = useState(false)
   const [view, setView] = useState<'view1' | 'view2'>('view1')
 
   function CommonView() {
@@ -181,11 +250,13 @@ function RegisterDidView() {
   }
 
   return (
-    <div className="mx-auto my-12 w-[612px] text-base">
-      <h4 className="text-xl font-bold">Create DlD & Apply Authorization</h4>
+    <Spin spinning={loading}>
+      <div className="mx-auto my-12 w-[612px] text-base">
+        <h4 className="text-xl font-bold">Create DlD & Apply Authorization</h4>
 
-      {view === 'view1' && <View1 />}
-      {view === 'view2' && <View2 />}
-    </div>
+        {view === 'view1' && <View1 />}
+        {view === 'view2' && <View2 />}
+      </div>
+    </Spin>
   )
 }
