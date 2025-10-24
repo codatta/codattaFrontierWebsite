@@ -10,23 +10,25 @@ import FailIcon from '@/assets/userinfo/close-line-icon.svg?react'
 
 import { shortenAddress } from '@/utils/wallet-address'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
-import { getAddress } from 'viem'
+import { createPublicClient, formatEther, getAddress, http } from 'viem'
 import { base, mainnet, bsc, arbitrum, optimism, polygon, sepolia } from 'viem/chains'
+import contract from '@/contracts/did-base-registrar.abi'
 
 export default function UserInfoDid() {
-  const onBaseNetworkConnected = () => {}
+  const [view, setView] = useState<'view1' | 'view2'>('view1')
+  const onBaseNetworkConnected = () => {
+    setView('view2')
+  }
 
   return (
     <div>
       <h3 className="mb-1 text-[32px] font-bold leading-[48px]">Register DID</h3>
-      <ChooseEvmWalletView onBaseNetworkConnected={onBaseNetworkConnected} />
-      {/* <RegisterDidView /> */}
+      {view === 'view1' ? <ChooseEvmWalletView onBaseNetworkConnected={onBaseNetworkConnected} /> : <RegisterDidView />}
     </div>
   )
 }
 
 function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnected: () => void }) {
-  const [loading, setLoading] = useState(false)
   const [network, setNetwork] = useState('')
   const [address, setAddress] = useState('')
   const [showWallet, setShowWallet] = useState(false)
@@ -74,18 +76,16 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
   }
 
   useEffect(() => {
-    getWalletInfo()
-  }, [getWalletInfo, lastUsedWallet])
-
-  useEffect(() => {
     if (!lastUsedWallet || !lastUsedWallet.connected) {
       setShowWallet(true)
+    } else {
+      getWalletInfo()
     }
-  }, [lastUsedWallet])
+  }, [getWalletInfo, lastUsedWallet])
 
   function View1() {
     return (
-      <Spin spinning={loading}>
+      <>
         <div className="mt-6 rounded-2xl bg-[#875DFF1A] p-6">
           <div className="flex items-center justify-between border-b border-b-[#FFFFFF1F] pb-3">
             <span className="text-lg font-bold">Address: {shortenAddress(address, 8)}</span>
@@ -104,7 +104,6 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
           styles={{ content: { padding: 0 } }}
           destroyOnHidden
           maskClosable={false}
-          closable={!loading}
         >
           <CodattaConnect
             config={{ showTonConnect: false, showFeaturedWallets: true }}
@@ -115,7 +114,7 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
         <Button type="primary" className="mx-auto my-12 block h-[40px] w-[240px] rounded-full" onClick={onSwitchToBase}>
           Switch to Base
         </Button>
-      </Spin>
+      </>
     )
   }
 
@@ -149,6 +148,36 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
 function RegisterDidView() {
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState<'view1' | 'view2'>('view1')
+  const [balance, setBalance] = useState<string>()
+  const { lastUsedWallet } = useCodattaConnectContext()
+  const address = useMemo(() => (lastUsedWallet?.address ? getAddress(lastUsedWallet.address) : ''), [lastUsedWallet])
+  const rpcClient = useMemo(() => {
+    const rpcUrl = contract?.chain.rpcUrls.default.http[0]
+
+    return createPublicClient({
+      chain: base,
+      transport: http(rpcUrl)
+    })
+  }, [])
+
+  const getBalance = useCallback(
+    async (address: `0x${string}`) => {
+      if (!address) return
+      const balance = await rpcClient.getBalance({
+        address
+      })
+      const balanceStr = formatEther(balance)
+
+      console.log('balance', balanceStr)
+      setBalance(balanceStr)
+    },
+    [rpcClient]
+  )
+
+  useEffect(() => {
+    if (!address) return
+    getBalance(address)
+  }, [address, getBalance])
 
   function CommonView() {
     return (
@@ -160,7 +189,7 @@ function RegisterDidView() {
         <div className="mt-6 rounded-2xl bg-[#1C1C26] px-5 py-4">
           <div className="flex items-center justify-between">
             <span className="text-sm text-[#BBBBBE]">Owner地址</span>
-            <span>8453(0x2105)</span>
+            <span>{shortenAddress(address, 8)}</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[#BBBBBE]">Gas预估</span>
