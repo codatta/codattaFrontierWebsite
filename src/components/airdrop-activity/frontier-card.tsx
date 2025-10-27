@@ -7,6 +7,7 @@ import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useMemo } from 'react'
 import { Clock, Users2 } from 'lucide-react'
 import RewardIcon from '@/assets/airdrop-activity/diamond.webp'
+import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 
 const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
   <div
@@ -25,6 +26,29 @@ const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
 
 export default function AirdropActivityFrontierCard({ frontier }: { readonly frontier: AirdropFrontierItem }) {
   const navigate = useNavigate()
+
+  const { currentAirdropInfo } = useAirdropActivityStore()
+
+  const isFinished = useMemo(() => {
+    if (!currentAirdropInfo) return false
+    try {
+      // Parse format: "2025-10-27T09:00:00+00:00.000Z"
+      const endTimeStr = currentAirdropInfo.end_time.replace(/\+00:00/, '')
+      const endTime = new Date(endTimeStr).getTime()
+
+      // Validate if the timestamp is valid
+      if (isNaN(endTime)) {
+        console.error('Invalid end_time:', endTimeStr)
+        return false
+      }
+
+      const now = new Date().getTime()
+      return now > endTime
+    } catch (error) {
+      console.error('Error parsing end_time:', error)
+      return false
+    }
+  }, [currentAirdropInfo])
 
   const goToForm = (task: AirdropFrontierTaskItem) => {
     navigate(`/frontier/project/${task.template_id}/${task.task_id}`)
@@ -100,8 +124,9 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
 
             {/* Submit Button */}
             <button
+              disabled={isFinished}
               onClick={() => goToForm(task)}
-              className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary"
+              className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
             >
               Submit
             </button>

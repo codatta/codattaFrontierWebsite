@@ -373,8 +373,6 @@ export default function AppSider() {
           label: (
             <div className="flex items-center gap-2">
               <span>Airdrop</span>
-              {/* red animate dot */}
-              <AnimationDot show={true} customClass="bg-red-500" />
             </div>
           ),
           isDynamic: true,
