@@ -156,7 +156,7 @@ class AccountApi {
   }
 
   async getAccountInfoForDidRegister() {
-    const { data } = await request.get('/v2/user/did/accounts')
+    const { data } = await request.post<{ data: { type: string; value: string }[] }>('/v2/user/did/accounts')
     return data
   }
 
