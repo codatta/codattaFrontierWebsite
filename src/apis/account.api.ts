@@ -154,6 +154,16 @@ class AccountApi {
     })
     return data
   }
+
+  async getAccountInfoForDidRegister() {
+    const { data } = await request.get('/v2/user/did/accounts')
+    return data
+  }
+
+  async bindDidAccount({ did, signature }: { did: string; signature: string }) {
+    const { data } = await request.post('/v2/user/did/bind', { did, signature })
+    return data
+  }
 }
 
 export default new AccountApi(request)

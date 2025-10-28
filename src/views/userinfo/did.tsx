@@ -10,9 +10,10 @@ import FailIcon from '@/assets/userinfo/close-line-icon.svg?react'
 
 import { shortenAddress } from '@/utils/wallet-address'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
-import { createPublicClient, formatEther, getAddress, http } from 'viem'
+import { Abi, Chain, createPublicClient, encodeFunctionData, formatEther, getAddress, http, stringToHex } from 'viem'
 import { base, mainnet, bsc, arbitrum, optimism, polygon, sepolia } from 'viem/chains'
 import contract from '@/contracts/did-base-registrar.abi'
+import accountApi from '@/apis/account.api'
 
 export default function UserInfoDid() {
   const [view, setView] = useState<'view1' | 'view2'>('view1')
@@ -59,8 +60,6 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
     } catch (error) {
       console.error(error)
     }
-
-    console.log('chainId', base.id, base.name)
   }, [lastUsedWallet])
 
   const onSwitchToBase = async () => {
@@ -149,6 +148,8 @@ function RegisterDidView() {
   const [loading, setLoading] = useState(false)
   const [view, setView] = useState<'view1' | 'view2'>('view1')
   const [balance, setBalance] = useState<string>()
+  const [accountInfo, setAccountInfo] = useState<string[]>([])
+  const [estimateGas, setEstimateGas] = useState<string>()
   const { lastUsedWallet } = useCodattaConnectContext()
   const address = useMemo(() => (lastUsedWallet?.address ? getAddress(lastUsedWallet.address) : ''), [lastUsedWallet])
   const rpcClient = useMemo(() => {
@@ -158,6 +159,28 @@ function RegisterDidView() {
       chain: base,
       transport: http(rpcUrl)
     })
+  }, [])
+
+  const getAccountInfoForDidRegister = useCallback(async () => {
+    // const res = await accountApi.getAccountInfoForDidRegister()
+    const res = [
+      {
+        type: 'EthereumAddress',
+        value: '0x8493738c9328144E04E67d563f002f3418E2059D'
+      },
+      {
+        type: 'EmailChallenge',
+        value: '0x42dca90bf744360b63dbfb00e5d65e6a55df25524d8471a08e9a5e0e463603f5'
+      }
+    ].map((item) => JSON.stringify(item))
+    console.log('getAccountInfoForDidRegister', res)
+    setAccountInfo(res)
+    return res
+  }, [])
+
+  const bindDidAccount = useCallback(async () => {
+    const res = await accountApi.bindDidAccount({ did: '', signature: '' })
+    return res
   }, [])
 
   const getBalance = useCallback(
@@ -174,10 +197,39 @@ function RegisterDidView() {
     [rpcClient]
   )
 
+  const getEstimateGas = useCallback(
+    async (contract: { abi: Abi; chain: Chain; address: string }, address: `0x${string}`) => {
+      if (!address) return
+
+      try {
+        // Convert authorization data to bytes[] format
+        // Replace with actual JSON authorization data if needed
+        const accountInfo = await getAccountInfoForDidRegister()
+        const authorizations = accountInfo.map((item) => stringToHex(item))
+
+        const estimateGas = await rpcClient.estimateGas({
+          account: address,
+          to: contract.address as `0x${string}`,
+          data: encodeFunctionData({
+            abi: contract.abi,
+            functionName: 'registerWithAuthorization',
+            args: [authorizations]
+          })
+        })
+        setEstimateGas(formatEther(estimateGas))
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [rpcClient]
+  )
+
   useEffect(() => {
     if (!address) return
     getBalance(address)
-  }, [address, getBalance])
+    getEstimateGas(contract, address)
+    getAccountInfoForDidRegister()
+  }, [address, getBalance, getEstimateGas, getAccountInfoForDidRegister])
 
   function CommonView() {
     return (
@@ -193,7 +245,7 @@ function RegisterDidView() {
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm text-[#BBBBBE]">Gas预估</span>
-            <span>8453(0x2105)</span>
+            <span>{estimateGas}</span>
           </div>
         </div>
       </>

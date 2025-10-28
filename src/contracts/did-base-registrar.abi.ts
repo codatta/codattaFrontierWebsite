@@ -32,6 +32,13 @@ const contract: { abi: Abi; chain: Chain; address: string } = {
     { type: 'function', name: 'register', inputs: [], outputs: [], stateMutability: 'nonpayable' },
     {
       type: 'function',
+      name: 'registerWithAuthorization',
+      inputs: [{ name: 'authorizations', type: 'bytes[]', internalType: 'bytes[]' }],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
       name: 'setRegistry',
       inputs: [{ name: 'registry', type: 'address', internalType: 'address' }],
       outputs: [],
