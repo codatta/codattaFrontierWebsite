@@ -139,9 +139,10 @@ export default function AirdropActivityHero() {
 
       {isFinished && (
         <div className="rounded-b-2xl bg-[#FFA8001F] p-4 text-center">
-          This event is over. Our AI experts are reviewing all submissions, <br />
-          with final results and reward distribution details coming on{' '}
-          <strong className="text-[#FFA800]">Oct 28 (9:00 UTC)</strong>. Please check later.
+          The event has ended. All rewards will be available for claim on{' '}
+          <strong className="text-[#FFA800]">Nov 3 at 9:00 UTC</strong>. <br />
+          For detailed instructions on how to claim your rewards, please refer to upcoming announcements. Thank you for
+          your participation!
         </div>
       )}
     </>
