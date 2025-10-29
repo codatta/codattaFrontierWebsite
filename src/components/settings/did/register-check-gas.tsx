@@ -1,90 +1,34 @@
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { Abi, Chain, encodeFunctionData, formatEther, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
 
 import { Button, Spin } from 'antd'
-
-import contract from '@/contracts/did-base-registrar.abi'
-import { shortenAddress } from '@/utils/wallet-address'
 import { InfoCircleOutlined } from '@ant-design/icons'
+
+import { shortenAddress } from '@/utils/wallet-address'
+import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import contract from '@/contracts/did-base-registrar.abi'
 
 function RegisterCheckGas({
   address,
   rpcClient,
-  contractArgs
+  contractArgs,
+  onNext
 }: {
   address: `0x${string}`
   rpcClient: PublicClient
-  contractArgs: string[]
+  contractArgs: string[][]
+  onNext: ({ balance, estimateGas }: { balance: string; estimateGas: string }) => void
 }) {
-  const [loading, setLoading] = useState(false)
-  const [balance, setBalance] = useState<string>('0')
-  const [estimateGas, setEstimateGas] = useState<string>('0')
-  const [gasWarning, setGasWarning] = useState('')
-
-  const checkGas = useCallback(async () => {
-    const getBalance = async (address: `0x${string}`) => {
-      if (!address) return
-      const balance = await rpcClient.getBalance({
-        address
-      })
-      const balanceStr = formatEther(balance)
-
-      console.log('balance', balanceStr)
-      setBalance(balanceStr)
-      return balanceStr
-    }
-
-    const getEstimateGas = async (contract: { abi: Abi; chain: Chain; address: string }, address: `0x${string}`) => {
-      if (!address) return
-
-      try {
-        const estimateGas = await rpcClient.estimateGas({
-          account: address,
-          to: contract.address as `0x${string}`,
-          data: encodeFunctionData({
-            abi: contract.abi,
-            functionName: 'registerWithAuthorization',
-            args: contractArgs
-          })
-        })
-        const estimateGasStr = formatEther(estimateGas)
-        setEstimateGas(estimateGasStr)
-        return estimateGasStr
-      } catch (error) {
-        console.error(error)
-        setEstimateGas('0') // TODO
-        return '0'
-      }
-    }
-
-    try {
-      if (!address || !rpcClient || !contractArgs.length) return
-
-      setLoading(true)
-      const balance = await getBalance(address)
-      const estimateGas = await getEstimateGas(contract, address)
-
-      if (balance && estimateGas) {
-        if (Number(balance) < Number(estimateGas)) {
-          setGasWarning('Balance insufficient to cover gas. Please top up and try again.')
-        }
-      }
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
-  }, [address, rpcClient, contractArgs])
-
-  useEffect(() => {
-    checkGas()
-  }, [checkGas])
+  const { loading, balance, estimateGas, gasWarning } = useGasEstimation({
+    address,
+    rpcClient,
+    contractArgs
+  })
 
   return (
     <Spin spinning={loading}>
       <div className="mt-6 rounded-2xl bg-[#875DFF1A] p-6">
         <p>
-          This will send a transaction on <span className="font-bold">Base</span> and incur gas.
+          This will send a transaction on <span className="font-bold">{contract.chain.name}</span> and incur gas.
         </p>
         <p className="font-bold"> Do you want to continue?</p>
         <div className="mt-6 rounded-2xl bg-[#1C1C26] px-5 py-4">
@@ -102,7 +46,7 @@ function RegisterCheckGas({
             <div>
               <InfoCircleOutlined className="text-lg"></InfoCircleOutlined>
             </div>
-            <p>BNB balance insufficient to cover gas. Please top up and try again.</p>
+            <p>Balance insufficient to cover gas. Please top up and try again.</p>
           </div>
         )}
       </div>
@@ -112,7 +56,11 @@ function RegisterCheckGas({
           Back
         </Button>
       ) : (
-        <Button className="mx-auto mt-12 block w-[240px] rounded-full text-sm" type="primary" onClick={() => {}}>
+        <Button
+          className="mx-auto mt-12 block w-[240px] rounded-full text-sm"
+          type="primary"
+          onClick={() => onNext({ balance, estimateGas })}
+        >
           Continue
         </Button>
       )}

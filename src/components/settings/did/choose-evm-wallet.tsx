@@ -8,12 +8,16 @@ import { getAddress } from 'viem'
 import { shortenAddress } from '@/utils/wallet-address'
 
 import ConnectedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
+import contract from '@/contracts/did-base-registrar.abi'
 
-function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnected: (address: `0x${string}`) => void }) {
-  const [network, setNetwork] = useState('')
-  const [address, setAddress] = useState('')
+function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => void }) {
+  const [network, setNetwork] = useState('Unknown Network')
+  const [address, setAddress] = useState('0x')
   const [showWallet, setShowWallet] = useState(false)
-  const isBaseNetwork = useMemo(() => network.toLocaleLowerCase() === 'base', [network])
+  const isTargetNetwork = useMemo(
+    () => network.toLocaleLowerCase() === contract.chain.name.toLocaleLowerCase(),
+    [network]
+  )
 
   const { lastUsedWallet } = useCodattaConnectContext()
 
@@ -29,7 +33,7 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
       const chainId = await lastUsedWallet.getChain()
       if (!chainId) throw new Error('Chain not found')
 
-      const supportedChains = [mainnet, base, bsc, arbitrum, optimism, polygon, sepolia]
+      const supportedChains = [mainnet, base, bsc, arbitrum, optimism, polygon, sepolia, contract.chain]
       const currentChain = supportedChains.find((chain) => chain.id === chainId)
 
       if (currentChain) {
@@ -42,8 +46,8 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
     }
   }, [lastUsedWallet])
 
-  const onSwitchToBase = async () => {
-    const res = await lastUsedWallet?.switchChain(base)
+  const onSwitchToTargetNetwork = async () => {
+    const res = await lastUsedWallet?.switchChain(contract.chain)
     await getWalletInfo()
     console.log('re', res)
   }
@@ -71,7 +75,7 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
             <span className="text-base text-[#FFA800]">Network: {network}</span>
           </div>
           <p className="mt-6 text-base">
-            DlD can be created on <span className="font-bold">Base</span> only, Your{' '}
+            DlD can be created on <span className="font-bold">{contract.chain.name}</span> only, Your{' '}
             <span className="font-bold">wallet extension</span> will prompt for confirmation.
           </p>
         </div>
@@ -90,8 +94,12 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
           ></CodattaConnect>
         </Modal>
 
-        <Button type="primary" className="mx-auto my-12 block h-[40px] w-[240px] rounded-full" onClick={onSwitchToBase}>
-          Switch to Base
+        <Button
+          type="primary"
+          className="mx-auto my-12 block h-[40px] w-[240px] rounded-full"
+          onClick={onSwitchToTargetNetwork}
+        >
+          Switch to {contract.chain.name}
         </Button>
       </>
     )
@@ -102,13 +110,13 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
       <>
         <div className="mt-6 rounded-2xl border border-[#FFFFFF1F] px-6 py-4 text-center">
           <ConnectedIcon className="mx-auto block size-[60px]" />
-          <p className="mt-6 text-xl font-bold">Connected to Base. Ready to create DlD</p>
+          <p className="mt-6 text-xl font-bold">Connected to {contract.chain.name}. Ready to create DlD</p>
           <p className="mt-2 text-base text-[#8D8D93]">Address: {shortenAddress(address, 8)}</p>
         </div>
         <Button
           type="primary"
           className="mx-auto my-12 block h-[40px] w-[240px] rounded-full"
-          onClick={() => onBaseNetworkConnected(address as `0x${string}`)}
+          onClick={() => onNext(address as `0x${string}`)}
         >
           Continue
         </Button>
@@ -119,7 +127,7 @@ function ChooseEvmWalletView({ onBaseNetworkConnected }: { onBaseNetworkConnecte
   return (
     <div className="mx-auto my-12 w-[612px] text-base">
       <h4 className="text-xl font-bold">Choose your EVM wallet</h4>
-      {!isBaseNetwork ? <View1 /> : <View2 />}
+      {!isTargetNetwork ? <View1 /> : <View2 />}
     </div>
   )
 }
