@@ -1,6 +1,6 @@
 import { Button, message, Spin } from 'antd'
-import { useEffect, useState } from 'react'
-import { decodeEventLog, PublicClient } from 'viem'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { decodeEventLog, getAddress, PublicClient } from 'viem'
 import { ExternalLink } from 'lucide-react'
 import { useCodattaConnectContext } from 'codatta-connect'
 
@@ -16,31 +16,51 @@ import registryContract from '@/contracts/did-base-registry.abi'
 import accountApi from '@/apis/account.api'
 
 export default function CreatDid({
-  address,
   rpcClient,
   contractArgs,
-  onNext,
-  estimateGas
+  estimateGas,
+  did,
+  onNext
 }: {
-  address: `0x${string}`
   rpcClient: PublicClient
   contractArgs: string[][]
   estimateGas: string
+  did?: string
   onNext: () => void
 }) {
   const [loading, setLoading] = useState(false)
   const [tip, setTip] = useState('')
-  const [did, setDid] = useState('did:kiteai-testnet:338923617616767100494389508643837036386')
-  const [txHash, setTxHash] = useState('0x8ad76b144e3b4ec1d037fb320ba24f3b18dabae32179052ab8d50529b05da5e5')
+  const [didIdentifier, setDidIdentifier] = useState<string>()
+  const [txHash, setTxHash] = useState<string>('')
   const [step1Status, setStep1Status] = useState<'pending' | 'waiting' | 'success' | 'failed'>('waiting')
   const [step2Status, setStep2Status] = useState<'pending' | 'waiting' | 'success' | 'failed'>('pending')
   const { lastUsedWallet } = useCodattaConnectContext()
+  const address = useMemo(() => {
+    if (!lastUsedWallet) return ''
+    return getAddress(lastUsedWallet.address!)
+  }, [lastUsedWallet])
 
-  const createDid = async () => {
+  const didShow = useMemo(() => {
+    if (!didIdentifier) return ''
+
+    return `did:codatta:0x${didIdentifier}`
+  }, [didIdentifier])
+
+  const createDid = useCallback(async () => {
     setLoading(true)
+    if (!address) return
+
     try {
-      const { request } = await rpcClient.simulateContract({
+      console.log('Contract call params:', {
         account: address,
+        contractAddress: contract.address,
+        functionName: 'registerWithAuthorization',
+        args: contractArgs,
+        chain: contract.chain.name
+      })
+
+      const { request } = await rpcClient.simulateContract({
+        account: address as `0x${string}`,
         address: contract.address as `0x${string}`,
         abi: contract.abi,
         functionName: 'registerWithAuthorization',
@@ -87,25 +107,11 @@ export default function CreatDid({
             if (didRegisteredLog) {
               const args = didRegisteredLog.args as unknown as { identifier: bigint; owner: string }
               const didIdentifier = args.identifier
-              const didOwner = args.owner
 
-              // Get chain name from contract config and normalize it for DID method
-              const chainName = contract.chain.name.toLowerCase().replace(/\s+/g, '-')
-
-              // Construct full DID in standard format
-              const fullDID = `did:${chainName}:${didIdentifier.toString()}`
-              const fullDIDHex = `did:${chainName}:0x${didIdentifier.toString(16)}`
-
-              console.log('✅ DID Generated Successfully!')
-              console.log('Chain:', contract.chain.name)
-              console.log('DID Identifier (decimal):', didIdentifier.toString())
-              console.log('DID Identifier (hex):', `0x${didIdentifier.toString(16)}`)
-              console.log('Full DID (decimal):', fullDID)
-              console.log('Full DID (hex):', fullDIDHex)
-              console.log('DID Owner:', didOwner)
-              console.log('Full event data:', didRegisteredLog)
-
-              setDid(fullDID)
+              setDidIdentifier(didIdentifier.toString())
+            } else {
+              console.error('DIDRegistered event not found in transaction receipt')
+              setStep1Status('failed')
             }
           } catch (error) {
             console.error('Error parsing logs:', error)
@@ -123,18 +129,55 @@ export default function CreatDid({
     } finally {
       setLoading(false)
     }
-  }
+  }, [address, contractArgs, lastUsedWallet?.client, rpcClient])
+
+  const bindDid = useCallback(async () => {
+    if (!address) return
+    if (!didIdentifier) return
+
+    setLoading(true)
+    try {
+      const {
+        data: { challenge }
+      } = await accountApi.getDidChallenge()
+      const { data } = await accountApi.bindDidAccount({
+        did: didIdentifier!.toString(),
+        signature: challenge,
+        account: address
+      })
+      if (data.flag === 1) {
+        setStep2Status('success')
+      }
+    } catch (error) {
+      console.error(error)
+      message.error(error.details || error.message)
+      setStep2Status('failed')
+    } finally {
+      setLoading(false)
+    }
+  }, [address, didIdentifier])
 
   const onTryAgain = () => {
     if (step1Status === 'failed') {
       createDid()
+    } else if (step2Status === 'failed') {
+      bindDid()
     }
   }
-  const onDone = () => {}
 
   useEffect(() => {
-    createDid()
-  }, [])
+    if (did) {
+      setStep1Status('success')
+      setStep2Status('success')
+      setDidIdentifier(did)
+    } else {
+      if (!didIdentifier) {
+        createDid()
+      } else {
+        bindDid()
+      }
+    }
+  }, [didIdentifier, bindDid, createDid, did])
 
   return (
     <Spin spinning={loading} tip={tip} wrapperClassName="text-white">
@@ -164,17 +207,19 @@ export default function CreatDid({
           </h4>
           <p className="mt-[6px] flex items-center gap-2 text-sm text-[#77777D]">
             <div className="mx-2 h-[40px] w-px bg-[#FFFFFF1F]" />
-            {did ? (
+            {didShow ? (
               <div className="flex flex-1 items-center justify-between">
-                <span>{did}</span>
-                <a
-                  href={`${contract.chain!.blockExplorers!.default.url}tx/${txHash}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 text-[#875DFF]"
-                >
-                  View on <ExternalLink color="#875DFF" size={18} />
-                </a>
+                <span>{didShow}</span>
+                {txHash && (
+                  <a
+                    href={`${contract.chain!.blockExplorers!.default.url}tx/${txHash}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="flex items-center gap-2 text-[#875DFF]"
+                  >
+                    View on <ExternalLink color="#875DFF" size={18} />
+                  </a>
+                )}
               </div>
             ) : (
               <span>Transaction submitted, Waiting for on-chain confimation...</span>
@@ -205,7 +250,7 @@ export default function CreatDid({
           Try again
         </Button>
       ) : step2Status === 'success' ? (
-        <Button className="mx-auto mt-12 block w-[240px] rounded-full text-sm" type="primary" onClick={onDone}>
+        <Button className="mx-auto mt-12 block w-[240px] rounded-full text-sm" type="primary" onClick={onNext}>
           Done
         </Button>
       ) : (

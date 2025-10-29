@@ -8,19 +8,23 @@ import accountApi from '@/apis/account.api'
 import ChooseEvmWalletView from '@/components/settings/did/choose-evm-wallet'
 import CheckGas from '@/components/settings/did/register-check-gas'
 import CreateDid from '@/components/settings/did/register-create-did'
+import { useUserStore } from '@/stores/user.store'
 
 export default function UserInfoDid() {
   const [view, setView] = useState<'view1' | 'view2' | 'view3'>('view1')
-  const [address, setAddress] = useState<`0x${string}`>('0x')
-  const [estimateGas, setEstimateGas] = useState('')
+  const [estimateGas, setEstimateGas] = useState('0')
   const [loading, setLoading] = useState(false)
   const [contractArgs, setContractArgs] = useState<string[][]>([])
+  const { info } = useUserStore()
 
   const getContractArgs = useCallback(async () => {
     setLoading(true)
     try {
       const res = await accountApi.getAccountInfoForDidRegister()
-      setContractArgs([res.data.map((item) => stringToHex(JSON.stringify(item)))])
+      console.log('Backend response:', res.data)
+      const authorizations = res.data.map((item) => stringToHex(JSON.stringify(item)))
+      console.log('Converted authorizations:', authorizations)
+      setContractArgs([authorizations])
     } catch (error) {
       console.error(error)
     } finally {
@@ -37,8 +41,7 @@ export default function UserInfoDid() {
     })
   }, [])
 
-  const onBaseNetworkConnected = (address: `0x${string}`) => {
-    setAddress(address)
+  const onBaseNetworkConnected = () => {
     setView('view2')
   }
 
@@ -47,22 +50,28 @@ export default function UserInfoDid() {
     setView('view3')
   }
 
-  const onRegisterSuccess = () => {}
+  const onRegisterSuccess = () => {
+    window.history.back()
+  }
 
   useEffect(() => {
     getContractArgs()
   }, [getContractArgs])
 
+  useEffect(() => {
+    if (info?.user_data.did) {
+      setView('view3')
+    }
+  }, [info])
+
   return (
     <Spin spinning={loading}>
       <h3 className="mb-1 text-[32px] font-bold leading-[48px]">Register DID</h3>
       {view === 'view1' && <ChooseEvmWalletView onNext={onBaseNetworkConnected} />}
-      {view === 'view2' && (
-        <CheckGas address={address} rpcClient={rpcClient} contractArgs={contractArgs} onNext={onGasChecked} />
-      )}
+      {view === 'view2' && <CheckGas rpcClient={rpcClient} contractArgs={contractArgs} onNext={onGasChecked} />}
       {view === 'view3' && (
         <CreateDid
-          address={address}
+          did={info?.user_data.did}
           rpcClient={rpcClient}
           contractArgs={contractArgs}
           estimateGas={estimateGas}

@@ -1,4 +1,4 @@
-import { PublicClient } from 'viem'
+import { getAddress, PublicClient } from 'viem'
 
 import { Button, Spin } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
@@ -6,20 +6,25 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { shortenAddress } from '@/utils/wallet-address'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import contract from '@/contracts/did-base-registrar.abi'
+import { useCodattaConnectContext } from 'codatta-connect'
+import { useMemo } from 'react'
 
 function RegisterCheckGas({
-  address,
   rpcClient,
   contractArgs,
   onNext
 }: {
-  address: `0x${string}`
   rpcClient: PublicClient
   contractArgs: string[][]
   onNext: ({ balance, estimateGas }: { balance: string; estimateGas: string }) => void
 }) {
+  const { lastUsedWallet } = useCodattaConnectContext()
+  const address = useMemo(() => {
+    if (!lastUsedWallet) return ''
+    return getAddress(lastUsedWallet.address!)
+  }, [lastUsedWallet])
   const { loading, balance, estimateGas, gasWarning } = useGasEstimation({
-    address,
+    address: address as `0x${string}`,
     rpcClient,
     contractArgs
   })

@@ -160,8 +160,13 @@ class AccountApi {
     return data
   }
 
-  async bindDidAccount({ did, signature }: { did: string; signature: string }) {
-    const { data } = await request.post('/v2/user/did/bind', { did, signature })
+  async getDidChallenge() {
+    const { data } = await request.post<{ data: { challenge: string } }>('/v2/user/did/challenge')
+    return data
+  }
+
+  async bindDidAccount({ did, signature, account }: { did: string; signature: string; account: string }) {
+    const { data } = await request.post<{ data: { flag: 0 | 1 } }>('/v2/user/did/bind', { did, signature, account })
     return data
   }
 }

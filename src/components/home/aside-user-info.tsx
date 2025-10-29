@@ -76,7 +76,7 @@ export default function UserInfoSection() {
           <img className="block size-20 rounded-full" src={info?.user_data?.avatar ?? defaultAvatar} alt="" />
         </div>
         <div className="text-[16px] font-bold">{username}</div>
-        <DidItem did={info?.user_data?.user_did} className="mt-7" />
+        <DidItem did={info?.user_data?.did} className="mt-7" />
         <CheckinBtn className="my-4" />
         <ul className="text-left text-sm leading-[22px] text-white">
           {assets.map((asset) => (
@@ -174,7 +174,7 @@ function DidItem({ className, did }: { className?: string; did?: string }) {
     >
       <div className="flex items-center gap-3">
         DID
-        <SettingsIcon className="size-4" />
+        {/* <SettingsIcon className="size-4" /> */}
       </div>
       <div className="flex items-center gap-3">
         {shortenAddress(did, 8)}
