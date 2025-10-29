@@ -13,7 +13,7 @@ import ImageLevel from '@/assets/home/level.png'
 import gridTextureImage from '@/assets/home/grid-texture.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg'
-import SettingsIcon from '@/assets/icons/settings.svg?react'
+// import SettingsIcon from '@/assets/icons/settings.svg?react'
 import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 
 import { useUserStore } from '@/stores/user.store'
