@@ -59,10 +59,10 @@ export default function UserInfoDid() {
   }, [getContractArgs])
 
   useEffect(() => {
-    if (info?.user_data.did) {
+    if (info?.user_data?.did) {
       setView('view3')
     }
-  }, [info])
+  }, [info?.user_data?.did])
 
   return (
     <Spin spinning={loading}>

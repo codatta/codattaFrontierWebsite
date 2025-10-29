@@ -14,6 +14,7 @@ import { shortenAddress } from '@/utils/wallet-address'
 import contract from '@/contracts/did-base-registrar.abi'
 import registryContract from '@/contracts/did-base-registry.abi'
 import accountApi from '@/apis/account.api'
+import { useUserStore } from '@/stores/user.store'
 
 export default function CreatDid({
   rpcClient,
@@ -35,6 +36,8 @@ export default function CreatDid({
   const [step1Status, setStep1Status] = useState<'pending' | 'waiting' | 'success' | 'failed'>('waiting')
   const [step2Status, setStep2Status] = useState<'pending' | 'waiting' | 'success' | 'failed'>('pending')
   const { lastUsedWallet } = useCodattaConnectContext()
+  const { info } = useUserStore()
+
   const address = useMemo(() => {
     if (!lastUsedWallet) return ''
     return getAddress(lastUsedWallet.address!)
@@ -134,15 +137,32 @@ export default function CreatDid({
   const bindDid = useCallback(async () => {
     if (!address) return
     if (!didIdentifier) return
+    if (!lastUsedWallet?.client) return
+
+    function createSignatureMsg(challenge: string): string {
+      const did = `did:codatta:${didIdentifier}`
+      const user_id = info?.user_data?.user_id
+      const message = `Bind DID to Codatta user\nDID: ${did}\nUser ID: ${user_id}\nChallenge: ${challenge}`
+      return message
+    }
 
     setLoading(true)
     try {
       const {
         data: { challenge }
       } = await accountApi.getDidChallenge()
+
+      const signatureMsg = createSignatureMsg(challenge)
+
+      console.log('signatureMsg', signatureMsg)
+
+      const signature = await lastUsedWallet?.client.signMessage({
+        account: address,
+        message: signatureMsg
+      })
       const { data } = await accountApi.bindDidAccount({
         did: didIdentifier!.toString(),
-        signature: challenge,
+        signature: signature!,
         account: address
       })
       if (data.flag === 1) {
@@ -155,7 +175,7 @@ export default function CreatDid({
     } finally {
       setLoading(false)
     }
-  }, [address, didIdentifier])
+  }, [address, didIdentifier, lastUsedWallet, info?.user_data?.user_id])
 
   const onTryAgain = () => {
     if (step1Status === 'failed') {
