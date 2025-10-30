@@ -163,8 +163,9 @@ export default function UserSecurity() {
   function EmailConnectButton() {
     return (
       <button
-        className="flex w-full shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black"
+        className="flex w-full shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black disabled:cursor-not-allowed"
         onClick={handleUpdateEmailClick}
+        disabled={true}
       >
         <Mail size={16} className="mr-2"></Mail>
         Connect Email
@@ -176,7 +177,8 @@ export default function UserSecurity() {
     return (
       <button
         onClick={handleWalletConnectClick}
-        className="flex w-full shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black"
+        className="flex w-full shrink-0 items-center rounded-lg bg-white px-4 py-3 font-semibold leading-[19px] text-black disabled:cursor-not-allowed"
+        disabled={true}
       >
         <WalletIcon size={16} className="mr-2"></WalletIcon>
         Connect Wallet

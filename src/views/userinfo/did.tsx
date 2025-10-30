@@ -66,9 +66,16 @@ export default function UserInfoDid() {
 
   return (
     <Spin spinning={loading}>
-      <h3 className="mb-1 text-[32px] font-bold leading-[48px]">Register DID</h3>
+      <h3 className="mb-1 text-[32px] font-bold leading-[48px]">Create DID & Apply Authorization</h3>
       {view === 'view1' && <ChooseEvmWalletView onNext={onBaseNetworkConnected} />}
-      {view === 'view2' && <CheckGas rpcClient={rpcClient} contractArgs={contractArgs} onNext={onGasChecked} />}
+      {view === 'view2' && (
+        <CheckGas
+          rpcClient={rpcClient}
+          contractArgs={contractArgs}
+          onNext={onGasChecked}
+          onBack={() => setView('view1')}
+        />
+      )}
       {view === 'view3' && (
         <CreateDid
           did={info?.user_data.did}
@@ -76,6 +83,7 @@ export default function UserInfoDid() {
           contractArgs={contractArgs}
           estimateGas={estimateGas}
           onNext={onRegisterSuccess}
+          onBack={() => setView('view1')}
         />
       )}
     </Spin>

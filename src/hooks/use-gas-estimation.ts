@@ -65,6 +65,8 @@ export function useGasEstimation({
       const balance = await getBalance(address)
       const estimateGas = await getEstimateGas(contract, address)
 
+      console.log('balance', balance, 'estimateGas', estimateGas)
+
       if (balance && estimateGas) {
         if (Number(balance) < Number(estimateGas)) {
           setGasWarning('Balance insufficient to cover gas. Please top up and try again.')

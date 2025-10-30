@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { cn } from '@udecode/cn'
 import { ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
@@ -16,7 +16,7 @@ import XnyIcon from '@/assets/userinfo/xny-icon.svg'
 // import SettingsIcon from '@/assets/icons/settings.svg?react'
 import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 
-import { useUserStore } from '@/stores/user.store'
+import { userStoreActions, useUserStore } from '@/stores/user.store'
 
 import { formatNumber } from '@/utils/str'
 import { shortenAddress } from '@/utils/wallet-address'
@@ -57,9 +57,9 @@ export default function UserInfoSection() {
     ]
   }, [info])
 
-  // useEffect(() => {
-  //   // userStoreActions.getUserInfo()
-  // }, [])
+  useEffect(() => {
+    userStoreActions.getUserInfo()
+  }, [])
 
   return (
     <div className="relative bg-[#252532] pt-6 text-center">

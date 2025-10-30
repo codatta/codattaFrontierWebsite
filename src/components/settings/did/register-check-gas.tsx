@@ -12,11 +12,13 @@ import { useMemo } from 'react'
 function RegisterCheckGas({
   rpcClient,
   contractArgs,
-  onNext
+  onNext,
+  onBack
 }: {
   rpcClient: PublicClient
   contractArgs: string[][]
   onNext: ({ balance, estimateGas }: { balance: string; estimateGas: string }) => void
+  onBack: () => void
 }) {
   const { lastUsedWallet } = useCodattaConnectContext()
   const address = useMemo(() => {
@@ -55,20 +57,23 @@ function RegisterCheckGas({
           </div>
         )}
       </div>
-
-      {gasWarning ? (
-        <Button className="mx-auto mt-12 block w-[240px] rounded-full text-sm" type="primary" onClick={() => {}}>
+      <div className="my-12 flex items-center justify-center gap-4">
+        <Button
+          className="block h-[40px] w-[240px] rounded-full bg-white text-sm font-medium text-black"
+          type="default"
+          onClick={onBack}
+        >
           Back
         </Button>
-      ) : (
+
         <Button
-          className="mx-auto mt-12 block w-[240px] rounded-full text-sm"
+          className="block h-[40px] w-[240px] rounded-full text-sm font-medium"
           type="primary"
           onClick={() => onNext({ balance, estimateGas })}
         >
           Continue
         </Button>
-      )}
+      </div>
     </Spin>
   )
 }
