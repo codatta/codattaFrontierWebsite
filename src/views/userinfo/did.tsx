@@ -1,6 +1,7 @@
 import { Spin } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPublicClient, http, stringToHex } from 'viem'
+import { useNavigate } from 'react-router-dom'
 
 import contract from '@/contracts/did-base-registrar.abi'
 import accountApi from '@/apis/account.api'
@@ -16,6 +17,7 @@ export default function UserInfoDid() {
   const [loading, setLoading] = useState(false)
   const [contractArgs, setContractArgs] = useState<string[][]>([])
   const { info } = useUserStore()
+  const navigate = useNavigate()
 
   const getContractArgs = useCallback(async () => {
     setLoading(true)
@@ -51,7 +53,7 @@ export default function UserInfoDid() {
   }
 
   const onRegisterSuccess = () => {
-    window.history.back()
+    navigate('/')
   }
 
   useEffect(() => {
