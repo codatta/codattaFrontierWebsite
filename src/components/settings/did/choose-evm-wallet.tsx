@@ -9,12 +9,15 @@ import { shortenAddress } from '@/utils/wallet-address'
 
 // import ConnectedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
 import contract from '@/contracts/did-base-registrar.abi'
+import { userStoreActions, useUserStore } from '@/stores/user.store'
+import accountApi from '@/apis/account.api'
 
 function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => void }) {
   const [network, setNetwork] = useState('Unknown Network')
   const [address, setAddress] = useState('')
   const [showWallet, setShowWallet] = useState(false)
   const [isTargetNetwork, setIsTargetNetwork] = useState(false)
+  const { info } = useUserStore()
 
   const { lastUsedWallet } = useCodattaConnectContext()
 
@@ -26,6 +29,7 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
 
     try {
       const address = getAddress(lastUsedWallet.address!)
+
       setAddress(address)
 
       const chainId = await lastUsedWallet.getChain()
@@ -71,9 +75,62 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
     }
   }
 
+  const checkIsWalletAddressBinded = useCallback(
+    (address: string) => {
+      for (const asset of info?.accounts_data || []) {
+        if (asset.account_type === 'block_chain' && asset.account === address) return true
+      }
+      return false
+    },
+    [info]
+  )
+
+  const checkIsCurrentWalletCanBind = useCallback(
+    async (walletInfo: EmvWalletConnectInfo): Promise<boolean> => {
+      const address = (await walletInfo.client.getAddresses())[0]
+      if (checkIsWalletAddressBinded(address)) {
+        console.log('checkIsCurrentWalletCanBind', 'is binded')
+        return true
+      }
+
+      console.log('checkIsCurrentWalletCanBind', 'is not binded')
+
+      try {
+        await accountApi.bindEvmWallet({
+          account_type: 'block_chain',
+          connector: 'codatta_wallet',
+          account_enum: 'C',
+          chain: (await walletInfo.client.getChainId()).toString(),
+          address: (await walletInfo.client.getAddresses())[0],
+          signature: walletInfo.connect_info.signature,
+          nonce: walletInfo.connect_info.nonce,
+          wallet_name: walletInfo.connect_info.wallet_name,
+          message: walletInfo.connect_info.message
+        })
+        await userStoreActions.getUserInfo()
+
+        return true
+      } catch (error) {
+        console.error(error)
+        return false
+      }
+    },
+    [checkIsWalletAddressBinded]
+  )
+
   const handleOnEvmWalletConnect = async (connectInfo: EmvWalletConnectInfo) => {
     setShowWallet(false)
-    getWalletInfo()
+
+    const isBinded = await checkIsCurrentWalletCanBind(connectInfo)
+    if (isBinded) {
+      getWalletInfo()
+    } else {
+      await message
+        .error('This wallet account is already linked to another account. Please try a different one.')
+        .then(() => {
+          setShowWallet(true)
+        })
+    }
     console.log('handleOnEvmWalletConnect', connectInfo)
   }
 
@@ -108,7 +165,7 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
             type="default"
             onClick={() => setShowWallet(true)}
           >
-            Back
+            Switch Wallet
           </Button>
           {isTargetNetwork ? (
             <Button
@@ -116,7 +173,7 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
               className="block h-[40px] w-[240px] rounded-full font-medium"
               onClick={() => onNext(address as `0x${string}`)}
             >
-              Switch Wallet
+              Next
             </Button>
           ) : (
             <Button
