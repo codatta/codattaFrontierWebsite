@@ -116,7 +116,7 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
               className="block h-[40px] w-[240px] rounded-full font-medium"
               onClick={() => onNext(address as `0x${string}`)}
             >
-              Next
+              Switch Wallet
             </Button>
           ) : (
             <Button
