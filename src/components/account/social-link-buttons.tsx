@@ -40,7 +40,7 @@ function SocialAccountButton(props: {
   )
 }
 
-export default function SocialLink({ disabled = true }: { disabled?: boolean }) {
+export default function SocialLink() {
   const { info } = useUserStore()
   const [showDisconnectAlert, setShowDisconnectAlert] = useState(false)
   const selectedSocialMedia = useRef<string>()
@@ -50,6 +50,7 @@ export default function SocialLink({ disabled = true }: { disabled?: boolean }) 
   const [xLinkInfo, setXLinkInfo] = useState<SocialAccountInfoItem | null>(null)
   const [discordLinkInfo, setDiscordLinkInfo] = useState<SocialAccountInfoItem | null>(null)
   const [telegramLinkInfo, setTelegramLinkInfo] = useState<SocialAccountInfoItem | null>(null)
+  const btnDisabled = !!info?.user_data?.did
 
   useEffect(() => {
     if (!info?.social_account_info) return
@@ -122,7 +123,7 @@ export default function SocialLink({ disabled = true }: { disabled?: boolean }) 
           title={xLinkInfo?.name || 'Connect With X'}
           icon={<XOutlined className="text-5" />}
           linked={!!xLinkInfo}
-          disabled={disabled}
+          disabled={btnDisabled}
           onLink={() => linkAccount('x')}
           onUnlink={() => handleUnlinkAccount('x')}
         ></SocialAccountButton>
@@ -131,7 +132,7 @@ export default function SocialLink({ disabled = true }: { disabled?: boolean }) 
           title={discordLinkInfo?.name || 'Connect With Discord'}
           icon={<DiscordOutlined className="text-5" />}
           linked={!!discordLinkInfo}
-          disabled={disabled}
+          disabled={btnDisabled}
           onLink={() => linkAccount('discord')}
           onUnlink={() => handleUnlinkAccount('discord')}
         ></SocialAccountButton>
@@ -140,7 +141,7 @@ export default function SocialLink({ disabled = true }: { disabled?: boolean }) 
           title={telegramLinkInfo?.name || 'Connect With Telegram'}
           icon={<TelegramIcon className="text-5" />}
           linked={!!telegramLinkInfo}
-          disabled={disabled}
+          disabled={btnDisabled}
           onLink={() => linkAccount('telegram')}
           onUnlink={() => handleUnlinkAccount('telegram')}
         ></SocialAccountButton>

@@ -177,6 +177,7 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
         <CodattaConnect
           config={{ showTonConnect: false, showFeaturedWallets: true }}
           onEvmWalletConnect={handleOnEvmWalletConnect}
+          header={<h4 className="mb-6 text-xl font-bold">Choose your EVM wallet</h4>}
         ></CodattaConnect>
       </Modal>
     </div>
