@@ -25,9 +25,11 @@ function RegisterCheckGas({
     if (!lastUsedWallet) return ''
     return getAddress(lastUsedWallet.address!)
   }, [lastUsedWallet])
-  const { loading, balance, estimateGas, gasWarning } = useGasEstimation({
+  const { loading, balance, estimateGas, gasLimit, gasWarning } = useGasEstimation({
     address: address as `0x${string}`,
     rpcClient,
+    contract,
+    functionName: 'registerWithAuthorization',
     contractArgs
   })
 
@@ -44,8 +46,14 @@ function RegisterCheckGas({
             <span>{shortenAddress(address, 8)}</span>
           </div>
           <div className="flex items-center justify-between">
+            <span className="text-sm text-[#BBBBBE]">Gas Limit</span>
+            <span>{gasLimit}</span>
+          </div>
+          <div className="flex items-center justify-between">
             <span className="text-sm text-[#BBBBBE]">Gas预估</span>
-            <span>{estimateGas}</span>
+            <span>
+              {estimateGas} {contract?.chain.nativeCurrency.symbol}
+            </span>
           </div>
         </div>
         {gasWarning && (

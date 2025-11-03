@@ -1,20 +1,78 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Abi, Chain, encodeFunctionData, formatEther, PublicClient } from 'viem'
 
-import contract from '@/contracts/did-base-registrar.abi'
+/**
+ * Calculate gas estimation with proper fee data handling
+ * Supports both EIP-1559 and legacy transactions
+ */
+export async function calculateGasEstimation({
+  rpcClient,
+  account,
+  to,
+  data
+}: {
+  rpcClient: PublicClient
+  account: `0x${string}`
+  to: `0x${string}`
+  data: `0x${string}`
+}): Promise<{ gasLimit: bigint; totalCost: bigint; totalCostFormatted: string }> {
+  // Estimate gas limit
+  const estimatedGasLimit = await rpcClient.estimateGas({
+    account,
+    to,
+    data
+  })
+
+  // Get fee data for EIP-1559 support detection
+  let totalGasCost: bigint
+  try {
+    const feeData = await rpcClient.estimateFeesPerGas()
+
+    // Calculate total gas cost based on EIP-1559 support
+    if (feeData.maxFeePerGas && feeData.maxPriorityFeePerGas) {
+      // EIP-1559 transaction (e.g., Base mainnet)
+      totalGasCost = estimatedGasLimit * feeData.maxFeePerGas
+      console.log('Using EIP-1559 pricing', { maxFeePerGas: feeData.maxFeePerGas })
+    } else {
+      const gasPrice = feeData.gasPrice || (await rpcClient.getGasPrice())
+      // Legacy transaction (e.g., Kite testnet, BSC)
+      totalGasCost = estimatedGasLimit * gasPrice
+      console.log('Using legacy pricing', { gasPrice })
+    }
+  } catch (feeError) {
+    console.warn('Failed to get fee data, using fallback', feeError)
+    // Fallback: try to get gas price directly for networks like Kite
+    const gasPrice = await rpcClient.getGasPrice()
+    totalGasCost = estimatedGasLimit * gasPrice
+    console.log('Using fallback gas price', { gasPrice })
+  }
+
+  const totalCostFormatted = formatEther(totalGasCost)
+
+  return {
+    gasLimit: estimatedGasLimit,
+    totalCost: totalGasCost,
+    totalCostFormatted
+  }
+}
 
 export function useGasEstimation({
   address,
   rpcClient,
+  contract,
+  functionName,
   contractArgs
 }: {
   address: `0x${string}`
   rpcClient: PublicClient
+  contract: { abi: Abi; chain: Chain; address: string }
+  functionName: string
   contractArgs: string[] | string[][]
 }) {
   const [loading, setLoading] = useState(true)
   const [balance, setBalance] = useState<string>('0')
   const [estimateGas, setEstimateGas] = useState<string>('0')
+  const [gasLimit, setGasLimit] = useState<string>('0')
   const [gasWarning, setGasWarning] = useState('')
   const [gasChecked, setGasChecked] = useState(false)
 
@@ -31,27 +89,37 @@ export function useGasEstimation({
       return balanceStr
     }
 
-    const getEstimateGas = async (contract: { abi: Abi; chain: Chain; address: string }, address: `0x${string}`) => {
+    const getEstimateGas = async (address: `0x${string}`) => {
       if (!address) return
 
       try {
-        const estimateGas = await rpcClient.estimateGas({
+        const data = encodeFunctionData({
+          abi: contract.abi,
+          functionName,
+          args: contractArgs
+        }) as `0x${string}`
+
+        const result = await calculateGasEstimation({
+          rpcClient,
           account: address,
           to: contract.address as `0x${string}`,
-          data: encodeFunctionData({
-            abi: contract.abi,
-            functionName: 'registerWithAuthorization',
-            args: contractArgs
-          })
+          data
         })
-        const estimateGasStr = formatEther(estimateGas)
-        setEstimateGas(estimateGasStr)
 
-        console.log('estimateGas', estimateGasStr, estimateGas)
-        return estimateGasStr
+        setGasLimit(result.gasLimit.toString())
+        setEstimateGas(result.totalCostFormatted)
+
+        console.log('Gas estimation complete:', {
+          gasLimit: result.gasLimit.toString(),
+          totalCost: result.totalCostFormatted,
+          chain: contract.chain.name
+        })
+
+        return result.totalCostFormatted
       } catch (error) {
-        console.error(error)
+        console.error('Gas estimation failed:', error)
         setEstimateGas('0')
+        setGasLimit('0')
         return '0'
       }
     }
@@ -63,7 +131,7 @@ export function useGasEstimation({
       setGasWarning('')
       setGasChecked(false)
       const balance = await getBalance(address)
-      const estimateGas = await getEstimateGas(contract, address)
+      const estimateGas = await getEstimateGas(address)
 
       console.log('balance', balance, 'estimateGas', estimateGas)
 
@@ -80,7 +148,7 @@ export function useGasEstimation({
     } finally {
       setLoading(false)
     }
-  }, [address, rpcClient, contractArgs])
+  }, [address, rpcClient, contract, functionName, contractArgs])
 
   useEffect(() => {
     checkGas()
@@ -90,6 +158,7 @@ export function useGasEstimation({
     loading,
     balance,
     estimateGas,
+    gasLimit,
     gasWarning,
     gasChecked,
     refetch: checkGas
