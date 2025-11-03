@@ -21,7 +21,7 @@ const TESTNET = defineChain({
 })
 const MAINNET = base
 
-const CONTRACT_ADDRESS_TESTNET = '0x36a2deE7cA101F0AbB787F80888dc26959ca2Df6'
+const CONTRACT_ADDRESS_TESTNET = '0xC9D49eDec9824BC07e59B4904512d432a4Cd7982'
 const CONTRACT_ADDRESS_MAINNET = '0x' // TODO
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
