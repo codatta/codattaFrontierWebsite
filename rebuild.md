@@ -13,10 +13,10 @@
 
 ## 🗑️ 待清理路由列表
 
-### 1️⃣ Food 相关路由
+<!-- ### 1️⃣ Food 相关路由
 
 | 路由模板        | 路径                                                 |
-| --------------- | ---------------------------------------------------- |
+| --------------- | ---------------------------------------------------- |` |
 | FOOD_TPL_000002 | `/frontier/project/FOOD_TPL_000002/:taskId/:questId` |
 | FOOD_TPL_000003 | `/frontier/project/FOOD_TPL_000003/:taskId`          |
 | FOOD_TPL_000003 | `/frontier/project/FOOD_TPL_000003/:taskId/:questId` |
@@ -29,7 +29,7 @@
 | FOOD_TPL_W9     | `/frontier/project/FOOD_TPL_W9/:taskId/:questId`     |
 | FOOD_TPL_W10    | `/frontier/project/FOOD_TPL_W10/:taskId/:questId`    |
 | FOOD_TPL_W11    | `/frontier/project/FOOD_TPL_W11/:taskId/:questId`    |
-| FOOD_TPL_W12    | `/frontier/project/FOOD_TPL_W12/:taskId/:questId`    |
+| FOOD_TPL_W12    | `/frontier/project/FOOD_TPL_W12/:taskId/:questId`    | -->
 
 ### 2️⃣ Robotics 相关路由
 
