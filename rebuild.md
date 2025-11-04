@@ -16,7 +16,7 @@
 <!-- ### 1️⃣ Food 相关路由
 
 | 路由模板        | 路径                                                 |
-| --------------- | ---------------------------------------------------- |` |
+| --------------- | ---------------------------------------------------- |
 | FOOD_TPL_000002 | `/frontier/project/FOOD_TPL_000002/:taskId/:questId` |
 | FOOD_TPL_000003 | `/frontier/project/FOOD_TPL_000003/:taskId`          |
 | FOOD_TPL_000003 | `/frontier/project/FOOD_TPL_000003/:taskId/:questId` |
@@ -35,20 +35,21 @@
 
 | 路由模板         | 路径                                                  |
 | ---------------- | ----------------------------------------------------- |
-| ROBOTICS_TPL_W5  | `/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId`  |
+<!-- | ROBOTICS_TPL_W5  | `/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId`  |
 | ROBOTICS_TPL_W6  | `/frontier/project/ROBOTICS_TPL_W6/:taskId/:questId`  |
 | ROBOTICS_TPL_W7  | `/frontier/project/ROBOTICS_TPL_W7/:taskId/:questId`  |
 | ROBOTICS_TPL_W8  | `/frontier/project/ROBOTICS_TPL_W8/:taskId/:questId`  |
 | ROBOTICS_TPL_W9  | `/frontier/project/ROBOTICS_TPL_W9/:taskId/:questId`  |
 | ROBOTICS_TPL_W10 | `/frontier/project/ROBOTICS_TPL_W10/:taskId/:questId` |
 | ROBOTICS_TPL_W11 | `/frontier/project/ROBOTICS_TPL_W11/:taskId/:questId` |
-| ROBOTICS_TPL_W12 | `/frontier/project/ROBOTICS_TPL_W12/:taskId/:questId` |
+| ROBOTICS_TPL_W12 | `/frontier/project/ROBOTICS_TPL_W12/:taskId/:questId` | -->
 
 ### 3️⃣ CEX 数据提交相关路由
 
 #### Withdraw 路由
+- keep CRYPTO_TPL_WITHDRAW、CRYPTO_TPL_DEPOSIT
 
-- `/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId/:questId`
+<!-- - `/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId`
 - `/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_WITHDRAW_W8/:taskId`
@@ -57,7 +58,7 @@
 - `/frontier/project/CRYPTO_TPL_WITHDRAW_W9/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_WITHDRAW_W10/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_WITHDRAW_W11/:taskId/:questId`
-- `/frontier/project/CRYPTO_TPL_WITHDRAW_W12/:taskId/:questId`
+- `/frontier/project/CRYPTO_TPL_WITHDRAW_W12/:taskId/:questId` -->
 
 #### Deposit 路由
 
