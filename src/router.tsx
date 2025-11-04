@@ -42,16 +42,6 @@ const AccountSignin = lazy(() => import('@/views/account/signin'))
 const ReferralLanding = lazy(() => import('@/views/referral-landing'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 
-// crypto
-const CryptoHome = lazy(() => import('@/views/crypto/home'))
-const CryptoValidationList = lazy(() => import('@/views/crypto/validation-list'))
-const CryptoSubmissionSubmit = lazy(() => import('@/views/crypto/submission-submit'))
-const CryptoSubmissionHistory = lazy(() => import('@/views/crypto/submission-history'))
-const CryptoBountyHome = lazy(() => import('@/views/crypto/bounty-home'))
-const CryptoBountyList = lazy(() => import('@/views/crypto/bounty-list'))
-const CryptoBountyDetail = lazy(() => import('@/views/crypto/bounty-detail'))
-const CryptoBountySubmit = lazy(() => import('@/views/crypto/bounty-submit'))
-
 // frontiers
 const FrontierHome = lazy(() => import('@/views/frontiers/home'))
 const FashionHome = lazy(() => import('@/views/fashion/home'))
@@ -174,17 +164,6 @@ export default function Router() {
           <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
           <Route path="frontier/:frontier_id/history" element={<FrontierHistory />}></Route>
           <Route path="frontier/fashion" element={<FashionHome />}></Route>
-
-          <Route path="crypto">
-            <Route index element={<CryptoHome />} />
-            <Route path="validation/list" element={<CryptoValidationList />} />
-            <Route path="submission/submit" element={<CryptoSubmissionSubmit />} />
-            <Route path="submission/history" element={<CryptoSubmissionHistory />} />
-            <Route path="bounty" element={<CryptoBountyHome />} />
-            <Route path="bounty/:id/detail" element={<CryptoBountyDetail />}></Route>
-            <Route path="bounty/:id/submit" element={<CryptoBountySubmit />}></Route>
-            <Route path="bounty/list" element={<CryptoBountyList />} />
-          </Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
         </Route>
         <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
