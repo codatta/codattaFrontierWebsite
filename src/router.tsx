@@ -78,7 +78,6 @@ const CryptoTpl000005 = lazy(() => import('@/views/frontiers/crypto_tpl_000005')
 const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_info_survey_basic'))
 const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
 
-const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
 const KitchenAppDataW12 = lazy(() => import('@/views/frontiers/kitchen_app_data_w12'))
 const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
 const HighQualityUserV2Task1 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task1'))
@@ -372,30 +371,6 @@ export default function Router() {
         <Route
           path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId/:questId"
           element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W9/:taskId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W9/:taskId/:questId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W9/:taskId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W10/:taskId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W10/:taskId/:questId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W11/:taskId/:questId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W11" />}
         />
         <Route
           path="/frontier/project/KITCHEN_TPL_W12/:taskId/:questId"
