@@ -62,7 +62,7 @@
 
 #### Deposit 路由
 
-- `/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId/:questId`
+<!-- - `/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId`
 - `/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId`
@@ -71,7 +71,7 @@
 - `/frontier/project/CRYPTO_TPL_DEPOSIT_W9/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_DEPOSIT_W10/:taskId/:questId`
 - `/frontier/project/CRYPTO_TPL_DEPOSIT_W11/:taskId/:questId`
-- `/frontier/project/CRYPTO_TPL_DEPOSIT_W12/:taskId/:questId`
+- `/frontier/project/CRYPTO_TPL_DEPOSIT_W12/:taskId/:questId` -->
 
 ### 4️⃣ 厨房旋钮相关路由
 

@@ -176,15 +176,7 @@ export default function Router() {
           element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
         />
         <Route
-          path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId/:questId"
-          element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
-        />
-        <Route
           path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId"
-          element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
-        />
-        <Route
-          path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId/:questId"
           element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
         />
         <Route
@@ -195,21 +187,12 @@ export default function Router() {
           path="/frontier/project/HIGH_QUALITY_USER/:taskId"
           element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
         />
-
-        <Route
-          path="/frontier/project/HIGH_QUALITY_USER/:taskId/:questId"
-          element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
-        />
         <Route
           path="/frontier/project/HIGH_QUALITY_USER_TASK1/:questId"
           element={<HighQualityUserV2Task1 templateId="HIGH_QUALITY_USER_TASK1" />}
         />
         <Route
           path="/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId"
-          element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
-        />
-        <Route
-          path="/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId/:questId"
           element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
         />
         <Route
