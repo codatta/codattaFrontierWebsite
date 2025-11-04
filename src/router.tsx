@@ -50,17 +50,6 @@ const RoboticsFormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const RoboticsFormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
 // frontiers templates
-const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
-const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
-const FoodTpl000003 = lazy(() => import('@/views/frontiers/food_tpl_000003'))
-const FoodTpl000004 = lazy(() => import('@/views/frontiers/food_tpl_000004'))
-const FoodTpl000005 = lazy(() => import('@/views/frontiers/food_tpl_000005'))
-const FoodTplM2W1 = lazy(() => import('@/views/frontiers/food_tpl_m2_w1'))
-const FoodTplM2W234 = lazy(() => import('@/views/frontiers/food_tpl_m2_w234'))
-const FoodTplW9 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
-const FoodTplW10 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
-const FoodTplW11 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
-const FoodTplW12 = lazy(() => import('@/views/frontiers/food_tpl_w12'))
 const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
 const RoboticsTplW12 = lazy(() => import('@/views/frontiers/robitcs_tpl_w12'))
 
@@ -169,7 +158,7 @@ export default function Router() {
           <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
         </Route>
         <Route path="/frontier/project" element={<FrontierLayout />}>
-          <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
+          {/* <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} /> */}
           <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
           <Route path="OOTD_TPL_000001/:taskId" element={<OOTDTemplate templateId="OOTD_TPL_000001" />} />
           <Route path="SPEECH_TPL_000001/:taskId" element={<SpeechTemplate templateId="SPEECH_TPL_000001" />} />
@@ -178,7 +167,7 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
         </Route>
-        <Route
+        {/* <Route
           path="/frontier/project/FOOD_TPL_000002/:taskId/:questId"
           element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
         />
@@ -230,7 +219,7 @@ export default function Router() {
         <Route
           path="/frontier/project/FOOD_TPL_W12/:taskId/:questId"
           element={<FoodTplW12 templateId="FOOD_TPL_W12" />}
-        />
+        /> */}
         <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
         <Route
           path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
@@ -264,10 +253,10 @@ export default function Router() {
           path="/frontier/project/ROBOTICS_TPL_W12/:taskId/:questId"
           element={<RoboticsTplW12 templateId="ROBOTICS_TPL_W12" />}
         />
-        <Route
+        {/* <Route
           path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
           element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
-        />
+        /> */}
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}

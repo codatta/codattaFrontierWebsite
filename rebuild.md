@@ -83,6 +83,7 @@
 ### 5️⃣ 链上数据验证路由
 
 - `/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId/:questId`
+- keep ANNOTATOR_INFO_SURVEY_BASIC、ANNOTATOR_INFO_SURVEY_QUIZ、HIGH_QUALITY_USER、HIGH_QUALITY_USER_TASK2、HIGH_QUALITY_USER_TASK1、HIGH_QUALITY_USER_TASK3
 <!-- - `/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId`
 - `/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId`
 - `/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId`
