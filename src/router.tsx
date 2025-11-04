@@ -69,7 +69,6 @@ const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
-const FashionGensmo = lazy(() => import('@/views/frontiers/fashion_gensmo'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
@@ -449,14 +448,6 @@ export default function Router() {
         <Route
           path="/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId/:questId"
           element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0002" />}
-        />
-        <Route
-          path="/frontier/project/FASHION_GENSMO/:taskId"
-          element={<FashionGensmo templateId="FASHION_GENSMO" />}
-        />
-        <Route
-          path="/frontier/project/FASHION_GENSMO/:taskId/:questId"
-          element={<FashionGensmo templateId="FASHION_GENSMO" />}
         />
 
         <Route

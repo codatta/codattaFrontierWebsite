@@ -98,7 +98,7 @@
 - `/frontier/project/FASHION_GENSMO/:taskId`
 - `/frontier/project/FASHION_GENSMO/:taskId/:questId`
 
-### 8️⃣ 老的 Crypto 相关路由
+<!-- ### 8️⃣ 老的 Crypto 相关路由
 
 #### Validation & Submission
 
@@ -111,7 +111,7 @@
 - `/app/crypto/bounty`
 - `/app/crypto/bounty/:id/detail`
 - `/app/crypto/bounty/:id/submit`
-- `/app/crypto/bounty/list`
+- `/app/crypto/bounty/list` -->
 
 #### Journey
 
