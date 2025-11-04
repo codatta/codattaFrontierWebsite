@@ -6,7 +6,6 @@ import FrontierLayout from '@/layouts/frontier-layout'
 import UserInfoLayout from '@/layouts/userinfo-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
-import BoosterLayout from '@/layouts/booster-layout'
 import { trackPageView } from './utils/track'
 import GlobalModalHost from './components/app/global-modal-host'
 
@@ -109,10 +108,6 @@ const ChatbotArenaPage = lazy(() => import('@/views/arena'))
 const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
 const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
-
-// booster
-const ReadTaskPage = lazy(() => import('@/views/booster/read'))
-const QuizTaskPage = lazy(() => import('@/views/booster/quiz'))
 
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
@@ -464,12 +459,6 @@ export default function Router() {
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
-
-        <Route path="/app/booster" element={<BoosterLayout />}>
-          <Route path=":week/read" element={<ReadTaskPage />} />
-          <Route path=":week/quiz" element={<QuizTaskPage />} />
-          <Route path="not-found" element={<NotFoundPage />} />
-        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <GlobalModalHost />

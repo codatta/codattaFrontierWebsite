@@ -93,10 +93,10 @@
 - `/app/booster/:week/read`
 - `/app/booster/:week/quiz`
 
-### 7️⃣ Favie App 导流任务路由
+<!-- ### 7️⃣ Favie App 导流任务路由
 
 - `/frontier/project/FASHION_GENSMO/:taskId`
-- `/frontier/project/FASHION_GENSMO/:taskId/:questId`
+- `/frontier/project/FASHION_GENSMO/:taskId/:questId` -->
 
 <!-- ### 8️⃣ 老的 Crypto 相关路由
 
