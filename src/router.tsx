@@ -85,8 +85,6 @@ const HighQualityUserV2Task1 = lazy(() => import('@/views/frontiers/high_quality
 const HighQualityUserV2Task2 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task2'))
 const HighQualityUserV2Task3 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task3'))
 
-const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
-
 const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_model_comparison'))
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
@@ -427,22 +425,6 @@ export default function Router() {
         <Route
           path="/frontier/project/HIGH_QUALITY_USER_TASK3/:questId"
           element={<HighQualityUserV2Task3 templateId="HIGH_QUALITY_USER_TASK3" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0002" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId/:questId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0002" />}
         />
 
         <Route

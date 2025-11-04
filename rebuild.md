@@ -83,15 +83,15 @@
 ### 5️⃣ 链上数据验证路由
 
 - `/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId/:questId`
-- `/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId`
+<!-- - `/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId`
 - `/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId`
 - `/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId`
-- `/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId/:questId`
+- `/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId/:questId` -->
 
-### 6️⃣ 币安期间的问答任务路由
+<!-- ### 6️⃣ 币安期间的问答任务路由
 
 - `/app/booster/:week/read`
-- `/app/booster/:week/quiz`
+- `/app/booster/:week/quiz` -->
 
 <!-- ### 7️⃣ Favie App 导流任务路由
 
