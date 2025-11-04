@@ -1,13 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { Button, message, Modal } from 'antd'
+import { Button, message, Modal, Popconfirm } from 'antd'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
 import { base, mainnet, bsc, arbitrum, optimism, polygon, sepolia } from 'viem/chains'
 import { getAddress } from 'viem'
 
 import { shortenAddress } from '@/utils/wallet-address'
 
-// import ConnectedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
 import contract from '@/contracts/did-base-registrar.abi'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 import accountApi from '@/apis/account.api'
@@ -16,6 +15,7 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
   const [network, setNetwork] = useState('Unknown Network')
   const [address, setAddress] = useState('')
   const [showWallet, setShowWallet] = useState(false)
+  const [open, setOpen] = useState(false)
   const [isTargetNetwork, setIsTargetNetwork] = useState(false)
   const { info } = useUserStore()
 
@@ -134,6 +134,18 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
     console.log('handleOnEvmWalletConnect', connectInfo)
   }
 
+  const onConfirm = () => {
+    setOpen(false)
+    onSwitchToTargetNetwork()
+  }
+
+  const onConfirmCancel = () => {
+    setOpen(false)
+  }
+  const handleNext = () => {
+    setOpen(true)
+  }
+
   useEffect(() => {
     getWalletInfo()
   }, [getWalletInfo])
@@ -176,46 +188,24 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
               Next
             </Button>
           ) : (
-            <Button
-              type="primary"
-              className="block h-[40px] w-[240px] rounded-full font-medium"
-              onClick={onSwitchToTargetNetwork}
+            <Popconfirm
+              title={`Switch to ${contract.chain.name}`}
+              description="Are you sure to switch to this network?"
+              open={open}
+              onConfirm={onConfirm}
+              onCancel={onConfirmCancel}
+              okText="Yes"
+              cancelText="No"
             >
-              Switch to {contract.chain.name}
-            </Button>
+              <Button type="primary" className="block h-[40px] w-[240px] rounded-full font-medium" onClick={handleNext}>
+                Next
+              </Button>
+            </Popconfirm>
           )}
         </div>
       </>
     )
   }
-
-  // function View2() {
-  //   return (
-  //     <>
-  //       <div className="mt-6 rounded-2xl border border-[#FFFFFF1F] px-6 py-4 text-center">
-  //         <ConnectedIcon className="mx-auto block size-[60px]" />
-  //         <p className="mt-6 text-xl font-bold">Connected to {contract.chain.name}. Ready to create DlD</p>
-  //         <p className="mt-2 text-base text-[#8D8D93]">Address: {shortenAddress(address, 8)}</p>
-  //       </div>
-  //       <div className="my-12 flex items-center justify-center gap-4">
-  //         <Button
-  //           className="h-[40px] w-[240px] rounded-full bg-white text-sm font-medium text-black"
-  //           type="default"
-  //           onClick={() => setShowWallet(true)}
-  //         >
-  //           Back
-  //         </Button>
-  //         <Button
-  //           type="primary"
-  //           className="block h-[40px] w-[240px] rounded-full"
-  //           onClick={() => onNext(address as `0x${string}`)}
-  //         >
-  //           Continue
-  //         </Button>
-  //       </div>
-  //     </>
-  //   )
-  // }
 
   return (
     <div className="mx-auto my-12 w-[612px] text-base">
