@@ -37,6 +37,7 @@ export default function UserInfoDid() {
   const rpcClient = useMemo(() => {
     const rpcUrl = contract?.chain.rpcUrls.default.http[0]
 
+    console.log('rpcUrl', rpcUrl)
     return createPublicClient({
       chain: contract.chain,
       transport: http(rpcUrl)
