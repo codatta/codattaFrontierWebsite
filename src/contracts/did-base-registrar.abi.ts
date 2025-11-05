@@ -25,10 +25,10 @@ export const CONTRACT_ADDRESS_TESTNET = '0xC9D49eDec9824BC07e59B4904512d432a4Cd7
 export const CONTRACT_ADDRESS_MAINNET = '0x44b186073903722637785e4C9320EfC0Db0A110f'
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
-  // chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : TESTNET,
-  // address: import.meta.env.VITE_MODE === 'production' ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET,
-  chain: MAINNET,
-  address: CONTRACT_ADDRESS_MAINNET,
+  chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : TESTNET,
+  address: import.meta.env.VITE_MODE === 'production' ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET,
+  // chain: MAINNET,
+  // address: CONTRACT_ADDRESS_MAINNET,
   abi: [
     { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
     { type: 'function', name: 'register', inputs: [], outputs: [], stateMutability: 'nonpayable' },
