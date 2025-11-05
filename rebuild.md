@@ -75,11 +75,11 @@
 
 ### 4️⃣ 厨房旋钮相关路由
 
-- `/frontier/project/KITCHEN_TPL_W9/:taskId`
+<!-- - `/frontier/project/KITCHEN_TPL_W9/:taskId`
 - `/frontier/project/KITCHEN_TPL_W9/:taskId/:questId`
 - `/frontier/project/KITCHEN_TPL_W10/:taskId`
 - `/frontier/project/KITCHEN_TPL_W10/:taskId/:questId`
-- `/frontier/project/KITCHEN_TPL_W11/:taskId/:questId`
+- `/frontier/project/KITCHEN_TPL_W11/:taskId/:questId` -->
 
 ### 5️⃣ 链上数据验证路由
 
