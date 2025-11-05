@@ -64,6 +64,7 @@ export interface UserInfo {
     referee_code: string
     user_id: string
     user_name: string
+    did: string
   }
   user_assets: UserAsset[]
   accounts_data: UserAccount[]
