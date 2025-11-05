@@ -1,4 +1,4 @@
-import { Spin } from 'antd'
+import { message, Spin } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPublicClient, http, stringToHex } from 'viem'
 import { useNavigate } from 'react-router-dom'
@@ -29,6 +29,7 @@ export default function UserInfoDid() {
       setContractArgs([authorizations])
     } catch (error) {
       console.error(error)
+      message.error('Failed to get account info for DID registration')
     } finally {
       setLoading(false)
     }
