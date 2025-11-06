@@ -42,7 +42,7 @@ function RegisterCheckGas({
         <p className="font-bold"> Do you want to continue?</p>
         <div className="mt-6 rounded-2xl bg-[#1C1C26] px-5 py-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-[#BBBBBE]">Owner地址</span>
+            <span className="text-sm text-[#BBBBBE]">Owner Address</span>
             <span>{shortenAddress(address, 8)}</span>
           </div>
           <div className="flex items-center justify-between">
@@ -50,7 +50,7 @@ function RegisterCheckGas({
             <span>{gasLimit}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-[#BBBBBE]">Gas预估</span>
+            <span className="text-sm text-[#BBBBBE]">Gas Estimation</span>
             <span>
               {estimateGas} {contract?.chain.nativeCurrency.symbol}
             </span>
