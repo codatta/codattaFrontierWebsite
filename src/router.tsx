@@ -72,6 +72,7 @@ const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_mode
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
+const Physical = lazy(() => import('@/views/frontiers/physical'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -161,6 +162,7 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
+          <Route path="PHYSICAL_TPL_000001/:taskId" element={<Physical templateId="PHYSICAL_TPL_000001" />} />
         </Route>
         <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
         <Route
