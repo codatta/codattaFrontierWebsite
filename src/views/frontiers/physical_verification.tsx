@@ -18,7 +18,7 @@ interface FileValue {
   path: string
 }
 
-export default function Physical({ templateId }: { templateId: string }) {
+export default function PhysicalVerification({ templateId }: { templateId: string }) {
   const [form] = Form.useForm()
   const { taskId } = useParams()
   const [loading, setLoading] = useState(false)
