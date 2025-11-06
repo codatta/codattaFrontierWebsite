@@ -361,7 +361,7 @@ export default function CreatDid({ rpcClient, contractArgs, estimateGas, did, on
             <span>{shortenAddress(address, 8)}</span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm text-[#BBBBBE]">Gas Est.</span>
+            <span className="text-sm text-[#BBBBBE]">Gas Estimation</span>
             <span>
               {estimateGas} {contract?.chain.nativeCurrency.symbol}
             </span>
