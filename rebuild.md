@@ -117,7 +117,7 @@
 
 #### Journey
 
-- `/app/journey`
+<!-- - `/app/journey` -->
 
 ---
 

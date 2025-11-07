@@ -15,7 +15,6 @@ const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
 const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const AppReferral = lazy(() => import('@/views/referral'))
-const NewJourney = lazy(() => import('@/views/new-journey'))
 const SubmissionDetail = lazy(() => import('@/views/frontiers/submission-detail'))
 
 // quest
@@ -110,7 +109,6 @@ export default function Router() {
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
           <Route index element={<Home />} />
           <Route path="referral" element={<AppReferral />}></Route>
-          <Route path="journey" element={<NewJourney />} />
           <Route path="airdrop">
             <Route index element={<AirdropActivity />} />
             <Route path="leaderboard" element={<AirdropLeaderboard />} />
