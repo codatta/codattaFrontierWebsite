@@ -73,6 +73,7 @@ const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdro
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
 const PhysicalVerification = lazy(() => import('@/views/frontiers/physical_verification'))
+const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -162,11 +163,15 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
-          <Route
-            path="PHYSICAL_TPL_VERIFICATION/:taskId"
-            element={<PhysicalVerification templateId="PHYSICAL_TPL_VERIFICATION" />}
-          />
         </Route>
+        <Route
+          path="/frontier/project/PHYSICAL_TPL_VERIFICATION/:questId"
+          element={<PhysicalVerification templateId="PHYSICAL_TPL_VERIFICATION" />}
+        />
+        <Route
+          path="/frontier/project/PHYSICAL_TPL_QUESTION/:taskId"
+          element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
+        />
         <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
@@ -236,3 +241,5 @@ function RouteTracker() {
 
   return null
 }
+
+// http://localhost:5175/app/frontier/project/PHYSICAL_TPL_QUESTION/8995881856000103187
