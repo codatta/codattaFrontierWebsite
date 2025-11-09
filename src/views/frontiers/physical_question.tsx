@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Form, Input, Button, message, Spin, Checkbox } from 'antd'
+import { Form, Input, Button, message, Spin, Checkbox, Select } from 'antd'
 import { useParams, useNavigate } from 'react-router-dom'
 
 // import FileUpload from '@/components/common/file-upload'
@@ -11,35 +11,8 @@ interface ModelTest {
   id: string
   name: string
   files: UploadedImage[]
-  link?: string
-}
-
-// ModelTestItem component
-function ModelTestItem({
-  model,
-  onChange
-}: {
-  model: ModelTest
-  onChange: ({ modelId, files, link }: { modelId: string; files?: UploadedImage[]; link?: string }) => void
-}) {
-  console.log(`Rendering Upload for ${model.id}, files:`, model.files)
-  return (
-    <li>
-      <label className="mb-2 block text-base font-bold">
-        {model.name}
-        <span className="text-red-400">*</span>
-      </label>
-      <div className="rounded-lg border border-[#FFFFFF1F] p-4 pt-3">
-        <Input
-          placeholder="Please provide a link or upload an image."
-          className="mb-3 border-none bg-transparent text-white placeholder:text-white/30"
-          value={model.link}
-          onChange={(e) => onChange({ modelId: model.id, link: e.target.value })}
-        />
-        <Upload value={model.files} onChange={(files: UploadedImage[]) => onChange({ modelId: model.id, files })} />
-      </div>
-    </li>
-  )
+  link: string
+  correct: boolean
 }
 
 export default function PhysicalQuestion({ templateId }: { templateId: string }) {
@@ -54,11 +27,11 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
   const [isBasedOnLiterature, setIsBasedOnLiterature] = useState<string>('')
   const [literatureCitation, setLiteratureCitation] = useState('')
   const [modelTests, setModelTests] = useState<ModelTest[]>([
-    { id: 'model_1', name: 'GPT-5-pro', files: [], link: '' },
-    { id: 'model_2', name: 'Grok-4', files: [], link: '' },
-    { id: 'model_3', name: 'Duobao-Seed-1.6-1015-high', files: [], link: '' },
-    { id: 'model_4', name: 'qwen3-235B-A22B-Thinking-2507', files: [], link: '' },
-    { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', files: [], link: '' }
+    { id: 'model_1', name: 'GPT-5-pro', files: [], link: '', correct: false },
+    { id: 'model_2', name: 'Grok-4', files: [], link: '', correct: false },
+    { id: 'model_3', name: 'Duobao-Seed-1.6-1015-high', files: [], link: '', correct: false },
+    { id: 'model_4', name: 'qwen3-235B-A22B-Thinking-2507', files: [], link: '', correct: false },
+    { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', files: [], link: '', correct: false }
   ])
   const [conclusion, setConclusion] = useState('')
   const [reviewChecklist, setReviewChecklist] = useState<string[]>([])
@@ -69,25 +42,47 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
   ]
 
   const handleModelTestChange = useCallback(
-    ({ modelId, files, link }: { modelId: string; files?: UploadedImage[]; link?: string }) => {
-      console.log('handleModelTestChange', { modelId, files, link })
-      setModelTests((prev) => {
-        console.log(
-          'prev modelTests:',
-          prev.find((m) => m.id === modelId)
-        )
-        const updated = prev.map((model) => {
-          if (model.id === modelId) {
+    ({
+      modelId,
+      files,
+      link,
+      correct
+    }: {
+      modelId: string
+      files?: UploadedImage[]
+      link?: string
+      correct?: true
+    }) => {
+      if (correct) {
+        setModelTests((prev) => {
+          const updated = prev.map((model) => {
             const newModel = { ...model }
-            if (files !== undefined) newModel.files = files
-            if (link !== undefined) newModel.link = link
-            console.log('updated model:', newModel)
+            if (model.id === modelId) {
+              newModel.correct = true
+              console.log('updated model:', newModel)
+              return newModel
+            } else {
+              newModel.correct = false
+            }
             return newModel
-          }
-          return model
+          })
+          return updated
         })
-        return updated
-      })
+      } else {
+        setModelTests((prev) => {
+          const updated = prev.map((model) => {
+            if (model.id === modelId) {
+              const newModel = { ...model }
+              if (files !== undefined) newModel.files = files
+              if (link !== undefined) newModel.link = link
+              console.log('updated model:', newModel)
+              return newModel
+            }
+            return model
+          })
+          return updated
+        })
+      }
     },
     []
   )
@@ -303,29 +298,38 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
 
               <ul className="space-y-4 rounded-2xl bg-[#252532] p-6">
                 {modelTests.map((model) => {
-                  console.log(`Mapping model ${model.id}, files:`, model.files)
-                  return <ModelTestItem key={model.id} model={model} onChange={handleModelTestChange} />
+                  return (
+                    <li key={model.id}>
+                      <label className="mb-2 block text-base font-bold">
+                        {model.name}
+                        <span className="text-red-400">*</span>
+                      </label>
+                      <div className="rounded-lg border border-[#FFFFFF1F] p-4 pt-3">
+                        <Input
+                          placeholder="Please provide a link or upload an image."
+                          className="mb-3 border-none bg-transparent text-white placeholder:text-white/30"
+                          value={model.link}
+                          onChange={(e) => handleModelTestChange({ modelId: model.id, link: e.target.value })}
+                        />
+                        <Upload
+                          value={model.files}
+                          onChange={(files: UploadedImage[]) => handleModelTestChange({ modelId: model.id, files })}
+                        />
+                      </div>
+                    </li>
+                  )
                 })}
+                <li>
+                  <label className="mb-2 block text-base font-bold">Correct answer</label>
+                  <Select
+                    className="h-12 w-full"
+                    placeholder="Select correct answer."
+                    options={modelTests.map((model) => ({ value: model.id, label: model.name }))}
+                    onChange={(value) => handleModelTestChange({ modelId: value, correct: true })}
+                  />
+                </li>
               </ul>
             </div>
-
-            {/* Conclusion */}
-            <div>
-              <label className="mb-2 block text-sm font-medium text-white">Conclusion*</label>
-              <Input.TextArea
-                value={conclusion}
-                onChange={(e) => setConclusion(e.target.value)}
-                placeholder="e.g., arXiv:2024.12345 or DOI: 10.1234/example"
-                rows={4}
-                className="resize-none rounded-lg border-white/10 bg-[#252033] text-white placeholder:text-white/30"
-                style={{
-                  backgroundColor: '#252033',
-                  borderColor: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white'
-                }}
-              />
-            </div>
-
             <CheckList />
           </Form>
         </div>
