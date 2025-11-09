@@ -1,27 +1,51 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Form, Input, Button, message, Spin, Checkbox } from 'antd'
-import { Plus } from 'lucide-react'
 import { useParams, useNavigate } from 'react-router-dom'
 
-import FileUpload from '@/components/common/file-upload'
+// import FileUpload from '@/components/common/file-upload'
+import Upload, { type UploadedImage } from '@/components/frontier/physical/upload'
 import PageHeader from '@/components/common/frontier-page-header'
 import frontiterApi from '@/apis/frontiter.api'
-
-interface FileValue {
-  name: string
-  path: string
-}
 
 interface ModelTest {
   id: string
   name: string
-  files: FileValue[]
+  files: UploadedImage[]
+  link?: string
+}
+
+// ModelTestItem component
+function ModelTestItem({
+  model,
+  onChange
+}: {
+  model: ModelTest
+  onChange: ({ modelId, files, link }: { modelId: string; files?: UploadedImage[]; link?: string }) => void
+}) {
+  console.log(`Rendering Upload for ${model.id}, files:`, model.files)
+  return (
+    <li>
+      <label className="mb-2 block text-base font-bold">
+        {model.name}
+        <span className="text-red-400">*</span>
+      </label>
+      <div className="rounded-lg border border-[#FFFFFF1F] p-4 pt-3">
+        <Input
+          placeholder="Please provide a link or upload an image."
+          className="mb-3 border-none bg-transparent text-white placeholder:text-white/30"
+          value={model.link}
+          onChange={(e) => onChange({ modelId: model.id, link: e.target.value })}
+        />
+        <Upload value={model.files} onChange={(files: UploadedImage[]) => onChange({ modelId: model.id, files })} />
+      </div>
+    </li>
+  )
 }
 
 export default function PhysicalQuestion({ templateId }: { templateId: string }) {
+  const navigate = useNavigate()
   const [form] = Form.useForm()
   const { taskId } = useParams()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
 
   // Form states
@@ -30,23 +54,43 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
   const [isBasedOnLiterature, setIsBasedOnLiterature] = useState<string>('')
   const [literatureCitation, setLiteratureCitation] = useState('')
   const [modelTests, setModelTests] = useState<ModelTest[]>([
-    { id: '1', name: 'GPT-4-pro*', files: [] },
-    { id: '2', name: 'Grok-4', files: [] },
-    { id: '3', name: 'Bamboo-Good-14-102k-Saga*', files: [] },
-    { id: '4', name: 'qwen-2-238k-8228-Thinking-250P', files: [] },
-    { id: '5', name: 'Bamboo-V2.2-Thinking', files: [] }
+    { id: 'model_1', name: 'GPT-5-pro', files: [], link: '' },
+    { id: 'model_2', name: 'Grok-4', files: [], link: '' },
+    { id: 'model_3', name: 'Duobao-Seed-1.6-1015-high', files: [], link: '' },
+    { id: 'model_4', name: 'qwen3-235B-A22B-Thinking-2507', files: [], link: '' },
+    { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', files: [], link: '' }
   ])
   const [conclusion, setConclusion] = useState('')
-  const [bonusChecklist, setBonusChecklist] = useState<string[]>([])
+  const [reviewChecklist, setReviewChecklist] = useState<string[]>([])
 
   const languageOptions = [
     { label: 'Python & C/Masm etc', value: 'python_c' },
     { label: 'Rust/Zig, Haskell, OCaml', value: 'rust_haskell' }
   ]
 
-  const handleModelFileChange = (modelId: string, files: FileValue[]) => {
-    setModelTests((prev) => prev.map((model) => (model.id === modelId ? { ...model, files } : model)))
-  }
+  const handleModelTestChange = useCallback(
+    ({ modelId, files, link }: { modelId: string; files?: UploadedImage[]; link?: string }) => {
+      console.log('handleModelTestChange', { modelId, files, link })
+      setModelTests((prev) => {
+        console.log(
+          'prev modelTests:',
+          prev.find((m) => m.id === modelId)
+        )
+        const updated = prev.map((model) => {
+          if (model.id === modelId) {
+            const newModel = { ...model }
+            if (files !== undefined) newModel.files = files
+            if (link !== undefined) newModel.link = link
+            console.log('updated model:', newModel)
+            return newModel
+          }
+          return model
+        })
+        return updated
+      })
+    },
+    []
+  )
 
   const handleSubmit = async () => {
     try {
@@ -82,7 +126,7 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
             files: model.files
           })),
           conclusion,
-          bonusChecklist
+          reviewChecklist
         }
       }
 
@@ -103,19 +147,19 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
     const options = [
       {
         label:
-          "I confirm that I have not included any individual's name (such as the model's name, the model's developer, the model's vendor, the model's vendor, etc.)",
-        value: 'no_names'
+          'Original: Not copied from textbooks/online sources(e.g., quantum field theory books by Peskin, Weinberg, Schwartz, etc.)',
+        value: 'original'
       },
       {
-        label: 'Code-related: AI-non-oriented code (e.g., does not have CHSI, PyTorch, TensorFlow, etc.)',
-        value: 'code_related'
+        label: 'Clear Notation: All non-standard symbols defined',
+        value: 'clear_notation'
       },
       {
         label:
-          'Reasonable Correlation: You assert that you are familiar with a complete understanding of the problem (e.g., CHSI, CHSI has been run through discipline, specialized literature, etc.) and the solution provided does not violate the problem statement (e.g., CHSI, PyTorch, TensorFlow, etc.)',
-        value: 'reasonable'
+          'Reasonable Complexity: The question does not involve overly complex calculations (e.g., multi-loop Feynman diagrams, complicated integrals, etc.), and the solution process does not rely on specialized symbolic computation tools (e.g., FeynCalc, Mathematica, etc.).',
+        value: 'reasonable_complexity'
       },
-      { label: 'Confident Solution: Full stack for only one product (product)', value: 'confident' }
+      { label: 'Complete Solution: Full step-by-step answer prepared', value: 'complete_solution' }
     ]
     return (
       <div>
@@ -130,12 +174,12 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
               className="flex items-start gap-3 rounded-lg border border-[#FFFFFF1F] px-4 py-3 text-sm font-semibold"
             >
               <Checkbox
-                checked={bonusChecklist.includes(option.value)}
+                checked={reviewChecklist.includes(option.value)}
                 onChange={(e) => {
                   if (e.target.checked) {
-                    setBonusChecklist([...bonusChecklist, option.value])
+                    setReviewChecklist([...reviewChecklist, option.value])
                   } else {
-                    setBonusChecklist(bonusChecklist.filter((v) => v !== option.value))
+                    setReviewChecklist(reviewChecklist.filter((v) => v !== option.value))
                   }
                 }}
                 className="[&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-purple-500 [&_.ant-checkbox-inner]:size-4 [&_.ant-checkbox-inner]:rounded-none [&_.ant-checkbox-inner]:border-white"
@@ -255,32 +299,14 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
 
             {/* Model Testing */}
             <div>
-              <div className="mb-4">
-                <h2 className="mb-1 text-sm font-medium text-white">Model Testing*</h2>
-                <p className="text-xs text-white/50">GPT-4-pro*</p>
-              </div>
+              <h2 className="mb-3 text-lg font-bold text-white">Model Testing*</h2>
 
-              <div className="space-y-4">
-                {modelTests.map((model) => (
-                  <div key={model.id}>
-                    <label className="mb-2 block text-sm font-medium text-white">{model.name}</label>
-                    <FileUpload
-                      value={model.files}
-                      // @ts-expect-error - FileUpload component type issue
-                      onChange={(files) => handleModelFileChange(model.id, files)}
-                      maxCount={5}
-                      accept="image/*,.pdf,.doc,.docx"
-                    >
-                      <div className="flex h-24 cursor-pointer items-center justify-center rounded-lg border border-dashed border-white/20 bg-[#252033] transition-colors hover:border-purple-500/50 hover:bg-[#2a2538]">
-                        <div className="flex items-center gap-2 text-white/50">
-                          <Plus className="size-5" />
-                          <span className="text-sm">Please provide a file or address or image</span>
-                        </div>
-                      </div>
-                    </FileUpload>
-                  </div>
-                ))}
-              </div>
+              <ul className="space-y-4 rounded-2xl bg-[#252532] p-6">
+                {modelTests.map((model) => {
+                  console.log(`Mapping model ${model.id}, files:`, model.files)
+                  return <ModelTestItem key={model.id} model={model} onChange={handleModelTestChange} />
+                })}
+              </ul>
             </div>
 
             {/* Conclusion */}
