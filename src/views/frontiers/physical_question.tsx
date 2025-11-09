@@ -6,11 +6,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import Upload, { type UploadedImage } from '@/components/frontier/physical/upload'
 import PageHeader from '@/components/common/frontier-page-header'
 import frontiterApi from '@/apis/frontiter.api'
+import TextArea from 'antd/es/input/TextArea'
 
 interface ModelTest {
   id: string
   name: string
-  files: UploadedImage[]
+  images: UploadedImage[]
   link: string
   correct: boolean
 }
@@ -22,8 +23,10 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
   const [loading, setLoading] = useState(false)
 
   // Form states
-  const [questionContent, setQuestionContent] = useState('')
-  const [languages, setLanguages] = useState<string[]>([])
+  const [questionContent, setQuestionContent] = useState<{ images: UploadedImage[]; text: string }>({
+    images: [],
+    text: ''
+  })
   const [recentResearchLiterature, setRecentResearchLiterature] = useState<{ url?: string; hasSource?: boolean }>({
     url: '',
     hasSource: false
@@ -31,22 +34,22 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
   const [certificationChecked, setCertificationChecked] = useState<boolean>(false)
   const [reviewChecklist, setReviewChecklist] = useState<string[]>([])
   const [modelTests, setModelTests] = useState<ModelTest[]>([
-    { id: 'model_1', name: 'GPT-5-pro', files: [], link: '', correct: false },
-    { id: 'model_2', name: 'Grok-4', files: [], link: '', correct: false },
-    { id: 'model_3', name: 'Duobao-Seed-1.6-1015-high', files: [], link: '', correct: false },
-    { id: 'model_4', name: 'qwen3-235B-A22B-Thinking-2507', files: [], link: '', correct: false },
-    { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', files: [], link: '', correct: false }
+    { id: 'model_1', name: 'GPT-5-pro', images: [], link: '', correct: false },
+    { id: 'model_2', name: 'Grok-4', images: [], link: '', correct: false },
+    { id: 'model_3', name: 'Duobao-Seed-1.6-1015-high', images: [], link: '', correct: false },
+    { id: 'model_4', name: 'qwen3-235B-A22B-Thinking-2507', images: [], link: '', correct: false },
+    { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', images: [], link: '', correct: false }
   ])
 
   const handleModelTestChange = useCallback(
     ({
       modelId,
-      files,
+      images,
       link,
       correct
     }: {
       modelId: string
-      files?: UploadedImage[]
+      images?: UploadedImage[]
       link?: string
       correct?: true
     }) => {
@@ -70,7 +73,7 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
           const updated = prev.map((model) => {
             if (model.id === modelId) {
               const newModel = { ...model }
-              if (files !== undefined) newModel.files = files
+              if (images !== undefined) newModel.images = images
               if (link !== undefined) newModel.link = link
               console.log('updated model:', newModel)
               return newModel
@@ -88,13 +91,8 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
     try {
       await form.validateFields()
 
-      if (!questionContent.trim()) {
+      if (!questionContent.text.trim()) {
         message.error('Please enter question content')
-        return
-      }
-
-      if (languages.length === 0) {
-        message.error('Please select at least one language')
         return
       }
 
@@ -110,12 +108,13 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
         templateId,
         data: {
           questionContent,
-          languages,
           // isBasedOnLiterature: isBasedOnLiterature === 'yes',
           // literatureCitation: isBasedOnLiterature === 'yes' ? literatureCitation : undefined,
           modelTests: modelTests.map((model) => ({
             name: model.name,
-            files: model.files
+            images: model.images,
+            link: model.link,
+            correct: model.correct
           })),
           reviewChecklist
         }
@@ -194,7 +193,20 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
               <label className="mb-2 block text-sm font-medium text-white">
                 Question Content<span className="text-red-400">*</span>
               </label>
-              <Input.TextArea
+              <div className="space-y-4 rounded-lg border border-[#FFFFFF1F] px-4 py-3">
+                <TextArea
+                  value={questionContent.text}
+                  onChange={(e) => setQuestionContent({ ...questionContent, text: e.target.value })}
+                  placeholder="Please enter the question content"
+                  rows={4}
+                  className="resize-none border-none"
+                />
+                <Upload
+                  onChange={(files) => setQuestionContent({ ...questionContent, images: files })}
+                  value={questionContent.images}
+                />
+              </div>
+              {/* <Input.TextArea
                 value={questionContent}
                 onChange={(e) => setQuestionContent(e.target.value)}
                 placeholder="Share group of target (on coding)"
@@ -205,7 +217,8 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
                   borderColor: 'rgba(255, 255, 255, 0.1)',
                   color: 'white'
                 }}
-              />
+              /> */}
+
               <div className="mt-2 rounded-lg bg-[#FFFFFF0A] px-4 py-3">
                 <h3 className="mb-3 text-base font-semibold text-white">📋 Language & Formatting</h3>
                 <ul className="list-inside list-disc space-y-2 text-sm text-[#BBBBBE]">
@@ -278,8 +291,8 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
                           onChange={(e) => handleModelTestChange({ modelId: model.id, link: e.target.value })}
                         />
                         <Upload
-                          value={model.files}
-                          onChange={(files: UploadedImage[]) => handleModelTestChange({ modelId: model.id, files })}
+                          value={model.images}
+                          onChange={(images: UploadedImage[]) => handleModelTestChange({ modelId: model.id, images })}
                         />
                       </div>
                     </li>
@@ -321,13 +334,15 @@ function Notes() {
     'All submissions undergo rigorous review. Questions not meeting the stated criteria will be rejected.'
   ]
   return (
-    <div className="mx-auto max-w-[1352px] bg-[#875DFF0A] px-10 py-[30px]">
-      <h3 className="text-lg font-bold text-[#875DFF]">Submission Notes</h3>
-      <ul className="mt-4 list-inside list-disc text-sm leading-[22px] text-[#BBBBBE]">
-        {notes.map((note, index) => (
-          <li key={'note_' + index}>{note}</li>
-        ))}
-      </ul>
+    <div className="bg-[#875DFF0A]">
+      <div className="mx-auto max-w-[1352px] px-10 py-[30px]">
+        <h3 className="text-lg font-bold text-[#875DFF]">Submission Notes</h3>
+        <ul className="mt-4 list-inside list-disc text-sm leading-[22px] text-[#BBBBBE]">
+          {notes.map((note, index) => (
+            <li key={'note_' + index}>{note}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   )
 }
