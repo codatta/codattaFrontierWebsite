@@ -24,8 +24,12 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
   // Form states
   const [questionContent, setQuestionContent] = useState('')
   const [languages, setLanguages] = useState<string[]>([])
-  const [isBasedOnLiterature, setIsBasedOnLiterature] = useState<string>('')
-  const [literatureCitation, setLiteratureCitation] = useState('')
+  const [recentResearchLiterature, setRecentResearchLiterature] = useState<{ url?: string; hasSource?: boolean }>({
+    url: '',
+    hasSource: false
+  })
+  const [certificationChecked, setCertificationChecked] = useState<boolean>(false)
+  const [reviewChecklist, setReviewChecklist] = useState<string[]>([])
   const [modelTests, setModelTests] = useState<ModelTest[]>([
     { id: 'model_1', name: 'GPT-5-pro', files: [], link: '', correct: false },
     { id: 'model_2', name: 'Grok-4', files: [], link: '', correct: false },
@@ -33,13 +37,6 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
     { id: 'model_4', name: 'qwen3-235B-A22B-Thinking-2507', files: [], link: '', correct: false },
     { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', files: [], link: '', correct: false }
   ])
-  const [conclusion, setConclusion] = useState('')
-  const [reviewChecklist, setReviewChecklist] = useState<string[]>([])
-
-  const languageOptions = [
-    { label: 'Python & C/Masm etc', value: 'python_c' },
-    { label: 'Rust/Zig, Haskell, OCaml', value: 'rust_haskell' }
-  ]
 
   const handleModelTestChange = useCallback(
     ({
@@ -101,10 +98,10 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
         return
       }
 
-      if (!isBasedOnLiterature) {
-        message.error('Please specify if the question is based on recent research literature')
-        return
-      }
+      // if (!isBasedOnLiterature) {
+      //   message.error('Please specify if the question is based on recent research literature')
+      //   return
+      // }
 
       setLoading(true)
 
@@ -114,13 +111,12 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
         data: {
           questionContent,
           languages,
-          isBasedOnLiterature: isBasedOnLiterature === 'yes',
-          literatureCitation: isBasedOnLiterature === 'yes' ? literatureCitation : undefined,
+          // isBasedOnLiterature: isBasedOnLiterature === 'yes',
+          // literatureCitation: isBasedOnLiterature === 'yes' ? literatureCitation : undefined,
           modelTests: modelTests.map((model) => ({
             name: model.name,
             files: model.files
           })),
-          conclusion,
           reviewChecklist
         }
       }
@@ -162,12 +158,9 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
           Review Checklist{' '}
           <span className="font-normal text-[#BBBBBE]">*(confirm your question meets all criteria)</span>
         </h2>
-        <div className="space-y-3">
+        <ul className="space-y-3">
           {options.map((option) => (
-            <div
-              key={option.value}
-              className="flex items-start gap-3 rounded-lg border border-[#FFFFFF1F] px-4 py-3 text-sm font-semibold"
-            >
+            <li key={option.value} className="rounded-lg border border-[#FFFFFF1F] px-4 py-3 text-sm font-semibold">
               <Checkbox
                 checked={reviewChecklist.includes(option.value)}
                 onChange={(e) => {
@@ -178,11 +171,12 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
                   }
                 }}
                 className="[&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-purple-500 [&_.ant-checkbox-inner]:size-4 [&_.ant-checkbox-inner]:rounded-none [&_.ant-checkbox-inner]:border-white"
-              />
-              <span className="text-xs leading-relaxed text-white/70">{option.label}</span>
-            </div>
+              >
+                <span className="text-xs leading-relaxed text-white/70">{option.label}</span>
+              </Checkbox>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     )
   }
@@ -197,7 +191,9 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
           <Form form={form} layout="vertical" className="space-y-12 pb-12">
             {/* Question Content */}
             <div>
-              <label className="mb-2 block text-sm font-medium text-white">Question Content*</label>
+              <label className="mb-2 block text-sm font-medium text-white">
+                Question Content<span className="text-red-400">*</span>
+              </label>
               <Input.TextArea
                 value={questionContent}
                 onChange={(e) => setQuestionContent(e.target.value)}
@@ -210,86 +206,57 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
                   color: 'white'
                 }}
               />
-            </div>
-
-            {/* Language & Formatting */}
-            <div>
-              <div className="mb-3 flex items-center gap-2">
-                <div className="h-4 w-0.5 bg-purple-500" />
-                <h2 className="text-base font-semibold text-white">Language & Formatting</h2>
-              </div>
-              <div className="space-y-2">
-                {languageOptions.map((option) => (
-                  <div key={option.value} className="flex items-center gap-3 text-sm text-white/80">
-                    <Checkbox
-                      checked={languages.includes(option.value)}
-                      onChange={(e) => {
-                        if (e.target.checked) {
-                          setLanguages([...languages, option.value])
-                        } else {
-                          setLanguages(languages.filter((l) => l !== option.value))
-                        }
-                      }}
-                      className="[&_.ant-checkbox-checked_.ant-checkbox-inner]:bg-purple-500 [&_.ant-checkbox-inner]:border-white/30"
-                    />
-                    <span>{option.label}</span>
-                  </div>
-                ))}
+              <div className="mt-2 rounded-lg bg-[#FFFFFF0A] px-4 py-3">
+                <h3 className="mb-3 text-base font-semibold text-white">📋 Language & Formatting</h3>
+                <ul className="list-inside list-disc space-y-2 text-sm text-[#BBBBBE]">
+                  <li>Supported languages: English & Chinese only</li>
+                  <li>Required format for formulas: LaTeX</li>
+                </ul>
               </div>
             </div>
 
             {/* Is the question based on recent research literature? */}
             <div>
-              <label className="mb-3 block text-sm font-medium text-white">
-                Is the question based on recent research literature?*
+              <label className="mb-2 block text-base font-bold text-white">
+                Is the question based on recent research literature? <span className="text-red-400">*</span>
               </label>
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => setIsBasedOnLiterature('yes')}
-                  className={`h-10 flex-1 rounded-lg border transition-all ${
-                    isBasedOnLiterature === 'yes'
-                      ? 'border-purple-500 bg-purple-500/20 text-white'
-                      : 'border-white/10 bg-transparent text-white/60 hover:border-white/30 hover:text-white/80'
-                  }`}
-                >
-                  Yes
-                </Button>
-                <Button
-                  onClick={() => setIsBasedOnLiterature('no')}
-                  className={`h-10 flex-1 rounded-lg border transition-all ${
-                    isBasedOnLiterature === 'no'
-                      ? 'border-purple-500 bg-purple-500/20 text-white'
-                      : 'border-white/10 bg-transparent text-white/60 hover:border-white/30 hover:text-white/80'
-                  }`}
-                >
-                  choose-No
-                </Button>
+              <div className="flex gap-2">
+                <Select
+                  value={recentResearchLiterature.hasSource ? 'yes' : 'no'}
+                  onChange={(value) => {
+                    if (value === 'yes') {
+                      setRecentResearchLiterature({ hasSource: true })
+                    } else {
+                      setRecentResearchLiterature({ hasSource: false })
+                    }
+                  }}
+                  options={[
+                    { value: 'yes', label: 'Yes' },
+                    { value: 'no', label: 'No' }
+                  ]}
+                  className="h-12 w-[240px]"
+                />
+                {recentResearchLiterature.hasSource && (
+                  <Input
+                    value={recentResearchLiterature.url}
+                    onChange={(e) => setRecentResearchLiterature({ url: e.target.value })}
+                    placeholder="Source URL"
+                    className="h-12 flex-1"
+                  />
+                )}
               </div>
 
-              {isBasedOnLiterature === 'yes' && (
-                <div className="mt-3">
-                  <Checkbox
-                    checked={!!literatureCitation}
-                    className="mb-2 text-white/70 [&_.ant-checkbox-inner]:border-white/30"
-                  >
-                    <span className="text-sm">
-                      Cite literature (not included in any individual's name (such as the model's name, the model's
-                      developer, the model's vendor, the model's vendor, etc.))
-                    </span>
-                  </Checkbox>
-                  <Input
-                    value={literatureCitation}
-                    onChange={(e) => setLiteratureCitation(e.target.value)}
-                    placeholder="e.g., arXiv:2024.12345 or DOI: 10.1234/example"
-                    className="rounded-lg border-white/10 bg-[#252033] text-white placeholder:text-white/30"
-                    style={{
-                      backgroundColor: '#252033',
-                      borderColor: 'rgba(255, 255, 255, 0.1)',
-                      color: 'white'
-                    }}
-                  />
-                </div>
-              )}
+              <div className="mt-3">
+                <Checkbox
+                  checked={!!certificationChecked}
+                  onChange={(e) => setCertificationChecked(e.target.checked)}
+                  className="mb-2 text-white/70 [&_.ant-checkbox-inner]:border-white/30"
+                >
+                  <span className="text-sm leading-4 text-[#BBBBBE]">
+                    Certification: I confirm this question can be solved independently using only the provided context.
+                  </span>
+                </Checkbox>
+              </div>
             </div>
 
             {/* Model Testing */}
@@ -301,8 +268,7 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
                   return (
                     <li key={model.id}>
                       <label className="mb-2 block text-base font-bold">
-                        {model.name}
-                        <span className="text-red-400">*</span>
+                        {model.name} <span className="text-red-400">*</span>
                       </label>
                       <div className="rounded-lg border border-[#FFFFFF1F] p-4 pt-3">
                         <Input
