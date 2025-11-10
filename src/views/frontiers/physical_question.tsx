@@ -39,9 +39,9 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
     checkTaskStatus
   } = usePhysicalQuestion(taskId, templateId)
 
-  // useEffect(() => {
-  //   checkTaskStatus()
-  // }, [checkTaskStatus])
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
 
   const handleQuestionContentChange = (value: { text?: string; images?: UploadedImage[] }) => {
     const newContent = {

@@ -1,5 +1,5 @@
-import TextArea from 'antd/es/input/TextArea'
 import Upload, { type UploadedImage } from './upload'
+import MarkdownLatex from '@/components/common/markdown-latex'
 
 interface QuestionContentSectionProps {
   value: {
@@ -11,21 +11,53 @@ interface QuestionContentSectionProps {
 }
 
 export default function QuestionContentSection({ value, onChange, error }: QuestionContentSectionProps) {
+  const placeholder = `# Physics Formula for Example
+
+## Newton's Second Law
+
+The mathematical expression is:
+
+$$
+F = ma
+$$
+
+Where:
+- $F$ is force (unit: Newton N)
+- $m$ is mass (unit: kilogram kg)
+- $a$ is acceleration (unit: m/s²)
+
+## Energy Conservation
+
+Einstein's mass-energy equation:
+
+$$
+E = mc^2
+$$
+
+## Quadratic Formula
+
+$$
+x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
+$$
+`
   return (
     <div>
       <label className="mb-2 block text-sm font-medium text-white">
         Question Content<span className="text-red-400">*</span>
       </label>
+      <p className="mb-3 text-sm text-[#BBBBBE]">
+        Enter your question description or upload an image to illustrate the question.
+      </p>
       <div className="space-y-4 rounded-lg border border-[#FFFFFF1F] px-4 py-3">
-        <TextArea
+        <MarkdownLatex
+          editable
           value={value.text}
-          onChange={(e) => onChange({ text: e.target.value })}
-          placeholder="Please enter the question content"
-          rows={4}
-          maxLength={500}
+          onChange={(text) => onChange({ text })}
+          placeholder={placeholder}
+          previewLayout="side"
+          editorHeight="300px"
           showCount
-          className="resize-none border-none"
-          status={error ? 'error' : ''}
+          maxLength={500}
         />
         <Upload onChange={(images) => onChange({ images })} value={value.images} />
       </div>
