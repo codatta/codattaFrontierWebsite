@@ -6,7 +6,6 @@ import FrontierLayout from '@/layouts/frontier-layout'
 import UserInfoLayout from '@/layouts/userinfo-layout'
 import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
-import BoosterLayout from '@/layouts/booster-layout'
 import { trackPageView } from './utils/track'
 import GlobalModalHost from './components/app/global-modal-host'
 
@@ -16,7 +15,6 @@ const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
 const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const AppReferral = lazy(() => import('@/views/referral'))
-const NewJourney = lazy(() => import('@/views/new-journey'))
 const SubmissionDetail = lazy(() => import('@/views/frontiers/submission-detail'))
 
 // quest
@@ -43,16 +41,6 @@ const AccountSignin = lazy(() => import('@/views/account/signin'))
 const ReferralLanding = lazy(() => import('@/views/referral-landing'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 
-// crypto
-const CryptoHome = lazy(() => import('@/views/crypto/home'))
-const CryptoValidationList = lazy(() => import('@/views/crypto/validation-list'))
-const CryptoSubmissionSubmit = lazy(() => import('@/views/crypto/submission-submit'))
-const CryptoSubmissionHistory = lazy(() => import('@/views/crypto/submission-history'))
-const CryptoBountyHome = lazy(() => import('@/views/crypto/bounty-home'))
-const CryptoBountyList = lazy(() => import('@/views/crypto/bounty-list'))
-const CryptoBountyDetail = lazy(() => import('@/views/crypto/bounty-detail'))
-const CryptoBountySubmit = lazy(() => import('@/views/crypto/bounty-submit'))
-
 // frontiers
 const FrontierHome = lazy(() => import('@/views/frontiers/home'))
 const FashionHome = lazy(() => import('@/views/fashion/home'))
@@ -62,43 +50,23 @@ const RoboticsFormType2 = lazy(() => import('@/views/robotics/form-type-2'))
 const RoboticsFormType3 = lazy(() => import('@/views/robotics/form-type-3'))
 
 // frontiers templates
-const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
-const FoodTpl000002 = lazy(() => import('@/views/frontiers/food_tpl_000002'))
-const FoodTpl000003 = lazy(() => import('@/views/frontiers/food_tpl_000003'))
-const FoodTpl000004 = lazy(() => import('@/views/frontiers/food_tpl_000004'))
-const FoodTpl000005 = lazy(() => import('@/views/frontiers/food_tpl_000005'))
-const FoodTplM2W1 = lazy(() => import('@/views/frontiers/food_tpl_m2_w1'))
-const FoodTplM2W234 = lazy(() => import('@/views/frontiers/food_tpl_m2_w234'))
-const FoodTplW9 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
-const FoodTplW10 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
-const FoodTplW11 = lazy(() => import('@/views/frontiers/food_tpl_w9'))
-const FoodTplW12 = lazy(() => import('@/views/frontiers/food_tpl_w12'))
-const RoboticsTplW5 = lazy(() => import('@/views/frontiers/robitcs_tpl_w5'))
-const RoboticsTplW12 = lazy(() => import('@/views/frontiers/robitcs_tpl_w12'))
 
+const FoodScienceTemplate = lazy(() => import('@/views/frontiers/form-type-6'))
 const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
-const FashionGensmo = lazy(() => import('@/views/frontiers/fashion_gensmo'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
-const CryptoTpl000002 = lazy(() => import('@/views/frontiers/crypto_tpl_000002'))
-const CryptoTpl000003 = lazy(() => import('@/views/frontiers/crypto_tpl_000003'))
-const CryptoTpl000004 = lazy(() => import('@/views/frontiers/crypto_tpl_000004'))
-const CryptoTpl000005 = lazy(() => import('@/views/frontiers/crypto_tpl_000005'))
 
 const AnnotatorInfoSurveyBasic = lazy(() => import('@/views/frontiers/annotator_info_survey_basic'))
 const AnnotatorInfoSurveyQuiz = lazy(() => import('@/views/frontiers/annotator_info_survey_quiz'))
 
-const KitchenAppData = lazy(() => import('@/views/frontiers/kitchen_app_data'))
 const KitchenAppDataW12 = lazy(() => import('@/views/frontiers/kitchen_app_data_w12'))
 const HighQualityUser = lazy(() => import('@/views/frontiers/high_quality_user'))
 const HighQualityUserV2Task1 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task1'))
 const HighQualityUserV2Task2 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task2'))
 const HighQualityUserV2Task3 = lazy(() => import('@/views/frontiers/high_quality_user_v2_task3'))
-
-const OnchainVerify = lazy(() => import('@/views/frontiers/onchain-verify'))
 
 const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_model_comparison'))
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
@@ -122,10 +90,6 @@ const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
 const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
 
-// booster
-const ReadTaskPage = lazy(() => import('@/views/booster/read'))
-const QuizTaskPage = lazy(() => import('@/views/booster/quiz'))
-
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
 
@@ -146,7 +110,6 @@ export default function Router() {
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
           <Route index element={<Home />} />
           <Route path="referral" element={<AppReferral />}></Route>
-          <Route path="journey" element={<NewJourney />} />
           <Route path="airdrop">
             <Route index element={<AirdropActivity />} />
             <Route path="leaderboard" element={<AirdropLeaderboard />} />
@@ -176,17 +139,6 @@ export default function Router() {
           <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
           <Route path="frontier/:frontier_id/history" element={<FrontierHistory />}></Route>
           <Route path="frontier/fashion" element={<FashionHome />}></Route>
-
-          <Route path="crypto">
-            <Route index element={<CryptoHome />} />
-            <Route path="validation/list" element={<CryptoValidationList />} />
-            <Route path="submission/submit" element={<CryptoSubmissionSubmit />} />
-            <Route path="submission/history" element={<CryptoSubmissionHistory />} />
-            <Route path="bounty" element={<CryptoBountyHome />} />
-            <Route path="bounty/:id/detail" element={<CryptoBountyDetail />}></Route>
-            <Route path="bounty/:id/submit" element={<CryptoBountySubmit />}></Route>
-            <Route path="bounty/list" element={<CryptoBountyList />} />
-          </Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
         </Route>
         <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
@@ -210,96 +162,7 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
         </Route>
-        <Route
-          path="/frontier/project/FOOD_TPL_000002/:taskId/:questId"
-          element={<FoodTpl000002 templateId="FOOD_TPL_000002" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_000003/:taskId"
-          element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_000003/:taskId/:questId"
-          element={<FoodTpl000003 templateId="FOOD_TPL_000003" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_000004/:taskId/:questId"
-          element={<FoodTpl000004 templateId="FOOD_TPL_000004" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
-          element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
-        />
-        <Route path="/frontier/project/FOOD_TPL_M2_W1/:taskId" element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />} />
-        <Route
-          path="/frontier/project/FOOD_TPL_M2_W1/:taskId/:questId"
-          element={<FoodTplM2W1 templateId="FOOD_TPL_M2_W1" />}
-        />
-        <Route path="/frontier/project/FOOD_TPL_W6/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W6" />} />
-        <Route
-          path="/frontier/project/FOOD_TPL_W6/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_W6" />}
-        />
-        <Route path="/frontier/project/FOOD_TPL_W7/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W7" />} />
-        <Route
-          path="/frontier/project/FOOD_TPL_W7/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_W7" />}
-        />
-        <Route path="/frontier/project/FOOD_TPL_W8/:taskId" element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />} />
-        <Route
-          path="/frontier/project/FOOD_TPL_W8/:taskId/:questId"
-          element={<FoodTplM2W234 templateId="FOOD_TPL_W8" />}
-        />
-        <Route path="/frontier/project/FOOD_TPL_W9/:taskId/:questId" element={<FoodTplW9 templateId="FOOD_TPL_W9" />} />
-        <Route
-          path="/frontier/project/FOOD_TPL_W10/:taskId/:questId"
-          element={<FoodTplW10 templateId="FOOD_TPL_W10" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_W11/:taskId/:questId"
-          element={<FoodTplW11 templateId="FOOD_TPL_W11" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_W12/:taskId/:questId"
-          element={<FoodTplW12 templateId="FOOD_TPL_W12" />}
-        />
         <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W5/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W5" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W6/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W6" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W7/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W7" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W8/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W8" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W9/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W10/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W10" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W11/:taskId/:questId"
-          element={<RoboticsTplW5 templateId="ROBOTICS_TPL_W11" />}
-        />
-        <Route
-          path="/frontier/project/ROBOTICS_TPL_W12/:taskId/:questId"
-          element={<RoboticsTplW12 templateId="ROBOTICS_TPL_W12" />}
-        />
-        <Route
-          path="/frontier/project/FOOD_TPL_000005/:taskId/:questId"
-          element={<FoodTpl000005 templateId="FOOD_TPL_000005" />}
-        />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
@@ -309,91 +172,7 @@ export default function Router() {
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
         />
         <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId/:questId"
-          element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT/:taskId/:questId"
-          element={<CryptoTpl000001 templateId="CRYPTO_TPL_DEPOSIT" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId"
-          element={<CryptoTpl000002 templateId="CRYPTO_TPL_WITHDRAW_W7" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId"
-          element={<CryptoTpl000002 templateId="CRYPTO_TPL_DEPOSIT_W7" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W7/:taskId/:questId"
-          element={<CryptoTpl000002 templateId="CRYPTO_TPL_WITHDRAW_W7" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W7/:taskId/:questId"
-          element={<CryptoTpl000002 templateId="CRYPTO_TPL_DEPOSIT_W7" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W8/:taskId"
-          element={<CryptoTpl000003 templateId="CRYPTO_TPL_WITHDRAW_W8" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId"
-          element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W8/:taskId/:questId"
-          element={<CryptoTpl000003 templateId="CRYPTO_TPL_WITHDRAW_W8" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W8/:taskId/:questId"
-          element={<CryptoTpl000003 templateId="CRYPTO_TPL_DEPOSIT_W8" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W9/:taskId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W9" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W9/:taskId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W9" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W9/:taskId/:questId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W9" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W9/:taskId/:questId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W9" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W10/:taskId/:questId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W10" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W10/:taskId/:questId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W10" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W11/:taskId/:questId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_WITHDRAW_W11" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W11/:taskId/:questId"
-          element={<CryptoTpl000004 templateId="CRYPTO_TPL_DEPOSIT_W11" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_DEPOSIT_W12/:taskId/:questId"
-          element={<CryptoTpl000005 templateId="CRYPTO_TPL_DEPOSIT_W12" />}
-        />
-        <Route
-          path="/frontier/project/CRYPTO_TPL_WITHDRAW_W12/:taskId/:questId"
-          element={<CryptoTpl000005 templateId="CRYPTO_TPL_WITHDRAW_W12" />}
-        />
-        <Route
           path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId"
-          element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
-        />
-        <Route
-          path="/frontier/project/ANNOTATOR_INFO_SURVEY_BASIC/:taskId/:questId"
           element={<AnnotatorInfoSurveyBasic templateId="ANNOTATOR_INFO_SURVEY_BASIC" />}
         />
         <Route
@@ -401,44 +180,11 @@ export default function Router() {
           element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
         />
         <Route
-          path="/frontier/project/ANNOTATOR_INFO_SURVEY_QUIZ/:taskId/:questId"
-          element={<AnnotatorInfoSurveyQuiz templateId="ANNOTATOR_INFO_SURVEY_QUIZ" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W9/:taskId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W9/:taskId/:questId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W9/:taskId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W9" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W10/:taskId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W10/:taskId/:questId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W10" />}
-        />
-        <Route
-          path="/frontier/project/KITCHEN_TPL_W11/:taskId/:questId"
-          element={<KitchenAppData templateId="KITCHEN_TPL_W11" />}
-        />
-        <Route
           path="/frontier/project/KITCHEN_TPL_W12/:taskId/:questId"
           element={<KitchenAppDataW12 templateId="KITCHEN_TPL_W12" />}
         />
         <Route
           path="/frontier/project/HIGH_QUALITY_USER/:taskId"
-          element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
-        />
-
-        <Route
-          path="/frontier/project/HIGH_QUALITY_USER/:taskId/:questId"
           element={<HighQualityUser templateId="HIGH_QUALITY_USER" />}
         />
         <Route
@@ -450,36 +196,8 @@ export default function Router() {
           element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
         />
         <Route
-          path="/frontier/project/HIGH_QUALITY_USER_TASK2/:taskId/:questId"
-          element={<HighQualityUserV2Task2 templateId="HIGH_QUALITY_USER_TASK2" />}
-        />
-        <Route
           path="/frontier/project/HIGH_QUALITY_USER_TASK3/:questId"
           element={<HighQualityUserV2Task3 templateId="HIGH_QUALITY_USER_TASK3" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0001/:taskId/:questId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0001" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0002" />}
-        />
-        <Route
-          path="/frontier/project/ONCHAIN_VERIFY_TPL_0002/:taskId/:questId"
-          element={<OnchainVerify templateId="ONCHAIN_VERIFY_TPL_0002" />}
-        />
-        <Route
-          path="/frontier/project/FASHION_GENSMO/:taskId"
-          element={<FashionGensmo templateId="FASHION_GENSMO" />}
-        />
-        <Route
-          path="/frontier/project/FASHION_GENSMO/:taskId/:questId"
-          element={<FashionGensmo templateId="FASHION_GENSMO" />}
         />
 
         <Route
@@ -496,12 +214,6 @@ export default function Router() {
         />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
-
-        <Route path="/app/booster" element={<BoosterLayout />}>
-          <Route path=":week/read" element={<ReadTaskPage />} />
-          <Route path=":week/quiz" element={<QuizTaskPage />} />
-          <Route path="not-found" element={<NotFoundPage />} />
-        </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <GlobalModalHost />
