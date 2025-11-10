@@ -1,22 +1,20 @@
-import { Button, Modal } from 'antd'
-import underReviewSvgImage from '@/assets/icons/circle-under-review.svg'
+import { Modal } from 'antd'
+import underReviewSvgImage from '@/assets/common/circle-under-review.svg'
 
-export default function SubmitSuccessModal(props: { open: boolean; points?: number; onClose: () => void }) {
-  const { open, onClose } = props
+export default function SubmitSuccessModal(props: { open: boolean; points: number; onClose: () => void }) {
+  const { open, points, onClose } = props
 
   return (
-    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[400px]" closeIcon={false}>
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[400px]">
       <div className="flex flex-col items-center justify-center p-6 text-white">
         <img className="mb-2" src={underReviewSvgImage} alt="" />
-        {/* <h1 className="mb-1 text-lg font-bold">{points} Points Awarded!</h1> */}
-        <div className="mt-2 text-xl font-bold text-[#FFA800]">Under Review</div>
-        <p className="mt-2 text-center text-sm leading-[22px] text-[#BBBBBE]">
-          The acceptance status will be updated in your history in 15 days. Rewards for accepted submissions will be
-          distributed directly to your account.
+        <h1 className="mb-1 text-lg font-bold">{points} Points Awarded!</h1>
+        <p className="text-center text-sm font-thin leading-[22px]">
+          The acceptance status will be updated in your history in 15 days.
         </p>
-        <Button onClick={onClose} type="primary" className="mt-12 h-[42px] w-[120px] rounded-full">
-          Got it
-        </Button>
+        <p className="text-center text-sm font-thin leading-[22px]">
+          Rewards for accepted submissions will be distributed directly to your account.
+        </p>
       </div>
     </Modal>
   )
