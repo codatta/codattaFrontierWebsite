@@ -3,6 +3,10 @@ import { message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 
 import frontiterApi from '@/apis/frontiter.api'
+import userApi from '@/apis/user.api'
+import { useCountdown } from '@/hooks/use-countdown'
+import { isValidEmail } from '@/utils/str'
+
 export interface UploadedImage {
   url: string
   hash: string
@@ -15,7 +19,6 @@ export interface FileValue {
 }
 
 export function useVerification(taskId?: string, templateId?: string) {
-  const navigate = useNavigate()
   const [loading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -33,6 +36,15 @@ export function useVerification(taskId?: string, templateId?: string) {
   const [academicCredentials, setAcademicCredentials] = useState<UploadedImage[]>([])
   const [cvFiles, setCvFiles] = useState<UploadedImage[]>([])
   const [sendingCode, setSendingCode] = useState(false)
+  const [codeSent, setCodeSent] = useState(false)
+  const [emailVerified, setEmailVerified] = useState(false)
+
+  // 60-second countdown for verification code
+  const [countdown, countdownEnded, restartCountdown] = useCountdown(60, null, false)
+
+  // Computed properties for button states
+  const canSendCode = !sendingCode && countdownEnded && !!academicEmail && isValidEmail(academicEmail)
+  const canVerify = codeSent && verificationCode.trim().length > 0
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -57,14 +69,58 @@ export function useVerification(taskId?: string, templateId?: string) {
       setErrors((prev) => ({ ...prev, academicEmail: 'Please enter your academic email' }))
       return
     }
+    if (!isValidEmail(academicEmail)) {
+      setErrors((prev) => ({ ...prev, academicEmail: 'Please enter a valid academic email' }))
+      return
+    }
+
     setSendingCode(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await userApi.getVerificationCode({
+        account_type: 'email',
+        email: academicEmail,
+        opt: 'verify'
+      })
       message.success('Verification code sent successfully')
-    } catch {
+      setCodeSent(true)
+      restartCountdown() // Start 60-second countdown
+    } catch (error) {
       message.error('Failed to send verification code')
+      console.error('Verification code send error:', error)
     } finally {
       setSendingCode(false)
+    }
+  }
+
+  const handleVerifyCode = async () => {
+    if (!taskId) {
+      message.error('Task ID is required for verification')
+      return
+    }
+    if (!academicEmail || !verificationCode) {
+      message.error('Email and verification code are required')
+      return
+    }
+
+    try {
+      const result = await userApi.checkEmail({
+        email: academicEmail,
+        code: verificationCode,
+        task_id: taskId
+      })
+
+      if (result.flag) {
+        message.success('Email verified successfully')
+        setEmailVerified(true)
+        return true
+      } else {
+        message.error(result.info || 'Verification failed')
+        return false
+      }
+    } catch (error) {
+      message.error('Failed to verify email')
+      console.error('Email verification error:', error)
+      return false
     }
   }
 
@@ -97,7 +153,6 @@ export function useVerification(taskId?: string, templateId?: string) {
     try {
       await frontiterApi.submitTask(taskId!, submitData)
       message.success('Application submitted successfully!')
-      setTimeout(() => navigate(-1), 1500)
     } catch (error) {
       message.error((error as Error).message || 'Failed to submit application')
     } finally {
@@ -122,6 +177,12 @@ export function useVerification(taskId?: string, templateId?: string) {
     academicCredentials,
     cvFiles,
     sendingCode,
+    codeSent,
+    emailVerified,
+    countdown,
+    countdownEnded,
+    canSendCode,
+    canVerify,
     setPhoneCountryCode,
     setPhoneNumber,
     setTitlePosition,
@@ -135,6 +196,7 @@ export function useVerification(taskId?: string, templateId?: string) {
     setAcademicCredentials,
     setCvFiles,
     handleSendVerificationCode,
+    handleVerifyCode,
     handleSubmit,
     validateForm
   }

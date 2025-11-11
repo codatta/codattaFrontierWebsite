@@ -12,7 +12,7 @@ import { useVerification } from '@/components/frontier/verification/useVerificat
 
 export default function Verification({ templateId }: { templateId: string }) {
   const [form] = Form.useForm()
-  const { taskId } = useParams()
+  const { questId } = useParams()
 
   const {
     loading,
@@ -30,6 +30,12 @@ export default function Verification({ templateId }: { templateId: string }) {
     academicCredentials,
     cvFiles,
     sendingCode,
+    codeSent,
+    emailVerified,
+    countdown,
+    countdownEnded,
+    canSendCode,
+    canVerify,
     setPhoneNumber,
     setTitlePosition,
     setTitlePositionSpecify,
@@ -42,8 +48,9 @@ export default function Verification({ templateId }: { templateId: string }) {
     setAcademicCredentials,
     setCvFiles,
     handleSendVerificationCode,
+    handleVerifyCode,
     handleSubmit
-  } = useVerification(taskId, templateId)
+  } = useVerification(questId, templateId)
 
   return (
     <Spin spinning={loading || isSubmitting} className="min-h-screen">
@@ -74,9 +81,16 @@ export default function Verification({ templateId }: { templateId: string }) {
               academicEmail={academicEmail}
               verificationCode={verificationCode}
               sendingCode={sendingCode}
+              codeSent={codeSent}
+              emailVerified={emailVerified}
+              countdown={countdown}
+              countdownEnded={countdownEnded}
+              canSendCode={canSendCode}
+              canVerify={canVerify}
               setAcademicEmail={setAcademicEmail}
               setVerificationCode={setVerificationCode}
               handleSendVerificationCode={handleSendVerificationCode}
+              handleVerifyCode={handleVerifyCode}
             />
 
             <CredentialUploadSection

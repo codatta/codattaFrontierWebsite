@@ -18,9 +18,16 @@ interface IdentityVerificationSectionProps {
   academicEmail: string
   verificationCode: string
   sendingCode: boolean
+  codeSent: boolean
+  emailVerified: boolean
+  countdown: number
+  countdownEnded: boolean
+  canSendCode: boolean
+  canVerify: boolean
   setAcademicEmail: (value: string) => void
   setVerificationCode: (value: string) => void
   handleSendVerificationCode: () => void
+  handleVerifyCode: () => void
 }
 
 export default function IdentityVerificationSection({
@@ -28,9 +35,16 @@ export default function IdentityVerificationSection({
   academicEmail,
   verificationCode,
   sendingCode,
+  codeSent,
+  emailVerified,
+  countdown,
+  countdownEnded,
+  canSendCode,
+  canVerify,
   setAcademicEmail,
   setVerificationCode,
-  handleSendVerificationCode
+  handleSendVerificationCode,
+  handleVerifyCode
 }: IdentityVerificationSectionProps) {
   return (
     <>
@@ -44,32 +58,48 @@ export default function IdentityVerificationSection({
               placeholder="Provide your Email"
               className="!h-12 flex-1"
               suffix={
-                <span
-                  className="cursor-pointer text-sm font-semibold text-[#875DFF]"
-                  onClick={handleSendVerificationCode}
-                >
-                  Send Code
-                </span>
+                emailVerified ? (
+                  <span className="pl-2 text-lg text-green-500">✅</span>
+                ) : (
+                  <span
+                    className={`pl-2 text-sm font-semibold ${
+                      canSendCode
+                        ? 'cursor-pointer text-[#875DFF] hover:text-[#6B46C1]'
+                        : 'cursor-not-allowed text-gray-400'
+                    }`}
+                    onClick={canSendCode ? handleSendVerificationCode : undefined}
+                  >
+                    {sendingCode ? 'Sending...' : !countdownEnded ? `${countdown}s` : 'Send Code'}
+                  </span>
+                )
               }
             />
           </div>
           {errors.academicEmail && <p className="mt-1 text-sm text-red-500">{errors.academicEmail}</p>}
         </FormItem>
-        <FormItem label="Verification Code" required>
-          <div className="flex gap-4">
-            <StyledInput
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
-              placeholder="Enter Code"
-              maxLength={6}
-              className="!h-12 flex-1"
-            />
-            <Button type="primary" className="box-border h-12 w-[100px] text-sm" size="middle">
-              Verify
-            </Button>
-          </div>
-          {errors.verificationCode && <p className="mt-1 text-sm text-red-500">{errors.verificationCode}</p>}
-        </FormItem>
+        {codeSent && !emailVerified && (
+          <FormItem label="Verification Code" required>
+            <div className="flex gap-4">
+              <StyledInput
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                placeholder="Enter Code"
+                maxLength={6}
+                className="!h-12 flex-1"
+              />
+              <Button
+                type="primary"
+                className="box-border h-12 w-[100px] text-sm"
+                size="middle"
+                disabled={!canVerify}
+                onClick={handleVerifyCode}
+              >
+                Verify
+              </Button>
+            </div>
+            {errors.verificationCode && <p className="mt-1 text-sm text-red-500">{errors.verificationCode}</p>}
+          </FormItem>
+        )}
       </div>
     </>
   )
