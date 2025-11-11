@@ -23,9 +23,11 @@ export function useVerification(taskId?: string, templateId?: string) {
   const [phoneCountryCode, setPhoneCountryCode] = useState('+86')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [titlePosition, setTitlePosition] = useState('')
-  const [otherTitle, setOtherTitle] = useState('')
+  const [titlePositionSpecify, setTitlePositionSpecify] = useState('')
   const [institution, setInstitution] = useState('')
+  const [institutionSpecify, setInstitutionSpecify] = useState('')
   const [major, setMajor] = useState('')
+  const [majorSpecify, setMajorSpecify] = useState('')
   const [academicEmail, setAcademicEmail] = useState('')
   const [verificationCode, setVerificationCode] = useState('')
   const [academicCredentials, setAcademicCredentials] = useState<UploadedImage[]>([])
@@ -36,9 +38,12 @@ export function useVerification(taskId?: string, templateId?: string) {
     const newErrors: Record<string, string> = {}
     if (!phoneNumber) newErrors.phoneNumber = 'Please enter phone number'
     if (!titlePosition) newErrors.titlePosition = 'Please select title/position'
-    if (titlePosition === 'other' && !otherTitle) newErrors.otherTitle = 'Please specify title/position'
+    if (titlePosition === 'other' && !titlePositionSpecify)
+      newErrors.otherTitlePosition = 'Please specify title/position'
     if (!institution) newErrors.institution = 'Please select institution'
+    if (institution === 'other' && !institutionSpecify) newErrors.institutionSpecify = 'Please specify institution'
     if (!major) newErrors.major = 'Please select major/research field'
+    if (major === 'other' && !majorSpecify) newErrors.majorSpecify = 'Please specify field'
     if (!academicEmail) newErrors.academicEmail = 'Please enter academic email'
     if (!verificationCode) newErrors.verificationCode = 'Please enter verification code'
     if (academicCredentials.length === 0) newErrors.academicCredentials = 'Please upload academic credential'
@@ -77,9 +82,11 @@ export function useVerification(taskId?: string, templateId?: string) {
         phoneCountryCode,
         phoneNumber,
         titlePosition,
-        otherTitle,
+        titlePositionSpecify,
         institution,
+        institutionSpecify,
         major,
+        majorSpecify,
         academicEmail,
         verificationCode,
         academicCredentials: academicCredentials.map((img) => ({ url: img.url, hash: img.hash })),
@@ -105,9 +112,11 @@ export function useVerification(taskId?: string, templateId?: string) {
     phoneCountryCode,
     phoneNumber,
     titlePosition,
-    otherTitle,
+    titlePositionSpecify,
     institution,
+    institutionSpecify,
     major,
+    majorSpecify,
     academicEmail,
     verificationCode,
     academicCredentials,
@@ -116,9 +125,11 @@ export function useVerification(taskId?: string, templateId?: string) {
     setPhoneCountryCode,
     setPhoneNumber,
     setTitlePosition,
-    setOtherTitle,
+    setTitlePositionSpecify,
     setInstitution,
+    setInstitutionSpecify,
     setMajor,
+    setMajorSpecify,
     setAcademicEmail,
     setVerificationCode,
     setAcademicCredentials,

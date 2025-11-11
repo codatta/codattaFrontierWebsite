@@ -20,9 +20,11 @@ export default function Verification({ templateId }: { templateId: string }) {
     errors,
     phoneNumber,
     titlePosition,
-    otherTitle,
+    titlePositionSpecify,
     institution,
+    institutionSpecify,
     major,
+    majorSpecify,
     academicEmail,
     verificationCode,
     academicCredentials,
@@ -30,9 +32,11 @@ export default function Verification({ templateId }: { templateId: string }) {
     sendingCode,
     setPhoneNumber,
     setTitlePosition,
-    setOtherTitle,
+    setTitlePositionSpecify,
     setInstitution,
+    setInstitutionSpecify,
     setMajor,
+    setMajorSpecify,
     setAcademicEmail,
     setVerificationCode,
     setAcademicCredentials,
@@ -40,21 +44,6 @@ export default function Verification({ templateId }: { templateId: string }) {
     handleSendVerificationCode,
     handleSubmit
   } = useVerification(taskId, templateId)
-
-  const titlePositionOptions = [
-    { label: 'Professor / Principal Investigator', value: 'professor' },
-    { label: 'Other Equivalent Titles', value: 'other' }
-  ]
-
-  const institutionOptions = [
-    { label: 'Massachusetts Institute of Technology', value: 'mit' },
-    { label: 'Stanford University', value: 'stanford' }
-  ]
-
-  const majorOptions = [
-    { label: 'Computer Science', value: 'cs' },
-    { label: 'Artificial Intelligence', value: 'ai' }
-  ]
 
   return (
     <Spin spinning={loading || isSubmitting} className="min-h-screen">
@@ -66,17 +55,18 @@ export default function Verification({ templateId }: { templateId: string }) {
               errors={errors}
               phoneNumber={phoneNumber}
               titlePosition={titlePosition}
-              otherTitle={otherTitle}
+              titlePositionSpecify={titlePositionSpecify}
               institution={institution}
+              institutionSpecify={institutionSpecify}
               major={major}
-              titlePositionOptions={titlePositionOptions}
-              institutionOptions={institutionOptions}
-              majorOptions={majorOptions}
+              majorSpecify={majorSpecify}
               setPhoneNumber={setPhoneNumber}
               setTitlePosition={setTitlePosition}
-              setOtherTitle={setOtherTitle}
+              setTitlePositionSpecify={setTitlePositionSpecify}
               setInstitution={setInstitution}
+              setInstitutionSpecify={setInstitutionSpecify}
               setMajor={setMajor}
+              setMajorSpecify={setMajorSpecify}
             />
 
             <IdentityVerificationSection
