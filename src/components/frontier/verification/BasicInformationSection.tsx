@@ -24,6 +24,7 @@ interface BasicInformationSectionProps {
   phoneNumber: string
   titlePosition: string
   titlePositionSpecify: string
+  titlePositionYear: string
   institution: string
   institutionSpecify: string
   major: string
@@ -31,6 +32,7 @@ interface BasicInformationSectionProps {
   setPhoneNumber: (value: string) => void
   setTitlePosition: (value: string) => void
   setTitlePositionSpecify: (value: string) => void
+  setTitlePositionYear: (value: string) => void
   setInstitution: (value: string) => void
   setInstitutionSpecify: (value: string) => void
   setMajor: (value: string) => void
@@ -107,6 +109,7 @@ export default function BasicInformationSection({
   phoneNumber,
   titlePosition,
   titlePositionSpecify,
+  titlePositionYear,
   institution,
   institutionSpecify,
   major,
@@ -114,6 +117,7 @@ export default function BasicInformationSection({
   setPhoneNumber,
   setTitlePosition,
   setTitlePositionSpecify,
+  setTitlePositionYear,
   setInstitution,
   setInstitutionSpecify,
   setMajor,
@@ -140,19 +144,35 @@ export default function BasicInformationSection({
               options={TITLE_POSITION_OPTIONS}
               placeholder="Select Title / Position"
               onChange={(value) => setTitlePosition(value as string)}
-              className={cn('h-12 w-full transition-all', !!titleSpecifyPlaceholder && 'w-[200px]')}
+              className={cn(
+                'h-12 w-full transition-all',
+                (!!titleSpecifyPlaceholder || titlePosition === 'phd_student') && 'w-[200px]'
+              )}
             />
-            {!!titleSpecifyPlaceholder && (
+            {titlePosition === 'phd_student' ? (
               <StyledInput
-                value={titlePositionSpecify}
-                onChange={(e) => setTitlePositionSpecify(e.target.value)}
-                placeholder={titleSpecifyPlaceholder}
+                value={titlePositionYear}
+                onChange={(e) => setTitlePositionYear(e.target.value)}
+                placeholder="Enter year (0-10)"
                 className="h-12 flex-1 transition-all"
+                type="number"
+                min="0"
+                max="10"
               />
+            ) : (
+              !!titleSpecifyPlaceholder && (
+                <StyledInput
+                  value={titlePositionSpecify}
+                  onChange={(e) => setTitlePositionSpecify(e.target.value)}
+                  placeholder={titleSpecifyPlaceholder}
+                  className="h-12 flex-1 transition-all"
+                />
+              )
             )}
           </div>
           {errors.titlePosition && <p className="mt-1 text-sm text-red-500">{errors.titlePosition}</p>}
           {errors.otherTitlePosition && <p className="mt-1 text-sm text-red-500">{errors.otherTitlePosition}</p>}
+          {errors.titlePositionYear && <p className="mt-1 text-sm text-red-500">{errors.titlePositionYear}</p>}
         </FormItem>
         <FormItem label="Institution" required>
           <div className="flex gap-2">

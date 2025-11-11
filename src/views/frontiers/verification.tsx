@@ -21,6 +21,7 @@ export default function Verification({ templateId }: { templateId: string }) {
     phoneNumber,
     titlePosition,
     titlePositionSpecify,
+    titlePositionYear,
     institution,
     institutionSpecify,
     major,
@@ -39,6 +40,7 @@ export default function Verification({ templateId }: { templateId: string }) {
     setPhoneNumber,
     setTitlePosition,
     setTitlePositionSpecify,
+    setTitlePositionYear,
     setInstitution,
     setInstitutionSpecify,
     setMajor,
@@ -63,6 +65,7 @@ export default function Verification({ templateId }: { templateId: string }) {
               phoneNumber={phoneNumber}
               titlePosition={titlePosition}
               titlePositionSpecify={titlePositionSpecify}
+              titlePositionYear={titlePositionYear}
               institution={institution}
               institutionSpecify={institutionSpecify}
               major={major}
@@ -70,6 +73,7 @@ export default function Verification({ templateId }: { templateId: string }) {
               setPhoneNumber={setPhoneNumber}
               setTitlePosition={setTitlePosition}
               setTitlePositionSpecify={setTitlePositionSpecify}
+              setTitlePositionYear={setTitlePositionYear}
               setInstitution={setInstitution}
               setInstitutionSpecify={setInstitutionSpecify}
               setMajor={setMajor}
@@ -103,8 +107,10 @@ export default function Verification({ templateId }: { templateId: string }) {
 
             <Button
               type="primary"
+              htmlType="submit"
               className="mx-auto block h-10 w-[240px] rounded-full disabled:opacity-50"
               disabled={isSubmitting}
+              loading={isSubmitting}
             >
               Submit
             </Button>

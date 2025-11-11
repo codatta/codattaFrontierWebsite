@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { message } from 'antd'
-import { useNavigate } from 'react-router-dom'
 
 import frontiterApi from '@/apis/frontiter.api'
 import userApi from '@/apis/user.api'
@@ -23,21 +22,128 @@ export function useVerification(taskId?: string, templateId?: string) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const [phoneCountryCode, setPhoneCountryCode] = useState('+86')
-  const [phoneNumber, setPhoneNumber] = useState('')
-  const [titlePosition, setTitlePosition] = useState('')
-  const [titlePositionSpecify, setTitlePositionSpecify] = useState('')
-  const [institution, setInstitution] = useState('')
-  const [institutionSpecify, setInstitutionSpecify] = useState('')
-  const [major, setMajor] = useState('')
-  const [majorSpecify, setMajorSpecify] = useState('')
-  const [academicEmail, setAcademicEmail] = useState('')
-  const [verificationCode, setVerificationCode] = useState('')
-  const [academicCredentials, setAcademicCredentials] = useState<UploadedImage[]>([])
-  const [cvFiles, setCvFiles] = useState<UploadedImage[]>([])
+  const [phoneCountryCode, setPhoneCountryCodeState] = useState('+86')
+  const [phoneNumber, setPhoneNumberState] = useState('')
+  const [titlePosition, setTitlePositionState] = useState('')
+  const [titlePositionSpecify, setTitlePositionSpecifyState] = useState('')
+  const [titlePositionYear, setTitlePositionYearState] = useState('')
+  const [institution, setInstitutionState] = useState('')
+  const [institutionSpecify, setInstitutionSpecifyState] = useState('')
+  const [major, setMajorState] = useState('')
+  const [majorSpecify, setMajorSpecifyState] = useState('')
+  const [academicEmail, setAcademicEmailState] = useState('')
+  const [verificationCode, setVerificationCodeState] = useState('')
+  const [academicCredentials, setAcademicCredentialsState] = useState<UploadedImage[]>([])
+  const [cvFiles, setCvFilesState] = useState<UploadedImage[]>([])
   const [sendingCode, setSendingCode] = useState(false)
   const [codeSent, setCodeSent] = useState(false)
   const [emailVerified, setEmailVerified] = useState(false)
+
+  // Helper function to clear field errors when values change
+  const clearFieldError = (fieldName: string) => {
+    setErrors((prev) => {
+      const newErrors = { ...prev }
+      delete newErrors[fieldName]
+      return newErrors
+    })
+  }
+
+  // Helper function to remove duplicates based on hash
+  const removeDuplicatesByHash = (files: UploadedImage[]): UploadedImage[] => {
+    const seen = new Set<string>()
+    return files.filter((file) => {
+      if (file.hash && seen.has(file.hash)) {
+        console.log(`Duplicate file detected and removed: ${file.url} (hash: ${file.hash})`)
+        return false
+      }
+      if (file.hash) {
+        seen.add(file.hash)
+      }
+      return true
+    })
+  }
+
+  // Enhanced setters that clear errors on value change
+  const setPhoneCountryCode = (value: string) => {
+    setPhoneCountryCodeState(value)
+    clearFieldError('phoneNumber')
+  }
+
+  const setPhoneNumber = (value: string) => {
+    setPhoneNumberState(value)
+    clearFieldError('phoneNumber')
+
+    // Extract and update country code from phone number
+    const match = value.match(/^\+(\d+)\s*(.*)$/)
+    if (match) {
+      const dialCode = match[1]
+      setPhoneCountryCodeState(`+${dialCode}`)
+    }
+  }
+
+  const setTitlePosition = (value: string) => {
+    setTitlePositionState(value)
+    clearFieldError('titlePosition')
+    clearFieldError('otherTitlePosition')
+    clearFieldError('titlePositionYear')
+  }
+
+  const setTitlePositionSpecify = (value: string) => {
+    setTitlePositionSpecifyState(value)
+    clearFieldError('otherTitlePosition')
+  }
+
+  const setTitlePositionYear = (value: string) => {
+    setTitlePositionYearState(value)
+    clearFieldError('titlePositionYear')
+  }
+
+  const setInstitution = (value: string) => {
+    setInstitutionState(value)
+    clearFieldError('institution')
+    clearFieldError('institutionSpecify')
+  }
+
+  const setInstitutionSpecify = (value: string) => {
+    setInstitutionSpecifyState(value)
+    clearFieldError('institutionSpecify')
+  }
+
+  const setMajor = (value: string) => {
+    setMajorState(value)
+    clearFieldError('major')
+    clearFieldError('majorSpecify')
+  }
+
+  const setMajorSpecify = (value: string) => {
+    setMajorSpecifyState(value)
+    clearFieldError('majorSpecify')
+  }
+
+  const setAcademicEmail = (value: string) => {
+    setAcademicEmailState(value)
+    clearFieldError('academicEmail')
+    // Reset email verification status when email changes
+    setEmailVerified(false)
+    setCodeSent(false)
+  }
+
+  const setVerificationCode = (value: string) => {
+    setVerificationCodeState(value)
+    clearFieldError('verificationCode')
+  }
+
+  const setAcademicCredentials = (value: UploadedImage[]) => {
+    const deduplicatedValue = removeDuplicatesByHash(value)
+    setAcademicCredentialsState(deduplicatedValue)
+    clearFieldError('academicCredentials')
+  }
+
+  const setCvFiles = (value: UploadedImage[]) => {
+    const deduplicatedValue = removeDuplicatesByHash(value)
+    setCvFilesState(deduplicatedValue)
+    clearFieldError('cvFiles')
+  }
 
   // 60-second countdown for verification code
   const [countdown, countdownEnded, restartCountdown] = useCountdown(60, null, false)
@@ -48,17 +154,55 @@ export function useVerification(taskId?: string, templateId?: string) {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
-    if (!phoneNumber) newErrors.phoneNumber = 'Please enter phone number'
-    if (!titlePosition) newErrors.titlePosition = 'Please select title/position'
-    if (titlePosition === 'other' && !titlePositionSpecify)
-      newErrors.otherTitlePosition = 'Please specify title/position'
-    if (!institution) newErrors.institution = 'Please select institution'
-    if (institution === 'other' && !institutionSpecify) newErrors.institutionSpecify = 'Please specify institution'
-    if (!major) newErrors.major = 'Please select major/research field'
-    if (major === 'other' && !majorSpecify) newErrors.majorSpecify = 'Please specify field'
-    if (!academicEmail) newErrors.academicEmail = 'Please enter academic email'
-    if (!verificationCode) newErrors.verificationCode = 'Please enter verification code'
-    if (academicCredentials.length === 0) newErrors.academicCredentials = 'Please upload academic credential'
+
+    // Phone number validation
+    if (!phoneNumber) {
+      newErrors.phoneNumber = 'Please enter phone number'
+    } else if (!/^\+\d+\s*\d{4,15}$/.test(phoneNumber.trim())) {
+      newErrors.phoneNumber = 'Please enter a valid phone number.'
+    }
+
+    // Title/Position validation
+    if (!titlePosition) {
+      newErrors.titlePosition = 'Please select title/position'
+    } else if (titlePosition === 'other' && !titlePositionSpecify.trim()) {
+      newErrors.otherTitlePosition = 'Please specify your title/position'
+    } else if (titlePosition === 'phd_student') {
+      if (!titlePositionYear.trim()) {
+        newErrors.titlePositionYear = 'Please enter your PhD year'
+      } else {
+        const year = parseInt(titlePositionYear.trim(), 10)
+        if (isNaN(year) || year < 0 || year > 10) {
+          newErrors.titlePositionYear = 'Please enter a valid year (0-10)'
+        }
+      }
+    }
+
+    // Institution validation
+    if (!institution) {
+      newErrors.institution = 'Please select institution'
+    } else if (institution === 'other' && !institutionSpecify.trim()) {
+      newErrors.institutionSpecify = 'Please specify your institution'
+    }
+
+    // Major/Research field validation
+    if (!major) {
+      newErrors.major = 'Please select major/research field'
+    } else if (major === 'other' && !majorSpecify.trim()) {
+      newErrors.majorSpecify = 'Please specify your field'
+    }
+
+    // Academic email validation
+    if (!academicEmail) {
+      newErrors.academicEmail = 'Please enter academic email'
+    } else if (!isValidEmail(academicEmail)) {
+      newErrors.academicEmail = 'Please enter a valid email address'
+    } else if (!emailVerified) {
+      newErrors.academicEmail = 'Please verify your email address'
+    }
+
+    // Academic credentials validation (optional)
+    // Academic credentials are now optional, no validation needed
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -112,6 +256,9 @@ export function useVerification(taskId?: string, templateId?: string) {
       if (result.flag) {
         message.success('Email verified successfully')
         setEmailVerified(true)
+        // Clear email-related errors when verification succeeds
+        clearFieldError('academicEmail')
+        clearFieldError('verificationCode')
         return true
       } else {
         message.error(result.info || 'Verification failed')
@@ -125,36 +272,75 @@ export function useVerification(taskId?: string, templateId?: string) {
   }
 
   const handleSubmit = async () => {
-    if (!validateForm()) {
-      message.error('Please fill in all required fields')
+    // Validate all form fields (this will set errors internally)
+    const isValid = validateForm()
+
+    if (!isValid) {
+      message.error('Please correct the errors and fill in all required fields')
+      return
+    }
+
+    // Additional pre-submission checks
+    if (!taskId) {
+      message.error('Task ID is missing. Please refresh the page and try again.')
+      return
+    }
+
+    if (!emailVerified) {
+      message.error('Please verify your email address before submitting')
+      setErrors((prev) => ({ ...prev, academicEmail: 'Email verification required' }))
       return
     }
 
     setIsSubmitting(true)
-    const submitData = {
-      taskId,
-      templateId,
-      data: {
-        phoneCountryCode,
-        phoneNumber,
-        titlePosition,
-        titlePositionSpecify,
-        institution,
-        institutionSpecify,
-        major,
-        majorSpecify,
-        academicEmail,
-        verificationCode,
-        academicCredentials: academicCredentials.map((img) => ({ url: img.url, hash: img.hash })),
-        cvFiles
-      }
-    }
 
     try {
-      await frontiterApi.submitTask(taskId!, submitData)
-      message.success('Application submitted successfully!')
+      // Format and clean data before submission
+      const cleanPhoneNumber = phoneNumber.trim()
+      const formattedCredentials = academicCredentials
+        .filter((cred) => cred.url && cred.hash)
+        .map((cred) => ({
+          url: cred.url,
+          hash: cred.hash
+        }))
+
+      const formattedCvFiles = cvFiles
+        .filter((file) => file.url && file.hash)
+        .map((file) => ({
+          url: file.url,
+          hash: file.hash
+        }))
+
+      const submitData = {
+        taskId,
+        templateId,
+        data: {
+          phoneCountryCode: phoneCountryCode || '+86',
+          phoneNumber: cleanPhoneNumber,
+          titlePosition: titlePosition,
+          titlePositionSpecify: titlePosition === 'other' ? titlePositionSpecify.trim() : '',
+          titlePositionYear: titlePosition === 'phd_student' ? titlePositionYear.trim() : '',
+          institution: institution,
+          institutionSpecify: institution === 'other' ? institutionSpecify.trim() : '',
+          major: major,
+          majorSpecify: major === 'other' ? majorSpecify.trim() : '',
+          academicEmail: academicEmail.toLowerCase().trim(),
+          academicCredentials: formattedCredentials,
+          cvFiles: formattedCvFiles
+        }
+      }
+
+      console.log('Submitting verification data:', submitData)
+      await frontiterApi.submitTask(taskId, submitData)
+
+      message.success('Verification application submitted successfully!')
     } catch (error) {
-      message.error((error as Error).message || 'Failed to submit application')
+      console.error('Submission error:', error)
+      const errorMessage =
+        (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
+        (error as Error)?.message ||
+        'Failed to submit application. Please try again.'
+      message.error(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
@@ -168,6 +354,7 @@ export function useVerification(taskId?: string, templateId?: string) {
     phoneNumber,
     titlePosition,
     titlePositionSpecify,
+    titlePositionYear,
     institution,
     institutionSpecify,
     major,
@@ -187,6 +374,7 @@ export function useVerification(taskId?: string, templateId?: string) {
     setPhoneNumber,
     setTitlePosition,
     setTitlePositionSpecify,
+    setTitlePositionYear,
     setInstitution,
     setInstitutionSpecify,
     setMajor,
