@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Plus, Trash, Eye, AlertCircle, X } from 'lucide-react'
+import { Plus, Trash, Eye, AlertCircle, X, FileText } from 'lucide-react'
 import { message, Spin } from 'antd'
 import { cn } from '@udecode/cn'
 
@@ -11,6 +11,9 @@ export interface UploadedImage {
   hash: string
   status?: 'uploading' | 'done' | 'error'
   file?: File // Keep the original file object for preview
+  fileType?: string // Store file type for rendering
+  fileName?: string // Store file name
+  fileSize?: number // Store file size in bytes
 }
 
 interface UploadProps {
@@ -36,6 +39,7 @@ const Upload: React.FC<UploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
+  const [previewFileType, setPreviewFileType] = useState('')
 
   const processFiles = async (files: FileList) => {
     if (value.length + files.length > maxCount) {
@@ -61,7 +65,10 @@ const Upload: React.FC<UploadProps> = ({
           url: URL.createObjectURL(file),
           hash: `uploading-${file.name}-${Date.now()}`,
           status: 'uploading',
-          file
+          file,
+          fileType: file.type,
+          fileName: file.name,
+          fileSize: file.size
         })
         filesToUpload.push(file)
         existingHashes.add(hash) // Add new hash to prevent duplicate uploads in the same batch
@@ -94,7 +101,18 @@ const Upload: React.FC<UploadProps> = ({
 
         // Update the specific image from 'uploading' to 'done'
         currentImages = currentImages.map((img) =>
-          img.hash === image.hash ? { ...img, url: res.file_path, hash, status: 'done', file: undefined } : img
+          img.hash === image.hash
+            ? {
+                ...img,
+                url: res.file_path,
+                hash,
+                status: 'done',
+                file: undefined,
+                fileType: image.file?.type,
+                fileName: image.fileName,
+                fileSize: image.fileSize
+              }
+            : img
         )
         onChange(currentImages)
       } catch (err) {
@@ -130,7 +148,18 @@ const Upload: React.FC<UploadProps> = ({
 
   const handlePreview = (image: UploadedImage) => {
     setPreviewImage(image.url)
+    setPreviewFileType(image.fileType || '')
     setPreviewOpen(true)
+  }
+
+  const isPdf = (fileType?: string) => fileType === 'application/pdf'
+
+  const formatFileSize = (bytes?: number) => {
+    if (!bytes) return '0 B'
+    const k = 1024
+    const sizes = ['B', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`
   }
 
   const UploadButton = () => (
@@ -159,7 +188,19 @@ const Upload: React.FC<UploadProps> = ({
             key={image.hash}
             className="group relative h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
           >
-            <img src={image.url} className="size-full object-contain" alt="upload preview" />
+            {isPdf(image.fileType) ? (
+              <div className="flex size-full flex-col items-center justify-center gap-2 bg-gray-800 p-3">
+                <FileText className="size-12 text-gray-400" />
+                <div className="w-full text-center">
+                  <p className="truncate text-xs text-gray-300" title={image.fileName}>
+                    {image.fileName}
+                  </p>
+                  <p className="text-xs text-gray-500">{formatFileSize(image.fileSize)}</p>
+                </div>
+              </div>
+            ) : (
+              <img src={image.url} className="size-full object-contain" alt="upload preview" />
+            )}
 
             {/* Centered Preview Icon on Hover */}
             <div className="absolute inset-0 flex items-center justify-center gap-5 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
@@ -201,7 +242,16 @@ const Upload: React.FC<UploadProps> = ({
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
           onClick={() => setPreviewOpen(false)}
         >
-          <img src={previewImage} className="max-h-[90vh] max-w-[90vw] object-contain" alt="Preview" />
+          {isPdf(previewFileType) ? (
+            <iframe
+              src={previewImage}
+              className="h-[90vh] w-[90vw] rounded-lg bg-white"
+              title="PDF Preview"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <img src={previewImage} className="max-h-[90vh] max-w-[90vw] object-contain" alt="Preview" />
+          )}
           <button
             type="button"
             onClick={() => setPreviewOpen(false)}

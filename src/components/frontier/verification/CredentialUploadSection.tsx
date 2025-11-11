@@ -1,17 +1,6 @@
-import { Info, Plus } from 'lucide-react'
+import { Info } from 'lucide-react'
 
 import UploadImg from '@/components/frontier/airdrop/UploadImg'
-import FileUpload from '@/components/common/file-upload'
-import { FileValue } from '@/components/frontier/verification/useVerification'
-
-const UploadBox = ({ children, className }: { children: React.ReactNode; className?: string }) => (
-  <div
-    className={`flex h-40 w-80 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-700 bg-gray-800/50 transition-colors hover:border-purple-500 ${className}`}
-  >
-    {children}
-  </div>
-)
-
 import { UploadedImage } from '@/components/frontier/verification/useVerification'
 
 interface CredentialUploadSectionProps {
