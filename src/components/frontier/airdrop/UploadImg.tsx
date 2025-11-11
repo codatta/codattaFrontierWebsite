@@ -18,6 +18,7 @@ interface UploadProps {
   allUploadedImages?: UploadedImage[] // All images for cross-validation
   error?: string
   description?: string | React.ReactNode
+  supportPdf?: boolean
   className?: string
   onChange: (value: UploadedImage[]) => void
   maxCount?: number
@@ -29,6 +30,7 @@ const Upload: React.FC<UploadProps> = ({
   onChange,
   error,
   description,
+  supportPdf = false,
   maxCount = 5
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -81,9 +83,11 @@ const Upload: React.FC<UploadProps> = ({
 
         if (image.file.size > 10 * 1024 * 1024) throw new Error(`Image ${image.file.name} size must be less than 10MB`)
 
-        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
+        const allowedTypes = supportPdf
+          ? ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf']
+          : ['image/png', 'image/jpeg', 'image/jpg']
         if (!allowedTypes.includes(image.file.type.toLowerCase()))
-          throw new Error(`Image ${image.file.name} must be in PNG, JPEG, or JPG format.`)
+          throw new Error(`Image ${image.file.name} must be in ${supportPdf ? 'PDF, ' : ''}PNG, JPEG, or JPG format.`)
 
         const hash = await calculateFileHash(image.file)
         const res = await commonApi.uploadFile(image.file)
@@ -135,25 +139,27 @@ const Upload: React.FC<UploadProps> = ({
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       className={cn(
-        'mt-4 flex h-[130px] min-w-[212px] flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
-        !value.length && 'aspect-auto block border-solid py-6',
+        'flex h-[130px] min-w-[212px] flex-1 cursor-pointer items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
+        !value.length && 'aspect-auto border-solid py-6',
         error && 'border-red-500'
       )}
     >
-      <Plus className="mx-auto mb-2 block size-6" />
-      <div className="text-xs">{description || 'Upload'}</div>
+      <div>
+        <Plus className="mx-auto mb-2 block size-6" />
+        <div className="text-xs">{description || 'Upload'}</div>
+      </div>
     </div>
   )
 
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex items-center gap-4">
         {value.map((image) => (
           <div
             key={image.hash}
-            className="group relative mt-4 h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
+            className="group relative h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
           >
-            <img src={image.url} className="size-full object-cover" alt="upload preview" />
+            <img src={image.url} className="size-full object-contain" alt="upload preview" />
 
             {/* Centered Preview Icon on Hover */}
             <div className="absolute inset-0 flex items-center justify-center gap-5 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
@@ -182,10 +188,11 @@ const Upload: React.FC<UploadProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/png,image/jpeg,image/jpg"
+        accept={`image/png,image/jpeg,image/jpg${supportPdf ? ',application/pdf' : ''}`}
         onChange={handleImageUpload}
         className="hidden"
         multiple
+        style={{ display: 'none' }}
       />
 
       {/* Full-screen preview modal */}
