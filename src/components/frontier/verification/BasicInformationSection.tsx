@@ -1,4 +1,5 @@
 import { Select, Input } from 'antd'
+import PhoneInput from '@/components/common/phone-input'
 
 const FormItem = ({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) => (
   <div>
@@ -19,17 +20,14 @@ const StyledSelect = (props: React.ComponentProps<typeof Select>) => (
 
 interface BasicInformationSectionProps {
   errors: Record<string, string>
-  phoneCountryCode: string
   phoneNumber: string
   titlePosition: string
   otherTitle: string
   institution: string
   major: string
-  countryCodeOptions: { label: string; value: string }[]
   titlePositionOptions: { label: string; value: string }[]
   institutionOptions: { label: string; value: string }[]
   majorOptions: { label: string; value: string }[]
-  setPhoneCountryCode: (value: string) => void
   setPhoneNumber: (value: string) => void
   setTitlePosition: (value: string) => void
   setOtherTitle: (value: string) => void
@@ -39,17 +37,14 @@ interface BasicInformationSectionProps {
 
 export default function BasicInformationSection({
   errors,
-  phoneCountryCode,
   phoneNumber,
   titlePosition,
   otherTitle,
   institution,
   major,
-  countryCodeOptions,
   titlePositionOptions,
   institutionOptions,
   majorOptions,
-  setPhoneCountryCode,
   setPhoneNumber,
   setTitlePosition,
   setOtherTitle,
@@ -63,20 +58,7 @@ export default function BasicInformationSection({
       </h2>
       <div className="!my-0 space-y-4">
         <FormItem label="Phone Number" required>
-          <div className="flex gap-2">
-            <StyledSelect
-              value={phoneCountryCode}
-              onChange={(value) => setPhoneCountryCode(value as string)}
-              options={countryCodeOptions}
-              className="h-12 w-[160px]"
-            />
-            <StyledInput
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="Please enter your mobile number"
-              className="h-12 flex-1"
-            />
-          </div>
+          <PhoneInput value={phoneNumber} onChange={setPhoneNumber} />
           {errors.phoneNumber && <p className="mt-1 text-sm text-red-500">{errors.phoneNumber}</p>}
         </FormItem>
         <FormItem label="Title / Position" required>

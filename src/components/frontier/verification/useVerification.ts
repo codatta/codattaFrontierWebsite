@@ -29,7 +29,7 @@ export function useVerification(taskId?: string, templateId?: string) {
   const [academicEmail, setAcademicEmail] = useState('')
   const [verificationCode, setVerificationCode] = useState('')
   const [academicCredentials, setAcademicCredentials] = useState<UploadedImage[]>([])
-  const [cvFiles, setCvFiles] = useState<FileValue[]>([])
+  const [cvFiles, setCvFiles] = useState<UploadedImage[]>([])
   const [sendingCode, setSendingCode] = useState(false)
 
   const validateForm = () => {

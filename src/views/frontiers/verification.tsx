@@ -1,4 +1,4 @@
-import { Form, Spin } from 'antd'
+import { Button, Form, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 
 import PageHeader from '@/components/common/frontier-page-header'
@@ -18,7 +18,6 @@ export default function Verification({ templateId }: { templateId: string }) {
     loading,
     isSubmitting,
     errors,
-    phoneCountryCode,
     phoneNumber,
     titlePosition,
     otherTitle,
@@ -29,7 +28,6 @@ export default function Verification({ templateId }: { templateId: string }) {
     academicCredentials,
     cvFiles,
     sendingCode,
-    setPhoneCountryCode,
     setPhoneNumber,
     setTitlePosition,
     setOtherTitle,
@@ -42,11 +40,6 @@ export default function Verification({ templateId }: { templateId: string }) {
     handleSendVerificationCode,
     handleSubmit
   } = useVerification(taskId, templateId)
-
-  const countryCodeOptions = [
-    { label: '🇨🇳 +86', value: '+86' },
-    { label: '🇺🇸 +1', value: '+1' }
-  ]
 
   const titlePositionOptions = [
     { label: 'Professor / Principal Investigator', value: 'professor' },
@@ -71,17 +64,14 @@ export default function Verification({ templateId }: { templateId: string }) {
           <Form form={form} onFinish={handleSubmit} layout="vertical" className="space-y-8">
             <BasicInformationSection
               errors={errors}
-              phoneCountryCode={phoneCountryCode}
               phoneNumber={phoneNumber}
               titlePosition={titlePosition}
               otherTitle={otherTitle}
               institution={institution}
               major={major}
-              countryCodeOptions={countryCodeOptions}
               titlePositionOptions={titlePositionOptions}
               institutionOptions={institutionOptions}
               majorOptions={majorOptions}
-              setPhoneCountryCode={setPhoneCountryCode}
               setPhoneNumber={setPhoneNumber}
               setTitlePosition={setTitlePosition}
               setOtherTitle={setOtherTitle}
@@ -107,15 +97,13 @@ export default function Verification({ templateId }: { templateId: string }) {
               setCvFiles={setCvFiles}
             />
 
-            <div className="flex justify-center pt-8">
-              <button
-                type="submit"
-                className="h-10 w-40 rounded-full bg-purple-600 text-sm font-medium text-white hover:bg-purple-700 disabled:opacity-50"
-                disabled={isSubmitting}
-              >
-                Submit
-              </button>
-            </div>
+            <Button
+              type="primary"
+              className="mx-auto block h-10 w-[240px] rounded-full disabled:opacity-50"
+              disabled={isSubmitting}
+            >
+              Submit
+            </Button>
           </Form>
         </div>
       </div>
