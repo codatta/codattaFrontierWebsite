@@ -2,25 +2,9 @@ import { CalendarDays, Loader2, BookText } from 'lucide-react'
 import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
 import { Link } from 'react-router'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
-import { useMemo } from 'react'
 
 export default function AirdropActivityHero() {
   const { currentAirdropInfo } = useAirdropActivityStore()
-
-  const isFinished = useMemo(() => {
-    if (!currentAirdropInfo) return false
-    try {
-      const endTimeStr = currentAirdropInfo.end_time.replace(/\+00:00/, '')
-      const endTime = new Date(endTimeStr).getTime()
-      if (isNaN(endTime)) return false
-
-      const now = new Date().getTime()
-      return now > endTime
-    } catch (error) {
-      console.error('Error parsing end_time:', error)
-      return false
-    }
-  }, [currentAirdropInfo])
 
   function formatDate(date: string) {
     if (!date) return ''
