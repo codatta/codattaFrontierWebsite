@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-import { Plus, Trash, Eye, AlertCircle, X, FileText } from 'lucide-react'
-import { message, Spin } from 'antd'
+import { Plus, Trash, Eye, AlertCircle, FileText } from 'lucide-react'
+import { message, Spin, Modal } from 'antd'
 import { cn } from '@udecode/cn'
 
 import commonApi from '@/api-v1/common.api'
@@ -236,31 +236,35 @@ const Upload: React.FC<UploadProps> = ({
         style={{ display: 'none' }}
       />
 
-      {/* Full-screen preview modal */}
-      {previewOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-          onClick={() => setPreviewOpen(false)}
-        >
-          {isPdf(previewFileType) ? (
-            <iframe
-              src={previewImage}
-              className="h-[90vh] w-[90vw] rounded-lg bg-white"
-              title="PDF Preview"
-              onClick={(e) => e.stopPropagation()}
-            />
-          ) : (
-            <img src={previewImage} className="max-h-[90vh] max-w-[90vw] object-contain" alt="Preview" />
-          )}
-          <button
-            type="button"
-            onClick={() => setPreviewOpen(false)}
-            className="group absolute right-4 top-4 rounded-full bg-white/20 p-2 transition-colors hover:bg-white/30"
-          >
-            <X className="size-6 text-white" />
-          </button>
-        </div>
-      )}
+      {/* Preview modal */}
+      <Modal
+        open={previewOpen}
+        footer={null}
+        onCancel={() => setPreviewOpen(false)}
+        width={isPdf(previewFileType) ? '90vw' : '80vw'}
+        centered
+        styles={{
+          body: {
+            padding: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            maxHeight: '85vh',
+            overflow: 'hidden'
+          }
+        }}
+      >
+        {isPdf(previewFileType) ? (
+          <iframe src={previewImage} className="h-[80vh] w-full" title="PDF Preview" />
+        ) : (
+          <img
+            src={previewImage}
+            className="max-h-[80vh] max-w-full object-contain"
+            alt="Preview"
+            style={{ display: 'block' }}
+          />
+        )}
+      </Modal>
 
       {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </>
