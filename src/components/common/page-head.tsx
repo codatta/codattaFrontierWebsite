@@ -1,5 +1,6 @@
-import LogoWhiteSvgImage from '@/assets/common/logo-white.svg'
 import { ArrowLeft } from 'lucide-react'
+
+import LogoWhiteSvgImage from '@/assets/common/logo-white.svg'
 
 export default function PageHead(props: { children?: React.ReactNode }) {
   return (

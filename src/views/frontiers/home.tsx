@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import FrontierTaskList from '@/components/robotics/task-list'
 import ActivityInfo from '@/components/home/activity-info'
+import QualificationList from '@/components/home/qualification-list'
 
 import { useEffect, useState } from 'react'
 import frontierApi, { FrontierItemType, MediaName } from '@/apis/frontiter.api'
@@ -27,6 +28,7 @@ export default function Component() {
     const res = await frontierApi.getFrontierInfo(frontier_id)
     if (res.errorCode === 0) {
       setFrontierInfo(res.data)
+      console.log('frontierInfo', res.data)
     }
     setLoading(false)
   }
@@ -72,6 +74,7 @@ export default function Component() {
           <div className="text-white/55">{frontierInfo?.description}</div>
           <ActivityInfo className="mb-6" />
         </div>
+        <QualificationList task_ids={frontierInfo?.qualification ?? ''} />
         <div className="mb-6">
           <GetRewardGuide videos={frontierInfo?.videos ?? []} />
         </div>

@@ -109,6 +109,7 @@ export interface FrontierItemType {
     name: MediaName
     value: string
   }>
+  qualification?: string
   videos?: Array<VideoItem>
   reputation_permission?: number
   frontier_id?: string

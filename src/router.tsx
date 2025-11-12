@@ -72,6 +72,9 @@ const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_mode
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
+
+const Verification = lazy(() => import('@/views/frontiers/verification'))
+const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
 const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto_and_stock_info_collection'))
 const RealWorldPhotoCollection = lazy(() => import('@/views/frontiers/real_world_photo_collection'))
 
@@ -168,6 +171,11 @@ export default function Router() {
             <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
           </Route>
         </Route>
+        <Route path="/frontier/project/VERIFICATION/:questId" element={<Verification templateId="VERIFICATION" />} />
+        <Route
+          path="/frontier/project/PHYSICAL_TPL_QUESTION/:taskId"
+          element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
+        />
         <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
@@ -245,3 +253,5 @@ function RouteTracker() {
 
   return null
 }
+
+// http://localhost:5175/app/frontier/project/PHYSICAL_TPL_QUESTION/8995881856000103187
