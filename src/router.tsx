@@ -15,7 +15,6 @@ const AppLeaderboard = lazy(() => import('@/views/leaderboard'))
 const AppNotification = lazy(() => import('@/views/notification'))
 const AppQuestChanllenge = lazy(() => import('@/views/quest/quest-challenge'))
 const AppReferral = lazy(() => import('@/views/referral'))
-const NewJourney = lazy(() => import('@/views/new-journey'))
 const SubmissionDetail = lazy(() => import('@/views/frontiers/submission-detail'))
 
 // quest
@@ -35,6 +34,7 @@ const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
 const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
 const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
+const UserInfoDid = lazy(() => import('@/views/userinfo/did'))
 
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
@@ -72,8 +72,11 @@ const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_mode
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
+
 const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
+const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto_and_stock_info_collection'))
+const RealWorldPhotoCollection = lazy(() => import('@/views/frontiers/real_world_photo_collection'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -112,7 +115,6 @@ export default function Router() {
         <Route path="/app" element={<AppLayout className="max-w-[1560px]" />}>
           <Route index element={<Home />} />
           <Route path="referral" element={<AppReferral />}></Route>
-          <Route path="journey" element={<NewJourney />} />
           <Route path="airdrop">
             <Route index element={<AirdropActivity />} />
             <Route path="leaderboard" element={<AirdropLeaderboard />} />
@@ -130,6 +132,7 @@ export default function Router() {
             <Route path="onchain" element={<UserInfoOnchain />} />
             <Route path="data-profile" element={<UserInfoDataProfile />} />
             <Route path="data-assets" element={<UserInfoDataAssets />} />
+            <Route path="did" element={<UserInfoDid />} />
           </Route>
 
           <Route path="quest">
@@ -138,10 +141,13 @@ export default function Router() {
           </Route>
 
           <Route path="notification" element={<AppNotification />}></Route>
-          <Route path="frontier/:frontier_id" element={<FrontierHome />}></Route>
-          <Route path="frontier/:frontier_id/history" element={<FrontierHistory />}></Route>
-          <Route path="frontier/fashion" element={<FashionHome />}></Route>
           <Route path="leaderboard" element={<AppLeaderboard />}></Route>
+
+          <Route path="frontier">
+            <Route path=":frontier_id" element={<FrontierHome />}></Route>
+            <Route path=":frontier_id/history" element={<FrontierHistory />}></Route>
+            <Route path="fashion" element={<FashionHome />}></Route>
+          </Route>
         </Route>
         <Route path="/app/quest/:id/challenge" element={<AppQuestChanllenge />}></Route>
         <Route path="/account">
@@ -150,10 +156,7 @@ export default function Router() {
           <Route path="social/link/:social_media" element={<SocialLinkLanding />}></Route>
         </Route>
         <Route path="/referral/:code" element={<ReferralLanding />} />
-        <Route path="/frontier/project/CMU_TPL_000001/:taskId" element={<CMULayout />}>
-          <Route index element={<CMUVideoLabelingTaskList />} />
-          <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
-        </Route>
+
         <Route path="/frontier/project" element={<FrontierLayout />}>
           <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />
           <Route path="NFT_TPL_000001/:taskId" element={<NFTGenerateTemplate templateId="NFT_TPL_000001" />} />
@@ -163,6 +166,10 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
           <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
+          <Route path="CMU_TPL_000001/:taskId" element={<CMULayout />}>
+            <Route index element={<CMUVideoLabelingTaskList />} />
+            <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
+          </Route>
         </Route>
         <Route path="/frontier/project/VERIFICATION/:questId" element={<Verification templateId="VERIFICATION" />} />
         <Route
@@ -219,6 +226,14 @@ export default function Router() {
           path="/frontier/project/AIRDROP_BAD_CASE_ANALYSIS/:taskId"
           element={<AirdropBadCaseAnalysis templateId="AIRDROP_BAD_CASE_ANALYSIS" />}
         />
+        <Route
+          path="/frontier/project/CRYPTO_AND_STOCK_INFO_COLLECTION/:taskId"
+          element={<CryptoAndStockInfoCollection templateId="CRYPTO_AND_STOCK_INFO_COLLECTION" />}
+        ></Route>
+        <Route
+          path="/frontier/project/REAL_WORLD_PHOTO_COLLECTION/:taskId"
+          element={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+        ></Route>
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
         <Route path="*" element={<NotFoundPage />} />
