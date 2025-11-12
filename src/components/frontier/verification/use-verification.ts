@@ -1,8 +1,8 @@
-import { useState } from 'react'
-import { message } from 'antd'
+import { useCallback, useEffect, useState } from 'react'
+import { message, Modal } from 'antd'
 
-import frontiterApi from '@/apis/frontiter.api'
 import userApi from '@/apis/user.api'
+import boosterApi from '@/apis/booster.api'
 import { useCountdown } from '@/hooks/use-countdown'
 import { isValidEmail } from '@/utils/str'
 
@@ -18,8 +18,9 @@ export interface FileValue {
 }
 
 export function useVerification(taskId?: string, templateId?: string) {
-  const [loading] = useState(false)
+  const [pageLoading, setPageLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [view, setView] = useState<'form' | 'complete'>('form')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const [phoneCountryCode, setPhoneCountryCodeState] = useState('+86')
@@ -312,43 +313,76 @@ export function useVerification(taskId?: string, templateId?: string) {
         }))
 
       const submitData = {
-        taskId,
-        templateId,
-        data: {
-          phoneCountryCode: phoneCountryCode || '+86',
-          phoneNumber: cleanPhoneNumber,
-          titlePosition: titlePosition,
-          titlePositionSpecify: titlePosition === 'other' ? titlePositionSpecify.trim() : '',
-          titlePositionYear: titlePosition === 'phd_student' ? titlePositionYear.trim() : '',
-          institution: institution,
-          institutionSpecify: institution === 'other' ? institutionSpecify.trim() : '',
-          major: major,
-          majorSpecify: major === 'other' ? majorSpecify.trim() : '',
-          academicEmail: academicEmail.toLowerCase().trim(),
-          academicCredentials: formattedCredentials,
-          cvFiles: formattedCvFiles
-        }
+        phoneCountryCode: phoneCountryCode || '+86',
+        phoneNumber: cleanPhoneNumber,
+        titlePosition: titlePosition,
+        titlePositionSpecify: titlePosition === 'other' ? titlePositionSpecify.trim() : '',
+        titlePositionYear: titlePosition === 'phd_student' ? titlePositionYear.trim() : '',
+        institution: institution,
+        institutionSpecify: institution === 'other' ? institutionSpecify.trim() : '',
+        major: major,
+        majorSpecify: major === 'other' ? majorSpecify.trim() : '',
+        academicEmail: academicEmail.toLowerCase().trim(),
+        academicCredentials: formattedCredentials,
+        cvFiles: formattedCvFiles
       }
 
       console.log('Submitting verification data:', submitData)
-      await frontiterApi.submitTask(taskId, submitData)
+      const res = await boosterApi.submitSpecTask(taskId, JSON.stringify(submitData), 1)
 
-      message.success('Verification application submitted successfully!')
+      if (res.data?.status === 1) {
+        message.success('Submit successfully!')
+      } else {
+        message.error(res.data?.info || 'Failed to submit!')
+      }
     } catch (error) {
       console.error('Submission error:', error)
       const errorMessage =
         (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||
         (error as Error)?.message ||
-        'Failed to submit application. Please try again.'
+        'Failed to submit. Please try again.'
       message.error(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  const checkTaskStatus = useCallback(async () => {
+    if (!taskId || !templateId) {
+      message.error('Task ID or template ID is required!')
+      return
+    }
+
+    setPageLoading(true)
+
+    try {
+      const taskInfo = await boosterApi.getSpecTaskInfo(taskId!)
+      if (taskInfo.data?.status) {
+        setView('complete')
+      }
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: error.message ? error.message : 'Failed to get task detail!',
+        okText: 'Try Again',
+        className: '[&_.ant-btn]:!bg-[#875DFF]',
+        onOk: () => {
+          checkTaskStatus()
+        }
+      })
+    } finally {
+      setPageLoading(false)
+    }
+  }, [taskId, templateId])
+
+  useEffect(() => {
+    checkTaskStatus()
+  }, [checkTaskStatus])
+
   return {
-    loading,
+    pageLoading,
     isSubmitting,
+    view,
     errors,
     phoneCountryCode,
     phoneNumber,

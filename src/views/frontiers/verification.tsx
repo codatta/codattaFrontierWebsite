@@ -2,11 +2,12 @@ import { Button, Form, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 
 import PageHeader from '@/components/common/frontier-page-header'
-import BasicInformationSection from '@/components/frontier/verification/BasicInformationSection'
-import IdentityVerificationSection from '@/components/frontier/verification/IdentityVerificationSection'
-import CredentialUploadSection from '@/components/frontier/verification/CredentialUploadSection'
+import BasicInformationSection from '@/components/frontier/verification/basic-information-section'
+import IdentityVerificationSection from '@/components/frontier/verification/identity-verification-section'
+import CredentialUploadSection from '@/components/frontier/verification/credential-upload-section'
+import TaskComplete from '@/components/frontier/verification/task-complete'
 
-import { useVerification } from '@/components/frontier/verification/useVerification'
+import { useVerification } from '@/components/frontier/verification/use-verification'
 
 // Custom styled components to match the design
 
@@ -15,7 +16,8 @@ export default function Verification({ templateId }: { templateId: string }) {
   const { questId } = useParams()
 
   const {
-    loading,
+    pageLoading,
+    view,
     isSubmitting,
     errors,
     phoneNumber,
@@ -55,7 +57,7 @@ export default function Verification({ templateId }: { templateId: string }) {
   } = useVerification(questId, templateId)
 
   return (
-    <Spin spinning={loading || isSubmitting} className="min-h-screen">
+    <Spin spinning={pageLoading || isSubmitting} className="min-h-screen">
       <div className="min-h-screen bg-[#1a1625]">
         <PageHeader title="Verification Application" />
         <div className="mx-auto max-w-[1352px] px-10 pb-12">
@@ -116,6 +118,7 @@ export default function Verification({ templateId }: { templateId: string }) {
             </Button>
           </Form>
         </div>
+        {view === 'complete' && <TaskComplete />}
       </div>
     </Spin>
   )

@@ -1,7 +1,7 @@
 import { Info } from 'lucide-react'
 
 import UploadImg from '@/components/frontier/airdrop/UploadImg'
-import { UploadedImage } from '@/components/frontier/verification/useVerification'
+import { UploadedImage } from '@/components/frontier/verification/use-verification'
 
 interface CredentialUploadSectionProps {
   academicCredentials: UploadedImage[]
