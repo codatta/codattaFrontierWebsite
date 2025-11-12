@@ -59,7 +59,7 @@ export default function Component() {
                   Improve Reputation
                 </Button>
               )}
-              {activeSegment === SegmentType.Contributors && (
+              {/* {activeSegment === SegmentType.Contributors && (
                 <Button
                   size="large"
                   className="rounded-full border-solid border-gray-900 bg-transparent text-sm font-medium text-gray-900"
@@ -67,7 +67,7 @@ export default function Component() {
                 >
                   Contribute More
                 </Button>
-              )}
+              )} */}
             </div>
             <div className="flex items-start justify-center">
               {activeSegment === SegmentType.Reputation && <TopReputation />}

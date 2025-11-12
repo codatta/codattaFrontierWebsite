@@ -15,6 +15,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { keccak256, stringToHex } from 'viem'
 import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
 import { getAddress } from 'viem'
+import { calculateGasEstimation } from '@/hooks/use-gas-estimation'
 
 interface Asset {
   type: string
@@ -187,16 +188,29 @@ function ClaimConfirm({
     if (!tokenConfig) return
     if (!address) return
 
-    const estimateGas = await rpcClient.estimateGas({
-      account: address as `0x${string}`,
-      to: contract.address as `0x${string}`,
-      data: encodeFunctionData({
+    try {
+      const data = encodeFunctionData({
         abi: contract.abi,
         functionName: 'claim',
         args: getContractCallParams(signResponse)
       })
-    })
-    setEstimateGas(formatEther(estimateGas))
+
+      const result = await calculateGasEstimation({
+        rpcClient,
+        account: address as `0x${string}`,
+        to: contract.address as `0x${string}`,
+        data
+      })
+
+      setEstimateGas(result.totalCostFormatted)
+      console.log('Gas estimation for claim:', {
+        gasLimit: result.gasLimit.toString(),
+        totalCost: result.totalCostFormatted
+      })
+    } catch (error) {
+      console.error('Gas estimation failed:', error)
+      setEstimateGas('0')
+    }
   }
 
   async function handleOnClaim() {

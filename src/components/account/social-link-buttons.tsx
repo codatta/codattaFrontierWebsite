@@ -13,6 +13,7 @@ function SocialAccountButton(props: {
   title: string
   icon: React.ReactNode
   linked: boolean
+  disabled?: boolean
   onLink: () => void
   onUnlink: () => void
 }) {
@@ -27,9 +28,10 @@ function SocialAccountButton(props: {
   return (
     <button
       className={cn(
-        'flex w-full items-center rounded-xl px-4 py-3 text-white',
+        'flex w-full cursor-pointer items-center rounded-xl px-4 py-3 text-white disabled:cursor-not-allowed disabled:bg-gray-300',
         props.linked ? 'bg-gray-300' : 'bg-primary'
       )}
+      disabled={props.disabled}
       onClick={handleButtonClick}
     >
       <div>{props.title}</div>
@@ -48,6 +50,7 @@ export default function SocialLink() {
   const [xLinkInfo, setXLinkInfo] = useState<SocialAccountInfoItem | null>(null)
   const [discordLinkInfo, setDiscordLinkInfo] = useState<SocialAccountInfoItem | null>(null)
   const [telegramLinkInfo, setTelegramLinkInfo] = useState<SocialAccountInfoItem | null>(null)
+  const btnDisabled = !!info?.user_data?.did
 
   useEffect(() => {
     if (!info?.social_account_info) return
@@ -120,6 +123,7 @@ export default function SocialLink() {
           title={xLinkInfo?.name || 'Connect With X'}
           icon={<XOutlined className="text-5" />}
           linked={!!xLinkInfo}
+          disabled={btnDisabled}
           onLink={() => linkAccount('x')}
           onUnlink={() => handleUnlinkAccount('x')}
         ></SocialAccountButton>
@@ -128,6 +132,7 @@ export default function SocialLink() {
           title={discordLinkInfo?.name || 'Connect With Discord'}
           icon={<DiscordOutlined className="text-5" />}
           linked={!!discordLinkInfo}
+          disabled={btnDisabled}
           onLink={() => linkAccount('discord')}
           onUnlink={() => handleUnlinkAccount('discord')}
         ></SocialAccountButton>
@@ -136,6 +141,7 @@ export default function SocialLink() {
           title={telegramLinkInfo?.name || 'Connect With Telegram'}
           icon={<TelegramIcon className="text-5" />}
           linked={!!telegramLinkInfo}
+          disabled={btnDisabled}
           onLink={() => linkAccount('telegram')}
           onUnlink={() => handleUnlinkAccount('telegram')}
         ></SocialAccountButton>

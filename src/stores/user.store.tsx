@@ -111,7 +111,8 @@ const userStore = proxy<UserStore>({
       user_name: '',
       avatar: '',
       referee_code: '',
-      user_id: ''
+      user_id: '',
+      did: ''
     },
     user_reputation: 0,
     user_assets: [],
@@ -199,6 +200,7 @@ async function unlinkSocialAccount(type: string) {
 async function getUserInfo() {
   const { data } = await userApi.getUserInfo()
   userStore.info = data
+  // userStore.info.user_data.did = ''
   return data
 }
 
@@ -211,9 +213,13 @@ function logout() {
 }
 
 function checkLogin() {
+  const userAgent = navigator.userAgent.toLowerCase()
   const token = localStorage.getItem('token')
   const uid = localStorage.getItem('uid')
   const auth = localStorage.getItem('auth')
+  if (userAgent.includes('codatta')) {
+    return !!auth && !!uid
+  }
   return !!token && !!uid && !!auth
 }
 
