@@ -2,25 +2,9 @@ import { CalendarDays, Loader2, BookText } from 'lucide-react'
 import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
 import { Link } from 'react-router'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
-import { useMemo } from 'react'
 
 export default function AirdropActivityHero() {
   const { currentAirdropInfo } = useAirdropActivityStore()
-
-  const isFinished = useMemo(() => {
-    if (!currentAirdropInfo) return false
-    try {
-      const endTimeStr = currentAirdropInfo.end_time.replace(/\+00:00/, '')
-      const endTime = new Date(endTimeStr).getTime()
-      if (isNaN(endTime)) return false
-
-      const now = new Date().getTime()
-      return now > endTime
-    } catch (error) {
-      console.error('Error parsing end_time:', error)
-      return false
-    }
-  }, [currentAirdropInfo])
 
   function formatDate(date: string) {
     if (!date) return ''
@@ -41,7 +25,7 @@ export default function AirdropActivityHero() {
     <>
       <section
         style={{ backgroundImage: `url(${HeroBgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-        className={`overflow-hidden ${isFinished ? 'rounded-t-2xl' : 'rounded-2xl'}`}
+        className={`overflow-hidden ${currentAirdropInfo?.extra_desc ? 'rounded-t-2xl' : 'rounded-2xl'}`}
       >
         {!currentAirdropInfo ? (
           <div className="flex h-[212px] items-center justify-center bg-black/20">
@@ -137,11 +121,9 @@ export default function AirdropActivityHero() {
         )}
       </section>
 
-      {isFinished && (
-        <div className="rounded-b-2xl bg-[#FFA8001F] p-4 text-center">
-          The event has ended. To claim your reward, simply visit User Info - Data Assets section in the sidebar.
-          <br />
-          Please make sure to claim your rewards by <strong className="text-[#FFA800]">Dec 3 at 9:00 UTC</strong>.
+      {currentAirdropInfo?.extra_desc && (
+        <div className="whitespace-pre-wrap rounded-b-2xl bg-[#FFA8001F] p-4 text-center">
+          {currentAirdropInfo?.extra_desc}
         </div>
       )}
     </>
