@@ -1,5 +1,5 @@
 import { Modal } from 'antd'
-import underReviewSvgImage from '@/assets/common/circle-under-review.svg'
+import underReviewSvgImage from '@/assets/icons/circle-under-review.svg'
 
 export default function SubmitSuccessModal(props: { open: boolean; points: number; onClose: () => void }) {
   const { open, points, onClose } = props
