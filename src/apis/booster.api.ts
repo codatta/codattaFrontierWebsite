@@ -1,6 +1,6 @@
 import request, { type Response } from './request'
 
-interface TaskInfo {
+export interface TaskInfo {
   task_id: string
   status: 0 | 1 | 2 // 0 not start, 1 in progress, 2 done
   info?: string
@@ -19,6 +19,11 @@ class BoosterApi {
 
   async getSpecTaskInfo(task_id: string) {
     const res = await request.get<Response<TaskInfo>>(`/v2/spec/task/info?task_id=${task_id}`)
+    return res.data
+  }
+
+  async getSpecTaskInfos(task_ids: string) {
+    const res = await request.get<Response<TaskInfo[]>>(`/v2/spec/task/infos?task_ids=${task_ids}`)
     return res.data
   }
 
