@@ -56,6 +56,8 @@ export interface TaskDetail {
   txHashUrl: string
   result: 'S' | 'A' | 'B' | 'C' | 'D'
   chain_status: 0 | 1 | 2 | 3 | 4
+  qualification?: string
+  qualification_flag: 0 | 1
 }
 
 export interface FrontierListItem {
