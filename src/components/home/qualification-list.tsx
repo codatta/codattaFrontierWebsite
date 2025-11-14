@@ -18,7 +18,9 @@ export default function QualificationList({ task_ids = '' }: { task_ids?: string
   }, [])
 
   useEffect(() => {
-    getQualificationList(task_ids)
+    if (task_ids) {
+      getQualificationList(task_ids)
+    }
   }, [getQualificationList, task_ids])
 
   if (!task_ids || qualificationList.length === 0) return null

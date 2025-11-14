@@ -110,6 +110,7 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
     <Spin spinning={pageLoading || loading} className="min-h-screen">
       <div className="min-h-screen bg-[#1a1625] pb-12">
         <PageHeader title="Physical Question Submission" />
+
         {resultType ? (
           <SubmitSuccessModal points={rewardPoints} open={true} onClose={() => window.history.back()} />
         ) : (
