@@ -166,6 +166,8 @@ export default function BasicInformationSection({
                   onChange={(e) => setTitlePositionSpecify(e.target.value)}
                   placeholder={titleSpecifyPlaceholder}
                   className="h-12 flex-1 transition-all"
+                  maxLength={100}
+                  showCount
                 />
               )
             )}
@@ -190,6 +192,8 @@ export default function BasicInformationSection({
                 onChange={(e) => setInstitutionSpecify(e.target.value)}
                 placeholder={institutionSpecifyPlaceholder}
                 className="h-12 flex-1 transition-all"
+                maxLength={100}
+                showCount
               />
             )}
           </div>
@@ -212,6 +216,8 @@ export default function BasicInformationSection({
                 onChange={(e) => setMajorSpecify(e.target.value)}
                 placeholder={majorSpecifyPlaceholder}
                 className="h-12 flex-1 transition-all"
+                maxLength={100}
+                showCount
               />
             )}
           </div>
