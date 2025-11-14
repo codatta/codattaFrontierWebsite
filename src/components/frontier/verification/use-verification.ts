@@ -20,6 +20,7 @@ export interface FileValue {
 export function useVerification(taskId?: string, templateId?: string) {
   const [pageLoading, setPageLoading] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submissionSuccessful, setSubmissionSuccessful] = useState(false)
   const [view, setView] = useState<'form' | 'complete'>('form')
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -293,6 +294,8 @@ export function useVerification(taskId?: string, templateId?: string) {
       return
     }
 
+    if (isSubmitting || submissionSuccessful) return
+
     setIsSubmitting(true)
 
     try {
@@ -332,6 +335,7 @@ export function useVerification(taskId?: string, templateId?: string) {
 
       if (res.data?.status === 1) {
         message.success('Submit successfully!')
+        setSubmissionSuccessful(true)
       } else {
         message.error(res.data?.info || 'Failed to submit!')
       }
@@ -382,6 +386,7 @@ export function useVerification(taskId?: string, templateId?: string) {
   return {
     pageLoading,
     isSubmitting,
+    submissionSuccessful,
     view,
     errors,
     phoneCountryCode,

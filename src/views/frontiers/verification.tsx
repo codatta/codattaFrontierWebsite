@@ -19,6 +19,7 @@ export default function Verification({ templateId }: { templateId: string }) {
     pageLoading,
     view,
     isSubmitting,
+    submissionSuccessful,
     errors,
     phoneNumber,
     titlePosition,
@@ -133,10 +134,10 @@ export default function Verification({ templateId }: { templateId: string }) {
               type="primary"
               htmlType="submit"
               className="mx-auto block h-10 w-[240px] rounded-full disabled:opacity-50"
-              disabled={isSubmitting}
+              disabled={isSubmitting || submissionSuccessful}
               loading={isSubmitting}
             >
-              Submit
+              {submissionSuccessful ? 'Submitted Successfully' : 'Submit'}
             </Button>
           </Form>
         </div>
