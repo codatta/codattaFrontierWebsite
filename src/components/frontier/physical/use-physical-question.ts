@@ -84,11 +84,11 @@ export function usePhysicalQuestion(taskId: string | undefined, templateId: stri
 
       setRewardPoints(totalRewards)
 
-      const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
+      // const lastSubmission = await getLastSubmission(taskDetail.data.frontier_id, taskId!)
 
-      if (lastSubmission?.status) {
-        handleResultStatus(lastSubmission.status)
-      }
+      // if (lastSubmission?.status) {
+      //   handleResultStatus(lastSubmission.status)
+      // }
     } catch (error) {
       Modal.error({
         title: 'Error',
