@@ -334,8 +334,10 @@ export function useVerification(taskId?: string, templateId?: string) {
       const res = await boosterApi.submitSpecTask(taskId, JSON.stringify(submitData), 1)
 
       if (res.data?.status === 1) {
-        message.success('Submit successfully!')
         setSubmissionSuccessful(true)
+        message.success('Submit successfully!').then(() => {
+          setView('complete')
+        })
       } else {
         message.error(res.data?.info || 'Failed to submit!')
       }
