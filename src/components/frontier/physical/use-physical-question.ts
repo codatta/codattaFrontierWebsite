@@ -12,15 +12,15 @@ import {
   checkDuplicateInRealTime
 } from './validation'
 
-async function getLastSubmission(frontierId: string, taskIds: string) {
-  const res = await frontiterApi.getSubmissionList({
-    page_num: 1,
-    page_size: 1,
-    frontier_id: frontierId,
-    task_ids: taskIds
-  })
-  return res.data[0]
-}
+// async function getLastSubmission(frontierId: string, taskIds: string) {
+//   const res = await frontiterApi.getSubmissionList({
+//     page_num: 1,
+//     page_size: 1,
+//     frontier_id: frontierId,
+//     task_ids: taskIds
+//   })
+//   return res.data[0]
+// }
 
 export function usePhysicalQuestion(taskId: string | undefined, templateId: string) {
   const [loading, setLoading] = useState(false)
@@ -48,16 +48,16 @@ export function usePhysicalQuestion(taskId: string | undefined, templateId: stri
     { id: 'model_5', name: 'DeepSeek-V3.2-Thinking', images: [], link: '', correct: false }
   ])
 
-  const handleResultStatus = (status: string = '') => {
-    status = status.toLocaleUpperCase()
-    if (['PENDING', 'SUBMITTED'].includes(status)) {
-      setResultType('PENDING')
-    } else if (status === 'REFUSED') {
-      setResultType('REJECT')
-    } else if (status === 'ADOPT') {
-      setResultType('ADOPT')
-    }
-  }
+  // const handleResultStatus = (status: string = '') => {
+  //   status = status.toLocaleUpperCase()
+  //   if (['PENDING', 'SUBMITTED'].includes(status)) {
+  //     setResultType('PENDING')
+  //   } else if (status === 'REFUSED') {
+  //     setResultType('REJECT')
+  //   } else if (status === 'ADOPT') {
+  //     setResultType('ADOPT')
+  //   }
+  // }
 
   const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) {
