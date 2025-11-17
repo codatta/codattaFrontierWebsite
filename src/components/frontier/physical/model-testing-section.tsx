@@ -46,7 +46,7 @@ export default function ModelTestingSection({
           )
         })}
         <li>
-          <label className="mb-2 block text-base font-bold">Correct answer</label>
+          <label className="mb-2 block text-base font-bold">Correct answer (Optional)</label>
           <Select
             className="h-12 w-full"
             placeholder="Select correct answer."
