@@ -28,7 +28,8 @@ export default function ReviewChecklist({ value, onChange, error }: ReviewCheckl
   return (
     <div>
       <h2 className="mb-3 text-base font-bold">
-        Review Checklist <span className="font-normal text-[#BBBBBE]">*(confirm your question meets all criteria)</span>
+        Review Checklist <span className="text-red-400">*</span>
+        <span className="font-normal text-[#BBBBBE]"> (confirm your question meets all criteria)</span>
       </h2>
       <ul className="space-y-3">
         {CHECKLIST_OPTIONS.map((option) => (
