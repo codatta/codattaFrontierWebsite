@@ -22,7 +22,7 @@ function TaskSuccessModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <ApprovedIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Task Completed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Task Completed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -38,7 +38,7 @@ function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <RejectIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Failed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Verification Failed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -54,7 +54,7 @@ function TaskPendingModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <PendingIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Pending!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Verifying...</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -151,7 +151,7 @@ export default function TelegramBind(props: { templateId: string }) {
       <div className="m-auto flex max-w-[600px] flex-col gap-12 rounded-2xl bg-[#252532] p-10">
         <div className="flex flex-col gap-4">
           <span className="text-lg font-bold">Step 1</span>
-          <span className="text-base">Click the button below to join our Telegram group.</span>
+          <span className="text-base">Click the button below to join the Telegram group. </span>
           <Button
             size="large"
             type="primary"
@@ -164,7 +164,7 @@ export default function TelegramBind(props: { templateId: string }) {
         </div>
         <div className="flex flex-col gap-4">
           <span className="text-lg font-bold">Step 2</span>
-          <span className="text-base">Click the button below to verify your task.</span>
+          <span className="text-base">Click "Verify" to complete this task.</span>
           <Button
             size="large"
             type="primary"

@@ -23,7 +23,7 @@ function TaskSuccessModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <ApprovedIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Task Completed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Task Completed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -39,7 +39,7 @@ function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <RejectIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Failed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Verification Failed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -91,8 +91,7 @@ export default function TelegramBind(props: { templateId: string }) {
       const botId = taskDetail?.data_display.bot_id
       if (!botId) throw new Error('Bot ID not found')
       const data = await startTelegramBind(botId)
-      console.log('telegram bind data:', data)
-      await submitTask(data)
+      await submitTask(data, botId)
       setShowSuccessModal(true)
     } catch (err) {
       message.error(err.message)
@@ -100,7 +99,7 @@ export default function TelegramBind(props: { templateId: string }) {
     setLoading(false)
   }
 
-  async function submitTask(bindResult: TelegramAuthResult) {
+  async function submitTask(bindResult: TelegramAuthResult, botId: string) {
     if (!taskId) return
     if (!templateId) return
 
@@ -111,7 +110,8 @@ export default function TelegramBind(props: { templateId: string }) {
         site: 'Telegram',
         opt: 'bind',
         task_open_id: bindResult.id.toString(),
-        task_user_name: bindResult.first_name + '#' + bindResult.last_name
+        task_user_name: bindResult.first_name + '#' + bindResult.last_name,
+        bot_id: botId
       }
     })
   }
@@ -142,7 +142,7 @@ export default function TelegramBind(props: { templateId: string }) {
       <div className="m-auto flex max-w-[600px] flex-col gap-12 rounded-2xl bg-[#252532] p-10">
         <div className="flex flex-col gap-4">
           <span className="text-lg font-bold">Step 1</span>
-          <span className="text-base">Click the button below to post a tweet and bind your Telegram account. </span>
+          <span className="text-base">Click the button below to bind your Telegram account. </span>
           <Button
             size="large"
             type="primary"

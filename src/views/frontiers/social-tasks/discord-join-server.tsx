@@ -16,7 +16,7 @@ function TaskSuccessModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <ApprovedIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Task Completed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Task Completed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -32,7 +32,7 @@ function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <RejectIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Failed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Verification Failed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -48,7 +48,7 @@ function TaskPendingModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <PendingIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Pending!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Verifying...</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>

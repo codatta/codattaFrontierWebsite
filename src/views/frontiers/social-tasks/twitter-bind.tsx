@@ -14,7 +14,7 @@ function TaskResultModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <ApprovedIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Task Completed!!</h1>
+        <h1 className="mb-3 text-lg font-bold">Task Completed</h1>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -50,6 +50,7 @@ export default function TwitterBind(props: { templateId: string }) {
     try {
       const { data } = await frontiterApi.verifyXBind(verifyLink)
       await submitTask(data)
+      setShowSuccessModal(true)
     } catch (err) {
       message.error(err.message)
     }
