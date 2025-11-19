@@ -8,6 +8,14 @@ import { Loader2 } from 'lucide-react'
 import ApprovedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
 import RejectIcon from '@/assets/frontier/crypto/pc-reject-icon.svg?react'
 
+interface TelegramAuthResult {
+  auth_date: number
+  first_name: string
+  hash: string
+  id: number
+  last_name: string
+}
+
 function TaskSuccessModal(props: { open: boolean; onClose: () => void }) {
   const { open, onClose } = props
 
@@ -68,9 +76,9 @@ export default function TelegramBind(props: { templateId: string }) {
   }
 
   async function startTelegramBind(botId: string) {
-    return new Promise<unknown>((resolve) => {
+    return new Promise<TelegramAuthResult>((resolve) => {
       window.Telegram.Login.auth({ bot_id: botId, request_access: true }, (data: unknown) => {
-        resolve(data)
+        resolve(data as TelegramAuthResult)
       })
     })
   }
@@ -84,7 +92,7 @@ export default function TelegramBind(props: { templateId: string }) {
       if (!botId) throw new Error('Bot ID not found')
       const data = await startTelegramBind(botId)
       console.log('telegram bind data:', data)
-      await submitTask(data as Record<string, string>)
+      await submitTask(data)
       setShowSuccessModal(true)
     } catch (err) {
       message.error(err.message)
@@ -92,7 +100,7 @@ export default function TelegramBind(props: { templateId: string }) {
     setLoading(false)
   }
 
-  async function submitTask(bindResult: Record<string, string>) {
+  async function submitTask(bindResult: TelegramAuthResult) {
     if (!taskId) return
     if (!templateId) return
 
@@ -102,7 +110,8 @@ export default function TelegramBind(props: { templateId: string }) {
       data: {
         site: 'Telegram',
         opt: 'bind',
-        ...bindResult
+        task_open_id: bindResult.id.toString(),
+        task_user_name: bindResult.first_name + '#' + bindResult.last_name
       }
     })
   }

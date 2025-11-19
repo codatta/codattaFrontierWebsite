@@ -291,7 +291,7 @@ class frontier {
     return res.data
   }
 
-  async getSocialBindInfo(params: { type: 'DISCORD' | 'X'; value: { [key: string]: string } }) {
+  async getSocialBindInfo(params: { type: 'Discord' | 'X'; value: { [key: string]: string } }) {
     const res = await this.request.post<
       Response<{
         id: null
