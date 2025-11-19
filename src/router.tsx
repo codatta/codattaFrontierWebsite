@@ -254,7 +254,10 @@ export default function Router() {
           path="/frontier/project/DISCORD_BIND/:taskId"
           element={<FrontierSocialDiscordBind templateId="DISCORD_BIND" />}
         />
-        <Route path="/frontier/project/DISCORD_JOIN_SERVER/:taskId" element={<FrontierSocialDiscordJoinServer />} />
+        <Route
+          path="/frontier/project/DISCORD_JOIN_SERVER/:taskId"
+          element={<FrontierSocialDiscordJoinServer templateId="DISCORD_JOIN_SERVER" />}
+        />
         <Route
           path="/frontier/project/TELEGRAM_BIND/:taskId"
           element={<FrontierSocialTelegramBind templateId="TELEGRAM_BIND" />}

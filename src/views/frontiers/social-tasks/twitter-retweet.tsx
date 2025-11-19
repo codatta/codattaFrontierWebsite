@@ -1,104 +1,187 @@
-import { Button, message } from 'antd'
-import { useCallback, useMemo, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { Button, message, Modal } from 'antd'
 import frontiterApi from '@/apis/frontiter.api'
+import AuthChecker from '@/components/app/auth-checker'
+import FrontierHeader from '@/components/frontier/frontier-header'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Loader2 } from 'lucide-react'
+import ApprovedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
+import RejectIcon from '@/assets/frontier/crypto/pc-reject-icon.svg?react'
+import PendingIcon from '@/assets/frontier/crypto/pc-pending-icon.svg?react'
 
-type LocationState = {
-  link?: string
+function TaskSuccessModal(props: { open: boolean; onClose: () => void }) {
+  const { open, onClose } = props
+
+  return (
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
+      <div className="flex flex-col items-center justify-center text-white">
+        <ApprovedIcon className="mb-4 size-20" />
+        <h1 className="mb-3 text-lg font-bold">Task Completed!!</h1>
+        <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
+          Got it
+        </Button>
+      </div>
+    </Modal>
+  )
+}
+
+function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
+  const { open, onClose } = props
+
+  return (
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
+      <div className="flex flex-col items-center justify-center text-white">
+        <RejectIcon className="mb-4 size-20" />
+        <h1 className="mb-3 text-lg font-bold">Verification Failed!!</h1>
+        <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
+          Got it
+        </Button>
+      </div>
+    </Modal>
+  )
+}
+
+function TaskPendingModal(props: { open: boolean; onClose: () => void }) {
+  const { open, onClose } = props
+
+  return (
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
+      <div className="flex flex-col items-center justify-center text-white">
+        <PendingIcon className="mb-4 size-20" />
+        <h1 className="mb-3 text-lg font-bold">Verification Pending!!</h1>
+        <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
+          Got it
+        </Button>
+      </div>
+    </Modal>
+  )
 }
 
 export default function TwitterRetweet(props: { templateId: string }) {
+  const [loading, setLoading] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showFailedModal, setShowFailedModal] = useState(false)
+  const [showPendingModal, setShowPendingModal] = useState(false)
+  const [taskLink, setTaskLink] = useState<string>('')
+  const { taskId } = useParams()
   const { templateId } = props
-  const { taskId } = useParams<{ taskId?: string }>()
-  const location = useLocation()
-  const [verifyLoading, setVerifyLoading] = useState(false)
-  const [verifyStatus, setVerifyStatus] = useState<'idle' | 'success' | 'error'>('idle')
-  const [verifyError, setVerifyError] = useState('')
+  const navigate = useNavigate()
 
-  const locationState = location.state as LocationState | null
-  const linkUrl = useMemo(() => {
-    const params = new URLSearchParams(location.search)
-    return (
-      locationState?.link || params.get('link') || 'https://twitter.com/intent/retweet?tweet_id=1956346473148526888'
-    )
-  }, [location.search, locationState])
-
-  const handleComplete = useCallback(() => {
-    if (!linkUrl) {
-      message.info('Link not provided. Please follow the instructions.')
-      return
+  async function checkIsTaskFinished(taskId: string) {
+    setLoading(true)
+    try {
+      const taskHistory = await frontiterApi.getSubmissionList({ task_ids: taskId, page_num: 1, page_size: 1 })
+      if (taskHistory.data.length > 0) {
+        const status = taskHistory.data[0].status
+        if (status === 'ADOPT') {
+          setShowSuccessModal(true)
+        } else if (status === 'PENDING' || status === 'SUBMITTED') {
+          setShowPendingModal(true)
+        } else if (status === 'REFUSED') {
+          setShowFailedModal(true)
+        }
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      message.error(err.message)
+    } finally {
+      setLoading(false)
     }
-    window.open(linkUrl, '_blank')
-  }, [linkUrl])
+  }
 
-  const handleVerify = useCallback(async () => {
-    setVerifyLoading(true)
-    setVerifyStatus('idle')
-    setVerifyError('')
+  async function handleCompleteClick() {
+    if (taskLink) {
+      window.open(taskLink, '_blank')
+    } else {
+      message.error('Task link not found')
+    }
+  }
+
+  async function handleVerifyClick() {
+    setLoading(true)
+    try {
+      if (!taskId) throw new Error('Task ID not found')
+      await submitTask()
+      setShowPendingModal(true)
+    } catch (err) {
+      message.error(err.message)
+    }
+    setLoading(false)
+  }
+
+  async function submitTask() {
     if (!taskId) return
     if (!templateId) return
+
+    await frontiterApi.submitTask(taskId, {
+      templateId,
+      taskId,
+      data: {
+        site: 'X',
+        opt: 'retweet',
+        link: taskLink
+      }
+    })
+  }
+
+  function handleModalClose() {
+    navigate(-1)
+  }
+
+  async function getTaskDetail(taskId: string) {
     try {
-      await frontiterApi.submitTask(taskId, {
-        templateId,
-        taskId,
-        data: {
-          site: 'X',
-          opt: 'retweet',
-          link: linkUrl
-        }
-      })
-      setVerifyStatus('success')
-      message.success('Verification request sent. Please wait for confirmation.')
-    } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : 'Verification failed'
-      setVerifyStatus('error')
-      setVerifyError(errMsg)
-      message.error(errMsg)
-    } finally {
-      setVerifyLoading(false)
+      const res = await frontiterApi.getTaskDetail(taskId)
+      if (res.data?.data_display?.link) {
+        setTaskLink(res.data.data_display.link)
+      }
+      return res.data
+    } catch (err) {
+      message.error(err.message)
     }
-  }, [taskId, linkUrl, templateId])
+  }
+
+  useEffect(() => {
+    if (!taskId) return
+    getTaskDetail(taskId)
+    checkIsTaskFinished(taskId)
+  }, [taskId])
 
   return (
-    <div className="min-h-screen bg-[#050011] text-white">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-8">
-        <div className="space-y-3 rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
-          <h1 className="text-2xl font-bold">Retweet on Twitter</h1>
-          <p className="text-sm text-white/70">
-            Use Complete to open the post you need to retweet, then hit Verify after completing the retweet.
-          </p>
-          {linkUrl && (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-xs text-white/70">
-              {linkUrl}
-            </div>
-          )}
-        </div>
-        <div className="mt-6 flex flex-col gap-3">
+    <AuthChecker>
+      <FrontierHeader title="Retweet on Twitter" className="mb-16"></FrontierHeader>
+      <div className="m-auto flex max-w-[600px] flex-col gap-12 rounded-2xl bg-[#252532] p-10">
+        <div className="flex flex-col gap-4">
+          <span className="text-lg font-bold">Step 1</span>
+          <span className="text-base">Click the button below to retweet the post.</span>
           <Button
+            size="large"
             type="primary"
-            block
-            className="rounded-[32px] border-none py-4 text-base font-semibold"
-            onClick={handleComplete}
+            className="w-[240px] rounded-full"
+            onClick={handleCompleteClick}
+            disabled={loading || !taskLink}
           >
             Complete
           </Button>
+        </div>
+        <div className="flex flex-col gap-4">
+          <span className="text-lg font-bold">Step 2</span>
+          <span className="text-base">Click the button below to verify your task.</span>
           <Button
-            type="default"
-            block
-            loading={verifyLoading}
-            className="rounded-[32px] border border-white/30 py-4 text-base font-semibold text-white"
-            onClick={handleVerify}
+            size="large"
+            type="primary"
+            className="w-[240px] rounded-full"
+            onClick={handleVerifyClick}
+            disabled={loading}
           >
-            Verify Retweet
+            {loading ? <Loader2 className="animate-spin"></Loader2> : 'Verify'}
           </Button>
         </div>
-        {verifyStatus === 'success' && (
-          <p className="mt-4 text-center text-sm text-emerald-400">Verification request sent.</p>
-        )}
-        {verifyStatus === 'error' && verifyError && (
-          <p className="mt-4 text-center text-sm text-rose-400">{verifyError}</p>
-        )}
       </div>
-    </div>
+      <TaskSuccessModal open={showSuccessModal} onClose={handleModalClose}></TaskSuccessModal>
+      <TaskFailedModal open={showFailedModal} onClose={() => setShowFailedModal(false)}></TaskFailedModal>
+      <TaskPendingModal open={showPendingModal} onClose={handleModalClose}></TaskPendingModal>
+    </AuthChecker>
   )
 }

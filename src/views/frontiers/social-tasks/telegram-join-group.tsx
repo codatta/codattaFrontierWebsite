@@ -1,137 +1,184 @@
-import { Button, message } from 'antd'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation, useParams } from 'react-router-dom'
+import { Button, message, Modal } from 'antd'
+import frontiterApi from '@/apis/frontiter.api'
+import AuthChecker from '@/components/app/auth-checker'
+import FrontierHeader from '@/components/frontier/frontier-header'
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Loader2 } from 'lucide-react'
+import ApprovedIcon from '@/assets/frontier/crypto/pc-approved-icon.svg?react'
+import RejectIcon from '@/assets/frontier/crypto/pc-reject-icon.svg?react'
+import PendingIcon from '@/assets/frontier/crypto/pc-pending-icon.svg?react'
+import userApi from '@/apis/user.api'
 
-type LocationState = {
-  link?: string
+interface TgInviteInfo {
+  link: string
+  chat_id: string
 }
 
-import frontiterApi from '@/apis/frontiter.api'
+function TaskSuccessModal(props: { open: boolean; onClose: () => void }) {
+  const { open, onClose } = props
 
-export default function TelegramJoinGroup(props: { templateId: string }) {
+  return (
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
+      <div className="flex flex-col items-center justify-center text-white">
+        <ApprovedIcon className="mb-4 size-20" />
+        <h1 className="mb-3 text-lg font-bold">Task Completed!!</h1>
+        <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
+          Got it
+        </Button>
+      </div>
+    </Modal>
+  )
+}
+
+function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
+  const { open, onClose } = props
+
+  return (
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
+      <div className="flex flex-col items-center justify-center text-white">
+        <RejectIcon className="mb-4 size-20" />
+        <h1 className="mb-3 text-lg font-bold">Verification Failed!!</h1>
+        <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
+          Got it
+        </Button>
+      </div>
+    </Modal>
+  )
+}
+
+function TaskPendingModal(props: { open: boolean; onClose: () => void }) {
+  const { open, onClose } = props
+
+  return (
+    <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
+      <div className="flex flex-col items-center justify-center text-white">
+        <PendingIcon className="mb-4 size-20" />
+        <h1 className="mb-3 text-lg font-bold">Verification Pending!!</h1>
+        <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
+          Got it
+        </Button>
+      </div>
+    </Modal>
+  )
+}
+
+export default function TelegramBind(props: { templateId: string }) {
+  const [loading, setLoading] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [showFailedModal, setShowFailedModal] = useState(false)
+  const [showPendingModal, setShowPendingModal] = useState(false)
+  const [tgInviteInfo, setTgInviteInfo] = useState<TgInviteInfo>()
+  const { taskId } = useParams()
   const { templateId } = props
-  const { taskId } = useParams<{ taskId?: string }>()
-  const location = useLocation()
-  const [verifyLoading, setVerifyLoading] = useState(false)
-  const [verifyStatus, setVerifyStatus] = useState<'idle' | 'success' | 'error'>('idle')
-  const [verifyError, setVerifyError] = useState('')
+  const navigate = useNavigate()
 
-  const locationState = location.state as LocationState | null
-  const [apiLink, setApiLink] = useState('')
+  async function checkIsTaskFinished(taskId: string) {
+    setLoading(true)
+    try {
+      const taskHistory = await frontiterApi.getSubmissionList({ task_ids: taskId, page_num: 1, page_size: 1 })
+      if (taskHistory.data.length > 0) {
+        const status = taskHistory.data[0].status
+        if (status === 'ADOPT') {
+          setShowSuccessModal(true)
+        } else if (status === 'PENDING' || status === 'SUBMITTED') {
+          setShowPendingModal(true)
+        } else if (status === 'REFUSED') {
+          setShowFailedModal(true)
+        }
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      message.error(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
 
-  const [linkLoading, setLinkLoading] = useState(false)
+  async function handleCompleteClick() {
+    const inviteInfo = await getTgInviteInfo()
+    setTgInviteInfo(inviteInfo)
+    window.open(inviteInfo.link, '_blank')
+  }
+
+  async function handleVerifyClick() {
+    setLoading(true)
+    try {
+      if (!taskId) throw new Error('Task ID not found')
+      await submitTask()
+      setShowPendingModal(true)
+    } catch (err) {
+      message.error(err.message)
+    }
+    setLoading(false)
+  }
+
+  async function submitTask() {
+    if (!taskId) return
+    if (!templateId) return
+    if (!tgInviteInfo) return
+
+    await frontiterApi.submitTask(taskId, {
+      templateId,
+      taskId,
+      data: {
+        site: 'Telegram',
+        opt: 'in_group',
+        ...tgInviteInfo
+      }
+    })
+  }
+
+  function handleModalClose() {
+    navigate(-1)
+  }
+
+  async function getTgInviteInfo() {
+    const res = await userApi.getTgGroupInviteLink()
+    return res
+  }
 
   useEffect(() => {
     if (!taskId) return
-    let cancelled = false
-
-    const loadTaskLink = async () => {
-      setLinkLoading(true)
-      try {
-        const taskDetail = await frontiterApi.getTaskDetail(taskId)
-        const displayData = taskDetail?.data?.data_display
-        const linkFromTask = displayData?.link
-        if (!cancelled && linkFromTask) {
-          setApiLink(linkFromTask)
-        }
-      } catch (err: unknown) {
-        console.error('Failed to fetch task detail link', err)
-      } finally {
-        if (!cancelled) {
-          setLinkLoading(false)
-        }
-      }
-    }
-
-    loadTaskLink()
-
-    return () => {
-      cancelled = true
-    }
+    checkIsTaskFinished(taskId)
   }, [taskId])
 
-  const linkUrl = useMemo(() => {
-    const params = new URLSearchParams(location.search)
-    return locationState?.link || params.get('link') || apiLink || 'https://t.me/codatta_io/1'
-  }, [location.search, locationState, apiLink])
-
-  const handleComplete = useCallback(() => {
-    if (!linkUrl) {
-      message.info('Link not provided. Please follow the instructions.')
-      return
-    }
-    window.open(linkUrl, '_blank')
-  }, [linkUrl])
-
-  const handleVerify = useCallback(async () => {
-    setVerifyLoading(true)
-    setVerifyStatus('idle')
-    setVerifyError('')
-    if (!taskId) return
-    if (!templateId) return
-    try {
-      await frontiterApi.submitTask(taskId, {
-        templateId,
-        taskId,
-        data: {
-          site: 'Telegram',
-          opt: 'join',
-          link: linkUrl
-        }
-      })
-      setVerifyStatus('success')
-      message.success('Verification request sent. Please wait for confirmation.')
-    } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : 'Verification failed'
-      setVerifyStatus('error')
-      setVerifyError(errMsg)
-      message.error(errMsg)
-    } finally {
-      setVerifyLoading(false)
-    }
-  }, [taskId, linkUrl, templateId])
-
   return (
-    <div className="min-h-screen bg-[#050011] text-white">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-4 py-8">
-        <div className="space-y-3 rounded-3xl border border-white/10 bg-white/5 p-6 text-center">
-          <h1 className="text-2xl font-bold">Join the Telegram Group</h1>
-          <p className="text-sm text-white/70">
-            Complete opens the invite link. After joining, click Verify to confirm.
-          </p>
-          {linkUrl && (
-            <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/40 px-4 py-3 text-xs text-white/70">
-              {linkUrl}
-            </div>
-          )}
-        </div>
-        <div className="mt-6 flex flex-col gap-3">
+    <AuthChecker>
+      <FrontierHeader title="Join Telegram Group" className="mb-16"></FrontierHeader>
+      <div className="m-auto flex max-w-[600px] flex-col gap-12 rounded-2xl bg-[#252532] p-10">
+        <div className="flex flex-col gap-4">
+          <span className="text-lg font-bold">Step 1</span>
+          <span className="text-base">Click the button below to join our Telegram group.</span>
           <Button
+            size="large"
             type="primary"
-            block
-            loading={linkLoading}
-            className="rounded-[32px] border-none py-4 text-base font-semibold"
-            onClick={handleComplete}
+            className="w-[240px] rounded-full"
+            onClick={handleCompleteClick}
+            disabled={loading}
           >
             Complete
           </Button>
+        </div>
+        <div className="flex flex-col gap-4">
+          <span className="text-lg font-bold">Step 2</span>
+          <span className="text-base">Click the button below to verify your task.</span>
           <Button
-            type="default"
-            block
-            loading={verifyLoading}
-            className="rounded-[32px] border border-white/30 py-4 text-base font-semibold text-white"
-            onClick={handleVerify}
+            size="large"
+            type="primary"
+            className="w-[240px] rounded-full"
+            onClick={handleVerifyClick}
+            disabled={loading || !tgInviteInfo}
           >
-            Verify Join
+            {loading ? <Loader2 className="animate-spin"></Loader2> : 'Verify'}
           </Button>
         </div>
-        {verifyStatus === 'success' && (
-          <p className="mt-4 text-center text-sm text-emerald-400">Verification request sent.</p>
-        )}
-        {verifyStatus === 'error' && verifyError && (
-          <p className="mt-4 text-center text-sm text-rose-400">{verifyError}</p>
-        )}
       </div>
-    </div>
+      <TaskSuccessModal open={showSuccessModal} onClose={handleModalClose}></TaskSuccessModal>
+      <TaskFailedModal open={showFailedModal} onClose={() => setShowFailedModal(false)}></TaskFailedModal>
+      <TaskPendingModal open={showPendingModal} onClose={handleModalClose}></TaskPendingModal>
+    </AuthChecker>
   )
 }
