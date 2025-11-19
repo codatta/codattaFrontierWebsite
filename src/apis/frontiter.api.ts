@@ -45,6 +45,8 @@ export interface TaskDetail {
     template_id: string
     related_task_id?: string
     hide?: boolean
+    link?: string
+    bot_id?: string
   }
   questions?: CMUDataRequirements[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }
@@ -268,6 +270,42 @@ class frontier {
 
   async generateFingerprint(params: GenerateFingerprintParams): Promise<Response<{ fingerprint: string }>> {
     const res = await this.request.post('/v2/chain/gen/fingerprint', params)
+    return res.data
+  }
+
+  async getSocailLink(params: { type: 'Discord' | 'X' | 'Telegram' }) {
+    const res = await this.request.post<Response<{ link: string }>>('/v2/user/sm/task/connect', params)
+    return res.data
+  }
+
+  async getXBindLink() {
+    const res = await this.request.post<Response<{ link: string }>>('/v2/user/sm/twitter/link/get')
+    return res.data
+  }
+
+  async verifyXBind(link: string) {
+    const res = await this.request.post<Response<{ task_open_id: string; task_user_name: string }>>(
+      '/v2/user/sm/twitter/link/verify',
+      { link }
+    )
+    return res.data
+  }
+
+  async getSocialBindInfo(params: { type: 'DISCORD' | 'X'; value: { [key: string]: string } }) {
+    const res = await this.request.post<
+      Response<{
+        id: null
+        first_name: ''
+        last_name: ''
+        username: ''
+        photo_url: ''
+        auth_date: null
+        hash: ''
+        oauth_verifier: ''
+        oauth_token: ''
+        code: ''
+      }>
+    >('/v2/user/sm/task/bind', params)
     return res.data
   }
 }
