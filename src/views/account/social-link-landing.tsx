@@ -51,7 +51,10 @@ export default function Component() {
         userStoreActions.showLinkSuccess(onClose)
       } else if (type === 'discord-bind-task') {
         if (!query.code) throw new Error('The account connect has been bind.')
-        const data = await frontiterApi.getSocialBindInfo({ type: 'Discord', value: { code: query.code as string } })
+        const { data } = await frontiterApi.getSocialBindInfo({
+          type: 'Discord',
+          value: { code: query.code as string }
+        })
         await frontiterApi.submitTask(params?.taskId as string, {
           templateId: params?.templateId as string,
           taskId: params?.taskId as string,
@@ -60,6 +63,9 @@ export default function Component() {
             opt: 'bind',
             ...data
           }
+        })
+        userStoreActions.showLinkSuccess(() => {
+          window.close()
         })
       } else {
         throw new Error(`No supported social media type [${type}].`)
