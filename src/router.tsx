@@ -77,6 +77,13 @@ const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
 const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto_and_stock_info_collection'))
 const RealWorldPhotoCollection = lazy(() => import('@/views/frontiers/real_world_photo_collection'))
+const FrontierSocialDiscordBind = lazy(() => import('@/views/frontiers/social-tasks/discord-bind'))
+const FrontierSocialTelegramBind = lazy(() => import('@/views/frontiers/social-tasks/telegram-bind'))
+const FrontierSocialTwitterBind = lazy(() => import('@/views/frontiers/social-tasks/twitter-bind'))
+const FrontierSocialDiscordJoinServer = lazy(() => import('@/views/frontiers/social-tasks/discord-join-server'))
+const FrontierSocialTelegramJoinGroup = lazy(() => import('@/views/frontiers/social-tasks/telegram-join-group'))
+const FrontierSocialTwitterFollow = lazy(() => import('@/views/frontiers/social-tasks/twitter-follow'))
+const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social-tasks/twitter-retweet'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -234,6 +241,28 @@ export default function Router() {
           path="/frontier/project/REAL_WORLD_PHOTO_COLLECTION/:taskId"
           element={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
         ></Route>
+        <Route path="/frontier/project/X_BIND/:taskId" element={<FrontierSocialTwitterBind templateId="X_BIND" />} />
+        <Route
+          path="/frontier/project/X_FOLLOW/:taskId"
+          element={<FrontierSocialTwitterFollow templateId="X_FOLLOW" />}
+        />
+        <Route
+          path="/frontier/project/X_RETWEET/:taskId"
+          element={<FrontierSocialTwitterRetweet templateId="X_RETWEET" />}
+        />
+        <Route
+          path="/frontier/project/DISCORD_BIND/:taskId"
+          element={<FrontierSocialDiscordBind templateId="DISCORD_BIND" />}
+        />
+        <Route path="/frontier/project/DISCORD_JOIN_SERVER/:taskId" element={<FrontierSocialDiscordJoinServer />} />
+        <Route
+          path="/frontier/project/TELEGRAM_BIND/:taskId"
+          element={<FrontierSocialTelegramBind templateId="TELEGRAM_BIND" />}
+        />
+        <Route
+          path="/frontier/project/TELEGRAM_JOIN_GROUP/:taskId"
+          element={<FrontierSocialTelegramJoinGroup templateId="TELEGRAM_JOIN_GROUP" />}
+        />
 
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
         <Route path="*" element={<NotFoundPage />} />
