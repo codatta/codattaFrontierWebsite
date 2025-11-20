@@ -123,13 +123,16 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
             </div>
 
             {/* Submit Button */}
-            <button
-              disabled={isFinished}
-              onClick={() => goToForm(task)}
-              className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
-            >
-              Complete
-            </button>
+            {task.status === 2 && <span className="text-white/40">Task Completed</span>}
+            {task.status !== 2 && (
+              <button
+                disabled={isFinished || task.status === 0}
+                onClick={() => goToForm(task)}
+                className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
+              >
+                Complete
+              </button>
+            )}
           </div>
         ))}
       </div>
