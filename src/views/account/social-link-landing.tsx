@@ -51,10 +51,6 @@ export default function Component() {
         userStoreActions.showLinkSuccess(onClose)
       } else if (type === 'discord-bind-task') {
         if (!query.code) throw new Error('The account connect has been bind.')
-        const { data } = await frontiterApi.getSocialBindInfo({
-          type: 'Discord',
-          value: { code: query.code as string }
-        })
 
         const submissions = await frontiterApi.getSubmissionList({
           task_ids: params?.taskId,
@@ -66,6 +62,11 @@ export default function Component() {
           userStoreActions.showLinkSuccess(onClose)
           return
         }
+
+        const { data } = await frontiterApi.getSocialBindInfo({
+          type: 'Discord',
+          value: { code: query.code as string }
+        })
 
         await frontiterApi.submitTask(params?.taskId as string, {
           templateId: params?.templateId as string,
