@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Form, Button, Spin } from 'antd'
 import { useParams } from 'react-router-dom'
 
@@ -11,6 +11,67 @@ import ReviewChecklist from '@/components/frontier/physical/review-checklist'
 import SubmissionNotes from '@/components/frontier/physical/submission-notes'
 import { usePhysicalQuestion } from '@/components/frontier/physical/use-physical-question'
 import { UploadedImage } from '@/components/frontier/physical/upload'
+import { TaskInfo } from '@/apis/booster.api'
+import { Tag } from 'antd'
+import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
+import frontiterApi from '@/apis/frontiter.api'
+
+function QualificationList({ task_id }: { task_id: string }) {
+  const [qualificationList, setQualificationList] = useState<TaskInfo[]>([])
+  async function getQualificationList(task_id: string) {
+    const res = await frontiterApi.getTaskDetail(task_id)
+    const qualifications = res.data.qualification_datas || []
+
+    if (qualifications.length) {
+      // setQualificationList(res.data) // TODO: supoort multiple qualifications
+      setQualificationList(qualifications.slice(0, 1))
+    } else {
+      setQualificationList([])
+    }
+  }
+
+  useEffect(() => {
+    if (task_id) {
+      getQualificationList(task_id)
+    }
+  }, [task_id])
+
+  if (!task_id || qualificationList.length === 0) return null
+
+  return (
+    <ul className="mb-6 space-y-3">
+      {qualificationList?.map((item, index) => (
+        <li
+          key={'qualification-list-' + index}
+          className="flex items-center justify-between rounded-2xl bg-[#252532] p-8"
+        >
+          <span className="text-xl font-bold text-white">Unlock tasks by completing verification!</span>
+          {item.status === 0 ? (
+            <Link
+              className="flex h-[34px] w-[104px] items-center justify-center gap-[6px] rounded-full bg-white text-[#1C1C26] hover:text-[#1C1C26]"
+              to={`/frontier/project/VERIFICATION/${item.task_id}`}
+            >
+              Start <ArrowRight size={14} color="#1C1C26" />
+            </Link>
+          ) : item.status === 1 ? (
+            <Tag className="flex h-[34px] w-[104px] items-center justify-center rounded-full bg-white text-sm font-semibold text-[#1C1C26]">
+              Pending
+            </Tag>
+          ) : item.status === 2 ? (
+            <Tag className="flex h-[34px] w-[104px] items-center justify-center rounded-full bg-gradient-to-b from-[#FFEA98] to-[#FCC800] text-sm font-semibold text-[#1C1C26]">
+              Approved
+            </Tag>
+          ) : item.status === 3 ? (
+            <Tag className="flex h-[34px] w-[104px] items-center justify-center rounded-full bg-white text-sm font-semibold text-[#D92B2B]">
+              Not Passed
+            </Tag>
+          ) : null}
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 export default function PhysicalQuestion({ templateId }: { templateId: string }) {
   const [form] = Form.useForm()
@@ -110,6 +171,10 @@ export default function PhysicalQuestion({ templateId }: { templateId: string })
     <Spin spinning={pageLoading || loading} className="min-h-screen">
       <div className="min-h-screen bg-[#1a1625] pb-12">
         <PageHeader title="Physical Question Submission" />
+
+        <div className="mx-auto max-w-[1352px] px-10">
+          <QualificationList task_id={taskId!}></QualificationList>
+        </div>
 
         {resultType ? (
           <SubmitSuccessModal points={rewardPoints} open={true} onClose={() => window.history.back()} />
