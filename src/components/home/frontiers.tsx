@@ -2,7 +2,7 @@ import { message, Spin } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState } from 'react'
 
-import arrowRight from '@/assets/icons/arrow-right.svg#file'
+import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 import badgeIcon from '@/assets/home/badge.svg#file'
 import Hourglass from '@/assets/home/hourglass.svg?react'
 import XNYCoinIcon from '@/assets/home/xyn-coin-icon.svg?react'
@@ -121,7 +121,7 @@ const Frontiers = () => {
                           </div>
                           <div className="flex items-center gap-[2px] text-xs">
                             <span>Start</span>
-                            <img src={arrowRight} alt="" className="size-[14px]" />
+                            <ArrowRightIcon />
                           </div>
                         </div>
                       ) : (
@@ -129,7 +129,7 @@ const Frontiers = () => {
                           <div className="line-clamp-2 text-[#A4A4A8]">{item.description.frontier_desc}</div>
                           <div className="flex h-[30px] w-[98px] flex-none cursor-pointer items-center justify-center gap-1 rounded-full bg-primary text-xs">
                             <span>Start</span>
-                            <img src={arrowRight} alt="" />
+                            <ArrowRightIcon />
                           </div>
                         </>
                       )}
