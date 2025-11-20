@@ -128,7 +128,7 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
               onClick={() => goToForm(task)}
               className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
             >
-              Submit
+              Complete
             </button>
           </div>
         ))}
