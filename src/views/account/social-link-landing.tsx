@@ -51,10 +51,23 @@ export default function Component() {
         userStoreActions.showLinkSuccess(onClose)
       } else if (type === 'discord-bind-task') {
         if (!query.code) throw new Error('The account connect has been bind.')
+
+        const submissions = await frontiterApi.getSubmissionList({
+          task_ids: params?.taskId,
+          page_size: 1,
+          page_num: 1
+        })
+
+        if (submissions.data.length > 0) {
+          userStoreActions.showLinkSuccess(onClose)
+          return
+        }
+
         const { data } = await frontiterApi.getSocialBindInfo({
           type: 'Discord',
           value: { code: query.code as string }
         })
+
         await frontiterApi.submitTask(params?.taskId as string, {
           templateId: params?.templateId as string,
           taskId: params?.taskId as string,
@@ -64,9 +77,7 @@ export default function Component() {
             ...data
           }
         })
-        userStoreActions.showLinkSuccess(() => {
-          window.close()
-        })
+        userStoreActions.showLinkSuccess(onClose)
       } else {
         throw new Error(`No supported social media type [${type}].`)
       }
