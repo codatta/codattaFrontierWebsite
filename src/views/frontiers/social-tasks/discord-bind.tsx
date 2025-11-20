@@ -31,7 +31,8 @@ function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <RejectIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Failed</h1>
+        <h1 className="mb-1 text-lg font-bold">Verification Failed</h1>
+        <p className="mb-6 text-center text-white/70">Verification failed, please try again.</p>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -122,7 +123,7 @@ export default function DiscordBind(props: { templateId: string }) {
             onClick={handleBindDiscordClick}
             disabled={loading}
           >
-            {loading ? <Loader2 className="animate-spin"></Loader2> : 'Bind X Account'}
+            {loading ? <Loader2 className="animate-spin"></Loader2> : 'Bind Discord Account'}
           </Button>
         </div>
 
