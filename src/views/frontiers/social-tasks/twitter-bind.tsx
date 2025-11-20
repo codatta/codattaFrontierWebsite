@@ -116,7 +116,9 @@ export default function TwitterBind(props: { templateId: string }) {
 
         <div className="flex flex-col gap-4">
           <span className="text-lg font-bold">Step 2</span>
-          <span className="text-base">Submit the link to your tweet and click "Verify" to complete this task. </span>
+          <span className="text-base">
+            Please paste the link to the verification tweet you just sent in the space below.
+          </span>
           <Input size="large" placeholder="Enter the link" onChange={handleVerifyLinkChange}></Input>
           <Button
             size="large"

@@ -32,7 +32,8 @@ function TaskFailedModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <RejectIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verification Failed</h1>
+        <h1 className="mb-1 text-lg font-bold">Verification Failed</h1>
+        <p className="mb-6 text-center text-white/70">Verification failed, please try again.</p>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -48,7 +49,8 @@ function TaskPendingModal(props: { open: boolean; onClose: () => void }) {
     <Modal open={open} onCancel={onClose} footer={null} centered className="max-w-[386px]">
       <div className="flex flex-col items-center justify-center text-white">
         <PendingIcon className="mb-4 size-20" />
-        <h1 className="mb-3 text-lg font-bold">Verifying...</h1>
+        <h1 className="mb-1 text-lg font-bold">Verifying...</h1>
+        <p className="mb-6 text-center text-white/70">Task verification in progress. Please check back later.</p>
         <Button type="primary" shape="round" size="large" onClick={onClose} className="min-w-40">
           Got it
         </Button>
@@ -59,6 +61,7 @@ function TaskPendingModal(props: { open: boolean; onClose: () => void }) {
 
 export default function TwitterRetweet(props: { templateId: string }) {
   const [loading, setLoading] = useState(false)
+  const [verifying, setVerifying] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showFailedModal, setShowFailedModal] = useState(false)
   const [showPendingModal, setShowPendingModal] = useState(false)
@@ -92,15 +95,22 @@ export default function TwitterRetweet(props: { templateId: string }) {
   }
 
   async function handleCompleteClick() {
-    if (taskLink) {
+    setLoading(true)
+    try {
+      if (!taskId) throw new Error('Task ID not found')
+      const res = await getTaskDetail(taskId)
+      const taskLink = res.data_display?.link
+      if (!taskLink) throw new Error('Task link not found')
+      setTaskLink(taskLink)
       window.open(taskLink, '_blank')
-    } else {
-      message.error('Task link not found')
+    } catch (err) {
+      message.error(err.message)
     }
+    setLoading(false)
   }
 
   async function handleVerifyClick() {
-    setLoading(true)
+    setVerifying(true)
     try {
       if (!taskId) throw new Error('Task ID not found')
       await submitTask()
@@ -108,12 +118,12 @@ export default function TwitterRetweet(props: { templateId: string }) {
     } catch (err) {
       message.error(err.message)
     }
-    setLoading(false)
+    setVerifying(false)
   }
 
   async function submitTask() {
-    if (!taskId) return
-    if (!templateId) return
+    if (!taskId) throw new Error('Task ID not found')
+    if (!templateId) throw new Error('Template ID not found')
 
     await frontiterApi.submitTask(taskId, {
       templateId,
@@ -131,20 +141,12 @@ export default function TwitterRetweet(props: { templateId: string }) {
   }
 
   async function getTaskDetail(taskId: string) {
-    try {
-      const res = await frontiterApi.getTaskDetail(taskId)
-      if (res.data?.data_display?.link) {
-        setTaskLink(res.data.data_display.link)
-      }
-      return res.data
-    } catch (err) {
-      message.error(err.message)
-    }
+    const res = await frontiterApi.getTaskDetail(taskId)
+    return res.data
   }
 
   useEffect(() => {
     if (!taskId) return
-    getTaskDetail(taskId)
     checkIsTaskFinished(taskId)
   }, [taskId])
 
@@ -160,9 +162,9 @@ export default function TwitterRetweet(props: { templateId: string }) {
             type="primary"
             className="w-[240px] rounded-full"
             onClick={handleCompleteClick}
-            disabled={loading || !taskLink}
+            disabled={loading}
           >
-            Complete
+            {loading ? <Loader2 className="animate-spin"></Loader2> : 'Complete'}
           </Button>
         </div>
         <div className="flex flex-col gap-4">
@@ -173,9 +175,9 @@ export default function TwitterRetweet(props: { templateId: string }) {
             type="primary"
             className="w-[240px] rounded-full"
             onClick={handleVerifyClick}
-            disabled={loading}
+            disabled={verifying || !taskLink}
           >
-            {loading ? <Loader2 className="animate-spin"></Loader2> : 'Verify'}
+            {verifying ? <Loader2 className="animate-spin"></Loader2> : 'Verify'}
           </Button>
         </div>
       </div>
