@@ -64,8 +64,7 @@ const RoboticsTaskList: React.FC = () => {
                 onClick={() => goToForm(item as TaskDetail)}
                 key={item.task_id}
                 className={cn(
-                  'mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6',
-                  item.qualification && item.qualification_flag === 0 ? 'opacity-50' : ''
+                  'mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6'
                 )}
               >
                 <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">

@@ -2,7 +2,7 @@ import request, { type Response } from './request'
 
 export interface TaskInfo {
   task_id: string
-  status: 0 | 1 | 2 // 0 not start, 1 in progress, 2 done
+  status: 0 | 1 | 2 | 3 // 0 not start, 1 in progress, 2 done
   info?: string
 }
 

@@ -52,6 +52,7 @@ export default function Verification({ templateId }: { templateId: string }) {
     setVerificationCode,
     setAcademicCredentials,
     setCvFiles,
+    handleEmailBlur,
     handleSendVerificationCode,
     handleVerifyCode,
     handleSubmit
@@ -118,6 +119,7 @@ export default function Verification({ templateId }: { templateId: string }) {
               canVerify={canVerify}
               setAcademicEmail={setAcademicEmail}
               setVerificationCode={setVerificationCode}
+              handleEmailBlur={handleEmailBlur}
               handleSendVerificationCode={handleSendVerificationCode}
               handleVerifyCode={handleVerifyCode}
             />
