@@ -22,15 +22,7 @@ const RoboticsTaskList: React.FC = () => {
   }, [list])
 
   const goToForm = (data: TaskDetail) => {
-    if (data.qualification && data.qualification_flag === 0) {
-      message.error('You are not verified for this frontier')
-      return
-    }
-    console.log('data', data)
-
-    // Create a mutable copy of the readonly object to avoid TypeScript errors
-    const mutableData = JSON.parse(JSON.stringify(data)) as TaskDetail
-    navigate(`/frontier/project/${mutableData.data_display.template_id}/${mutableData.task_id}`)
+    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
