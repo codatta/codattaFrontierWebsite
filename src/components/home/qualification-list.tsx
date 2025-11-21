@@ -12,7 +12,6 @@ export default function QualificationList({ task_ids = '' }: { task_ids?: string
   const getQualificationList = useCallback(async (task_ids: string) => {
     const res = await boosterApi.getSpecTaskInfos(task_ids)
     if (res.data?.length) {
-      // setQualificationList(res.data) // TODO: supoort multiple qualifications
       setQualification(res.data[0])
     } else {
       setQualification(undefined)
