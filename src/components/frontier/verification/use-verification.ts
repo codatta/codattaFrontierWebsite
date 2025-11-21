@@ -5,6 +5,7 @@ import userApi from '@/apis/user.api'
 import boosterApi from '@/apis/booster.api'
 import { useCountdown } from '@/hooks/use-countdown'
 import { isValidEmail } from '@/utils/str'
+import { checkQS100Email } from '@/utils/check-educational-email'
 
 export interface UploadedImage {
   url: string
@@ -151,7 +152,8 @@ export function useVerification(taskId?: string, templateId?: string) {
   const [countdown, countdownEnded, restartCountdown] = useCountdown(60, null, false)
 
   // Computed properties for button states
-  const canSendCode = !sendingCode && countdownEnded && !!academicEmail && isValidEmail(academicEmail)
+  const canSendCode =
+    !sendingCode && countdownEnded && !!academicEmail && isValidEmail(academicEmail) && checkQS100Email(academicEmail)
   const canVerify = codeSent && verificationCode.trim().length > 0
 
   const validateForm = () => {
@@ -199,6 +201,8 @@ export function useVerification(taskId?: string, templateId?: string) {
       newErrors.academicEmail = 'Please enter academic email'
     } else if (!isValidEmail(academicEmail)) {
       newErrors.academicEmail = 'Please enter a valid email address'
+    } else if (!checkQS100Email(academicEmail)) {
+      newErrors.academicEmail = 'Please use an educational institution email address'
     } else if (!emailVerified) {
       newErrors.academicEmail = 'Please verify your email address'
     }
@@ -210,6 +214,26 @@ export function useVerification(taskId?: string, templateId?: string) {
     return Object.keys(newErrors).length === 0
   }
 
+  const handleEmailBlur = () => {
+    // Only validate if there's a value
+    if (!academicEmail) return
+
+    // Check if email format is valid
+    if (!isValidEmail(academicEmail)) {
+      setErrors((prev) => ({ ...prev, academicEmail: 'Please enter a valid email address' }))
+      return
+    }
+
+    // Check if it's an educational email
+    if (!checkQS100Email(academicEmail)) {
+      setErrors((prev) => ({ ...prev, academicEmail: 'Please use an educational institution email address' }))
+      return
+    }
+
+    // Clear error if validation passes
+    clearFieldError('academicEmail')
+  }
+
   const handleSendVerificationCode = async () => {
     if (!academicEmail) {
       setErrors((prev) => ({ ...prev, academicEmail: 'Please enter your academic email' }))
@@ -217,6 +241,10 @@ export function useVerification(taskId?: string, templateId?: string) {
     }
     if (!isValidEmail(academicEmail)) {
       setErrors((prev) => ({ ...prev, academicEmail: 'Please enter a valid academic email' }))
+      return
+    }
+    if (!checkQS100Email(academicEmail)) {
+      setErrors((prev) => ({ ...prev, academicEmail: 'Please use an educational institution email address' }))
       return
     }
 
@@ -424,6 +452,7 @@ export function useVerification(taskId?: string, templateId?: string) {
     setVerificationCode,
     setAcademicCredentials,
     setCvFiles,
+    handleEmailBlur,
     handleSendVerificationCode,
     handleVerifyCode,
     handleSubmit,

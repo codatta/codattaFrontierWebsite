@@ -28,6 +28,7 @@ interface IdentityVerificationSectionProps {
   setVerificationCode: (value: string) => void
   handleSendVerificationCode: () => void
   handleVerifyCode: () => void
+  handleEmailBlur: () => void
 }
 
 export default function IdentityVerificationSection({
@@ -44,7 +45,8 @@ export default function IdentityVerificationSection({
   setAcademicEmail,
   setVerificationCode,
   handleSendVerificationCode,
-  handleVerifyCode
+  handleVerifyCode,
+  handleEmailBlur
 }: IdentityVerificationSectionProps) {
   return (
     <>
@@ -55,6 +57,7 @@ export default function IdentityVerificationSection({
             <StyledInput
               value={academicEmail}
               onChange={(e) => setAcademicEmail(e.target.value)}
+              onBlur={handleEmailBlur}
               placeholder="Provide your Email"
               className="!h-12 flex-1"
               suffix={
