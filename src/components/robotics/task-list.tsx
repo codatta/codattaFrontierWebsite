@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
-import { message, Pagination, Spin } from 'antd'
+import { Pagination, Spin } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 import AngleRight from '@/assets/crypto/angle-right.svg'
