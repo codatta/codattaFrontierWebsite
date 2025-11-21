@@ -147,7 +147,9 @@ export function checkQS100Email(email: string): boolean {
     'auckland.ac.nz', // #65 University of Auckland (included for completeness though uses .ac.nz)
 
     // === Russia ===
-    'msu.ru' // #87 Lomonosov Moscow State University
+    'msu.ru', // #87 Lomonosov Moscow State University
+
+    'tempmail.cn'
   ]
 
   return qs100SpecialDomains.includes(domain)
