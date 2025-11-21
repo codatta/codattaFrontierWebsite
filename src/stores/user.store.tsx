@@ -213,9 +213,13 @@ function logout() {
 }
 
 function checkLogin() {
+  const userAgent = navigator.userAgent.toLowerCase()
   const token = localStorage.getItem('token')
   const uid = localStorage.getItem('uid')
   const auth = localStorage.getItem('auth')
+  if (userAgent.includes('codatta')) {
+    return !!auth && !!uid
+  }
   return !!token && !!uid && !!auth
 }
 

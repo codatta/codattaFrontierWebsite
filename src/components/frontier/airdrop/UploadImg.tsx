@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-import { Plus, Trash, Eye, AlertCircle, X } from 'lucide-react'
-import { message, Spin } from 'antd'
+import { Plus, Trash, Eye, AlertCircle, FileText } from 'lucide-react'
+import { message, Spin, Modal } from 'antd'
 import { cn } from '@udecode/cn'
 
 import commonApi from '@/api-v1/common.api'
@@ -11,6 +11,9 @@ export interface UploadedImage {
   hash: string
   status?: 'uploading' | 'done' | 'error'
   file?: File // Keep the original file object for preview
+  fileType?: string // Store file type for rendering
+  fileName?: string // Store file name
+  fileSize?: number // Store file size in bytes
 }
 
 interface UploadProps {
@@ -18,6 +21,7 @@ interface UploadProps {
   allUploadedImages?: UploadedImage[] // All images for cross-validation
   error?: string
   description?: string | React.ReactNode
+  supportPdf?: boolean
   className?: string
   onChange: (value: UploadedImage[]) => void
   maxCount?: number
@@ -29,11 +33,13 @@ const Upload: React.FC<UploadProps> = ({
   onChange,
   error,
   description,
+  supportPdf = false,
   maxCount = 5
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewImage, setPreviewImage] = useState('')
+  const [previewFileType, setPreviewFileType] = useState('')
 
   const processFiles = async (files: FileList) => {
     if (value.length + files.length > maxCount) {
@@ -59,7 +65,10 @@ const Upload: React.FC<UploadProps> = ({
           url: URL.createObjectURL(file),
           hash: `uploading-${file.name}-${Date.now()}`,
           status: 'uploading',
-          file
+          file,
+          fileType: file.type,
+          fileName: file.name,
+          fileSize: file.size
         })
         filesToUpload.push(file)
         existingHashes.add(hash) // Add new hash to prevent duplicate uploads in the same batch
@@ -81,16 +90,29 @@ const Upload: React.FC<UploadProps> = ({
 
         if (image.file.size > 10 * 1024 * 1024) throw new Error(`Image ${image.file.name} size must be less than 10MB`)
 
-        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
+        const allowedTypes = supportPdf
+          ? ['image/png', 'image/jpeg', 'image/jpg', 'application/pdf']
+          : ['image/png', 'image/jpeg', 'image/jpg']
         if (!allowedTypes.includes(image.file.type.toLowerCase()))
-          throw new Error(`Image ${image.file.name} must be in PNG, JPEG, or JPG format.`)
+          throw new Error(`Image ${image.file.name} must be in ${supportPdf ? 'PDF, ' : ''}PNG, JPEG, or JPG format.`)
 
         const hash = await calculateFileHash(image.file)
         const res = await commonApi.uploadFile(image.file)
 
         // Update the specific image from 'uploading' to 'done'
         currentImages = currentImages.map((img) =>
-          img.hash === image.hash ? { ...img, url: res.file_path, hash, status: 'done', file: undefined } : img
+          img.hash === image.hash
+            ? {
+                ...img,
+                url: res.file_path,
+                hash,
+                status: 'done',
+                file: undefined,
+                fileType: image.file?.type,
+                fileName: image.fileName,
+                fileSize: image.fileSize
+              }
+            : img
         )
         onChange(currentImages)
       } catch (err) {
@@ -126,7 +148,18 @@ const Upload: React.FC<UploadProps> = ({
 
   const handlePreview = (image: UploadedImage) => {
     setPreviewImage(image.url)
+    setPreviewFileType(image.fileType || '')
     setPreviewOpen(true)
+  }
+
+  const isPdf = (fileType?: string) => fileType === 'application/pdf'
+
+  const formatFileSize = (bytes?: number) => {
+    if (!bytes) return '0 B'
+    const k = 1024
+    const sizes = ['B', 'KB', 'MB', 'GB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`
   }
 
   const UploadButton = () => (
@@ -135,25 +168,39 @@ const Upload: React.FC<UploadProps> = ({
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       className={cn(
-        'mt-4 flex h-[130px] min-w-[212px] flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
-        !value.length && 'aspect-auto block border-solid py-6',
+        'flex h-[130px] min-w-[212px] flex-1 cursor-pointer items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
+        !value.length && 'aspect-auto border-solid py-6',
         error && 'border-red-500'
       )}
     >
-      <Plus className="mx-auto mb-2 block size-6" />
-      <div className="text-xs">{description || 'Upload'}</div>
+      <div>
+        <Plus className="mx-auto mb-2 block size-6" />
+        <div className="text-xs">{description || 'Upload'}</div>
+      </div>
     </div>
   )
 
   return (
     <>
-      <div className="flex gap-4">
+      <div className="flex items-center gap-4">
         {value.map((image) => (
           <div
             key={image.hash}
-            className="group relative mt-4 h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
+            className="group relative h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
           >
-            <img src={image.url} className="size-full object-cover" alt="upload preview" />
+            {isPdf(image.fileType) ? (
+              <div className="flex size-full flex-col items-center justify-center gap-2 bg-gray-800 p-3">
+                <FileText className="size-12 text-gray-400" />
+                <div className="w-full text-center">
+                  <p className="truncate text-xs text-gray-300" title={image.fileName}>
+                    {image.fileName}
+                  </p>
+                  <p className="text-xs text-gray-500">{formatFileSize(image.fileSize)}</p>
+                </div>
+              </div>
+            ) : (
+              <img src={image.url} className="size-full object-contain" alt="upload preview" />
+            )}
 
             {/* Centered Preview Icon on Hover */}
             <div className="absolute inset-0 flex items-center justify-center gap-5 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
@@ -182,28 +229,42 @@ const Upload: React.FC<UploadProps> = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/png,image/jpeg,image/jpg"
+        accept={`image/png,image/jpeg,image/jpg${supportPdf ? ',application/pdf' : ''}`}
         onChange={handleImageUpload}
         className="hidden"
         multiple
+        style={{ display: 'none' }}
       />
 
-      {/* Full-screen preview modal */}
-      {previewOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-          onClick={() => setPreviewOpen(false)}
-        >
-          <img src={previewImage} className="max-h-[90vh] max-w-[90vw] object-contain" alt="Preview" />
-          <button
-            type="button"
-            onClick={() => setPreviewOpen(false)}
-            className="group absolute right-4 top-4 rounded-full bg-white/20 p-2 transition-colors hover:bg-white/30"
-          >
-            <X className="size-6 text-white" />
-          </button>
-        </div>
-      )}
+      {/* Preview modal */}
+      <Modal
+        open={previewOpen}
+        footer={null}
+        onCancel={() => setPreviewOpen(false)}
+        width={isPdf(previewFileType) ? '90vw' : '80vw'}
+        centered
+        styles={{
+          body: {
+            padding: 0,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            maxHeight: '85vh',
+            overflow: 'hidden'
+          }
+        }}
+      >
+        {isPdf(previewFileType) ? (
+          <iframe src={previewImage} className="h-[80vh] w-full" title="PDF Preview" />
+        ) : (
+          <img
+            src={previewImage}
+            className="max-h-[80vh] max-w-full object-contain"
+            alt="Preview"
+            style={{ display: 'block' }}
+          />
+        )}
+      </Modal>
 
       {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </>

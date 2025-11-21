@@ -1,5 +1,6 @@
 import { AxiosInstance } from 'axios'
 import request, { PaginationResponse, TPagination } from './request'
+import { TaskInfo } from './booster.api'
 
 interface Response<T> {
   data: T
@@ -45,17 +46,22 @@ export interface TaskDetail {
     template_id: string
     related_task_id?: string
     hide?: boolean
+    link?: string
+    bot_id?: string
   }
   questions?: CMUDataRequirements[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
+  qualification_datas: TaskInfo[]
 
   status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
   result: 'S' | 'A' | 'B' | 'C' | 'D'
   chain_status: 0 | 1 | 2 | 3 | 4
+  qualification?: string
+  qualification_flag: 0 | 1
 }
 
 export interface FrontierListItem {
@@ -109,6 +115,7 @@ export interface FrontierItemType {
     name: MediaName
     value: string
   }>
+  qualification?: string
   videos?: Array<VideoItem>
   reputation_permission?: number
   frontier_id?: string
@@ -268,6 +275,42 @@ class frontier {
 
   async generateFingerprint(params: GenerateFingerprintParams): Promise<Response<{ fingerprint: string }>> {
     const res = await this.request.post('/v2/chain/gen/fingerprint', params)
+    return res.data
+  }
+
+  async getSocailLink(params: { type: 'Discord' | 'X' | 'Telegram' }) {
+    const res = await this.request.post<Response<{ link: string }>>('/v2/user/sm/task/connect', params)
+    return res.data
+  }
+
+  async getXBindLink() {
+    const res = await this.request.post<Response<{ link: string }>>('/v2/user/sm/twitter/link/get')
+    return res.data
+  }
+
+  async verifyXBind(link: string) {
+    const res = await this.request.post<Response<{ task_open_id: string; task_user_name: string }>>(
+      '/v2/user/sm/twitter/link/verify',
+      { link }
+    )
+    return res.data
+  }
+
+  async getSocialBindInfo(params: { type: 'Discord' | 'X'; value: { [key: string]: string } }) {
+    const res = await this.request.post<
+      Response<{
+        id: null
+        first_name: ''
+        last_name: ''
+        username: ''
+        photo_url: ''
+        auth_date: null
+        hash: ''
+        oauth_verifier: ''
+        oauth_token: ''
+        code: ''
+      }>
+    >('/v2/user/sm/task/bind', params)
     return res.data
   }
 }

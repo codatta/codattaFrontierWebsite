@@ -4,7 +4,7 @@ import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'ax
 import cookies from 'js-cookie'
 
 const request = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.MODE === 'production' ? '/api' : 'https://app-test.b18a.io/api',
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json'

@@ -8,6 +8,7 @@ import CustomEmpty from '@/components/common/empty'
 
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import { TaskDetail } from '@/apis/frontiter.api'
+import { cn } from '@udecode/cn'
 
 const RoboticsTaskList: React.FC = () => {
   const navigate = useNavigate()
@@ -20,10 +21,8 @@ const RoboticsTaskList: React.FC = () => {
     return list?.filter((item) => !item.data_display?.hide)
   }, [list])
 
-  const goToForm = (data: unknown) => {
-    // Create a mutable copy of the readonly object to avoid TypeScript errors
-    const mutableData = JSON.parse(JSON.stringify(data)) as TaskDetail
-    navigate(`/frontier/project/${mutableData.data_display.template_id}/${mutableData.task_id}`)
+  const goToForm = (data: TaskDetail) => {
+    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handlePageChange = (page: number, _pageSize: number) => {
@@ -54,9 +53,11 @@ const RoboticsTaskList: React.FC = () => {
           <div className="">
             {displayList?.map((item) => (
               <div
-                onClick={() => goToForm(item)}
+                onClick={() => goToForm(item as TaskDetail)}
                 key={item.task_id}
-                className="mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
+                className={cn(
+                  'mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6'
+                )}
               >
                 <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
                   {item.data_display.template_id !== 'CMU_TPL_000001' && (

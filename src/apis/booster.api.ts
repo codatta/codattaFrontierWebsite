@@ -1,11 +1,8 @@
 import request, { type Response } from './request'
 
-// const res = await request.post<Response<ActivityGroup[]>>('/v2/task/categories')
-// return res.data
-
-interface TaskInfo {
+export interface TaskInfo {
   task_id: string
-  status: 0 | 1 | 2 // 0 not start, 1 in progress, 2 done
+  status: 0 | 1 | 2 | 3 // 0 not start, 1 in progress, 2 done
   info?: string
 }
 
@@ -15,8 +12,27 @@ class BoosterApi {
     return res.data
   }
 
-  async submitTask(task_id: string, content?: string) {
-    const res = await request.post<Response<TaskInfo>>('/v2/h5/quest/submit', { task_id, status: 2, content })
+  async submitTask(task_id: string, content?: string, status?: 1 | 2) {
+    const res = await request.post<Response<TaskInfo>>('/v2/h5/quest/submit', { task_id, status: status ?? 2, content })
+    return res.data
+  }
+
+  async getSpecTaskInfo(task_id: string) {
+    const res = await request.get<Response<TaskInfo>>(`/v2/spec/task/info?task_id=${task_id}`)
+    return res.data
+  }
+
+  async getSpecTaskInfos(task_ids: string) {
+    const res = await request.get<Response<TaskInfo[]>>(`/v2/spec/task/infos?task_ids=${task_ids}`)
+    return res.data
+  }
+
+  async submitSpecTask(task_id: string, content?: string, status?: 1 | 2) {
+    const res = await request.post<Response<TaskInfo>>('/v2/spec/task/submit', {
+      task_id,
+      status: status ?? 2,
+      content
+    })
     return res.data
   }
 

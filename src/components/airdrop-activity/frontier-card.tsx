@@ -64,11 +64,11 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
     <div className="overflow-hidden rounded-2xl border border-white/5 bg-[#1C1C26] text-white">
       {/* Challenge Overview Section */}
       <div className="bg-[#252532] p-6">
-        <a href={`/app/frontier/${frontier.frontier_id}`}>
-          <h1 className="mb-2 inline text-xl font-bold text-white transition-all hover:cursor-pointer hover:text-primary">
-            {frontier.name}
-          </h1>
-        </a>
+        {/* <a href={`/app/frontier/${frontier.frontier_id}`}> */}
+        <h1 className="mb-2 inline text-xl font-bold text-white transition-all hover:cursor-pointer hover:text-primary">
+          {frontier.name}
+        </h1>
+        {/* </a> */}
         <p className="my-3 text-sm text-primary">{frontier.title}</p>
         <p className="mb-3 text-sm leading-relaxed text-gray-400">{frontier.description}</p>
         <div className="flex flex-wrap items-center gap-6">
@@ -123,13 +123,16 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
             </div>
 
             {/* Submit Button */}
-            <button
-              disabled={isFinished}
-              onClick={() => goToForm(task)}
-              className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
-            >
-              Submit
-            </button>
+            {task.status === 2 && <span className="text-white/40">Task Completed</span>}
+            {task.status !== 2 && (
+              <button
+                disabled={isFinished || task.status === 0}
+                onClick={() => goToForm(task)}
+                className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
+              >
+                Complete
+              </button>
+            )}
           </div>
         ))}
       </div>
