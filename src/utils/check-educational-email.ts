@@ -17,6 +17,7 @@ export function isEducationalEmail(email: string): boolean {
 
     // Asia-Pacific
     '.edu.cn', // Mainland China (3000+ universities)
+    '.ac.cn', // Mainland China (3000+ universities)
     '.edu.tw', // Taiwan
     '.edu.hk', // Hong Kong (partial)
     '.ac.jp', // Japan

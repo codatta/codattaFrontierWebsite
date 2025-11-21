@@ -48,7 +48,7 @@ const TITLE_POSITION_OPTIONS: { label: string; value: string; specify?: string }
   { label: 'Other Equivalent Titles', value: 'other', specify: 'Please specify title/position' }
 ]
 
-const INSTITUTION_OPTIONS: { label: string; value: string; specify?: string }[] = [
+const INSTITUTION_OPTIONS: { label: string; value: string; specify?: string; className?: string }[] = [
   { label: 'Peking University', value: 'peking_university' },
   { label: 'Tsinghua University', value: 'tsinghua_university' },
   { label: 'Institute of High Energy Physics', value: 'institute_of_high_energy_physics' },
@@ -81,7 +81,12 @@ const INSTITUTION_OPTIONS: { label: string; value: string; specify?: string }[] 
   { label: 'Fuzhou University', value: 'fuzhou_university' },
   { label: 'Zhengzhou University', value: 'zhengzhou_university' },
   { label: 'Henan Normal University', value: 'henan_normal_university' },
-  { label: 'Other QS Top 100 Universities', value: 'other', specify: 'Please specify institution' }
+  {
+    label: 'Other QS Top 100 Universities',
+    value: 'other',
+    specify: 'Please specify institution',
+    className: 'text-[#FFA800]'
+  }
 ]
 
 const MAJOR_OPTIONS: { label: string; value: string; specify?: string }[] = [
@@ -181,11 +186,16 @@ export default function BasicInformationSection({
             <StyledSelect
               value={institution || undefined}
               onChange={(value) => setInstitution(value as string)}
-              options={INSTITUTION_OPTIONS}
               placeholder="Select Institution"
               className={cn('h-12 w-full transition-all', !!institutionSpecifyPlaceholder && 'w-[200px]')}
               showSearch
-            />
+            >
+              {INSTITUTION_OPTIONS.map((option) => (
+                <Select.Option key={option.value} value={option.value}>
+                  <span className={cn(option.className)}>{option.label}</span>
+                </Select.Option>
+              ))}
+            </StyledSelect>
             {!!institutionSpecifyPlaceholder && (
               <StyledInput
                 value={institutionSpecify}
