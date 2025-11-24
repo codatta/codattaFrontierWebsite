@@ -164,6 +164,8 @@ export interface FrontierTokenRewardTokenItem {
   frontier_id: string
   reward_type: string
   reward_amount: number
+  reward_locked_amount: number
+  reward_unlock_time: string
 }
 
 export interface FrontierTokenRewardItem {

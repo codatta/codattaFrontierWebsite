@@ -50,6 +50,7 @@ export default function DataAssets() {
           Claim Rewards Test
         </Button> */}
       </div>
+      <LockableRewards />
       <TokenRewards />
       <Tabs
         destroyOnHidden
@@ -115,6 +116,56 @@ function TokenRewards() {
           </li>
         ))}
       </ul>
+    </div>
+  )
+}
+
+function LockableRewards() {
+  const { info } = useUserStore()
+  const assets = useMemo(() => {
+    const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
+    const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
+    const xynAmount = Number(xyn?.amount ?? 0.0).toFixed(2)
+    const usdtAmount = Number(usdt?.amount ?? 0.0).toFixed(2)
+
+    console.log('xynAmount', xynAmount)
+    console.log('usdtAmount', usdtAmount)
+    return [
+      {
+        type: 'USDT',
+        amount: usdtAmount === '0.00' ? '1.00' : usdtAmount,
+        currency: usdt?.currency ?? 'USDT',
+        Icon: <USDTIcon width={28} height={28} />
+      },
+      {
+        type: 'XNY',
+        amount: xynAmount === '0.00' ? '2.00' : xynAmount,
+        currency: xyn?.currency ?? 'XNY Token',
+        Icon: <XnyIcon width={28} height={28} />
+      }
+    ]
+  }, [info])
+
+  return (
+    <div className="mb-12 flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#875DFF] to-[#FFFFFF80] px-10 py-8">
+      <div>
+        <h3 className="text-2xl font-bold leading-9">Send rewards to lock contract</h3>
+        <p>Lock your rewards in a 3-month contract (T+90), then claim them later on the "Lock-up" page.</p>
+      </div>
+      <div className="flex items-center gap-3 rounded-full bg-[#875DFF] px-3 py-[6px]">
+        {assets.map((asset) => (
+          <div key={asset.type} className="flex items-center gap-[2px] text-sm">
+            <span>{asset.Icon}</span>
+            <span className="text-lg font-semibold text-[#FCC800]">{Number(asset.amount).toLocaleString()}</span>
+          </div>
+        ))}
+        <Button
+          type="text"
+          className="ml-3 h-[34px] rounded-full border-none bg-gradient-to-b from-[#FFEA98] to-[#FCC800] text-sm font-semibold text-[#1C1C26] hover:!bg-gradient-to-b hover:from-[#FFEA98] hover:to-[#FCC800]"
+        >
+          Lock Now
+        </Button>
+      </div>
     </div>
   )
 }
