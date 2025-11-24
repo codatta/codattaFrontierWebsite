@@ -2,6 +2,7 @@ import { Button, Pagination, Tooltip } from 'antd'
 import { useState } from 'react'
 import { ExternalLink } from 'lucide-react'
 import { maskAddress } from '@/utils/wallet-address'
+import TokenSettleClaimModal from '@/components/settings/token-settle-claim-modal'
 
 // Mock Data Types
 interface LockUpRecord {
@@ -118,6 +119,7 @@ function LockUpItem({ item }: { item: LockUpRecord }) {
 export default function LockUpClaim() {
   const [page, setPage] = useState(1)
   const [pageSize] = useState(10)
+  const [showClaimModal, setShowClaimModal] = useState(false)
 
   // Mock Summary Data
   const summary = {
@@ -152,7 +154,11 @@ export default function LockUpClaim() {
           </div>
         </div>
 
-        <Button type="primary" className="h-9 rounded-full bg-[#875DFF] px-6 text-sm hover:bg-[#754DEB]">
+        <Button
+          type="primary"
+          className="h-9 rounded-full bg-[#875DFF] px-6 text-sm hover:bg-[#754DEB]"
+          onClick={() => setShowClaimModal(true)}
+        >
           Claim All
         </Button>
       </div>
@@ -176,6 +182,8 @@ export default function LockUpClaim() {
         total={20} // Mock total
         showSizeChanger={false}
       />
+
+      <TokenSettleClaimModal open={showClaimModal} onClose={() => setShowClaimModal(false)} />
     </div>
   )
 }

@@ -8,6 +8,7 @@ import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useUserStore } from '@/stores/user.store'
 import { cn } from '@udecode/cn'
 import TokenClaimModal from '@/components/settings/token-claim-modal'
+import TokenLockModal from '@/components/settings/token-lock-modal'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
 import LockUpClaim from '@/components/settings/lock-up-claim'
@@ -32,6 +33,7 @@ const items: TabsProps['items'] = [
 
 export default function DataAssets() {
   const [showClaimModal, setShowClaimModal] = useState(false)
+  const [showLockModal, setShowLockModal] = useState(false)
   // const [showClaimModalTest, setShowClaimModalTest] = useState(false)
 
   const handleClaim = () => {
@@ -56,7 +58,7 @@ export default function DataAssets() {
           Claim Rewards Test
         </Button> */}
       </div>
-      <LockableRewards />
+      <LockableRewards onLock={() => setShowLockModal(true)} />
       <TokenRewards />
       <Tabs
         destroyOnHidden
@@ -65,6 +67,7 @@ export default function DataAssets() {
         className="flex-1 [&.ant-tabs-top>.ant-tabs-nav::before]:hidden"
       />
       <TokenClaimModal open={showClaimModal} onClose={() => setShowClaimModal(false)} />
+      <TokenLockModal open={showLockModal} onClose={() => setShowLockModal(false)} />
       {/* <TokenClaimModalTest open={showClaimModalTest} onClose={() => setShowClaimModalTest(false)} /> */}
     </div>
   )
@@ -126,7 +129,7 @@ function TokenRewards() {
   )
 }
 
-function LockableRewards() {
+function LockableRewards({ onLock }: { onLock: () => void }) {
   const { info } = useUserStore()
   const assets = useMemo(() => {
     const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
@@ -168,6 +171,7 @@ function LockableRewards() {
         <Button
           type="text"
           className="ml-3 h-[34px] rounded-full border-none bg-gradient-to-b from-[#FFEA98] to-[#FCC800] text-sm font-semibold text-[#1C1C26] hover:!bg-gradient-to-b hover:from-[#FFEA98] hover:to-[#FCC800]"
+          onClick={onLock}
         >
           Lock Now
         </Button>
