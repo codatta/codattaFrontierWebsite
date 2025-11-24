@@ -10,12 +10,18 @@ import { cn } from '@udecode/cn'
 import TokenClaimModal from '@/components/settings/token-claim-modal'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
+import LockUpClaim from '@/components/settings/lock-up-claim'
 
 const items: TabsProps['items'] = [
   {
     key: 'earned-history-tab',
     label: 'Earned History',
     children: <EarnedHistory />
+  },
+  {
+    key: 'lock-up-claim-tab',
+    label: 'Lock Up',
+    children: <LockUpClaim />
   },
   {
     key: 'claim-history-tab',
