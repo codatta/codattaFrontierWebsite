@@ -45,7 +45,7 @@ const GuideComponent: React.FC<GuideComponenntProps> = ({ isOpen, onClose }) => 
 
   return (
     <div className="fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-[#1C1C26B8]">
-      <div className="relative w-[840px] rounded-2xl bg-[#252532] text-white shadow-xl">
+      <div className="shadow-xl relative w-[840px] rounded-2xl bg-[#252532] text-white">
         {/* Header */}
         <div className="flex items-start justify-between border-b border-[#FFFFFF1F] px-6 pb-3 pt-6">
           <div className="flex flex-col gap-1">

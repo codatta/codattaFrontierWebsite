@@ -160,7 +160,7 @@ export default function SocialLink() {
         <Button
           loading={unbinding}
           shape="round"
-          className="bg-danger font-700 border-none py-5 shadow-none"
+          className="bg-danger font-700 shadow-none border-none py-5"
           block
           onClick={() => {
             unlinkAccount(selectedSocialMedia.current!)

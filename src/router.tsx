@@ -8,6 +8,7 @@ import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
 import { trackPageView } from './utils/track'
 import GlobalModalHost from './components/app/global-modal-host'
+import AppContainerDetector from './components/app/app-container-detector'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -56,6 +57,7 @@ const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
+const FateTplApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 
@@ -172,7 +174,6 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000001/:taskId" element={<RoboticsFormType1 templateId="ROBOTICS_TPL_000001" />} />
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
-          <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
           <Route path="CMU_TPL_000001/:taskId" element={<CMULayout />}>
             <Route index element={<CMUVideoLabelingTaskList />} />
             <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
@@ -266,7 +267,15 @@ export default function Router() {
           path="/frontier/project/TELEGRAM_JOIN_GROUP/:taskId"
           element={<FrontierSocialTelegramJoinGroup templateId="TELEGRAM_JOIN_GROUP" />}
         />
-
+        <Route
+          path="/frontier/project/FATE_TPL_000001/:taskId"
+          element={
+            <AppContainerDetector
+              notInApp={<FateTpl000001 templateId="FATE_TPL_000001" />}
+              inApp={<FateTplApp templateId="FATE_TPL_000001"></FateTplApp>}
+            ></AppContainerDetector>
+          }
+        ></Route>
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

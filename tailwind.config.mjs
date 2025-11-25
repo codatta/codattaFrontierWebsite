@@ -51,6 +51,14 @@ module.exports = {
     fontFamily: {
       mona: 'Mona Sans',
       zendots: 'Zen Dots'
+    },
+    boxShadow: {
+      'app-btn': `
+          inset 1px 1px 1px rgba(255, 255, 255, 0.8),
+          inset -1px -1px 1px rgba(0, 0, 0, 0.1),
+          1px 1px 10px rgba(60, 60, 0, 0.05),
+          0px 0px 8px rgba(60, 60, 0, 0.1)
+      `
     }
   },
   plugins: [animatedPlugin, aspectRatioPlugin, typographyPlugin]
