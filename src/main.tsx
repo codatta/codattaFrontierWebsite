@@ -56,7 +56,7 @@ const isInCodattaApp = userAgent.includes('codatta')
 
 if (isInCodattaApp) {
   document.documentElement.style.backgroundColor = '#f8f8f8'
-  document.body.style.backgroundColor = '#1c1c26'
+  document.body.style.backgroundColor = '#f8f8f8'
 }
 
 const root = createRoot(container)
