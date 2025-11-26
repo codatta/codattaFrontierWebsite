@@ -7,7 +7,7 @@ import AuthChecker from '@/components/app/auth-checker'
 import FoodAnnotationUpload from '@/components/frontier/food-annotation/upload'
 import type { UploadedImage } from '@/components/frontier/food-annotation/upload'
 import frontiterApi from '@/apis/frontiter.api'
-import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
+import SuccessModal from '@/components/mobile-app/success-modal'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
@@ -69,18 +69,32 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
   const [showMeasurementToolPhotoDrawer, setShowMeasurementToolPhotoDrawer] = useState(false)
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
   const allFieldsFilled = useMemo(() => {
-    return (
+    // Basic fields validation
+    const basicFieldsValid =
       formData.foodImage.length > 0 &&
       formData.foodComponents.trim() !== '' &&
       formData.foodWeight.trim() !== '' &&
       formData.measurementToolPhotos.length > 0 &&
       formData.containerType !== '' &&
-      formData.containerDimension1.trim() !== '' &&
-      formData.containerDimension2.trim() !== '' &&
-      formData.containerDimension3.trim() !== '' &&
       formData.rulerPhoto.length > 0 &&
       formData.cookingMethod !== ''
-    )
+
+    if (!basicFieldsValid) return false
+
+    // Container dimensions validation based on type
+    if (formData.containerType === 'Rectangle/Square') {
+      return (
+        formData.containerDimension1.trim() !== '' &&
+        formData.containerDimension2.trim() !== '' &&
+        formData.containerDimension3.trim() !== ''
+      )
+    } else if (formData.containerType === 'Round/Oval') {
+      return formData.containerDimension1.trim() !== '' && formData.containerDimension2.trim() !== ''
+    } else if (formData.containerType === 'Other') {
+      return formData.containerDimension1.trim() !== ''
+    }
+
+    return false
   }, [formData])
 
   const updateFormData = <K extends keyof FoodAnnotationFormData>(field: K, value: FoodAnnotationFormData[K]) => {
@@ -109,6 +123,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
   const validateForm = (): boolean => {
     const newErrors: Partial<Record<keyof FoodAnnotationFormData, string>> = {}
 
+    // Basic fields validation
     if (formData.foodImage.length === 0) {
       newErrors.foodImage = 'Please upload a food image'
     }
@@ -124,15 +139,31 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
     if (!formData.containerType) {
       newErrors.containerType = 'Container type is required'
     }
-    if (!formData.containerDimension1.trim()) {
-      newErrors.containerDimension1 = 'Dimension is required'
+
+    // Container dimensions validation based on type
+    if (formData.containerType === 'Rectangle/Square') {
+      if (!formData.containerDimension1.trim()) {
+        newErrors.containerDimension1 = 'Length is required'
+      }
+      if (!formData.containerDimension2.trim()) {
+        newErrors.containerDimension2 = 'Width is required'
+      }
+      if (!formData.containerDimension3.trim()) {
+        newErrors.containerDimension3 = 'Height is required'
+      }
+    } else if (formData.containerType === 'Round/Oval') {
+      if (!formData.containerDimension1.trim()) {
+        newErrors.containerDimension1 = 'Diameter is required'
+      }
+      if (!formData.containerDimension2.trim()) {
+        newErrors.containerDimension2 = 'Depth is required'
+      }
+    } else if (formData.containerType === 'Other') {
+      if (!formData.containerDimension1.trim()) {
+        newErrors.containerDimension1 = 'Container dimensions are required'
+      }
     }
-    if (!formData.containerDimension2.trim()) {
-      newErrors.containerDimension2 = 'Dimension is required'
-    }
-    if (!formData.containerDimension3.trim()) {
-      newErrors.containerDimension3 = 'Dimension is required'
-    }
+
     if (formData.rulerPhoto.length === 0) {
       newErrors.rulerPhoto = 'Please upload ruler photo'
     }
@@ -182,12 +213,8 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
         return
       }
       const totalRewards = taskDetail.data.reward_info
-        .filter((item) => {
-          return item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
-        })
-        .reduce((acc, cur) => {
-          return acc + cur.reward_value
-        }, 0)
+        .filter((item) => item.reward_mode === 'REGULAR')
+        .reduce((acc, cur) => acc + cur.reward_value, 0)
 
       setRewardPoints(totalRewards)
     } catch (error) {
@@ -292,7 +319,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
                     <select
                       value={formData.containerType}
                       onChange={(e) => updateFormData('containerType', e.target.value)}
-                      className="w-full appearance-none rounded-2xl py-3 outline-none"
+                      className="w-full appearance-none rounded-2xl bg-white py-3 outline-none"
                       style={{ color: formData.containerType ? '#1f2937' : '#9ca3af' }}
                     >
                       <option value="" disabled>
@@ -411,7 +438,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
                   <select
                     value={formData.cookingMethod}
                     onChange={(e) => updateFormData('cookingMethod', e.target.value)}
-                    className="w-full appearance-none rounded-[26px] px-4 py-3 text-black outline-none"
+                    className="w-full appearance-none rounded-[26px] bg-white px-4 py-3 text-black outline-none"
                   >
                     <option value="" disabled>
                       Select cooking method
@@ -429,7 +456,14 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
             </div>
           </div>
 
-          <SubmitSuccessModal points={rewardPoints} open={modalShow} onClose={() => navigate(-1)} />
+          <SuccessModal
+            open={modalShow}
+            onClose={() => navigate(-1)}
+            title="Successful"
+            message="Other rewards will issue automatically after answer verification."
+            points={rewardPoints}
+            buttonText="Got it"
+          />
         </div>
       </Spin>
 

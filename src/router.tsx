@@ -57,7 +57,6 @@ const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
-const FateTplApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 
@@ -74,6 +73,7 @@ const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_mode
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
+const AirdropFoodApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
 
 const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
@@ -184,7 +184,15 @@ export default function Router() {
           path="/frontier/project/PHYSICAL_TPL_QUESTION/:taskId"
           element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
         />
-        <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
+        <Route
+          path="/frontier/project/AIRDROP_FOOD/:taskId"
+          element={
+            <AppContainerDetector
+              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" />}
+              notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
+            />
+          }
+        />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
@@ -269,12 +277,7 @@ export default function Router() {
         />
         <Route
           path="/frontier/project/FATE_TPL_000001/:taskId"
-          element={
-            <AppContainerDetector
-              notInApp={<FateTpl000001 templateId="FATE_TPL_000001" />}
-              inApp={<FateTplApp templateId="FATE_TPL_000001"></FateTplApp>}
-            ></AppContainerDetector>
-          }
+          element={<FateTpl000001 templateId="FATE_TPL_000001" />}
         ></Route>
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
         <Route path="*" element={<NotFoundPage />} />
