@@ -425,7 +425,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
                     maxCount={5}
                   />
                   <div className="text-[13px] text-[#999]">
-                    Upload photos of containe with rule(Ensure markings are clear){' '}
+                    Upload photos of container with ruler(Ensure markings are clear){' '}
                     <span onClick={() => setShowRulerPhotoDrawer(true)} className="text-[#40E1EF]">
                       example
                     </span>
