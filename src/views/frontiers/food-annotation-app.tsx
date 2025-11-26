@@ -225,6 +225,9 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
   }, [taskId, templateId])
 
   const onBack = () => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    const isInApp = userAgent.includes('codatta')
+    if (isInApp) window.native.call('close')
     navigate(-1)
   }
 
