@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { message, Spin } from 'antd'
-import { ChevronsUpDown, Ellipsis, X } from 'lucide-react'
+import { ChevronsUpDown, X } from 'lucide-react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import FoodAnnotationUpload from '@/components/frontier/food-annotation/upload'
@@ -62,7 +62,6 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
 
   const [errors, setErrors] = useState<Partial<Record<keyof FoodAnnotationFormData, string>>>({})
   const { taskId } = useParams()
-  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
