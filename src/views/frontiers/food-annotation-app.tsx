@@ -461,7 +461,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
 
           <SuccessModal
             open={modalShow}
-            onClose={() => navigate(-1)}
+            onClose={onBack}
             title="Successful"
             message="Other rewards will issue automatically after answer verification."
             points={rewardPoints}
