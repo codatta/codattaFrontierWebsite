@@ -15,3 +15,13 @@
     left: -20%;
   }
 }
+
+/* Hide scrollbar for mobile pickers */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

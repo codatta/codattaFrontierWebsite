@@ -57,6 +57,7 @@ const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
+const FateApp = lazy(() => import('@/views/frontiers/fate-app'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 
@@ -283,6 +284,7 @@ export default function Router() {
           path="/frontier/project/FATE_TPL_000001/:taskId"
           element={<FateTpl000001 templateId="FATE_TPL_000001" />}
         ></Route>
+        <Route path="/frontier/project/FATE_APP/:taskId" element={<FateApp templateId="FATE_APP" />}></Route>
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

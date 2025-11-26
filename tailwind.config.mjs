@@ -9,7 +9,9 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        'dot-expand': 'dot-expand 1.5s infinite ease-out'
+        'dot-expand': 'dot-expand 1.5s infinite ease-out',
+        'fade-in': 'fade-in 0.2s ease-out',
+        'scale-in': 'scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       },
       keyframes: {
         'dot-expand': {
@@ -20,6 +22,24 @@ module.exports = {
           '40%': {
             opacity: 1,
             transform: 'scale(1)'
+          }
+        },
+        'fade-in': {
+          '0%': {
+            opacity: 0
+          },
+          '100%': {
+            opacity: 1
+          }
+        },
+        'scale-in': {
+          '0%': {
+            opacity: 0,
+            transform: 'translate(-50%, -50%) scale(0.9)'
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translate(-50%, -50%) scale(1)'
           }
         }
       },

@@ -36,7 +36,7 @@ function ClaimHistoryItem({ item }: { item: RewardRecordHistoryItem }) {
       </div>
       <div className="flex w-full items-center gap-3 lg:ml-auto lg:w-auto">
         <div className="flex items-center gap-2" style={{ color: statusColorMap.get(item.status_name) }}>
-          <div className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: statusColorMap.get(item.status_name) }} />
+          <div className="size-1.5 rounded-full" style={{ backgroundColor: statusColorMap.get(item.status_name) }} />
           {item.status_name}
         </div>
         <div className="ml-auto min-w-[160px] rounded-full bg-primary/20 px-4 py-1 text-center text-primary lg:ml-0">
