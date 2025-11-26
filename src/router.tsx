@@ -188,10 +188,14 @@ export default function Router() {
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={
             <AppContainerDetector
-              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" />}
+              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
               notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
             />
           }
+        />
+        <Route
+          path="/frontier/project/AIRDROP_FOOD_APP/:taskId"
+          element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
         />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
