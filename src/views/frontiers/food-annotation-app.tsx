@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { message, Spin } from 'antd'
-import { ChevronsUpDown, X } from 'lucide-react'
+import { ChevronsUpDown, Ellipsis, X } from 'lucide-react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import FoodAnnotationUpload from '@/components/frontier/food-annotation/upload'
@@ -227,8 +227,8 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
   const onBack = () => {
     const userAgent = navigator.userAgent.toLowerCase()
     const isInApp = userAgent.includes('codatta')
-    if (isInApp) window.native.call('close')
-    navigate(-1)
+    if (isInApp) window.native.call('goBack')
+    else window.history.back()
   }
 
   useEffect(() => {
