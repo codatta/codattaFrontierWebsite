@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { message, Spin } from 'antd'
 import { ChevronsUpDown, X } from 'lucide-react'
 
