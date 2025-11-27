@@ -26,7 +26,7 @@ const MobileTimePicker: React.FC<MobileTimePickerProps> = ({ value, onChange, pl
   const initialTime = getInitialTime()
   const [selectedHour, setSelectedHour] = useState<number>(initialTime.hour)
   const [selectedMinute, setSelectedMinute] = useState<number>(initialTime.minute)
-  const [selectedPeriod, setSelectedPeriod] = useState<'AM' | 'PM'>(initialTime.period)
+  const [selectedPeriod, setSelectedPeriod] = useState<'AM' | 'PM'>(initialTime.period as 'AM' | 'PM')
 
   const hourRef = useRef<HTMLDivElement>(null)
   const minuteRef = useRef<HTMLDivElement>(null)
