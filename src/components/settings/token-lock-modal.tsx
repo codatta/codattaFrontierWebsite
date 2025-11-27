@@ -353,10 +353,10 @@ export default function TokenLockModal(props: TokenLockModalProps) {
   }, [props])
 
   useEffect(() => {
-    if (props.assets.length === 0) {
+    if (props.open && props.assets.length === 0) {
       handleClose()
     }
-  }, [props.assets, handleClose])
+  }, [props.assets, handleClose, props.open])
 
   return (
     <Modal
