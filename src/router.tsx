@@ -8,6 +8,7 @@ import AppLayout from '@/layouts/app-layout'
 import ArenaLayout from '@/layouts/arena-layout'
 import { trackPageView } from './utils/track'
 import GlobalModalHost from './components/app/global-modal-host'
+import AppContainerDetector from './components/app/app-container-detector'
 
 // index home
 const Home = lazy(() => import('@/views/home'))
@@ -56,6 +57,7 @@ const NFTGenerateTemplate = lazy(() => import('@/views/frontiers/form-type-7'))
 const OOTDTemplate = lazy(() => import('@/views/frontiers/form-type-8'))
 const SpeechTemplate = lazy(() => import('@/views/frontiers/form-type-9'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
+const FateApp = lazy(() => import('@/views/frontiers/fate-app'))
 
 const CryptoTpl000001 = lazy(() => import('@/views/frontiers/crypto_tpl_000001'))
 
@@ -72,6 +74,7 @@ const AirdropModelComparison = lazy(() => import('@/views/frontiers/airdrop_mode
 const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdrop_expert_answer_provision'))
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
+const AirdropFoodApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
 
 const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
@@ -172,7 +175,6 @@ export default function Router() {
           <Route path="ROBOTICS_TPL_000001/:taskId" element={<RoboticsFormType1 templateId="ROBOTICS_TPL_000001" />} />
           <Route path="ROBOTICS_TPL_000002/:taskId" element={<RoboticsFormType2 templateId="ROBOTICS_TPL_000002" />} />
           <Route path="ROBOTICS_TPL_000003/:taskId" element={<RoboticsFormType3 templateId="ROBOTICS_TPL_000003" />} />
-          <Route path="FATE_TPL_000001/:taskId" element={<FateTpl000001 templateId="FATE_TPL_000001" />} />
           <Route path="CMU_TPL_000001/:taskId" element={<CMULayout />}>
             <Route index element={<CMUVideoLabelingTaskList />} />
             <Route path="quest/:questId" element={<CMUVideoLabelingForm templateId="CMU_TPL_000001" />} />
@@ -183,7 +185,19 @@ export default function Router() {
           path="/frontier/project/PHYSICAL_TPL_QUESTION/:taskId"
           element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
         />
-        <Route path="/frontier/project/AIRDROP_FOOD/:taskId" element={<AirdropFood templateId="AIRDROP_FOOD" />} />
+        <Route
+          path="/frontier/project/AIRDROP_FOOD/:taskId"
+          element={
+            <AppContainerDetector
+              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
+              notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
+            />
+          }
+        />
+        <Route
+          path="/frontier/project/AIRDROP_FOOD_APP/:taskId"
+          element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
+        />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
@@ -266,7 +280,11 @@ export default function Router() {
           path="/frontier/project/TELEGRAM_JOIN_GROUP/:taskId"
           element={<FrontierSocialTelegramJoinGroup templateId="TELEGRAM_JOIN_GROUP" />}
         />
-
+        <Route
+          path="/frontier/project/FATE_TPL_000001/:taskId"
+          element={<FateTpl000001 templateId="FATE_TPL_000001" />}
+        ></Route>
+        <Route path="/frontier/project/FATE_APP/:taskId" element={<FateApp templateId="FATE_APP" />}></Route>
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

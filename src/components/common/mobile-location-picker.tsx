@@ -343,7 +343,7 @@ const MobileLocationPicker: React.FC<MobileLocationPickerProps> = ({
                 {/* Province Selection */}
                 <div>
                   <label className="mb-3 block text-sm font-medium text-gray-300">
-                    Province/State <span className="text-red-400">*</span>
+                    ProvinceState <span className="text-red-400">*</span>
                   </label>
                   <select
                     value={tempValue.province || ''}

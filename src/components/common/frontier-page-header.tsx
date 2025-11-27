@@ -22,7 +22,9 @@ export default function Header({ title, className }: { title: string; className?
             <ArrowLeft size={18} /> Back
           </div>
         ) : (
-          <span></span>
+          <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
+            <ArrowLeft size={18} />
+          </div>
         )}
         {title}
         <span></span>
