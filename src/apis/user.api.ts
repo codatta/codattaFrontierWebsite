@@ -176,6 +176,20 @@ export interface FrontierTokenRewardItem {
   average_result: number
   tokens: FrontierTokenRewardTokenItem[]
 }
+
+export interface LockupTokenRewardItem {
+  transaction_id: string
+  code: string
+  stage: string
+  name: string
+  total_submission: number
+  average_rating_name: string | null
+  average_result: number | null
+  reward_type: string
+  reward_amount: number
+  gmt_create: string
+}
+
 export interface TokenClaimItem {
   id: number
   uid: number
@@ -298,6 +312,23 @@ class UserApi {
 
     return data
   }
+
+  async getLockupTokenReward(page: number, pageSize: number) {
+    const { data } = await request.post<
+      Response<{
+        page_num: number
+        page_size: number
+        count: number
+        list: LockupTokenRewardItem[]
+      }>
+    >('/v2/airdrop/user/asset/lock/rewards', {
+      page_num: page,
+      page_size: pageSize
+    })
+
+    return data
+  }
+
   async updateRewardRecord(uid: string, tx_hash: string) {
     const { data } = await request.post<Response<{ flag: number; message: string }>>('/v2/user/reward/record/update', {
       uid,

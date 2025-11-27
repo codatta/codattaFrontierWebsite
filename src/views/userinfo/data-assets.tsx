@@ -36,6 +36,7 @@ const items: TabsProps['items'] = [
 
 export default function DataAssets() {
   const [showClaimModal, setShowClaimModal] = useState(false)
+  const [activeTab, setActiveTab] = useState('')
 
   const handleClaim = () => {
     setShowClaimModal(true)
@@ -65,6 +66,14 @@ export default function DataAssets() {
         destroyOnHidden
         defaultActiveKey="1"
         items={items}
+        onChange={(key) => setActiveTab(key)}
+        tabBarExtraContent={
+          activeTab === 'lock-up-claim-tab' ? (
+            <Button type="primary" className="h-[40px] w-[140px] rounded-full text-sm">
+              Lock-up details
+            </Button>
+          ) : undefined
+        }
         className="flex-1 [&.ant-tabs-top>.ant-tabs-nav::before]:hidden"
       />
       <TokenClaimModal open={showClaimModal} onClose={() => setShowClaimModal(false)} />
