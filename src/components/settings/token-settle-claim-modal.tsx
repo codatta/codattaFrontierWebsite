@@ -13,7 +13,7 @@ interface TokenSettleClaimModalProps {
 export default function TokenSettleClaimModal({ open, onClose, onSuccess }: TokenSettleClaimModalProps) {
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState<'confirm' | 'success'>('confirm')
-  const [hasInsufficientBalance, setHasInsufficientBalance] = useState(false)
+  const [hasInsufficientBalance, _setHasInsufficientBalance] = useState(false)
 
   const mockData = {
     network: 'BNB Chain',
