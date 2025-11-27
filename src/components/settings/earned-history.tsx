@@ -1,49 +1,7 @@
 import userApi, { FrontierTokenRewardItem } from '@/apis/user.api'
 import { List, message, Pagination, Spin } from 'antd'
-import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 
-const mockRewards: FrontierTokenRewardItem[] = [
-  {
-    frontier_id: 'frontier_1',
-    frontier_name: 'AI Research Dataset Labeling',
-    total_submission: 24,
-    average_rating_name: 'Excellent',
-    average_result: 4.8,
-    tokens: [
-      {
-        frontier_id: 'frontier_1',
-        reward_type: 'XnYCoin',
-        reward_amount: 123.45,
-        reward_locked_amount: 20,
-        reward_unlock_time: '2025-12-01T00:00:00Z'
-      },
-      {
-        frontier_id: 'frontier_1',
-        reward_type: 'USDT',
-        reward_amount: 25,
-        reward_locked_amount: 4,
-        reward_unlock_time: '2025-12-01T00:00:00Z'
-      }
-    ]
-  },
-  {
-    frontier_id: 'frontier_2',
-    frontier_name: 'DeFi User Behavior Data',
-    total_submission: 10,
-    average_rating_name: 'Good',
-    average_result: 4.1,
-    tokens: [
-      {
-        frontier_id: 'frontier_2',
-        reward_type: 'XnYCoin',
-        reward_amount: 80,
-        reward_locked_amount: 10,
-        reward_unlock_time: '2025-11-30T00:00:00Z'
-      }
-    ]
-  }
-]
 export default function EarnedHistory() {
   const [loading, setLoading] = useState(false)
   const [rewards, setRewards] = useState<FrontierTokenRewardItem[]>([])
@@ -57,8 +15,6 @@ export default function EarnedHistory() {
       const res = await userApi.getFrontierTokenReward(page, pageSize)
       setRewards(res.data.list)
       setTotal(res.data.count)
-      // setRewards(mockRewards)
-      // setTotal(mockRewards.length)
     } catch (err) {
       message.error(err.message)
     }
@@ -99,23 +55,6 @@ export default function EarnedHistory() {
                               +{Number(asset.reward_amount).toLocaleString()}
                             </span>
                           </div>
-                          {asset.reward_locked_amount > 0 && (
-                            <div className="mt-1 flex items-center gap-1 text-xs text-[#BBBBBE]">
-                              <div>
-                                Locked:{' '}
-                                <span className="text-white">
-                                  {Number(asset.reward_locked_amount).toLocaleString()}
-                                </span>
-                              </div>
-                              <div className="mx-1">·</div>
-                              <div>
-                                Unlock:{' '}
-                                <span className="text-white">
-                                  {dayjs(asset.reward_unlock_time).format('YYYY-MM-DD HH:mm')}
-                                </span>
-                              </div>
-                            </div>
-                          )}
                         </div>
                       ))}
                     </div>

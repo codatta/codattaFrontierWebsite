@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Abi, Chain, encodeFunctionData, formatEther, PublicClient } from 'viem'
+import { Abi, Chain, encodeFunctionData, formatEther, PublicClient, createPublicClient, http } from 'viem'
 
 /**
  * Calculate gas estimation with proper fee data handling
@@ -9,18 +9,21 @@ export async function calculateGasEstimation({
   rpcClient,
   account,
   to,
-  data
+  data,
+  value
 }: {
   rpcClient: PublicClient
   account: `0x${string}`
   to: `0x${string}`
   data: `0x${string}`
+  value?: bigint
 }): Promise<{ gasLimit: bigint; totalCost: bigint; totalCostFormatted: string }> {
   // Estimate gas limit
   const estimatedGasLimit = await rpcClient.estimateGas({
     account,
     to,
-    data
+    data,
+    value
   })
 
   // Get fee data for EIP-1559 support detection
@@ -56,18 +59,27 @@ export async function calculateGasEstimation({
   }
 }
 
+// Helper to get RPC client
+const getRpcClient = (chain: Chain) => {
+  const rpcUrl = chain.rpcUrls.default.http[0]
+  return createPublicClient({
+    chain,
+    transport: http(rpcUrl)
+  })
+}
+
 export function useGasEstimation({
   address,
-  rpcClient,
+  rpcClient: providedRpcClient,
   contract,
   functionName,
   contractArgs
 }: {
   address: `0x${string}`
-  rpcClient: PublicClient
+  rpcClient?: PublicClient
   contract: { abi: Abi; chain: Chain; address: string }
   functionName: string
-  contractArgs: string[] | string[][]
+  contractArgs: (string | bigint)[] | (string | bigint)[][]
 }) {
   const [loading, setLoading] = useState(true)
   const [balance, setBalance] = useState<string>('0')
@@ -77,9 +89,11 @@ export function useGasEstimation({
   const [gasChecked, setGasChecked] = useState(false)
 
   const checkGas = useCallback(async () => {
+    const client = providedRpcClient || getRpcClient(contract.chain)
+
     const getBalance = async (address: `0x${string}`) => {
       if (!address) return
-      const balance = await rpcClient.getBalance({
+      const balance = await client.getBalance({
         address
       })
       const balanceStr = formatEther(balance)
@@ -100,7 +114,7 @@ export function useGasEstimation({
         }) as `0x${string}`
 
         const result = await calculateGasEstimation({
-          rpcClient,
+          rpcClient: client,
           account: address,
           to: contract.address as `0x${string}`,
           data
@@ -125,7 +139,7 @@ export function useGasEstimation({
     }
 
     try {
-      if (!address || !rpcClient || !contractArgs.length) return
+      if (!address || !contractArgs.length) return
 
       setLoading(true)
       setGasWarning('')
@@ -148,7 +162,7 @@ export function useGasEstimation({
     } finally {
       setLoading(false)
     }
-  }, [address, rpcClient, contract, functionName, contractArgs])
+  }, [address, providedRpcClient, contract, functionName, contractArgs])
 
   useEffect(() => {
     checkGas()

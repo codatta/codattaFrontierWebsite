@@ -182,6 +182,13 @@ export interface TokenClaimItem {
   status_name: string
 }
 
+export interface ClaimableReward {
+  claim_type: 'normal' | 'lock'
+  asset_type: 'XnYCoin' | 'USDT'
+  name: string
+  amount: number
+}
+
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -320,6 +327,15 @@ class UserApi {
       }>
     >('/v2/user/reward/record/list', { page_num: page, page_size: pageSize })
 
+    return data.data
+  }
+
+  async getClaimableRewards(claim_types = 'normal,lock') {
+    const { data } = await this.request.get<Response<ClaimableReward[]>>('/v2/user/asset/claim/list', {
+      params: {
+        claim_types
+      }
+    })
     return data.data
   }
 

@@ -1,0 +1,6 @@
+const isProduction = import.meta.env.VITE_MODE === 'production'
+
+export const TOKEN_CONTRACT_ADDRESS: Record<string, string> = {
+  USDT: isProduction ? '0x55d398326f99059fF775485246999027B3197955' : '0x0fF5393387ad2f9f691FD6Fd28e07E3969e27e63',
+  XnYCoin: isProduction ? '0xE3225e11Cab122F1a126A28997788E5230838ab9' : '0x0000000000000000000000000000000000000000'
+}

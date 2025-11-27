@@ -1,17 +1,20 @@
 import { Button, Tabs, TabsProps } from 'antd'
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronUp } from 'lucide-react'
+import { cn } from '@udecode/cn'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
+import LockableRewardsBg from '@/assets/settings/token-rewards-lock-bg.svg'
 
-import { useUserStore } from '@/stores/user.store'
-import { cn } from '@udecode/cn'
 import TokenClaimModal from '@/components/settings/token-claim-modal'
-import TokenLockModal from '@/components/settings/token-lock-modal'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
 import LockUpClaim from '@/components/settings/lock-up-claim'
+import TokenLockModal from '@/components/settings/token-lock-modal'
+
+import userApi, { type ClaimableReward } from '@/apis/user.api'
+import { useUserStore } from '@/stores/user.store'
 
 const items: TabsProps['items'] = [
   {
@@ -33,8 +36,6 @@ const items: TabsProps['items'] = [
 
 export default function DataAssets() {
   const [showClaimModal, setShowClaimModal] = useState(false)
-  const [showLockModal, setShowLockModal] = useState(false)
-  // const [showClaimModalTest, setShowClaimModalTest] = useState(false)
 
   const handleClaim = () => {
     setShowClaimModal(true)
@@ -58,7 +59,7 @@ export default function DataAssets() {
           Claim Rewards Test
         </Button> */}
       </div>
-      <LockableRewards onLock={() => setShowLockModal(true)} />
+      <LockableRewards />
       <TokenRewards />
       <Tabs
         destroyOnHidden
@@ -67,7 +68,6 @@ export default function DataAssets() {
         className="flex-1 [&.ant-tabs-top>.ant-tabs-nav::before]:hidden"
       />
       <TokenClaimModal open={showClaimModal} onClose={() => setShowClaimModal(false)} />
-      <TokenLockModal open={showLockModal} onClose={() => setShowLockModal(false)} />
       {/* <TokenClaimModalTest open={showClaimModalTest} onClose={() => setShowClaimModalTest(false)} /> */}
     </div>
   )
@@ -129,53 +129,59 @@ function TokenRewards() {
   )
 }
 
-function LockableRewards({ onLock }: { onLock: () => void }) {
-  const { info } = useUserStore()
-  const assets = useMemo(() => {
-    const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
-    const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
-    const xynAmount = Number(xyn?.amount ?? 0.0).toFixed(2)
-    const usdtAmount = Number(usdt?.amount ?? 0.0).toFixed(2)
+function LockableRewards() {
+  const [assets, setAssets] = useState<ClaimableReward[]>([])
+  const [open, setOpen] = useState(false)
 
-    console.log('xynAmount', xynAmount)
-    console.log('usdtAmount', usdtAmount)
-    return [
-      {
-        type: 'USDT',
-        amount: usdtAmount === '0.00' ? '1.00' : usdtAmount,
-        currency: usdt?.currency ?? 'USDT',
-        Icon: <USDTIcon width={28} height={28} />
-      },
-      {
-        type: 'XNY',
-        amount: xynAmount === '0.00' ? '2.00' : xynAmount,
-        currency: xyn?.currency ?? 'XNY Token',
-        Icon: <XnyIcon width={28} height={28} />
-      }
-    ]
-  }, [info])
+  const getClaimableRewards = useCallback(async () => {
+    try {
+      const assets = await userApi.getClaimableRewards('lock')
+      setAssets(assets)
+    } catch (error) {
+      const mockAssets: ClaimableReward[] = [
+        {
+          claim_type: 'lock',
+          asset_type: 'XnYCoin',
+          name: 'XNY',
+          amount: 100
+        },
+        {
+          claim_type: 'lock',
+          asset_type: 'USDT',
+          name: 'USDT',
+          amount: 100
+        }
+      ]
+      setAssets(mockAssets)
+      console.error(error)
+    }
+  }, [])
+
+  useEffect(() => {
+    getClaimableRewards()
+  }, [getClaimableRewards])
 
   return (
-    <div className="mb-12 flex items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-[#875DFF] to-[#FFFFFF80] px-10 py-8">
-      <div>
-        <h3 className="text-2xl font-bold leading-9">Send rewards to lock contract</h3>
-        <p>Lock your rewards in a 3-month contract (T+90), then claim them later on the "Lock-up" page.</p>
-      </div>
-      <div className="flex items-center gap-3 rounded-full bg-[#875DFF] px-3 py-[6px]">
-        {assets.map((asset) => (
-          <div key={asset.type} className="flex items-center gap-[2px] text-sm">
-            <span>{asset.Icon}</span>
-            <span className="text-lg font-semibold text-[#FCC800]">{Number(asset.amount).toLocaleString()}</span>
-          </div>
-        ))}
+    <>
+      <div
+        className={`mb-12 flex items-center justify-between gap-4 rounded-2xl bg-cover px-10 py-8 ${assets.length > 0 ? 'flex' : 'hidden'}`}
+        style={{ backgroundImage: `url(${LockableRewardsBg})` }}
+      >
+        <div>
+          <h3 className="text-2xl font-bold leading-9">Confirm 3-month lock-up</h3>
+          <p>
+            Your rewards are in your account. Lock them for 3 months (T+90), then claim on the “Lock-up details” page.
+          </p>
+        </div>
         <Button
           type="text"
           className="ml-3 h-[34px] rounded-full border-none bg-gradient-to-b from-[#FFEA98] to-[#FCC800] text-sm font-semibold text-[#1C1C26] hover:!bg-gradient-to-b hover:from-[#FFEA98] hover:to-[#FCC800]"
-          onClick={onLock}
+          onClick={() => setOpen(true)}
         >
           Lock Now
         </Button>
       </div>
-    </div>
+      <TokenLockModal open={open} onClose={() => setOpen(false)} assets={assets} />
+    </>
   )
 }
