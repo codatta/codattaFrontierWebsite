@@ -15,6 +15,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { keccak256, stringToHex } from 'viem'
 import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
 import { calculateGasEstimation } from '@/hooks/use-gas-estimation'
+import { TOKEN_CONTRACT_ADDRESS } from './config'
 
 interface Asset {
   type: string
@@ -22,24 +23,6 @@ interface Asset {
   currency: string
   Icon?: React.ReactNode
 }
-
-interface TokenConfig {
-  tokenContractAddress: string
-}
-
-const TokenConfigMap = new Map<string, TokenConfig>()
-TokenConfigMap.set('USDT', {
-  tokenContractAddress:
-    import.meta.env.VITE_MODE === 'production'
-      ? '0x55d398326f99059fF775485246999027B3197955'
-      : '0x0fF5393387ad2f9f691FD6Fd28e07E3969e27e63'
-})
-TokenConfigMap.set('XnYCoin', {
-  tokenContractAddress:
-    import.meta.env.VITE_MODE === 'production'
-      ? '0xE3225e11Cab122F1a126A28997788E5230838ab9'
-      : '0x0000000000000000000000000000000000000000'
-})
 
 function InfoItemLoading(props: { loading: boolean; children: React.ReactNode }) {
   if (props.loading) {
@@ -183,8 +166,8 @@ function ClaimConfirm({
     contract: { abi: Abi; chain: Chain; address: string },
     signResponse: RewardClaimSignResponse
   ) {
-    const tokenConfig = TokenConfigMap.get(asset.type)
-    if (!tokenConfig) return
+    const tokenContractAddress = TOKEN_CONTRACT_ADDRESS[asset.type]
+    if (!tokenContractAddress) return
     if (!address) return
 
     try {
@@ -213,8 +196,8 @@ function ClaimConfirm({
   }
 
   async function handleOnClaim() {
-    const tokenConfig = TokenConfigMap.get(asset.type)
-    if (!tokenConfig) return
+    const tokenContractAddress = TOKEN_CONTRACT_ADDRESS[asset.type]
+    if (!tokenContractAddress) return
     if (!contract) return
     if (!claimSignature) return
 
@@ -268,8 +251,8 @@ function ClaimConfirm({
   }
 
   async function getClaimSignature() {
-    const tokenConfig = TokenConfigMap.get(asset.type)
-    if (!tokenConfig) return
+    const tokenContractAddress = TOKEN_CONTRACT_ADDRESS[asset.type]
+    if (!tokenContractAddress) return
     if (!contract) return
     if (!address) return
 
@@ -280,7 +263,7 @@ function ClaimConfirm({
         amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : '0.02',
         // amount: asset.amount,
         chain_id: contract?.chain.id.toString(),
-        token: tokenConfig.tokenContractAddress,
+        token: tokenContractAddress,
         reward_type: asset.type as 'USDT' | 'XnYCoin'
       })
 
