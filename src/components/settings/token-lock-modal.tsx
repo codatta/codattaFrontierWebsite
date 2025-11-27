@@ -354,7 +354,6 @@ export default function TokenLockModal(props: TokenLockModalProps) {
 
   useEffect(() => {
     if (props.assets.length === 0) {
-      message.error('No lockable assets found')
       handleClose()
     }
   }, [props.assets, handleClose])
