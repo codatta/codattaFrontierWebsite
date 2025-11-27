@@ -91,7 +91,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
       try {
         const signRes = await userApi.getRewardClaimSign({
           address: lastUsedWallet.address,
-          amount: import.meta.env.VITE_MODE === 'production' ? String(asset.amount) : '0.02',
+          amount: String(asset.amount),
           chain_id: LockRewardContract.chain.id.toString(),
           token: tokenAddress,
           reward_type: asset.asset_type,
@@ -122,7 +122,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
       keccak256(stringToHex(signData.uid)),
       signData.token,
       parseEther(signData.amount.toString()),
-      signData.release_time! || Math.floor((Date.now() + 3600 * 24 * 90) / 1000),
+      signData.release_time!,
       signData.expired_at!,
       `0x${signData.signature}`
     ]
@@ -142,40 +142,59 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
     contractArgs
   })
 
-  const { writeContract, isLoading: isWriting, tip: writeTip } = useContractWrite()
+  const {
+    writeContract,
+    isLoading: isWriting,
+    tip: writeTip
+  } = useContractWrite({
+    onStepChange: async (step, data) => {
+      if (!signData) return
+
+      switch (step) {
+        case 'writing':
+          console.log('Creating reward record...')
+
+          await userApi.createRewardRecord(signData.uid, gasFee!)
+          break
+        case 'confirming':
+          console.log('Transaction confirming...', data)
+          if (data && (data as { hash: string }).hash) {
+            await userApi.updateRewardRecord(signData.uid, (data as { hash: string }).hash)
+          }
+          break
+        case 'success':
+          console.log('Transaction successful!')
+          await userApi.finishRewardRecord(signData.uid, 2)
+          onSuccess()
+          break
+        case 'error':
+          console.log('Transaction failed!')
+          await userApi.finishRewardRecord(signData.uid, 4)
+          break
+        default:
+          console.log('Transaction step:', step)
+      }
+    }
+  })
 
   // 4. Action: Confirm Lock
   const handleConfirm = useCallback(async () => {
     if (!signData || !gasFee) return
 
     try {
-      // Create Record
-      await userApi.createRewardRecord(signData.uid, gasFee)
-
       // Write Contract
-      let hash
-      try {
-        const res = await writeContract({
-          contract: LockRewardContract,
-          functionName: 'lock', //
-          args: contractArgs
-        })
-        hash = res.hash
-      } catch (writeErr) {
-        await userApi.finishRewardRecord(signData.uid, 4) // Cancel
-        throw writeErr
-      }
-
-      // Update & Finish Record
-      await userApi.updateRewardRecord(signData.uid, hash)
-      await userApi.finishRewardRecord(signData.uid, 2) // Success
-
-      onSuccess()
+      await writeContract({
+        contract: LockRewardContract,
+        functionName: 'lock',
+        args: contractArgs
+      })
     } catch (err: unknown) {
       console.error(err)
+      // Error handling is now done in onStepChange('error')
+      // But we still show message to user
       message.error((err as Error).message || 'Transaction failed')
     }
-  }, [signData, gasFee, writeContract, contractArgs, onSuccess])
+  }, [signData, gasFee, writeContract, contractArgs])
 
   const isLoading = preparing || gasLoading
   const btnText = isWriting ? <Loader2 className="animate-spin" /> : 'Confirm Lock'
@@ -221,7 +240,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
           <div className="mb-3 flex items-center justify-between border-b border-[#FFFFFF1F] pb-2 text-lg font-bold">
             <span className="text-white">To lock</span>
             <span className="text-[#FFA800]">
-              {signData?.amount ? Number(signData.amount).toLocaleString() : '0'}{' '}
+              {asset?.amount ? Number(asset.amount).toLocaleString() : '0'}{' '}
               <span className="font-normal">{asset.name}</span>
             </span>
           </div>
@@ -269,7 +288,7 @@ function LockSuccess({ onClose }: { onClose: () => void }) {
       <img src={SuccessIcon} alt="" className="mb-4 size-[80px]" />
       <div className="mb-6 text-center text-lg font-bold text-white">Lock Success</div>
       <p className="mb-6 text-center text-[#8D8D93]">
-        Your assets have been successfully locked for 3 months. You can check the details in the Lock-up page.
+        Your assets have been successfully locked for 3 months. You can check the details in the Lock-up details page.
       </p>
       <Button shape="round" size="large" type="primary" className="w-[120px]" onClick={onClose}>
         Got it
@@ -326,9 +345,15 @@ export default function TokenLockModal(props: TokenLockModalProps) {
     props.onClose()
   }, [props])
 
+  const handleSuccess = useCallback(() => {
+    setViewState('success')
+    setTimeout(() => {
+      props.onClose()
+    }, 2000)
+  }, [props])
+
   useEffect(() => {
     if (props.assets.length === 0) {
-      message.error('No lockable assets found')
       handleClose()
     }
   }, [props.assets, handleClose])
@@ -359,7 +384,7 @@ export default function TokenLockModal(props: TokenLockModalProps) {
       {viewState === 'select-token' && <SelectToken onSelect={handleTokenSelect} assets={props.assets} />}
 
       {viewState === 'confirm' && selectedAsset && (
-        <LockConfirm asset={selectedAsset} onClose={handleClose} onSuccess={() => setViewState('success')} />
+        <LockConfirm asset={selectedAsset} onClose={handleClose} onSuccess={handleSuccess} />
       )}
 
       {viewState === 'success' && <LockSuccess onClose={handleClose} />}

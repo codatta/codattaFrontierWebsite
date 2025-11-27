@@ -79,7 +79,7 @@ export function useGasEstimation({
   rpcClient?: PublicClient
   contract: { abi: Abi; chain: Chain; address: string }
   functionName: string
-  contractArgs: (string | bigint)[] | (string | bigint)[][]
+  contractArgs: (string | bigint | number)[] | (string | bigint | number)[][]
 }) {
   const [loading, setLoading] = useState(true)
   const [balance, setBalance] = useState<string>('0')

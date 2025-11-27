@@ -13,7 +13,7 @@ export interface ContractCallConfig {
   value?: bigint
 }
 
-export type WriteStep = 'idle' | 'switching' | 'simulating' | 'writing' | 'confirming' | 'success'
+export type WriteStep = 'idle' | 'switching' | 'simulating' | 'writing' | 'confirming' | 'success' | 'error'
 
 const STEP_TIPS: Record<WriteStep, string> = {
   idle: '',
@@ -21,10 +21,13 @@ const STEP_TIPS: Record<WriteStep, string> = {
   simulating: 'Create transaction...',
   writing: 'Please check and approve the transaction in your wallet.',
   confirming: 'Waiting for transaction to be confirmed...',
-  success: 'Transaction successful'
+  success: 'Transaction successful',
+  error: 'Transaction failed'
 }
 
-export function useContractWrite(options?: { onStepChange?: (step: WriteStep) => void }) {
+export function useContractWrite(options?: {
+  onStepChange?: (step: WriteStep, data?: unknown) => Promise<void> | void
+}) {
   const { lastUsedWallet } = useCodattaConnectContext()
   const [step, setStep] = useState<WriteStep>('idle')
   const [error, setError] = useState<Error | null>(null)
@@ -39,9 +42,9 @@ export function useContractWrite(options?: { onStepChange?: (step: WriteStep) =>
   }, [])
 
   const updateStep = useCallback(
-    (newStep: WriteStep) => {
+    async (newStep: WriteStep, data?: unknown) => {
       setStep(newStep)
-      options?.onStepChange?.(newStep)
+      await options?.onStepChange?.(newStep, data)
     },
     [options]
   )
@@ -61,12 +64,12 @@ export function useContractWrite(options?: { onStepChange?: (step: WriteStep) =>
         // Switch Chain if needed
         const currentChainId = await lastUsedWallet.getChain()
         if (currentChainId !== contract.chain.id) {
-          updateStep('switching')
+          await updateStep('switching')
           await lastUsedWallet.switchChain(contract.chain)
         }
 
         // Simulate
-        updateStep('simulating')
+        await updateStep('simulating')
         const { request } = await rpcClient.simulateContract({
           account: walletAddress as `0x${string}`,
           address: contract.address as `0x${string}`,
@@ -78,22 +81,23 @@ export function useContractWrite(options?: { onStepChange?: (step: WriteStep) =>
         })
 
         // Write
-        updateStep('writing')
+        await updateStep('writing')
         const hash = await lastUsedWallet.client.writeContract(request)
 
         // Wait for Receipt
-        updateStep('confirming')
+        await updateStep('confirming', { hash })
         const receipt = await rpcClient.waitForTransactionReceipt({ hash })
 
         if (receipt.status !== 'success') {
           throw new Error('Transaction reverted on chain')
         }
 
-        updateStep('success')
+        await updateStep('success', { hash, receipt })
         return { hash, receipt }
       } catch (err: unknown) {
         const errorObj = err as Error
         setError(errorObj)
+        await updateStep('error', errorObj)
         throw errorObj
       }
     },

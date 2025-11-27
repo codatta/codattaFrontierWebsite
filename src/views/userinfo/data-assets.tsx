@@ -152,6 +152,11 @@ function LockableRewards() {
     }
   }, [])
 
+  const handleClose = async () => {
+    setOpen(false)
+    await getClaimableRewards()
+  }
+
   useEffect(() => {
     getClaimableRewards()
   }, [getClaimableRewards])
@@ -176,7 +181,7 @@ function LockableRewards() {
           Lock Now
         </Button>
       </div>
-      <TokenLockModal open={open} onClose={() => setOpen(false)} assets={assets} />
+      <TokenLockModal open={open} onClose={handleClose} assets={assets} />
     </>
   )
 }
