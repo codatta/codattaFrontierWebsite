@@ -91,10 +91,12 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
       try {
         const signRes = await userApi.getRewardClaimSign({
           address: lastUsedWallet.address,
-          amount: asset.amount.toString(),
+          amount: import.meta.env.VITE_MODE === 'production' ? String(asset.amount) : '0.02',
           chain_id: LockRewardContract.chain.id.toString(),
           token: tokenAddress,
-          reward_type: asset.asset_type
+          reward_type: asset.asset_type,
+          claim_type: 'lock',
+          batch_ids: asset.batch_ids
         })
         setSignData({
           ...signRes,
@@ -116,15 +118,12 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
     // If no signData, return empty to prevent useGasEstimation from calling RPC with bad data
     if (!signData) return []
 
-    // Calculate release time (T+90 days) - This might need to come from API if signed
-    const releaseTime = BigInt(Math.floor(Date.now() / 1000) + 90 * 24 * 3600)
-
     return [
       keccak256(stringToHex(signData.uid)),
       signData.token,
       parseEther(signData.amount.toString()),
-      releaseTime,
-      signData.expired_at,
+      signData.release_time! || Math.floor((Date.now() + 3600 * 24 * 90) / 1000),
+      signData.expired_at!,
       `0x${signData.signature}`
     ]
   }, [signData])
@@ -222,7 +221,8 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
           <div className="mb-3 flex items-center justify-between border-b border-[#FFFFFF1F] pb-2 text-lg font-bold">
             <span className="text-white">To lock</span>
             <span className="text-[#FFA800]">
-              {asset.amount} <span className="font-normal">{asset.name}</span>
+              {signData?.amount ? Number(signData.amount).toLocaleString() : '0'}{' '}
+              <span className="font-normal">{asset.name}</span>
             </span>
           </div>
           <p className="text-sm leading-5 text-[#77777D]">

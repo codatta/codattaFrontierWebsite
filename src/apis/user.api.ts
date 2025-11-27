@@ -132,6 +132,8 @@ export interface RewardClaimSignParams {
   amount: string
   address: string
   token: string
+  claim_type?: 'lock' | 'normal' // default is normal claim
+  batch_ids?: string // optional batch ID for lock claims
 }
 
 export interface RewardClaimSignResponse {
@@ -140,6 +142,7 @@ export interface RewardClaimSignResponse {
   amount: number | string
   expired_at: string
   uid: string
+  release_time?: string // release time for locked rewards
 }
 
 export interface RewardRecordHistoryParams {

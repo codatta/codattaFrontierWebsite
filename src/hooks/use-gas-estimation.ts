@@ -104,7 +104,9 @@ export function useGasEstimation({
     }
 
     const getEstimateGas = async (address: `0x${string}`) => {
-      if (!address) return
+      if (!address || contractArgs?.length === 0) return
+
+      console.log('contractArgs for gas estimation:', contractArgs)
 
       try {
         const data = encodeFunctionData({
