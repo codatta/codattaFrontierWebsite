@@ -34,6 +34,7 @@ const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
 const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
 const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
+const UserInfoDataAssetsLockupDetails = lazy(() => import('@/views/userinfo/data-assets-lockup-details'))
 const UserInfoDid = lazy(() => import('@/views/userinfo/did'))
 
 // account
@@ -139,6 +140,7 @@ export default function Router() {
             <Route path="onchain" element={<UserInfoOnchain />} />
             <Route path="data-profile" element={<UserInfoDataProfile />} />
             <Route path="data-assets" element={<UserInfoDataAssets />} />
+            <Route path="data-assets/lockup-details" element={<UserInfoDataAssetsLockupDetails />} />
             <Route path="did" element={<UserInfoDid />} />
           </Route>
 

@@ -1,5 +1,6 @@
 import { Button, Tabs, TabsProps } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ChevronUp } from 'lucide-react'
 import { cn } from '@udecode/cn'
 
@@ -10,7 +11,7 @@ import LockableRewardsBg from '@/assets/settings/token-rewards-lock-bg.svg'
 import TokenClaimModal from '@/components/settings/token-claim-modal'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
-import LockUpClaim from '@/components/settings/lock-up-claim'
+import LockUpClaim from '@/components/settings/lockup-claim'
 import TokenLockModal from '@/components/settings/token-lock-modal'
 
 import userApi, { type ClaimableReward } from '@/apis/user.api'
@@ -37,9 +38,13 @@ const items: TabsProps['items'] = [
 export default function DataAssets() {
   const [showClaimModal, setShowClaimModal] = useState(false)
   const [activeTab, setActiveTab] = useState('')
+  const navigate = useNavigate()
 
   const handleClaim = () => {
     setShowClaimModal(true)
+  }
+  const handleLockUpDetails = () => {
+    navigate('/app/settings/data-assets/lockup-details')
   }
 
   // const handleClaimTest = () => {
@@ -69,7 +74,7 @@ export default function DataAssets() {
         onChange={(key) => setActiveTab(key)}
         tabBarExtraContent={
           activeTab === 'lock-up-claim-tab' ? (
-            <Button type="primary" className="h-[40px] w-[140px] rounded-full text-sm">
+            <Button type="primary" className="h-[40px] w-[140px] rounded-full text-sm" onClick={handleLockUpDetails}>
               Lock-up details
             </Button>
           ) : undefined
