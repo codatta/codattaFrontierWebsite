@@ -145,24 +145,10 @@ function LockableRewards() {
   const getClaimableRewards = useCallback(async () => {
     try {
       const assets = await userApi.getClaimableRewards('lock')
+      console.log('Lockable rewards:', assets)
       setAssets(assets)
     } catch (error) {
-      const mockAssets: ClaimableReward[] = [
-        {
-          claim_type: 'lock',
-          asset_type: 'XnYCoin',
-          name: 'XNY',
-          amount: 100
-        },
-        {
-          claim_type: 'lock',
-          asset_type: 'USDT',
-          name: 'USDT',
-          amount: 100
-        }
-      ]
-      setAssets(mockAssets)
-      console.error(error)
+      console.error('Failed to fetch lockable rewards:', error)
     }
   }, [])
 

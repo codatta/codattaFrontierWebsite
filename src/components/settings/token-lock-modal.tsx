@@ -46,7 +46,7 @@ function SelectToken(props: { onSelect: (asset: ClaimableReward) => void; assets
         {props.assets?.length === 0 && <div className="py-8 text-center text-[#8D8D93]">No lockable assets found.</div>}
         {props.assets?.map((asset) => (
           <div
-            key={asset.asset_type + asset.amount}
+            key={asset.batch_ids}
             className="flex cursor-pointer items-center justify-between rounded-2xl border border-[#FFFFFF1F] p-6 hover:border-primary"
             onClick={() => props.onSelect(asset)}
           >
@@ -322,17 +322,16 @@ export default function TokenLockModal(props: TokenLockModalProps) {
     setViewState('confirm')
   }
 
-  function handleClose() {
+  const handleClose = useCallback(() => {
     props.onClose()
-  }
+  }, [props])
 
   useEffect(() => {
-    console.log('assets', props.assets)
     if (props.assets.length === 0) {
       message.error('No lockable assets found')
       handleClose()
     }
-  }, [props.assets])
+  }, [props.assets, handleClose])
 
   return (
     <Modal

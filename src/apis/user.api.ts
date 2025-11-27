@@ -201,6 +201,7 @@ export interface ClaimableReward {
   asset_type: 'XnYCoin' | 'USDT'
   name: string
   amount: number
+  batch_ids: string
 }
 
 class UserApi {
