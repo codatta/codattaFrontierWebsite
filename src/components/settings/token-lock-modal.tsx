@@ -2,17 +2,18 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 import { Button, Modal, Spin, message } from 'antd'
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
-import { Loader2 } from 'lucide-react'
 import { keccak256, stringToHex, parseEther } from 'viem'
+import { useNavigate } from 'react-router-dom'
+import { ExternalLink, Loader2 } from 'lucide-react'
 
 import userApi, { ClaimableReward, RewardClaimSignResponse } from '@/apis/user.api'
 import { shortenAddress } from '@/utils/wallet-address'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useContractWrite } from '@/hooks/use-contract-write'
-import LockRewardContract from '@/contracts/lock-claim-reward.abi'
+import LockRewardContract from '@/contracts/lockup-reward.abi'
 import { TOKEN_CONTRACT_ADDRESS } from './config'
 
-import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
+import SuccessIcon from '@/assets/frontier/crypto/pc-approved-icon.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 
@@ -68,13 +69,14 @@ function SelectToken(props: { onSelect: (asset: ClaimableReward) => void; assets
 interface LockConfirmProps {
   asset: ClaimableReward
   onClose: () => void
-  onSuccess: () => void
+  onSuccess: (hash: string) => void
 }
 
 function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
   const { lastUsedWallet } = useCodattaConnectContext()
   const [signData, setSignData] = useState<RewardClaimSignResponse | null>(null)
   const [preparing, setPreparing] = useState(false)
+  const [errorMsg, setErrorMsg] = useState('')
 
   // 1. Prepare: Get Signature
   useEffect(() => {
@@ -88,6 +90,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
       }
 
       setPreparing(true)
+      setErrorMsg('')
       try {
         const signRes = await userApi.getRewardClaimSign({
           address: lastUsedWallet.address,
@@ -153,7 +156,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
       switch (step) {
         case 'writing':
           console.log('Creating reward record...')
-
+          setErrorMsg('')
           await userApi.createRewardRecord(signData.uid, gasFee!)
           break
         case 'confirming':
@@ -165,11 +168,19 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
         case 'success':
           console.log('Transaction successful!')
           await userApi.finishRewardRecord(signData.uid, 2)
-          onSuccess()
+          if (data && (data as { hash: string }).hash) {
+            onSuccess((data as { hash: string }).hash)
+          } else {
+            onSuccess('')
+          }
           break
         case 'error':
           console.log('Transaction failed!')
           await userApi.finishRewardRecord(signData.uid, 4)
+          setErrorMsg('Transaction failed')
+          setTimeout(() => {
+            onClose()
+          }, 3000)
           break
         default:
           console.log('Transaction step:', step)
@@ -182,6 +193,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
     if (!signData || !gasFee) return
 
     try {
+      setErrorMsg('')
       // Write Contract
       await writeContract({
         contract: LockRewardContract,
@@ -192,12 +204,15 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
       console.error(err)
       // Error handling is now done in onStepChange('error')
       // But we still show message to user
-      message.error((err as Error).message || 'Transaction failed')
+      const msg = (err as Error).message || 'Transaction failed'
+      setErrorMsg(msg)
+      setTimeout(() => {
+        onClose()
+      }, 3000)
     }
-  }, [signData, gasFee, writeContract, contractArgs])
+  }, [signData, gasFee, writeContract, contractArgs, onClose])
 
   const isLoading = preparing || gasLoading
-  const btnText = isWriting ? <Loader2 className="animate-spin" /> : 'Confirm Lock'
   const hasGasWarning = !!gasWarning
 
   return (
@@ -257,6 +272,14 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
           </div>
         )}
 
+        {/* Error Message */}
+        {errorMsg && (
+          <div className="mb-4 flex items-center justify-center gap-2 text-[#D92B2B]">
+            <InfoCircleOutlined />
+            <span>{errorMsg}</span>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="flex items-center justify-end gap-4">
           <Button
@@ -274,7 +297,7 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
             loading={isWriting}
             disabled={!!gasWarning || isLoading || !signData}
           >
-            {btnText}
+            {preparing ? 'Preparing...' : gasLoading ? 'Calculating Gas...' : 'Confirm Lock'}
           </Button>
         </div>
       </div>
@@ -282,17 +305,45 @@ function LockConfirm({ asset, onClose, onSuccess }: LockConfirmProps) {
   )
 }
 
-function LockSuccess({ onClose }: { onClose: () => void }) {
+function LockSuccess({ txHash, onClose }: { txHash: string; onClose: () => void }) {
+  const navigate = useNavigate()
+  const handleGoToLockup = () => {
+    navigate('/app/settings/data-assets/lockup-details')
+    onClose()
+  }
   return (
-    <div className="flex flex-col items-center p-6 text-base">
-      <img src={SuccessIcon} alt="" className="mb-4 size-[80px]" />
-      <div className="mb-6 text-center text-lg font-bold text-white">Lock Success</div>
-      <p className="mb-6 text-center text-[#8D8D93]">
-        Your assets have been successfully locked for 3 months. You can check the details in the Lock-up details page.
-      </p>
-      <Button shape="round" size="large" type="primary" className="w-[120px]" onClick={onClose}>
-        Got it
-      </Button>
+    <div className="p-6 text-base">
+      <div className="mb-6 text-lg font-bold text-white">Lock now</div>
+
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-[#FFFFFF1F] bg-[#252532] px-4 py-10">
+        <img src={SuccessIcon} alt="" className="mb-6 size-[72px]" />
+        {/* <div className="mb-6 text-center text-lg font-bold text-white">Lock Success</div> */}
+        <p className="mb-2 text-center text-white">
+          Your rewards have been locked in the 3-month contract (T+90). You can always check this lock in Lock-up
+          history.
+        </p>
+
+        {txHash && (
+          <a
+            href={`${LockRewardContract.chain.blockExplorers?.default.url}tx/${txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mb-6 flex items-center gap-1 text-[#875DFF] hover:text-[#A78BFA]"
+          >
+            TX: {shortenAddress(txHash, 8)} <ExternalLink className="size-4" />
+          </a>
+        )}
+
+        <Button
+          shape="round"
+          size="large"
+          type="primary"
+          className="h-[42px] bg-white px-6 text-[#1C1C26] hover:!bg-black/80 hover:text-white"
+          onClick={handleGoToLockup}
+        >
+          View Lock-up Details
+        </Button>
+      </div>
     </div>
   )
 }
@@ -311,6 +362,7 @@ export default function TokenLockModal(props: TokenLockModalProps) {
   const [viewState, setViewState] = useState<'select-token' | 'confirm' | 'success' | 'connect-wallet'>('select-token')
   const { lastUsedWallet } = useCodattaConnectContext()
   const [selectedAsset, setSelectedAsset] = useState<ClaimableReward>()
+  const [txHash, setTxHash] = useState('')
 
   // State Synchronization
   useEffect(() => {
@@ -319,6 +371,7 @@ export default function TokenLockModal(props: TokenLockModalProps) {
       setTimeout(() => {
         setViewState('select-token')
         setSelectedAsset(undefined)
+        setTxHash('')
       }, 300)
       return
     }
@@ -345,12 +398,10 @@ export default function TokenLockModal(props: TokenLockModalProps) {
     props.onClose()
   }, [props])
 
-  const handleSuccess = useCallback(() => {
+  const handleSuccess = useCallback((hash: string) => {
+    setTxHash(hash)
     setViewState('success')
-    setTimeout(() => {
-      props.onClose()
-    }, 2000)
-  }, [props])
+  }, [])
 
   useEffect(() => {
     if (props.open && props.assets.length === 0) {
@@ -362,13 +413,13 @@ export default function TokenLockModal(props: TokenLockModalProps) {
     <Modal
       open={props.open}
       onCancel={handleClose}
-      width={480}
+      width={600}
       footer={null}
       styles={{ content: { padding: 0, backgroundColor: '#252532', color: 'white' } }}
       centered
       destroyOnHidden
       maskClosable={false}
-      closable={viewState !== 'confirm' && viewState !== 'success'} // Prevent close during heavy actions if needed, though LockConfirm handles its own 'isWriting' disabled state
+      closable={viewState !== 'confirm'} // Prevent close during heavy actions if needed, though LockConfirm handles its own 'isWriting' disabled state
       closeIcon={<span className="text-white/60 hover:text-white">✕</span>}
     >
       {viewState === 'connect-wallet' && (
@@ -387,7 +438,7 @@ export default function TokenLockModal(props: TokenLockModalProps) {
         <LockConfirm asset={selectedAsset} onClose={handleClose} onSuccess={handleSuccess} />
       )}
 
-      {viewState === 'success' && <LockSuccess onClose={handleClose} />}
+      {viewState === 'success' && <LockSuccess txHash={txHash} onClose={handleClose} />}
     </Modal>
   )
 }
