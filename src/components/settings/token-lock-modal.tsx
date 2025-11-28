@@ -38,31 +38,51 @@ function InfoItemLoading(props: { loading: boolean; children: React.ReactNode })
 // Sub-components
 // ----------------------------------------------------------------------
 
-function SelectToken(props: { onSelect: (asset: ClaimableReward) => void; assets: ClaimableReward[] }) {
-  console.log('assets 2', props.assets)
+function SelectToken(props: { onSelect: (asset: ClaimableReward) => void }) {
+  const [assets, setAssets] = useState<ClaimableReward[]>([])
+  const [loading, setLoading] = useState(false)
+  const getClaimableRewards = useCallback(async () => {
+    try {
+      setLoading(true)
+      const assets = await userApi.getClaimableRewards('lock')
+      console.log('Lockable rewards:', assets)
+      setAssets(assets)
+    } catch (error) {
+      console.error('Failed to fetch lockable rewards:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    getClaimableRewards()
+  }, [getClaimableRewards])
+  console.log('assets 2', assets)
   return (
-    <div className="p-6">
-      <div className="mb-6 text-lg font-bold text-white">Select Token to Lock</div>
-      <div className="grid grid-cols-1 gap-2">
-        {props.assets?.length === 0 && <div className="py-8 text-center text-[#8D8D93]">No lockable assets found.</div>}
-        {props.assets?.map((asset) => (
-          <div
-            key={asset.batch_ids}
-            className="flex cursor-pointer items-center justify-between rounded-2xl border border-[#FFFFFF1F] p-6 hover:border-primary"
-            onClick={() => props.onSelect(asset)}
-          >
-            <div className="flex items-center gap-3">
-              {getAssetIcon(asset.asset_type)}
-              <span className="text-lg font-bold text-white">{asset.name}</span>
+    <Spin spinning={loading} tip="Loading lockable assets...">
+      <div className="p-6">
+        <div className="mb-6 text-lg font-bold text-white">Select Token to Lock</div>
+        <div className="grid grid-cols-1 gap-2">
+          {assets?.length === 0 && <div className="py-8 text-center text-[#8D8D93]">No lockable assets found.</div>}
+          {assets?.map((asset) => (
+            <div
+              key={asset.batch_ids}
+              className="flex cursor-pointer items-center justify-between rounded-2xl border border-[#FFFFFF1F] p-6 hover:border-primary"
+              onClick={() => props.onSelect(asset)}
+            >
+              <div className="flex items-center gap-3">
+                {getAssetIcon(asset.asset_type)}
+                <span className="text-lg font-bold text-white">{asset.name}</span>
+              </div>
+              <div className="text-right">
+                <div className="mb-1 text-[28px] font-bold">{asset.amount}</div>
+                <div className="text-base text-[#BBBBBE]">{asset.name}</div>
+              </div>
             </div>
-            <div className="text-right">
-              <div className="mb-1 text-[28px] font-bold">{asset.amount}</div>
-              <div className="text-base text-[#BBBBBE]">{asset.name}</div>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </Spin>
   )
 }
 
@@ -355,7 +375,6 @@ function LockSuccess({ txHash, onClose }: { txHash: string; onClose: () => void 
 interface TokenLockModalProps {
   open: boolean
   onClose: () => void
-  assets: ClaimableReward[]
 }
 
 export default function TokenLockModal(props: TokenLockModalProps) {
@@ -403,12 +422,6 @@ export default function TokenLockModal(props: TokenLockModalProps) {
     setViewState('success')
   }, [])
 
-  useEffect(() => {
-    if (props.open && props.assets.length === 0) {
-      handleClose()
-    }
-  }, [props.assets, handleClose, props.open])
-
   return (
     <Modal
       open={props.open}
@@ -432,7 +445,7 @@ export default function TokenLockModal(props: TokenLockModalProps) {
         </div>
       )}
 
-      {viewState === 'select-token' && <SelectToken onSelect={handleTokenSelect} assets={props.assets} />}
+      {viewState === 'select-token' && <SelectToken onSelect={handleTokenSelect} />}
 
       {viewState === 'confirm' && selectedAsset && (
         <LockConfirm asset={selectedAsset} onClose={handleClose} onSuccess={handleSuccess} />

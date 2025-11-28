@@ -1,5 +1,5 @@
 import { Button, Tabs, TabsProps } from 'antd'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ChevronUp } from 'lucide-react'
 import { cn } from '@udecode/cn'
@@ -14,7 +14,6 @@ import EarnedHistory from '@/components/settings/earned-history'
 import TokenLockUpClaim from '@/components/settings/token-unlock'
 import TokenLockModal from '@/components/settings/token-lock-modal'
 
-import userApi, { type ClaimableReward } from '@/apis/user.api'
 import { useUserStore } from '@/stores/user.store'
 
 const items: TabsProps['items'] = [
@@ -149,32 +148,16 @@ function TokenRewards() {
 }
 
 function LockableRewards() {
-  const [assets, setAssets] = useState<ClaimableReward[]>([])
   const [open, setOpen] = useState(false)
-
-  const getClaimableRewards = useCallback(async () => {
-    try {
-      const assets = await userApi.getClaimableRewards('lock')
-      console.log('Lockable rewards:', assets)
-      setAssets(assets)
-    } catch (error) {
-      console.error('Failed to fetch lockable rewards:', error)
-    }
-  }, [])
 
   const handleClose = async () => {
     setOpen(false)
-    await getClaimableRewards()
   }
-
-  useEffect(() => {
-    getClaimableRewards()
-  }, [getClaimableRewards])
 
   return (
     <>
       <div
-        className={`mb-12 flex items-center justify-between gap-4 rounded-2xl bg-cover px-10 py-8 ${assets.length > 0 ? 'flex' : 'hidden'}`}
+        className="mb-12 flex items-center justify-between gap-4 rounded-2xl bg-cover px-10 py-8"
         style={{ backgroundImage: `url(${LockableRewardsBg})` }}
       >
         <div>
@@ -191,7 +174,7 @@ function LockableRewards() {
           Lock Now
         </Button>
       </div>
-      <TokenLockModal open={open} onClose={handleClose} assets={assets} />
+      <TokenLockModal open={open} onClose={handleClose} />
     </>
   )
 }
