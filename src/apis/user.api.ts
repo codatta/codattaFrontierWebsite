@@ -365,13 +365,14 @@ class UserApi {
     return data.data
   }
 
-  async getClaimableRewards(claim_types = 'normal,lock') {
+  async getClaimableRewards(claim_types = 'normal') {
+    // normal | lock
     const { data } = await this.request.get<Response<ClaimableReward[]>>('/v2/user/asset/claim/list', {
       params: {
         claim_types
       }
     })
-    return data.data
+    return data.data?.filter((item) => parseFloat(String(item.amount)) > 0)
   }
 
   async isHighQualityUser(): Promise<boolean> {

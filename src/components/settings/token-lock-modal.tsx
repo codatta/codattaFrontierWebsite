@@ -70,10 +70,7 @@ function SelectToken(props: { onSelect: (asset: ClaimableReward) => void }) {
               className="flex cursor-pointer items-center justify-between rounded-2xl border border-[#FFFFFF1F] p-6 hover:border-primary"
               onClick={() => props.onSelect(asset)}
             >
-              <div className="flex items-center gap-3">
-                {getAssetIcon(asset.asset_type)}
-                <span className="text-lg font-bold text-white">{asset.name}</span>
-              </div>
+              <div className="flex items-center gap-3">{getAssetIcon(asset.asset_type)}</div>
               <div className="text-right">
                 <div className="mb-1 text-[28px] font-bold">{asset.amount}</div>
                 <div className="text-base text-[#BBBBBE]">{asset.name}</div>

@@ -1,20 +1,29 @@
-import { userStoreActions, useUserStore } from '@/stores/user.store'
 import { Button, message, Modal, Spin } from 'antd'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
+import {
+  createPublicClient,
+  formatEther,
+  http,
+  encodeFunctionData,
+  Abi,
+  Chain,
+  parseEther,
+  keccak256,
+  stringToHex
+} from 'viem'
+import { bsc } from 'viem/chains'
+import { InfoCircleOutlined } from '@ant-design/icons'
+import { Loader2 } from 'lucide-react'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
-import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
+import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
 import ClaimRewardContract from '@/contracts/claim-reward.abi'
-import { createPublicClient, formatEther, http, encodeFunctionData, Abi, Chain, parseEther } from 'viem'
-import { bsc } from 'viem/chains'
 import userApi, { RewardClaimSignResponse } from '@/apis/user.api'
 import { shortenAddress } from '@/utils/wallet-address'
-import { Loader2 } from 'lucide-react'
-import { InfoCircleOutlined } from '@ant-design/icons'
-import { keccak256, stringToHex } from 'viem'
-import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
 import { calculateGasEstimation } from '@/hooks/use-gas-estimation'
+import { userStoreActions } from '@/stores/user.store'
 import { TOKEN_CONTRACT_ADDRESS } from './config'
 
 interface Asset {
@@ -22,6 +31,12 @@ interface Asset {
   amount: string
   currency: string
   Icon?: React.ReactNode
+}
+
+function getAssetIcon(type: string) {
+  if (type === 'USDT') return <USDTIcon />
+  if (type === 'XNY' || type === 'XnYCoin') return <XnyIcon />
+  return null
 }
 
 function InfoItemLoading(props: { loading: boolean; children: React.ReactNode }) {
@@ -37,57 +52,51 @@ interface TokenClaimModalProps {
 }
 
 function SelectToken(props: { onSelect: (asset: Asset) => void }) {
-  const { info } = useUserStore()
+  const [assets, setAssets] = useState<Asset[]>([])
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    setLoading(true)
-    userStoreActions.getUserInfo().finally(() => {
+  const getClaimableRewards = useCallback(async () => {
+    try {
+      setLoading(true)
+      const assets = await userApi.getClaimableRewards('normal')
+      const assetsList: Asset[] = assets
+        .filter((asset) => asset.asset_type === 'USDT' || asset.asset_type === 'XnYCoin')
+        .map((asset) => ({
+          type: asset.asset_type,
+          amount: asset.amount?.toString() ?? '0.0',
+          currency: asset.name ?? 'USDT',
+          Icon: getAssetIcon(asset.asset_type)
+        }))
+      console.log('rewards:', assets)
+      setAssets(assetsList)
+    } catch (error) {
+      console.error('Failed to fetch rewards:', error)
+    } finally {
       setLoading(false)
-    })
+    }
   }, [])
 
-  const assets = useMemo(() => {
-    const xny = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
-    const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
-
-    return [
-      {
-        type: 'XnYCoin',
-        amount: xny?.amount ?? '0.0',
-        currency: 'XNY',
-        Icon: <XnyIcon />
-      },
-      {
-        type: 'USDT',
-        amount: usdt?.amount ?? '0.0',
-        currency: usdt?.currency ?? 'USDT',
-        Icon: <USDTIcon />
-      }
-    ]
-  }, [info])
-
-  function handleSelectToken(asset: Asset) {
-    props.onSelect(asset)
-  }
+  useEffect(() => {
+    getClaimableRewards()
+  }, [getClaimableRewards])
 
   return (
     <Spin spinning={loading}>
       <div className="p-6">
-        <div className="mb-6">Select Token</div>
+        <div className="mb-6 text-lg font-bold text-white">Select Token</div>
         <div className="grid grid-cols-1 gap-2">
-          {assets.map((asset) => (
-            <li
-              key={asset.currency}
+          {assets?.length === 0 && <div className="py-8 text-center text-[#8D8D93]">No assets found.</div>}
+          {assets?.map((asset) => (
+            <div
+              key={asset.type}
               className="flex cursor-pointer items-center justify-between rounded-2xl border border-[#FFFFFF1F] p-6 hover:border-primary"
-              onClick={() => handleSelectToken(asset)}
+              onClick={() => props.onSelect(asset)}
             >
-              {asset.Icon}
+              <div className="flex items-center gap-3">{asset.Icon}</div>
               <div className="text-right">
                 <div className="mb-1 text-[28px] font-bold">{asset.amount}</div>
                 <div className="text-base text-[#BBBBBE]">{asset.currency}</div>
               </div>
-            </li>
+            </div>
           ))}
         </div>
       </div>
