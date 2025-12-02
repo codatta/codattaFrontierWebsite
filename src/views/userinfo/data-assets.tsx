@@ -1,5 +1,5 @@
 import { Button, Tabs, TabsProps } from 'antd'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ChevronUp } from 'lucide-react'
 import { cn } from '@udecode/cn'
@@ -15,6 +15,7 @@ import TokenLockUpClaim from '@/components/settings/token-unlock'
 import TokenLockModal from '@/components/settings/token-lock-modal'
 
 import { useUserStore } from '@/stores/user.store'
+import userApi from '@/apis/user.api'
 
 const items: TabsProps['items'] = [
   {
@@ -149,12 +150,28 @@ function TokenRewards() {
 
 function LockableRewards() {
   const [open, setOpen] = useState(false)
+  const [showLockModal, setShowLockModal] = useState(false)
 
   const handleClose = async () => {
     setOpen(false)
   }
 
-  return (
+  useEffect(() => {
+    const getClaimableRewards = async () => {
+      try {
+        const assets = await userApi.getClaimableRewards('lock')
+        const showClaimModal = assets?.filter((asset) => asset.amount > 0).length > 0
+        setShowLockModal(showClaimModal)
+
+        console.log('Lockable rewards:', assets, showClaimModal)
+      } catch (error) {
+        console.error('Failed to fetch lockable rewards:', error)
+      }
+    }
+    getClaimableRewards()
+  }, [])
+
+  return showLockModal ? (
     <>
       <div
         className="mb-12 flex items-center justify-between gap-4 rounded-2xl bg-cover px-10 py-8"
@@ -177,5 +194,5 @@ function LockableRewards() {
       </div>
       <TokenLockModal open={open} onClose={handleClose} />
     </>
-  )
+  ) : null
 }
