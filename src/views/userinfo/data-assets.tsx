@@ -163,7 +163,8 @@ function LockableRewards() {
         <div>
           <h3 className="text-2xl font-bold leading-9">Confirm 3-month lock-up</h3>
           <p>
-            Your rewards are in your account. Lock them for 3 months (T+90), then claim on the “Lock-up details” page.
+            Rewards are credited to your balance. Lock for 3 months (T+90), then claim on the “Lock-up details” page to
+            withdraw.
           </p>
         </div>
         <Button
