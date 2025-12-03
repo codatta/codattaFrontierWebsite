@@ -236,10 +236,10 @@ export default function LockupDetails() {
         <Spin spinning={loading}>
           <div className="w-full rounded-2xl bg-[#252532] p-6 text-sm text-white">
             {/* Header */}
-            <div className="grid grid-cols-3 border-b border-[#FFFFFF1F] pb-4 pr-[80px]">
+            <div className="grid grid-cols-3 border-b border-[#FFFFFF1F] pb-4">
               <div>Lock Time</div>
               <div className="text-center">Statu</div>
-              <div className="text-right">Reward</div>
+              <div className="pr-[80px] text-right">Reward</div>
             </div>
 
             {/* List */}
