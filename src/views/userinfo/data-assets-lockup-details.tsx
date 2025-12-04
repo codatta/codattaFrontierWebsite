@@ -237,7 +237,7 @@ export default function LockupDetails() {
           <div className="w-full rounded-2xl bg-[#252532] p-6 text-sm text-white">
             {/* Header */}
             <div className="grid grid-cols-3 border-b border-[#FFFFFF1F] pb-4">
-              <div>Lock Time</div>
+              <div>Unlock Time</div>
               <div className="text-center">Status</div>
               <div className="pr-[80px] text-right">Reward</div>
             </div>
