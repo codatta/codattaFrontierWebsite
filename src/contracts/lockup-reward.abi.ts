@@ -22,7 +22,7 @@ const TESTNET = defineChain({
 const MAINNET = bsc
 
 const CONTRACT_ADDRESS_TESTNET = '0x7d71B0904F8A9766532A3EcFE267E65eF48E60DB'
-const CONTRACT_ADDRESS_MAINNET = '0x'
+const CONTRACT_ADDRESS_MAINNET = '0xdf6F40b6608cAf9e76D65085EE2277B7E68eD759'
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
   chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : TESTNET,
