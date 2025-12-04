@@ -50,7 +50,7 @@ const CustomCascader = ({ ...props }) => {
 
           return (
             <div className="flex">
-              <div id="category-cascader" className="rounded-xl shadow-md">
+              <div id="category-cascader" className="shadow-md rounded-xl">
                 {menus}
               </div>
               <div>

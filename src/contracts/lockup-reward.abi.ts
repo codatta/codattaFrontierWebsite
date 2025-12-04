@@ -1,0 +1,431 @@
+import { Abi, Chain, defineChain } from 'viem'
+import { bsc } from 'viem/chains'
+
+const TESTNET = defineChain({
+  id: 2368,
+  name: 'KiteAI Testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'KITE',
+    symbol: 'KITE'
+  },
+  rpcUrls: {
+    default: { http: ['https://rpc-testnet.gokite.ai/'] }
+  },
+  blockExplorers: {
+    default: {
+      name: 'kitescan',
+      url: 'https://testnet.kitescan.ai/'
+    }
+  }
+})
+const MAINNET = bsc
+
+const CONTRACT_ADDRESS_TESTNET = '0x7d71B0904F8A9766532A3EcFE267E65eF48E60DB'
+const CONTRACT_ADDRESS_MAINNET = '0xdf6F40b6608cAf9e76D65085EE2277B7E68eD759'
+
+const contract: { abi: Abi; chain: Chain; address: string } = {
+  chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : TESTNET,
+  address: import.meta.env.VITE_MODE === 'production' ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET,
+  abi: [
+    { type: 'constructor', inputs: [], stateMutability: 'nonpayable' },
+    { type: 'receive', stateMutability: 'payable' },
+    {
+      type: 'function',
+      name: 'UPGRADE_INTERFACE_VERSION',
+      inputs: [],
+      outputs: [{ name: '', type: 'string', internalType: 'string' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'applySignerUpdates',
+      inputs: [
+        {
+          name: 'signersToAdd',
+          type: 'address[]',
+          internalType: 'address[]'
+        },
+        {
+          name: 'signersToRemove',
+          type: 'address[]',
+          internalType: 'address[]'
+        }
+      ],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
+      name: 'containsLockup',
+      inputs: [
+        { name: 'locker', type: 'address', internalType: 'address' },
+        { name: 'uid', type: 'bytes32', internalType: 'bytes32' }
+      ],
+      outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'getClaimableAmounts',
+      inputs: [{ name: 'user', type: 'address', internalType: 'address' }],
+      outputs: [
+        { name: 'tokens', type: 'address[]', internalType: 'address[]' },
+        { name: 'amounts', type: 'uint256[]', internalType: 'uint256[]' }
+      ],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'getLockupsCount',
+      inputs: [{ name: 'user', type: 'address', internalType: 'address' }],
+      outputs: [{ name: '', type: 'uint256', internalType: 'uint256' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'getSigners',
+      inputs: [],
+      outputs: [{ name: '', type: 'address[]', internalType: 'address[]' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'getUserLockups',
+      inputs: [
+        { name: 'user', type: 'address', internalType: 'address' },
+        { name: 'offset', type: 'uint256', internalType: 'uint256' },
+        { name: 'limit', type: 'uint256', internalType: 'uint256' }
+      ],
+      outputs: [
+        {
+          name: '',
+          type: 'tuple[]',
+          internalType: 'struct Types.LockupEntry[]',
+          components: [
+            { name: 'uid', type: 'bytes32', internalType: 'bytes32' },
+            { name: 'token', type: 'address', internalType: 'address' },
+            { name: 'amount', type: 'uint256', internalType: 'uint256' },
+            {
+              name: 'releaseTime',
+              type: 'uint256',
+              internalType: 'uint256'
+            }
+          ]
+        }
+      ],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'initialize',
+      inputs: [{ name: '_signers', type: 'address[]', internalType: 'address[]' }],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
+      name: 'isSigner',
+      inputs: [{ name: 'signer', type: 'address', internalType: 'address' }],
+      outputs: [{ name: '', type: 'bool', internalType: 'bool' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'lock',
+      inputs: [
+        { name: 'uid', type: 'bytes32', internalType: 'bytes32' },
+        { name: 'token', type: 'address', internalType: 'address' },
+        { name: 'amount', type: 'uint256', internalType: 'uint256' },
+        { name: 'releaseTime', type: 'uint256', internalType: 'uint256' },
+        { name: 'expiredAt', type: 'uint256', internalType: 'uint256' },
+        { name: 'signature', type: 'bytes', internalType: 'bytes' }
+      ],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
+      name: 'owner',
+      inputs: [],
+      outputs: [{ name: '', type: 'address', internalType: 'address' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'proxiableUUID',
+      inputs: [],
+      outputs: [{ name: '', type: 'bytes32', internalType: 'bytes32' }],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'renounceOwnership',
+      inputs: [],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
+      name: 'transferOwnership',
+      inputs: [{ name: 'newOwner', type: 'address', internalType: 'address' }],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
+      name: 'unlock',
+      inputs: [{ name: 'uids', type: 'bytes32[]', internalType: 'bytes32[]' }],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'function',
+      name: 'upgradeToAndCall',
+      inputs: [
+        {
+          name: 'newImplementation',
+          type: 'address',
+          internalType: 'address'
+        },
+        { name: 'data', type: 'bytes', internalType: 'bytes' }
+      ],
+      outputs: [],
+      stateMutability: 'payable'
+    },
+    {
+      type: 'function',
+      name: 'withdraw',
+      inputs: [
+        { name: 'token', type: 'address', internalType: 'address' },
+        { name: 'amount', type: 'uint256', internalType: 'uint256' }
+      ],
+      outputs: [],
+      stateMutability: 'nonpayable'
+    },
+    {
+      type: 'event',
+      name: 'AdminWithdraw',
+      inputs: [
+        {
+          name: 'token',
+          type: 'address',
+          indexed: false,
+          internalType: 'address'
+        },
+        {
+          name: 'amount',
+          type: 'uint256',
+          indexed: false,
+          internalType: 'uint256'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'Initialized',
+      inputs: [
+        {
+          name: 'version',
+          type: 'uint64',
+          indexed: false,
+          internalType: 'uint64'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'Lock',
+      inputs: [
+        {
+          name: 'uid',
+          type: 'bytes32',
+          indexed: true,
+          internalType: 'bytes32'
+        },
+        {
+          name: 'token',
+          type: 'address',
+          indexed: false,
+          internalType: 'address'
+        },
+        {
+          name: 'recipient',
+          type: 'address',
+          indexed: false,
+          internalType: 'address'
+        },
+        {
+          name: 'amount',
+          type: 'uint256',
+          indexed: false,
+          internalType: 'uint256'
+        },
+        {
+          name: 'releaseTime',
+          type: 'uint256',
+          indexed: false,
+          internalType: 'uint256'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'OwnershipTransferred',
+      inputs: [
+        {
+          name: 'previousOwner',
+          type: 'address',
+          indexed: true,
+          internalType: 'address'
+        },
+        {
+          name: 'newOwner',
+          type: 'address',
+          indexed: true,
+          internalType: 'address'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'SignerRemoved',
+      inputs: [
+        {
+          name: 'signer',
+          type: 'address',
+          indexed: true,
+          internalType: 'address'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'SignerSet',
+      inputs: [
+        {
+          name: 'signer',
+          type: 'address',
+          indexed: true,
+          internalType: 'address'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'Unlock',
+      inputs: [
+        {
+          name: 'uid',
+          type: 'bytes32',
+          indexed: true,
+          internalType: 'bytes32'
+        },
+        {
+          name: 'token',
+          type: 'address',
+          indexed: false,
+          internalType: 'address'
+        },
+        {
+          name: 'recipient',
+          type: 'address',
+          indexed: false,
+          internalType: 'address'
+        },
+        {
+          name: 'amount',
+          type: 'uint256',
+          indexed: false,
+          internalType: 'uint256'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'event',
+      name: 'Upgraded',
+      inputs: [
+        {
+          name: 'implementation',
+          type: 'address',
+          indexed: true,
+          internalType: 'address'
+        }
+      ],
+      anonymous: false
+    },
+    {
+      type: 'error',
+      name: 'AddressEmptyCode',
+      inputs: [{ name: 'target', type: 'address', internalType: 'address' }]
+    },
+    {
+      type: 'error',
+      name: 'AlreadyLockup',
+      inputs: [{ name: 'uid', type: 'bytes32', internalType: 'bytes32' }]
+    },
+    { type: 'error', name: 'ECDSAInvalidSignature', inputs: [] },
+    {
+      type: 'error',
+      name: 'ECDSAInvalidSignatureLength',
+      inputs: [{ name: 'length', type: 'uint256', internalType: 'uint256' }]
+    },
+    {
+      type: 'error',
+      name: 'ECDSAInvalidSignatureS',
+      inputs: [{ name: 's', type: 'bytes32', internalType: 'bytes32' }]
+    },
+    {
+      type: 'error',
+      name: 'ERC1967InvalidImplementation',
+      inputs: [{ name: 'implementation', type: 'address', internalType: 'address' }]
+    },
+    { type: 'error', name: 'ERC1967NonPayable', inputs: [] },
+    {
+      type: 'error',
+      name: 'EnumerableMapNonexistentKey',
+      inputs: [{ name: 'key', type: 'bytes32', internalType: 'bytes32' }]
+    },
+    { type: 'error', name: 'FailedCall', inputs: [] },
+    { type: 'error', name: 'InvalidInitialization', inputs: [] },
+    { type: 'error', name: 'InvalidSignature', inputs: [] },
+    { type: 'error', name: 'InvalidSignatureLength', inputs: [] },
+    {
+      type: 'error',
+      name: 'LockupPeriodNotEnded',
+      inputs: [
+        { name: 'locker', type: 'address', internalType: 'address' },
+        { name: 'uid', type: 'bytes32', internalType: 'bytes32' },
+        { name: 'releaseTime', type: 'uint256', internalType: 'uint256' }
+      ]
+    },
+    { type: 'error', name: 'NotInitializing', inputs: [] },
+    {
+      type: 'error',
+      name: 'OwnableInvalidOwner',
+      inputs: [{ name: 'owner', type: 'address', internalType: 'address' }]
+    },
+    {
+      type: 'error',
+      name: 'OwnableUnauthorizedAccount',
+      inputs: [{ name: 'account', type: 'address', internalType: 'address' }]
+    },
+    { type: 'error', name: 'SignatureExpired', inputs: [] },
+    { type: 'error', name: 'UUPSUnauthorizedCallContext', inputs: [] },
+    {
+      type: 'error',
+      name: 'UUPSUnsupportedProxiableUUID',
+      inputs: [{ name: 'slot', type: 'bytes32', internalType: 'bytes32' }]
+    },
+    { type: 'error', name: 'ZeroAmount', inputs: [] }
+  ]
+}
+
+export default contract

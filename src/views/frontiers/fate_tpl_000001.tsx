@@ -12,6 +12,7 @@ import Result from '@/components/frontier/fate_tpl/result'
 import { BirthDateTime, LocationValue, LifeEvent, EventListRow, EventCategory } from '../../types/common'
 
 import frontiterApi from '@/apis/frontiter.api'
+import FrontierHeader from '@/components/frontier/frontier-header'
 
 const { Option } = Select
 
@@ -373,6 +374,8 @@ const FateForm: React.FC<{ templateId: string }> = ({ templateId }) => {
 
   return (
     <Spin spinning={pageLoading} className="min-h-screen">
+      <FrontierHeader title="Life Log Canvas" className="mb-16"></FrontierHeader>
+
       <div className="min-h-screen bg-[#1C1C26] text-white">
         <div>
           <div className="mx-auto mt-9 flex max-w-5xl items-center px-6 py-3 text-xs text-[#b0b0b0]">

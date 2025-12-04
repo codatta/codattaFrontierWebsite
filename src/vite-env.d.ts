@@ -5,6 +5,7 @@
 interface Window {
   Telegram: any
   chrome: any
+  native: any
 }
 
 declare module '*.md' {

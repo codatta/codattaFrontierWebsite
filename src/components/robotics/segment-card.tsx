@@ -55,7 +55,7 @@ export default function SegmentCard({
   }
 
   return (
-    <div className="relative rounded-2xl bg-[#252532] p-6 text-base text-white shadow-md">
+    <div className="shadow-md relative rounded-2xl bg-[#252532] p-6 text-base text-white">
       {showClose && (
         <Button
           type="text"

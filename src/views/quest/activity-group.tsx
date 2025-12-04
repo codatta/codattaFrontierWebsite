@@ -50,7 +50,7 @@ const ActivityCard = ({ summary: activity }: { summary: ActivitySummary }) => {
     <Link to={'/app/quest/' + activity.sub_cate_id}>
       <div
         className={cn(
-          `relative h-full rounded-2xl border border-gray-50 bg-gray-50 px-6 pb-3 pt-6 transition-all hover:border hover:border-primary hover:shadow`,
+          `hover:shadow relative h-full rounded-2xl border border-gray-50 bg-gray-50 px-6 pb-3 pt-6 transition-all hover:border hover:border-primary`,
           highLight ? 'bg-primary hover:border-white' : ''
         )}
       >

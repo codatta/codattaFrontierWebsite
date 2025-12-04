@@ -51,16 +51,18 @@ const BSC_CHAIN = defineChain({
 
 initGA()
 
-const userAgent = navigator.userAgent
-const isInBinanceApp = userAgent.includes('BNC/') && userAgent.includes('BMP/')
+const userAgent = navigator.userAgent.toLowerCase()
+const isInCodattaApp = userAgent.includes('codatta')
+
+if (isInCodattaApp) {
+  document.documentElement.style.backgroundColor = '#f8f8f8'
+  document.body.style.backgroundColor = '#f8f8f8'
+}
 
 const root = createRoot(container)
 root.render(
   <ConfigProvider theme={AntdTheme}>
-    <CodattaConnectContextProvider
-      singleWalletName={isInBinanceApp ? 'Binance Wallet' : undefined}
-      chains={[BSC_CHAIN]}
-    >
+    <CodattaConnectContextProvider chains={[BSC_CHAIN]}>
       <Router></Router>
     </CodattaConnectContextProvider>
   </ConfigProvider>

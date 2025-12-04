@@ -9,7 +9,9 @@ module.exports = {
   theme: {
     extend: {
       animation: {
-        'dot-expand': 'dot-expand 1.5s infinite ease-out'
+        'dot-expand': 'dot-expand 1.5s infinite ease-out',
+        'fade-in': 'fade-in 0.2s ease-out',
+        'scale-in': 'scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       },
       keyframes: {
         'dot-expand': {
@@ -20,6 +22,24 @@ module.exports = {
           '40%': {
             opacity: 1,
             transform: 'scale(1)'
+          }
+        },
+        'fade-in': {
+          '0%': {
+            opacity: 0
+          },
+          '100%': {
+            opacity: 1
+          }
+        },
+        'scale-in': {
+          '0%': {
+            opacity: 0,
+            transform: 'translate(-50%, -50%) scale(0.9)'
+          },
+          '100%': {
+            opacity: 1,
+            transform: 'translate(-50%, -50%) scale(1)'
           }
         }
       },
@@ -51,6 +71,14 @@ module.exports = {
     fontFamily: {
       mona: 'Mona Sans',
       zendots: 'Zen Dots'
+    },
+    boxShadow: {
+      'app-btn': `
+          inset 1px 1px 1px rgba(255, 255, 255, 0.8),
+          inset -1px -1px 0.5px rgba(255, 255, 255, 0.4),
+          1px 1px 10px rgba(60, 60, 0, 0.05),
+          0px 0px 8px rgba(60, 60, 0, 0.05)
+      `
     }
   },
   plugins: [animatedPlugin, aspectRatioPlugin, typographyPlugin]

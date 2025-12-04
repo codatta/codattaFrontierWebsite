@@ -350,7 +350,7 @@ export default function ComparePage() {
               {feedbackArray.map((item) => (
                 <button
                   key={item.id}
-                  className="flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white shadow-none transition-all hover:bg-white hover:text-black"
+                  className="shadow-none flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white transition-all hover:bg-white hover:text-black"
                   onClick={() => onPostFeedback(item.id, task_id)}
                 >
                   {item.text}
@@ -392,13 +392,13 @@ export default function ComparePage() {
         {/* Action Buttons */}
         <div className="mt-4 grid grid-cols-2 justify-center gap-4 rounded-2xl bg-gray-50 px-6 py-5">
           <button
-            className="flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white shadow-none transition-all hover:bg-white hover:text-black"
+            className="shadow-none flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white transition-all hover:bg-white hover:text-black"
             onClick={handleNewRound}
           >
             🔄 New Round
           </button>
           <button
-            className="flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white shadow-none transition-all hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-white"
+            className="shadow-none flex items-center justify-center rounded-full border border-white/10 bg-transparent px-6 py-2 text-white transition-all hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-white"
             onClick={handleRegenerate}
             disabled={!showChatBox || !task_id || historyA.length === 0 || historyB.length === 0}
           >

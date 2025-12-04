@@ -22,7 +22,7 @@ const InformedConsentForm: React.FC<InformedConsentFormProps> = ({ isOpen, onClo
 
   return (
     <div className="fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-[#1C1C26B8]">
-      <div className="relative w-[800px] rounded-2xl bg-[#252532] text-white shadow-xl">
+      <div className="shadow-xl relative w-[800px] rounded-2xl bg-[#252532] text-white">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-[#FFFFFF1F] px-6 pb-3 pt-6">
           <h2 className="text-xl font-semibold leading-[30px]">Informed Consent Form</h2>

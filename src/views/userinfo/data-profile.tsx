@@ -117,8 +117,8 @@ function StatsCards({ stats }: { stats: SubmissionStatics }) {
       {/* Total Submissions */}
       <div className="rounded-2xl bg-[#252532] p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5">
-            <img src={TotalSubmissionIcon} className="h-6 w-6" />
+          <div className="flex size-12 items-center justify-center rounded-xl bg-white/5">
+            <img src={TotalSubmissionIcon} className="size-6" />
           </div>
           <div className="text-base font-bold">Total Submissions</div>
           <div className="ml-auto text-[28px] font-bold">{stats.total_submissions.toLocaleString()}</div>
@@ -128,8 +128,8 @@ function StatsCards({ stats }: { stats: SubmissionStatics }) {
       {/* Total Rewards */}
       <div className="col-span-2 rounded-2xl bg-[#252532] p-6">
         <div className="flex flex-wrap items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5">
-            <img src={TotalRewardIcon} className="h-6 w-6" />
+          <div className="flex size-12 items-center justify-center rounded-xl bg-white/5">
+            <img src={TotalRewardIcon} className="size-6" />
           </div>
           <div className="mb-1 flex flex-wrap gap-2">
             <div className="text-base font-bold">Total Rewards</div>
@@ -148,8 +148,8 @@ function StatsCards({ stats }: { stats: SubmissionStatics }) {
       {/* On-chain Records */}
       <div className="rounded-2xl bg-[#252532] p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/5">
-            <img src={OnChainRecordsIcon} className="h-6 w-6" />
+          <div className="flex size-12 items-center justify-center rounded-xl bg-white/5">
+            <img src={OnChainRecordsIcon} className="size-6" />
           </div>
           <div className="text-base font-bold">On-chain Records</div>
           <div className="ml-auto text-[28px] font-bold">{stats.on_chained?.toLocaleString()}</div>
@@ -159,8 +159,8 @@ function StatsCards({ stats }: { stats: SubmissionStatics }) {
       {/* Claimable */}
       <div className="col-span-2 rounded-2xl bg-[#252532] p-6">
         <div className="flex items-center gap-4">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#252532]">
-            <img src={ClaimableIcon} className="h-6 w-6" />
+          <div className="flex size-12 items-center justify-center rounded-xl bg-[#252532]">
+            <img src={ClaimableIcon} className="size-6" />
           </div>
           <div className="flex-1">
             <div className="text-base font-bold">Claimable</div>
@@ -263,7 +263,7 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
         <div className="col-span-3 truncate">{submission.task_name}</div>
         <div className="col-span-1">
           <span
-            className={`inline-flex h-8 w-8 items-center justify-center rounded-full font-bold ${getScoreColor(submission.rating_name)}`}
+            className={`inline-flex size-8 items-center justify-center rounded-full font-bold ${getScoreColor(submission.rating_name)}`}
           >
             {submission.rating_name}
           </span>
@@ -296,7 +296,7 @@ function SubmissionRow({ submission }: { submission: SubmissionRecord }) {
         <div className="mb-3 flex items-center justify-between">
           <div className="text-sm text-[#BBBBBE]">{dayjs(submission.submission_time).format('YYYY-MM-DD')}</div>
           <span
-            className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${getScoreColor(submission.rating_name)}`}
+            className={`inline-flex size-6 items-center justify-center rounded-full text-xs font-bold ${getScoreColor(submission.rating_name)}`}
           >
             {submission.rating_name}
           </span>
