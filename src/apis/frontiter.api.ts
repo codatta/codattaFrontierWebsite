@@ -41,6 +41,7 @@ export interface TaskDetail {
   create_time: number
   submission_id: string
   task_type: string
+  task_type_name: string
   data_display: {
     gif_resource: string
     template_id: string
@@ -62,6 +63,7 @@ export interface TaskDetail {
   chain_status: 0 | 1 | 2 | 3 | 4
   qualification?: string
   qualification_flag: 0 | 1
+  tags: string[]
 }
 
 export interface FrontierListItem {
