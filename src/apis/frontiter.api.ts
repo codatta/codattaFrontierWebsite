@@ -205,6 +205,7 @@ class frontier {
     frontier_id: string
     page_num: number
     page_size: number
+    task_types?: string
   }): Promise<PaginationResponse<TaskDetail[]>> {
     const res = await this.request.post('/v2/frontier/task/list', params)
     return res.data

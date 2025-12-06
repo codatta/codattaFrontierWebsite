@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo } from 'react'
-import { Pagination, Spin, Tooltip } from 'antd'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Button, Pagination, Spin, Tooltip } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
 
 import AngleRight from '@/assets/crypto/angle-right.svg'
+import FilterIcon from '@/assets/icons/filter.svg?react'
 import AirdropTagIcon from '@/assets/frontier/home/airdrop-tag-icon.svg?react'
 import ActivityTagIcon from '@/assets/frontier/home/activity-tag-icon.svg?react'
 
@@ -12,6 +13,7 @@ import CustomEmpty from '@/components/common/empty'
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import { TaskDetail } from '@/apis/frontiter.api'
 import { cn } from '@udecode/cn'
+import RoboticsTaskFilterModal, { type RoboticsFilterState } from './task-filter-modal'
 
 const RoboticsTaskList: React.FC = () => {
   const navigate = useNavigate()
@@ -20,6 +22,14 @@ const RoboticsTaskList: React.FC = () => {
   const {
     pageData: { page, page_size, total, list, listLoading }
   } = useSnapshot(frontiersStore)
+
+  const DEFAULT_FILTER_STATE: RoboticsFilterState = {
+    taskTypes: ['submission', 'validation']
+  }
+
+  const [filterModalOpen, setFilterModalOpen] = useState(false)
+  const [filter, setFilter] = useState<RoboticsFilterState>(DEFAULT_FILTER_STATE)
+
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
   }, [list])
@@ -36,21 +46,40 @@ const RoboticsTaskList: React.FC = () => {
     frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size, frontier_id])
 
+  useEffect(() => {
+    console.log('filter', filter, filter.taskTypes)
+    // Refetch list when filter conditions change
+    frontierStoreActions.changeFrontiersFilter({
+      page: 1,
+      page_size,
+      frontier_id: frontier_id,
+      task_types: filter.taskTypes.join(',')
+    })
+  }, [filter, page_size, frontier_id])
+
   return (
     <div>
       <div className="mb-3 flex flex-1 items-center justify-between">
         <div className="flex">
           <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
         </div>
-        <div
-          onClick={() => navigate(`/app/frontier/${frontier_id}/history`)}
-          className="flex cursor-pointer items-center"
-        >
-          <div className="text-xs font-normal text-white/80">History</div>
-          <AngleRight size={14} />
+        <div className="flex gap-4 text-base">
+          <Button
+            className="flex h-[44px] cursor-pointer items-center gap-[50px] rounded-full px-4"
+            onClick={() => setFilterModalOpen(true)}
+          >
+            <div className="">Filter</div>
+            <FilterIcon className="size-5" />
+          </Button>
+          <Button
+            onClick={() => navigate(`/app/frontier/${frontier_id}/history`)}
+            className="flex h-[44px] cursor-pointer items-center gap-1 rounded-full px-4"
+          >
+            <div className="">History</div>
+            <AngleRight size={14} />
+          </Button>
         </div>
       </div>
-
       <Spin spinning={listLoading}>
         <div className="mt-6">
           <div className="">
@@ -129,6 +158,12 @@ const RoboticsTaskList: React.FC = () => {
           </div>
         )}
       </Spin>
+      <RoboticsTaskFilterModal
+        open={filterModalOpen}
+        value={filter}
+        onChange={setFilter}
+        onClose={() => setFilterModalOpen(false)}
+      />
     </div>
   )
 }
