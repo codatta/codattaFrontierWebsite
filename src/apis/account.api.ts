@@ -47,6 +47,11 @@ interface IEmailConnectParams extends IConnectParamsBase {
   account_type: 'email'
   email: string
   email_code: string
+  source: {
+    device: 'WEB'
+    app: 'codatta-platform-website'
+    channel: string
+  }
 }
 
 interface IWalletLoginParams extends ILoginParamsBase {
@@ -69,6 +74,11 @@ interface IWalletConnectParams extends IConnectParamsBase {
   nonce: string
   signature: string
   message: string
+  source: {
+    device: 'WEB'
+    app: 'codatta-platform-website'
+    channel: string
+  }
 }
 
 interface ITonLoginParams extends ILoginParamsBase {
@@ -78,6 +88,11 @@ interface ITonLoginParams extends ILoginParamsBase {
   address: string
   chain: string
   connect_info: [{ [key: string]: string }, TonProofItemReply]
+  source: {
+    device: 'WEB'
+    app: 'codatta-platform-website'
+    channel: string
+  }
 }
 
 interface ITonConnectParams extends IConnectParamsBase {
@@ -87,6 +102,11 @@ interface ITonConnectParams extends IConnectParamsBase {
   address: string
   chain: string
   connect_info: [{ [key: string]: string }, TonProofItemReply]
+  source: {
+    device: 'WEB'
+    app: 'codatta-platform-website'
+    channel: string
+  }
 }
 
 class AccountApi {
