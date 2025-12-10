@@ -1,6 +1,10 @@
-import { CalendarDays, Loader2, BookText } from 'lucide-react'
-import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
+import { Loader2, BookText } from 'lucide-react'
 import { Link } from 'react-router'
+
+import HeroBgImage from '@/assets/airdrop-activity/hero-bg.webp'
+import AirdropIcon from '@/assets/airdrop-activity/airdrop-tag-icon.svg?react'
+import TimeIcon from '@/assets/airdrop-activity/time.svg?react'
+
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 
 export default function AirdropActivityHero() {
@@ -39,10 +43,13 @@ export default function AirdropActivityHero() {
                 <div>
                   {/* pill */}
                   <div className="flex items-center">
-                    <div className="mb-2 inline-flex items-center whitespace-nowrap rounded-full bg-gradient-to-b from-[#FFE37E] to-[#FFCF4E] px-5 py-2 text-sm font-semibold text-[#1E1E2A] shadow-[inset_0_-2px_6px_rgba(0,0,0,0.08)]">
-                      {currentAirdropInfo?.title}
+                    <div className="mb-2 flex items-center gap-3">
+                      <AirdropIcon className="size-12" />
+                      <div className="flex h-[48px] items-center whitespace-nowrap rounded-full bg-[#FFFFFF33] px-4 text-base font-semibold">
+                        {currentAirdropInfo?.title}
+                      </div>
                     </div>
-                    {currentAirdropInfo?.rules_link && (
+                    {!currentAirdropInfo?.rules_link && (
                       <a
                         href={currentAirdropInfo?.rules_link}
                         className="ml-auto flex items-center gap-2 rounded-full border px-4 py-2"
@@ -58,12 +65,12 @@ export default function AirdropActivityHero() {
                     {currentAirdropInfo?.name}
                   </h1>
 
-                  <p className="mb-3 text-sm text-white/70 md:text-sm">{currentAirdropInfo?.description}</p>
+                  <p className="mb-3 text-sm text-white/50 md:text-sm">{currentAirdropInfo?.description}</p>
                 </div>
 
                 {/* date */}
-                <div className="flex items-center gap-2 text-base text-white/80">
-                  <CalendarDays className="size-5 text-white/90" />
+                <div className="flex items-center gap-1 text-base">
+                  <TimeIcon className="size-4" />
                   <span className="text-base md:text-lg">
                     {formatDate(currentAirdropInfo?.start_time || '')} -{' '}
                     {formatDate(currentAirdropInfo?.end_time || '')}
@@ -108,11 +115,11 @@ export default function AirdropActivityHero() {
 
                     <Link
                       to="/app/airdrop/leaderboard"
-                      className="inline-flex h-8 items-center justify-center rounded-full bg-[#8A6BFF] px-1 py-2 text-sm font-semibold text-white transition hover:bg-[#7b5bf5]"
+                      className="mx-auto inline-flex h-8 w-[125px] items-center justify-center rounded-full bg-[#8A6BFF] py-2 text-sm font-semibold text-white transition hover:bg-[#7b5bf5]"
                     >
                       View Rankings
                     </Link>
-                    <p className="text-xs text-white/80">Current Season</p>
+                    <p className="mx-auto w-[125px] text-xs text-white/80">Current Season</p>
                   </div>
                 </div>
               </div>
