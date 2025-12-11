@@ -66,7 +66,7 @@ export interface AirdropFrontierTaskItem {
   template_id: string
   score: number
   status: 0 | 1 | 2 // 0-not started, 1-in progress, 2-completed
-  tags?: string[]
+  tags?: readonly string[]
   task_type_name?: string
 }
 

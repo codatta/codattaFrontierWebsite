@@ -17,6 +17,23 @@ export interface TaskRewardInfo {
 }
 
 export type ActiveStatus = 'ACTIVE' | 'INACTIVE' | 'COMPLETED'
+export type RankingGrade = 'S' | 'A' | 'B' | 'C' | 'D'
+export type TaskType = 'submission' | 'validation'
+export type SubmissionItem = {
+  submission_count: number
+  user_count: number
+}
+export type TaskRewardConfig = {
+  submission?: {
+    min_ranking_grade: RankingGrade
+    reward_count?: number
+    asset_amount?: number
+  }
+  validation?: {
+    reward_count?: number
+    asset_amount?: number
+  }
+}
 export interface FrontierActivityInfoItem {
   activity_id: string
   start_time: string
@@ -28,7 +45,11 @@ export interface FrontierActivityInfoItem {
   max_reward_count: number
   reward_asset_type: string
   participants: number
-  submissions: number
+  submissions: {
+    submission: SubmissionItem
+    validation: SubmissionItem
+  }
+  task_reward_config: TaskRewardConfig
   status: ActiveStatus
   rules?: readonly string[]
   description?: string
