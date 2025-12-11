@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { ChevronUp } from 'lucide-react'
 
 import { formatNumber } from '@/utils/str'
-import frontierApi, { FrontierActivityInfoItem } from '@/apis/frontiter.api'
+import frontierApi, { FrontierActivityInfoItem, SubmissionItem } from '@/apis/frontiter.api'
 import XNYCoinIcon from '@/assets/home/xyn-coin-icon.svg?react'
 import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'
 import ActivityIcon from '@/assets/home/activity-icon.svg?react'
@@ -15,8 +15,8 @@ import FrontierActivityMarkdown from '../frontier/frontier-activity-markdown'
 import { Button } from 'antd'
 
 type ActivityInfoItemType = FrontierActivityInfoItem & {
-  submission_count: number
-  validation_count: number
+  submission_record: SubmissionItem
+  validation_record: SubmissionItem
 }
 
 export default function ActivityInfo({ className }: { className?: string }) {
@@ -27,17 +27,23 @@ export default function ActivityInfo({ className }: { className?: string }) {
     const res = await frontierApi.getFrontierActivityInfo({ frontier_id })
     if (res.errorCode === 0) {
       setActivityInfoList(
-        res.data.map((item) => ({
-          ...item,
-          submissions: item.submissions || 0,
-          submission_count: item.submissions?.submission.submission_count ?? 0,
-          validation_count: item.submissions?.validation?.submission_count ?? 0,
-          max_reward_count:
-            item.max_reward_count ||
-            (item.task_reward_config?.submission?.reward_count ?? 0) +
-              (item.task_reward_config?.validation?.reward_count ?? 0)
-        }))
+        res.data.map((item) => {
+          const submission_record =
+            item.submissions?.find((s) => s.task_type === 'submission') ?? ({ submission_count: 0 } as SubmissionItem)
+          const validation_record =
+            item.submissions?.find((s) => s.task_type === 'validation') ?? ({ submission_count: 0 } as SubmissionItem)
+          return {
+            ...item,
+            submission_record,
+            validation_record,
+            max_reward_count:
+              item.max_reward_count ||
+              (item.task_reward_config?.submission?.reward_count ?? 0) +
+                (item.task_reward_config?.validation?.reward_count ?? 0)
+          }
+        })
       )
+
       console.log(res.data)
     }
   }
@@ -76,7 +82,7 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
             <span>Duration</span>
             <span>Type</span>
             <span>Total Reward</span>
-            <span>Target</span>
+            <span> {activity.reward_mode === 'FIRST_COME_FIRST_SERVE' ? 'Target' : 'Total Qualified Count'}</span>
           </div>
           <div className="mt-1 grid grid-cols-4 font-bold">
             <div className="text-base">
@@ -113,13 +119,18 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
             <div className="flex items-center gap-1">
               {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
               {activity.reward_asset_type == 'XnYCoin' ? <XNYCoinIcon className="size-6"></XNYCoinIcon> : null}
-              <div className="text-lg text-[#FCC800]">{formatNumber(activity.total_asset_amount || 0)}</div>
+              <div className="text-lg text-[#FCC800]">{formatNumber(activity.total_asset_amount || 0, 2)}</div>
             </div>
             <div className="flex items-center text-base font-bold">
               <Progress
                 reward_mode={activity.reward_mode}
-                reward_count={activity.submission_count + activity.validation_count}
-                max_reward_count={activity.max_reward_count}
+                reward_count={
+                  activity.submission_record?.submission_count + activity.validation_record?.submission_count
+                }
+                max_reward_count={
+                  (activity.task_reward_config?.submission?.reward_count ?? 0) +
+                  (activity.task_reward_config?.validation?.reward_count ?? 0)
+                }
               />
             </div>
           </div>
@@ -133,7 +144,9 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
               {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
               {activity.reward_asset_type == 'XnYCoin' ? <XNYCoinIcon className="size-6"></XNYCoinIcon> : null}
               <span className="ml-1 text-lg font-bold text-[#FCC800]">
-                {formatNumber(activity.task_reward_config?.submission?.asset_amount || 0)}
+                {activity.reward_mode !== 'FIRST_COME_FIRST_SERVE'
+                  ? formatNumber(activity.task_reward_config?.submission?.asset_amount || 0, 2)
+                  : 'Dynamic'}
               </span>
             </div>
             <div className="flex items-center">
@@ -143,10 +156,12 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
               </div>
             </div>
             <div className="flex items-center">
-              <span className="mr-2 text-xs">Target</span>
+              <span className="mr-2 text-xs">
+                {activity.reward_mode === 'FIRST_COME_FIRST_SERVE' ? 'Target' : 'Total Qualified Count'}
+              </span>
               <Progress
                 reward_mode={activity.reward_mode}
-                reward_count={activity?.submission_count || 0}
+                reward_count={activity?.submission_record?.submission_count || 0}
                 max_reward_count={activity.task_reward_config?.submission?.reward_count || 0}
               />
             </div>
@@ -159,7 +174,7 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
               {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
               {activity.reward_asset_type == 'XnYCoin' ? <XNYCoinIcon className="size-6"></XNYCoinIcon> : null}
               <span className="ml-1 text-lg font-bold text-[#FCC800]">
-                {formatNumber(activity.task_reward_config?.validation?.asset_amount || 0)}
+                {formatNumber(activity.task_reward_config?.validation?.asset_amount || 0, 2)}
               </span>
             </div>
             <div className="flex items-center">
@@ -169,10 +184,12 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
               </div>
             </div>
             <div className="flex items-center">
-              <span className="mr-2 text-xs">Target</span>
+              <span className="mr-2 text-xs">
+                {activity.reward_mode === 'FIRST_COME_FIRST_SERVE' ? 'Target' : 'Total Qualified Count'}
+              </span>
               <Progress
                 reward_mode={activity.reward_mode}
-                reward_count={activity?.validation_count || 0}
+                reward_count={activity?.validation_record?.submission_count || 0}
                 max_reward_count={activity.task_reward_config?.validation?.reward_count || 0}
               />
             </div>
@@ -190,12 +207,10 @@ function Progress({
 }: {
   reward_mode: string
   reward_count: number
-  max_reward_count: number
+  max_reward_count?: number
 }) {
   return reward_mode === 'EQUAL_SPLIT_ON_END' ? (
-    <div className="rounded-full border border-[#FFFFFF1F] px-3 py-1">
-      {reward_count},{max_reward_count}
-    </div>
+    <div className="px-3 py-1">{reward_count}</div>
   ) : (
     <div className="flex items-center gap-[6px] text-base font-bold">
       <svg width="166" height="8" viewBox="0 0 166 8" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -88,7 +88,6 @@ export default function AirdropActivityHero() {
                       {currentAirdropInfo?.total_rewards[0].reward_amount.toLocaleString()}
                     </p>
                     <p className="text-xs text-white/80">
-                      {' '}
                       {getTokenName(currentAirdropInfo?.total_rewards[0].reward_type)}
                     </p>
                   </div>
