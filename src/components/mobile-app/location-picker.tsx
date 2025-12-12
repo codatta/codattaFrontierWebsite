@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { message } from 'antd'
 import axios from 'axios'
-import { Plus, ChevronsUpDown } from 'lucide-react'
+import { Plus, ChevronsUpDown, Check } from 'lucide-react'
 
 interface LocationValue {
   country?: string
@@ -229,38 +229,46 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
         {formatDisplayValue}
       </button>
 
-      {/* Location Picker Modal */}
+      {/* Location Picker Drawer */}
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div className="fixed inset-0 z-50 animate-fade-in bg-black/20" onClick={handleCancel} />
+          <div className="fixed inset-0 z-50 bg-black/30 transition-opacity duration-300" onClick={handleCancel} />
 
-          {/* Picker */}
-          <div className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-[400px] -translate-x-1/2 -translate-y-1/2 animate-scale-in rounded-3xl bg-[#F8F8F8] p-5 [animation-fill-mode:both]">
-            {/* Header */}
-            <div className="mb-5 flex items-center justify-between">
-              <div className="text-[18px] font-bold text-gray-400">Select Location</div>
+          {/* Drawer */}
+          <div className="fixed inset-x-0 bottom-0 z-50 animate-slide-up rounded-t-3xl bg-white/80 p-5 pb-8 backdrop-blur-md">
+            {/* Header with Close and Confirm buttons */}
+            <div className="relative mb-5 flex items-center justify-between">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex size-10 items-center justify-center rounded-full bg-white transition-all hover:bg-gray-100"
+                className="flex size-10 items-center justify-center rounded-full bg-white/75 shadow-app-btn transition-all"
               >
                 <Plus size={24} className="rotate-45 text-gray-600" />
+              </button>
+              <div className="text-[18px] font-bold text-black">Select Location</div>
+              <button
+                type="button"
+                onClick={handleConfirm}
+                className="flex size-10 items-center justify-center rounded-full bg-[#40E1EF] shadow-app-btn backdrop-blur-sm transition-all"
+              >
+                <Check size={20} className="text-white" />
               </button>
             </div>
 
             {/* Form Content */}
-            <div className="mb-5 space-y-3">
+            <div className="mb-5 space-y-8">
               {/* Country Selection */}
-              <div className="rounded-[20px] bg-white px-4 py-3">
-                <div className="relative flex items-center justify-end">
+              <div className="rounded-full bg-white px-4 py-3">
+                <div className="relative flex items-center justify-between">
                   <span className="text-[16px] text-black">Country</span>
 
                   <select
                     value={tempValue.country || ''}
                     onChange={(e) => handleCountryChange(e.target.value)}
                     disabled={loading.countries}
-                    className="w-full appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                    className="w-full flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                    style={{ textAlignLast: 'right' }}
                   >
                     <option value="" disabled>
                       {loading.countries ? 'Loading...' : 'Select'}
@@ -276,14 +284,15 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
               </div>
 
               {/* Province Selection */}
-              <div className="rounded-[20px] bg-white px-4 py-3">
+              <div className="rounded-full bg-white px-4 py-3">
                 <div className="relative flex items-center justify-between">
                   <span className="text-[16px] text-black">State</span>
                   <select
                     value={tempValue.province || ''}
                     onChange={(e) => handleProvinceChange(e.target.value)}
                     disabled={loading.provinces || !countryDetail}
-                    className="appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                    className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                    style={{ textAlignLast: 'right' }}
                   >
                     <option value="" disabled>
                       {loading.provinces ? 'Loading...' : !countryDetail ? 'Select country first' : 'Select'}
@@ -299,14 +308,15 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
               </div>
 
               {/* City Selection */}
-              <div className="rounded-[20px] bg-white px-4 py-3">
-                <div className="relative flex items-center justify-end">
+              <div className="rounded-full bg-white px-4 py-3">
+                <div className="relative flex items-center justify-between">
                   <span className="text-[16px] text-black">City</span>
                   <select
                     value={tempValue.city || ''}
                     onChange={(e) => handleCityChange(e.target.value)}
                     disabled={loading.cities || cities.length === 0}
                     className="w-full appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                    style={{ textAlignLast: 'right' }}
                   >
                     <option value="" disabled>
                       {loading.cities ? 'Loading...' : cities.length === 0 ? 'Select state first' : 'Select'}
@@ -320,24 +330,6 @@ const LocationPicker: React.FC<LocationPickerProps> = ({
                   <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
                 </div>
               </div>
-            </div>
-
-            {/* Footer */}
-            <div className="flex justify-between gap-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="flex-1 rounded-2xl bg-white py-3 text-[16px] font-semibold text-gray-500 transition-all hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirm}
-                className="shadow-lg flex-1 rounded-2xl bg-[#40E1EF] py-3 text-[16px] font-semibold text-white shadow-[#40E1EF]/30 transition-all hover:bg-[#35c5d3]"
-              >
-                Confirm
-              </button>
             </div>
           </div>
         </>

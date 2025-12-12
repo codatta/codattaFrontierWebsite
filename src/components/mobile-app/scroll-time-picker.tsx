@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { X } from 'lucide-react'
+import { Plus, Check } from 'lucide-react'
 
 interface ScrollTimePickerProps {
   value?: string | null
@@ -147,23 +147,30 @@ const ScrollTimePicker: React.FC<ScrollTimePickerProps> = ({
         {displayValue}
       </button>
 
-      {/* Time Picker Modal */}
+      {/* Time Picker Drawer */}
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div className="fixed inset-0 z-50 animate-fade-in bg-black/20" onClick={handleCancel} />
+          <div className="fixed inset-0 z-50 bg-black/30 transition-opacity duration-300" onClick={handleCancel} />
 
-          {/* Picker */}
-          <div className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-[320px] animate-scale-in rounded-3xl bg-white/80 p-5 backdrop-blur-2xl [animation-fill-mode:both]">
-            {/* Header */}
-            <div className="mb-4 flex items-center justify-between">
-              <div className="text-[20px] font-bold text-gray-800">Select Time</div>
+          {/* Drawer */}
+          <div className="fixed inset-x-0 bottom-0 z-50 animate-slide-up rounded-t-3xl bg-white/80 p-5 pb-8 backdrop-blur-md">
+            {/* Header with Close and Confirm buttons */}
+            <div className="relative mb-5 flex items-center justify-between">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="flex size-8 items-center justify-center rounded-full bg-white/60 transition-all hover:bg-white/80"
+                className="flex size-10 items-center justify-center rounded-full bg-white/75 shadow-app-btn transition-all"
               >
-                <X size={20} className="text-gray-600" />
+                <Plus size={24} className="rotate-45 text-gray-600" />
+              </button>
+              <div className="text-[18px] font-bold text-black">Select Time</div>
+              <button
+                type="button"
+                onClick={handleConfirm}
+                className="flex size-10 items-center justify-center rounded-full bg-[#40E1EF] shadow-app-btn backdrop-blur-sm transition-all"
+              >
+                <Check size={20} className="text-white" />
               </button>
             </div>
 
@@ -183,7 +190,7 @@ const ScrollTimePicker: React.FC<ScrollTimePickerProps> = ({
             {/* Scrollable Pickers Container */}
             <div className="relative mb-5 flex items-center justify-center gap-2 px-2">
               {/* Selection highlight bar */}
-              <div className="pointer-events-none absolute inset-x-0 top-1/2 z-10 mx-2 h-[56px] -translate-y-1/2 rounded-2xl bg-[#40E1EF]/10 ring-2 ring-[#40E1EF]/20" />
+              <div className="pointer-events-none absolute inset-x-0 top-1/2 z-0 mx-2 h-[56px] -translate-y-1/2 rounded-full bg-white/75" />
 
               {/* Hour Picker */}
               <div className="relative flex flex-1">
@@ -293,24 +300,6 @@ const ScrollTimePicker: React.FC<ScrollTimePickerProps> = ({
                   </div>
                 </>
               )}
-            </div>
-
-            {/* Footer */}
-            <div className="flex justify-between gap-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="flex-1 rounded-2xl bg-white/60 py-3 text-[16px] font-semibold text-gray-500 transition-all hover:bg-white/80"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleConfirm}
-                className="shadow-lg flex-1 rounded-2xl bg-[#40E1EF] py-3 text-[16px] font-semibold text-white shadow-[#40E1EF]/30 transition-all hover:bg-[#35c5d3]"
-              >
-                Confirm
-              </button>
             </div>
           </div>
         </>
