@@ -211,7 +211,6 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [showChildModal, setShowChildModal] = useState(false)
   const [editingChild, setEditingChild] = useState<ChildInfo | null>(null)
   const [swipedChildId, setSwipedChildId] = useState<string | null>(null)
-  const [showRequirementsModal, setShowRequirementsModal] = useState(true)
 
   const allFieldsFilled = useMemo(() => {
     const checks = {
@@ -846,48 +845,6 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                     </div>
                   </div>
                 </div>
-              </div>
-            </>
-          )}
-
-          {/* Requirements Modal */}
-          {showRequirementsModal && (
-            <>
-              {/* Backdrop */}
-              <div className="fixed inset-0 z-50 bg-black/20" />
-
-              {/* Modal */}
-              <div className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-[340px] -translate-x-1/2 -translate-y-1/2 rounded-[32px] bg-white/60 px-4 pb-4 pt-5 shadow-app-btn backdrop-blur-md">
-                {/* Title */}
-                <h2 className="mb-4 text-center text-[17px] font-semibold text-black">Requirements</h2>
-
-                {/* Requirements List */}
-                <ul className="mb-6 space-y-2 px-3">
-                  <li className="flex items-start gap-2 text-[15px] leading-[1.4] text-black">
-                    <span className="mt-[6px] size-1 shrink-0 rounded-full bg-black" />
-                    <span>Please ensure all photos are clear and well-lit.</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-[15px] leading-[1.4] text-black">
-                    <span className="mt-[6px] size-1 shrink-0 rounded-full bg-black" />
-                    <span>Food photos should contain only a single food item, unobstructed.</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-[15px] leading-[1.4] text-black">
-                    <span className="mt-[6px] size-1 shrink-0 rounded-full bg-black" />
-                    <span>Weight and size measurements should be as accurate as possible.</span>
-                  </li>
-                  <li className="flex items-start gap-2 text-[15px] leading-[1.4] text-black">
-                    <span className="mt-[6px] size-1 shrink-0 rounded-full bg-black" />
-                    <span>All fields are required.</span>
-                  </li>
-                </ul>
-
-                {/* Got it Button */}
-                <button
-                  onClick={() => setShowRequirementsModal(false)}
-                  className="w-full rounded-full bg-black py-3 text-[17px] font-medium text-white"
-                >
-                  Got it
-                </button>
               </div>
             </>
           )}
