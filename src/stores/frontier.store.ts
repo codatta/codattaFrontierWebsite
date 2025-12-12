@@ -4,7 +4,8 @@ import frontierApi, {
   // SubmissionStatics,
   SubmissionRecord,
   FrontierActivityInfoItem,
-  ActiveStatus
+  ActiveStatus,
+  TaskType
 } from '@/apis/frontiter.api'
 import { debounce } from 'lodash'
 import { proxy, useSnapshot } from 'valtio'
@@ -19,7 +20,7 @@ type FrontierStore = {
     listLoading: boolean
     page_size: number
     page: number
-    task_types?: string
+    task_types: TaskType[]
   }
   historyPageData: {
     list: TaskDetail[]
@@ -45,7 +46,8 @@ export const frontiersStore = proxy<FrontierStore>({
     total: 0,
     listLoading: false,
     page_size: 8,
-    page: 1
+    page: 1,
+    task_types: ['submission', 'validation']
   },
   historyPageData: {
     list: [],
@@ -91,7 +93,7 @@ const getFrontiersTaskList = debounce(
 function changeFrontiersFilter(
   data: Partial<FrontierStore['pageData']> & {
     frontier_id: string
-    task_types?: string
+    task_types?: string[]
   }
 ) {
   const pageData = {
@@ -105,7 +107,7 @@ function changeFrontiersFilter(
     frontier_id: pageData.frontier_id,
     page_size: pageData.page_size,
     page: pageData.page,
-    task_types: pageData.task_types
+    task_types: pageData.task_types?.join(',')
   })
 }
 

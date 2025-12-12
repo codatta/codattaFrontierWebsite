@@ -13,22 +13,17 @@ import CustomEmpty from '@/components/common/empty'
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import { TaskDetail } from '@/apis/frontiter.api'
 import { cn } from '@udecode/cn'
-import RoboticsTaskFilterModal, { type RoboticsFilterState } from './task-filter-modal'
+import RoboticsTaskFilterModal, { FilterState } from './task-filter-modal'
 
 const RoboticsTaskList: React.FC = () => {
   const navigate = useNavigate()
   const { frontier_id = 'ROBSTIC001' } = useParams()
 
   const {
-    pageData: { page, page_size, total, list, listLoading }
+    pageData: { page, page_size, total, list, listLoading, task_types }
   } = useSnapshot(frontiersStore)
 
-  const DEFAULT_FILTER_STATE: RoboticsFilterState = {
-    taskTypes: ['submission', 'validation']
-  }
-
   const [filterModalOpen, setFilterModalOpen] = useState(false)
-  const [filter, setFilter] = useState<RoboticsFilterState>(DEFAULT_FILTER_STATE)
 
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
@@ -42,20 +37,13 @@ const RoboticsTaskList: React.FC = () => {
     frontierStoreActions.changeFrontiersFilter({ page: page, frontier_id: frontier_id })
   }
 
+  const handleFilterApply = ({ task_types }: FilterState) => {
+    frontierStoreActions.changeFrontiersFilter({ task_types: task_types, frontier_id: frontier_id })
+  }
+
   useEffect(() => {
     frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size, frontier_id])
-
-  useEffect(() => {
-    console.log('filter', filter, filter.taskTypes)
-    // Refetch list when filter conditions change
-    frontierStoreActions.changeFrontiersFilter({
-      page: 1,
-      page_size,
-      frontier_id: frontier_id,
-      task_types: filter.taskTypes.join(',')
-    })
-  }, [filter, page_size, frontier_id])
 
   return (
     <div>
@@ -160,8 +148,8 @@ const RoboticsTaskList: React.FC = () => {
       </Spin>
       <RoboticsTaskFilterModal
         open={filterModalOpen}
-        value={filter}
-        onChange={setFilter}
+        value={{ task_types: [...task_types] }}
+        onChange={handleFilterApply}
         onClose={() => setFilterModalOpen(false)}
       />
     </div>
