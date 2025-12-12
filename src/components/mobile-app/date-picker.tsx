@@ -87,13 +87,6 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
     setIsOpen(false)
   }
 
-  const handleToday = () => {
-    const today = dayjs()
-    setTempSelectedDate(today)
-    setCurrentMonth(today)
-    setViewMode('date')
-  }
-
   const handleTitleClick = () => {
     if (viewMode === 'date') {
       setViewMode('year')

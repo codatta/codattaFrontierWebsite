@@ -243,6 +243,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
             canSubmit={allFieldsFilled}
             onBack={onBack}
             onSubmit={handleSubmit}
+            showSubmitButton={false}
           />
 
           {/* Form Content */}
