@@ -17,6 +17,27 @@ export interface TaskRewardInfo {
 }
 
 export type ActiveStatus = 'ACTIVE' | 'INACTIVE' | 'COMPLETED'
+export type RankingGrade = 'S' | 'A' | 'B' | 'C' | 'D'
+export type TaskType = 'submission' | 'validation'
+export type TaskTypeName = 'Contribute' | 'Review'
+export type SubmissionItem = {
+  submission_count: number
+  user_count: number
+  task_type: TaskType
+  task_type_name: string
+  min_ranking_grade?: RankingGrade
+}
+export type TaskRewardConfig = {
+  submission?: {
+    min_ranking_grade: RankingGrade
+    reward_count?: number
+    asset_amount?: number
+  }
+  validation?: {
+    reward_count?: number
+    asset_amount?: number
+  }
+}
 export interface FrontierActivityInfoItem {
   activity_id: string
   start_time: string
@@ -28,7 +49,8 @@ export interface FrontierActivityInfoItem {
   max_reward_count: number
   reward_asset_type: string
   participants: number
-  submissions: number
+  submissions: readonly SubmissionItem[]
+  task_reward_config: TaskRewardConfig
   status: ActiveStatus
   rules?: readonly string[]
   description?: string
@@ -41,6 +63,7 @@ export interface TaskDetail {
   create_time: number
   submission_id: string
   task_type: string
+  task_type_name: string
   data_display: {
     gif_resource: string
     template_id: string
@@ -62,6 +85,7 @@ export interface TaskDetail {
   chain_status: 0 | 1 | 2 | 3 | 4
   qualification?: string
   qualification_flag: 0 | 1
+  tags: string[]
 }
 
 export interface FrontierListItem {
@@ -75,7 +99,7 @@ export interface FrontierListItem {
   reputation_permission: number
   status: string
   title: string
-  activities: FrontierActivityInfoItem[]
+  activities: readonly FrontierActivityInfoItem[]
   // start
   // total_asset_amount: number
   // reward_asset_type: string
@@ -203,6 +227,7 @@ class frontier {
     frontier_id: string
     page_num: number
     page_size: number
+    task_types?: string
   }): Promise<PaginationResponse<TaskDetail[]>> {
     const res = await this.request.post('/v2/frontier/task/list', params)
     return res.data
