@@ -99,34 +99,34 @@ const FoodAnnotationUpload: React.FC<UploadProps> = ({ value = [], onChange, err
 
   return (
     <div className={cn('', className)}>
-      <Spin spinning={uploading}>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/png,image/jpeg,image/jpg"
-          onChange={handleImageUpload}
-          multiple={maxCount > 1}
-          className="hidden"
-          style={{ display: 'none' }}
-        />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/jpg"
+        onChange={handleImageUpload}
+        multiple={maxCount > 1}
+        className="hidden"
+        style={{ display: 'none' }}
+      />
 
-        <div className="grid grid-cols-3 gap-2">
-          {value.map((image) => (
-            <div key={image.hash} className="relative">
-              <div className="aspect-[1/1] overflow-hidden rounded-2xl bg-[#F5F5F5]">
-                <img src={image.url} className="block size-full object-cover" alt={image.fileName} />
-              </div>
-              <button
-                type="button"
-                onClick={() => removeImage(image.hash)}
-                className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-[#999999]/80 text-white hover:bg-[#999999]"
-              >
-                <X className="size-4" strokeWidth={2.5} />
-              </button>
+      <div className="grid grid-cols-3 gap-2">
+        {value.map((image) => (
+          <div key={image.hash} className="relative">
+            <div className="aspect-[1/1] overflow-hidden rounded-2xl bg-[#F5F5F5]">
+              <img src={image.url} className="block size-full object-cover" alt={image.fileName} />
             </div>
-          ))}
+            <button
+              type="button"
+              onClick={() => removeImage(image.hash)}
+              className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-[#999999]/80 text-white hover:bg-[#999999]"
+            >
+              <X className="size-4" strokeWidth={2.5} />
+            </button>
+          </div>
+        ))}
 
-          {value.length < maxCount && (
+        {value.length < maxCount && (
+          <Spin spinning={uploading}>
             <div
               onClick={handleClick}
               className={cn(
@@ -136,9 +136,9 @@ const FoodAnnotationUpload: React.FC<UploadProps> = ({ value = [], onChange, err
             >
               <Camera className="size-9 text-[#999999]" strokeWidth={1.5} />
             </div>
-          )}
-        </div>
-      </Spin>
+          </Spin>
+        )}
+      </div>
       {error && <p className="mt-1 text-sm text-red-400">{error}</p>}
     </div>
   )

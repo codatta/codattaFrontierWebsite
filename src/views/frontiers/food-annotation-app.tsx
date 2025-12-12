@@ -247,7 +247,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
 
           {/* Form Content */}
           <div className="px-5">
-            <div className="space-y-6">
+            <div className="mb-8 space-y-6">
               {/* Food Image */}
               <div className="space-y-2">
                 <label className="block px-4 text-[17px] font-normal text-[#999]">Food Image</label>
@@ -456,6 +456,10 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
                 {errors.cookingMethod && <p className="text-xs text-red-400">{errors.cookingMethod}</p>}
               </div>
             </div>
+
+            <button className="block w-full rounded-full bg-black py-3 text-white" onClick={handleSubmit}>
+              Submit
+            </button>
           </div>
 
           <SuccessModal
@@ -482,8 +486,10 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
             </button>
           </div>
 
-          <p className="text-[17px]">Please refer to the following examples:</p>
-          <img src={ExampleMeasurement} alt="example-measurement" className="w-full" />
+          <div className="p-4">
+            <p className="mb-4 text-[17px]">Please refer to the following examples:</p>
+            <img src={ExampleMeasurement} alt="example-measurement" className="w-full" />
+          </div>
         </div>
       </BottomDrawer>
 
@@ -499,9 +505,10 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
               <X size={24}></X>
             </button>
           </div>
-
-          <p className="text-[17px]">Please refer to the following examples:</p>
-          <img src={ExampleRuler} alt="example-ruler" className="w-full" />
+          <div className="p-4">
+            <p className="mb-4 text-[17px]">Please refer to the following examples:</p>
+            <img src={ExampleRuler} alt="example-ruler" className="w-full" />
+          </div>
         </div>
       </BottomDrawer>
     </AuthChecker>
