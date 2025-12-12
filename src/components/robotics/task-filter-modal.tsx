@@ -112,7 +112,7 @@ const RoboticsTaskFilterModal: React.FC<RoboticsTaskFilterModalProps> = ({ open,
           <Button
             type="primary"
             onClick={handleFilterApply}
-            className="h-[44px] rounded-full bg-[#875DFF] px-8 font-semibold text-white shadow-none hover:bg-[#9C76FF]"
+            className="h-[44px] rounded-full bg-[#875DFF] px-8 font-semibold text-white shadow-[none] hover:bg-[#9C76FF]"
           >
             Apply
           </Button>
