@@ -79,7 +79,8 @@ module.exports = {
     },
     fontFamily: {
       mona: 'Mona Sans',
-      zendots: 'Zen Dots'
+      zendots: 'Zen Dots',
+      inter: 'Inter, sans-serif'
     },
     boxShadow: {
       'app-btn': `

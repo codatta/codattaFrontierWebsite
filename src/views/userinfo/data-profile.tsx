@@ -55,7 +55,6 @@ export default function DataProfile() {
 
   useEffect(() => {
     getSubmissionStatics()
-    getSubmissionRecords(page)
   }, [])
 
   useEffect(() => {

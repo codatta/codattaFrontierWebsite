@@ -92,7 +92,7 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
           <div className="flex size-full items-center justify-center gap-[14px]">
             <ReputationIcon />
             <div className="flex-1">
-              <ReputationRate rate={reputation} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>
+              <ReputationRate rate={reputation} size={24}></ReputationRate>
               <div className="mt-[6px] text-sm font-semibold">Reputation</div>
             </div>
           </div>
