@@ -102,9 +102,9 @@ const RoboticsTaskList: React.FC = () => {
                         <div className="flex items-center text-center">
                           <Tooltip
                             title={
-                              reward.reward_mode === 'DYNAMIC'
+                              reward.reward_mode === 'REGULAR'
                                 ? 'Instant reward granted for your submission'
-                                : reward.reward_mode === 'REGULAR'
+                                : reward.reward_mode === 'DYNAMIC'
                                   ? 'Additional reward unlocked upon approval'
                                   : ''
                             }

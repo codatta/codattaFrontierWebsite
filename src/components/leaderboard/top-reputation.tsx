@@ -1,14 +1,14 @@
+import { useSnapshot } from 'valtio'
+import { cn } from '@udecode/cn'
+
 import GoldMedal from '@/assets/leaderboard/gold-medal.svg'
 import SilverMedal from '@/assets/leaderboard/silver-medal.svg'
 import BronzeMedal from '@/assets/leaderboard/bronze-medal.svg'
 
-import ReputationRate from '@/components/common/reputation-rate'
-
 import Empty from '@/components/common/empty'
 import { rankStore } from '@/stores/rank.store'
-import { useSnapshot } from 'valtio'
-import { cn } from '@udecode/cn'
-import { truncateStr } from '@/utils/str'
+
+import { formatNumber, truncateStr } from '@/utils/str'
 
 function UserRank(props: { rank: number; className: string }) {
   const { rank } = props
@@ -103,7 +103,9 @@ export default function Component() {
               >
                 {user.email || truncateStr(user.user_id, { len: 10, ellipsis: '***' })}
               </div>
-              <ReputationRate gap={2} size={20} color="#FFA800E0" rate={user.reputation ?? 0}></ReputationRate>
+              <div className="w-[108px] text-base font-bold text-[#875DFF]">
+                {formatNumber(user.reputation ?? 0, 2)}
+              </div>
             </li>
           ))
         )}
