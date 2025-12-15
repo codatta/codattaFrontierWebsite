@@ -13,7 +13,7 @@ import ImageLevel from '@/assets/home/level.png'
 import gridTextureImage from '@/assets/home/grid-texture.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg'
-// import SettingsIcon from '@/assets/icons/settings.svg?react'
+import XnyStakedIcon from '@/assets/userinfo/xny-staked-icon.svg'
 import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 
 import { userStoreActions, useUserStore } from '@/stores/user.store'
@@ -25,12 +25,13 @@ export default function UserInfoSection() {
   const navigate = useNavigate()
   const { info, username, reputation } = useUserStore()
   const assets = useMemo(() => {
-    const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')?.balance
-    const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')?.balance
-    const points = info?.user_assets?.find((asset) => asset.asset_type === 'POINTS')?.balance
-    const xynAmount = formatNumber(Number(xyn?.amount ?? 0))
-    const usdtAmount = formatNumber(Number(usdt?.amount ?? 0))
-    const pointsAmount = formatNumber(parseInt(String(points?.amount ?? '0')))
+    const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')
+    const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')
+    const points = info?.user_assets?.find((asset) => asset.asset_type === 'POINTS')
+    const xynAmount = formatNumber(Number(xyn?.available_amount ?? 0))
+    const xnyStakedAmount = formatNumber(Number(xyn?.stake_amount ?? 0))
+    const usdtAmount = formatNumber(Number(usdt?.available_amount ?? 0))
+    const pointsAmount = formatNumber(parseInt(String(points?.available_amount ?? '0')))
 
     return [
       {
@@ -53,6 +54,13 @@ export default function UserInfoSection() {
         icon: ImageChrown,
         hasBg: true,
         link: '/app/settings/reward'
+      },
+      {
+        amount: xnyStakedAmount === '0' ? '0.00' : xnyStakedAmount,
+        currency: 'Staked XNY',
+        icon: XnyStakedIcon,
+        hasBg: true,
+        link: '/app/settings/data-assets/staking'
       }
     ]
   }, [info])

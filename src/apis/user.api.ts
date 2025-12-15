@@ -50,11 +50,17 @@ export interface SocialAccountInfoItem {
 }
 
 export interface UserAsset {
+  asset_id: string
   asset_type: 'POINTS' | 'XnYCoin' | 'USDT'
   balance: {
     amount: string
     currency: string
   }
+
+  stake_amount: number
+  lock_amount: number
+  available_amount: number
+  status: string
 }
 
 export interface UserInfo {
