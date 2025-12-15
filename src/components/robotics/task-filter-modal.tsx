@@ -3,25 +3,25 @@ import { Button, Modal } from 'antd'
 
 import { cn } from '@udecode/cn'
 
-export type RoboticsTaskType = 'submission' | 'validation'
+import { TaskType } from '@/apis/frontiter.api'
 
-export type RoboticsFilterState = {
-  taskTypes: RoboticsTaskType[]
+export type FilterState = {
+  task_types: TaskType[]
 }
 
-const DEFAULT_ROBOTICS_FILTER_STATE: RoboticsFilterState = {
-  taskTypes: ['submission', 'validation']
+const DEFAULT_FILTER_STATE: FilterState = {
+  task_types: ['submission', 'validation']
 }
 
 interface RoboticsTaskFilterModalProps {
   open: boolean
-  value: RoboticsFilterState
-  onChange: (value: RoboticsFilterState) => void
+  value: FilterState
+  onChange: (value: FilterState) => void
   onClose: () => void
 }
 
 const RoboticsTaskFilterModal: React.FC<RoboticsTaskFilterModalProps> = ({ open, value, onChange, onClose }) => {
-  const [draftFilter, setDraftFilter] = useState<RoboticsFilterState>(value)
+  const [draftFilter, setDraftFilter] = useState<FilterState>(value)
 
   useEffect(() => {
     if (open) {
@@ -30,8 +30,8 @@ const RoboticsTaskFilterModal: React.FC<RoboticsTaskFilterModalProps> = ({ open,
   }, [open, value])
 
   const handleFilterReset = () => {
-    setDraftFilter(DEFAULT_ROBOTICS_FILTER_STATE)
-    onChange(DEFAULT_ROBOTICS_FILTER_STATE)
+    setDraftFilter(DEFAULT_FILTER_STATE)
+    onChange(DEFAULT_FILTER_STATE)
   }
 
   const handleFilterApply = () => {
@@ -61,18 +61,29 @@ const RoboticsTaskFilterModal: React.FC<RoboticsTaskFilterModalProps> = ({ open,
                 type="button"
                 onClick={() =>
                   setDraftFilter((prev) => {
-                    const selected = prev.taskTypes.includes('submission')
-                    return {
-                      ...prev,
-                      taskTypes: selected
-                        ? prev.taskTypes.filter((t) => t !== 'submission')
-                        : [...prev.taskTypes, 'submission']
+                    const isSubmissionSelected = prev.task_types.includes('submission')
+                    const isValidationSelected = prev.task_types.includes('validation')
+
+                    if (isSubmissionSelected) {
+                      // Attempting to uncheck Submission
+                      // Only allow if Validation is also selected (so we don't end up with empty)
+                      if (!isValidationSelected) return prev
+                      return {
+                        ...prev,
+                        task_types: prev.task_types.filter((t) => t !== 'submission')
+                      }
+                    } else {
+                      // Checking Submission
+                      return {
+                        ...prev,
+                        task_types: [...prev.task_types, 'submission']
+                      }
                     }
                   })
                 }
                 className={cn(
                   'min-w-[110px] rounded-full border px-4 py-1.5 text-center text-sm transition-colors',
-                  draftFilter.taskTypes.includes('submission')
+                  draftFilter.task_types.includes('submission')
                     ? 'border-transparent bg-white text-black'
                     : 'border-white/20 bg-transparent text-white/80'
                 )}
@@ -83,18 +94,29 @@ const RoboticsTaskFilterModal: React.FC<RoboticsTaskFilterModalProps> = ({ open,
                 type="button"
                 onClick={() =>
                   setDraftFilter((prev) => {
-                    const selected = prev.taskTypes.includes('validation')
-                    return {
-                      ...prev,
-                      taskTypes: selected
-                        ? prev.taskTypes.filter((t) => t !== 'validation')
-                        : [...prev.taskTypes, 'validation']
+                    const isValidationSelected = prev.task_types.includes('validation')
+                    const isSubmissionSelected = prev.task_types.includes('submission')
+
+                    if (isValidationSelected) {
+                      // Attempting to uncheck Validation
+                      // Only allow if Submission is also selected
+                      if (!isSubmissionSelected) return prev
+                      return {
+                        ...prev,
+                        task_types: prev.task_types.filter((t) => t !== 'validation')
+                      }
+                    } else {
+                      // Checking Validation
+                      return {
+                        ...prev,
+                        task_types: [...prev.task_types, 'validation']
+                      }
                     }
                   })
                 }
                 className={cn(
                   'min-w-[110px] rounded-full border px-4 py-1.5 text-center transition-colors',
-                  draftFilter.taskTypes.includes('validation')
+                  draftFilter.task_types.includes('validation')
                     ? 'border-transparent bg-white text-black'
                     : 'border-white/20 bg-transparent text-white/80'
                 )}

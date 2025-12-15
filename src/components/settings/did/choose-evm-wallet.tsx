@@ -105,7 +105,12 @@ function ChooseEvmWalletView({ onNext }: { onNext: (address: `0x${string}`) => v
           signature: walletInfo.connect_info.signature,
           nonce: walletInfo.connect_info.nonce,
           wallet_name: walletInfo.connect_info.wallet_name,
-          message: walletInfo.connect_info.message
+          message: walletInfo.connect_info.message,
+          source: {
+            device: 'WEB',
+            channel: '',
+            app: 'codatta-platform-website'
+          }
         })
         await userStoreActions.getUserInfo()
 

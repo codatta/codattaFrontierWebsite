@@ -102,7 +102,12 @@ export default function UserSecurity() {
       chain: info.connect_info.account.chain,
       wallet_name: info.connect_info.device.appName,
       address: info.connect_info.account.address,
-      connect_info: [{ name: 'ton_addr', network: account.chain, ...account }, connectItems.tonProof]
+      connect_info: [{ name: 'ton_addr', network: account.chain, ...account }, connectItems.tonProof],
+      source: {
+        device: 'WEB',
+        channel: '',
+        app: 'codatta-platform-website'
+      }
     })
     message.success('Wallet bind success.')
     userStoreActions.getUserInfo()
@@ -119,7 +124,12 @@ export default function UserSecurity() {
       signature: info.connect_info.signature,
       nonce: info.connect_info.nonce,
       wallet_name: info.connect_info.wallet_name,
-      message: info.connect_info.message
+      message: info.connect_info.message,
+      source: {
+        device: 'WEB',
+        channel: '',
+        app: 'codatta-platform-website'
+      }
     })
     message.success('Wallet bind success.')
     userStoreActions.getUserInfo()
@@ -133,7 +143,12 @@ export default function UserSecurity() {
       account_type: 'email',
       account_enum: 'C',
       email: email,
-      email_code: code
+      email_code: code,
+      source: {
+        device: 'WEB',
+        channel: '',
+        app: 'codatta-platform-website'
+      }
     })
     message.success('Email bind success.')
     userStoreActions.getUserInfo()

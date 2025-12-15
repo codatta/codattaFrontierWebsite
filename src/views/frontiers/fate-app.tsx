@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { message, Spin } from 'antd'
-import { Plus, ChevronsUpDown, Trash2 } from 'lucide-react'
+import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import frontiterApi from '@/apis/frontiter.api'
@@ -127,7 +127,7 @@ const SwipeableChildCard: React.FC<{
   const translateX = isSwiped ? -100 : isDragging ? -touchCurrent : 0
 
   return (
-    <div className="overflow-hidden rounded-[26px]">
+    <div className="overflow-hidden">
       <div className="flex">
         <div
           ref={cardRef}
@@ -449,11 +449,12 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
             canSubmit={allFieldsFilled}
             onBack={onBack}
             onSubmit={handleSubmit}
+            showSubmitButton={false}
           />
 
           {/* Form Content */}
           <div className="px-5">
-            <div className="space-y-6">
+            <div className="mb-8 space-y-6">
               {/* Personal Data Section */}
               <div className="space-y-2">
                 <label className="block px-4 text-[17px] font-normal text-[#999]">Personal Data</label>
@@ -498,7 +499,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                       value={formData.gender}
                       onChange={(e) => updateFormData('gender', e.target.value)}
                       className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.gender ? '#999' : '#3C3C434D' }}
+                      style={{ color: formData.gender ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                     >
                       <option value="" disabled>
                         Select
@@ -525,7 +526,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                       value={formData.fatherOccupation}
                       onChange={(e) => updateFormData('fatherOccupation', e.target.value)}
                       className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.fatherOccupation ? '#999' : '#3C3C434D' }}
+                      style={{ color: formData.fatherOccupation ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                     >
                       <option value="" disabled>
                         Select
@@ -548,7 +549,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                       value={formData.relationshipWithFather}
                       onChange={(e) => updateFormData('relationshipWithFather', e.target.value)}
                       className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.relationshipWithFather ? '#999' : '#3C3C434D' }}
+                      style={{ color: formData.relationshipWithFather ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                     >
                       <option value="" disabled>
                         Select
@@ -569,7 +570,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                       value={formData.motherOccupation}
                       onChange={(e) => updateFormData('motherOccupation', e.target.value)}
                       className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.motherOccupation ? '#999' : '#3C3C434D' }}
+                      style={{ color: formData.motherOccupation ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                     >
                       <option value="" disabled>
                         Select
@@ -594,7 +595,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                       value={formData.relationshipWithMother}
                       onChange={(e) => updateFormData('relationshipWithMother', e.target.value)}
                       className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.relationshipWithMother ? '#999' : '#3C3C434D' }}
+                      style={{ color: formData.relationshipWithMother ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                     >
                       <option value="" disabled>
                         Select
@@ -611,14 +612,14 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
               </div>
 
               {/* Child Information Section */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">
+              <div>
+                <label className="mb-2 block px-4 text-[17px] font-normal text-[#999]">
                   Child Information<span className="text-[#999]">(Optional)</span>
                 </label>
 
-                {formData.children.length > 0 && (
-                  <div className="space-y-2">
-                    {formData.children.map((child, index) => (
+                <div className="overflow-hidden rounded-[26px] bg-white">
+                  {formData.children.map((child, index) => (
+                    <>
                       <SwipeableChildCard
                         key={child.id}
                         child={child}
@@ -628,17 +629,17 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                         isSwiped={swipedChildId === child.id}
                         onSwipeChange={(swiped) => handleChildSwipe(child.id, swiped)}
                       />
-                    ))}
-                  </div>
-                )}
-
-                <button
-                  onClick={addChildInfo}
-                  className="flex w-full items-center justify-center gap-2 rounded-[26px] bg-white py-3 text-[17px] font-normal text-[#40E1EF]"
-                >
-                  <Plus size={20} />
-                  Add Child Information
-                </button>
+                      <hr className="mx-4 border-black/5" />
+                    </>
+                  ))}
+                  <button
+                    onClick={addChildInfo}
+                    className="flex w-full items-center justify-center gap-2 bg-white py-3 text-[17px] font-normal text-[#40E1EF]"
+                  >
+                    <Plus size={20} />
+                    Add Child Information
+                  </button>
+                </div>
               </div>
 
               {/* Educational Background */}
@@ -729,6 +730,9 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                 {errors.otherNotableEvents && <p className="px-4 text-xs text-red-400">{errors.otherNotableEvents}</p>}
               </div>
             </div>
+            <button className="block w-full rounded-full bg-black py-3 text-white" onClick={handleSubmit}>
+              Submit
+            </button>
           </div>
 
           <SuccessModal
@@ -740,36 +744,47 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
             buttonText="Got it"
           />
 
-          {/* Child Information Modal */}
+          {/* Child Information Drawer */}
           {showChildModal && editingChild && (
             <>
               {/* Backdrop */}
-              <div className="fixed inset-0 z-50 animate-fade-in bg-black/20" onClick={cancelChildEdit} />
+              <div
+                className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 ${showChildModal ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+                onClick={cancelChildEdit}
+              />
 
-              {/* Modal */}
-              <div className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-[400px] -translate-x-1/2 -translate-y-1/2 animate-scale-in rounded-3xl bg-[#F8F8F8] p-5 [animation-fill-mode:both]">
-                {/* Header */}
-                <div className="mb-5 flex items-center justify-between">
-                  <div className="text-[18px] font-bold text-black">Add Child Information</div>
+              {/* Drawer */}
+              <div className="fixed inset-x-0 bottom-0 z-50 animate-slide-up rounded-t-3xl bg-white/80 p-5 pb-8 backdrop-blur-md">
+                {/* Header with Close and Confirm buttons */}
+                <div className="relative mb-5 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={cancelChildEdit}
-                    className="flex size-10 items-center justify-center rounded-full bg-white transition-all hover:bg-gray-100"
+                    className="flex size-10 items-center justify-center rounded-full bg-white/75 shadow-app-btn transition-all"
                   >
                     <Plus size={24} className="rotate-45 text-gray-600" />
+                  </button>
+                  <div className="text-[18px] font-bold text-black">Add Child Information</div>
+                  <button
+                    type="button"
+                    onClick={saveChildInfo}
+                    className="flex size-10 items-center justify-center rounded-full bg-[#40E1EF] shadow-app-btn backdrop-blur-sm transition-all"
+                  >
+                    <Check size={20} className="text-white" />
                   </button>
                 </div>
 
                 {/* Form Content */}
-                <div className="mb-5 space-y-3">
+                <div className="mb-5 space-y-8">
                   {/* Occupation */}
-                  <div className="rounded-[20px] bg-white px-4 py-3">
+                  <div className="rounded-full bg-white px-4 py-3">
                     <div className="relative flex items-center justify-between">
                       <span className="text-[16px] text-black">Occupation</span>
                       <select
                         value={editingChild.occupation}
                         onChange={(e) => updateEditingChild('occupation', e.target.value)}
-                        className="appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                        className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                        style={{ textAlignLast: 'right' }}
                       >
                         <option value="" disabled>
                           Select
@@ -785,13 +800,14 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                   </div>
 
                   {/* Health Status */}
-                  <div className="rounded-[20px] bg-white px-4 py-3">
+                  <div className="rounded-full bg-white px-4 py-3">
                     <div className="relative flex items-center justify-between">
                       <span className="text-[16px] text-black">Health Status</span>
                       <select
                         value={editingChild.healthStatus}
                         onChange={(e) => updateEditingChild('healthStatus', e.target.value)}
-                        className="appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                        className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                        style={{ textAlignLast: 'right' }}
                       >
                         <option value="" disabled>
                           Select
@@ -807,13 +823,14 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                   </div>
 
                   {/* Relationship */}
-                  <div className="rounded-[20px] bg-white px-4 py-3">
+                  <div className="rounded-full bg-white px-4 py-3">
                     <div className="relative flex items-center justify-between">
                       <span className="text-[16px] text-black">Relationship</span>
                       <select
                         value={editingChild.relationship}
                         onChange={(e) => updateEditingChild('relationship', e.target.value)}
-                        className="appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                        className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                        style={{ textAlignLast: 'right' }}
                       >
                         <option value="" disabled>
                           Select
@@ -827,24 +844,6 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                       <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
                     </div>
                   </div>
-                </div>
-
-                {/* Footer Buttons */}
-                <div className="flex justify-between gap-3">
-                  <button
-                    type="button"
-                    onClick={cancelChildEdit}
-                    className="flex-1 rounded-2xl bg-white py-3 text-[16px] font-semibold text-gray-500 transition-all hover:bg-gray-100"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={saveChildInfo}
-                    className="shadow-lg flex-1 rounded-2xl bg-[#40E1EF] py-3 text-[16px] font-semibold text-white shadow-[#40E1EF]/30 transition-all hover:bg-[#35c5d3]"
-                  >
-                    Confirm
-                  </button>
                 </div>
               </div>
             </>
