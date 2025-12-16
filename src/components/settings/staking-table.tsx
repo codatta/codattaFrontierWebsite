@@ -19,7 +19,7 @@ export default function StakingTable<T extends object>({
           showSizeChanger: false,
           className:
             'mt-6 flex w-full items-center gap-x-2 [&_.ant-pagination-total-text]:mr-auto [&_.ant-pagination-item-active]:bg-[#40404b] [&_.ant-pagination-item-active]:text-white [&_.ant-pagination-item-active]:border-none [&_.ant-pagination-item]:bg-transparent [&_.ant-pagination-item]:text-white/60 [&_.ant-pagination-item]:border-none [&_.ant-pagination-prev_button]:!text-white/60 [&_.ant-pagination-next_button]:!text-white/60',
-          showTotal: (total) => <span className="text-white/60">{`Total ${total}`}</span>
+          showTotal: (total) => <span>{`Total ${total}`}</span>
         }}
         components={{
           table: ({ children }: { children: React.ReactNode }) => (
