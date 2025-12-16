@@ -148,7 +148,7 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
                 <button
                   disabled={isFinished || task.status === 0}
                   onClick={() => goToForm(task)}
-                  className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                  className="w-[120px] rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
                 >
                   {task.task_type_name ? task.task_type_name : 'Complete'}
                 </button>
