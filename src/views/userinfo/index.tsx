@@ -13,7 +13,6 @@ import card3Bg from '@/assets/userinfo/card-3-bg.png'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import ReputationIcon from '@/assets/userinfo/reputation-icon.svg?react'
-import RewardIcon from '@/assets/userinfo/reward-icon.svg?react'
 import PersonalIcon from '@/assets/userinfo/personal-icon.svg?react'
 import NftIcon from '@/assets/userinfo/nft-icon.svg?react'
 import DataIcon from '@/assets/userinfo/data-icon.svg?react'
@@ -99,7 +98,11 @@ function Asset({ assets, reputation = 0 }: { assets: readonly UserAsset[]; reput
         </AssetCard>
         <AssetCard title="Reward" bg={card2Bg} onClick={() => handleClick('/app/settings/reward')}>
           <div className="flex size-full items-center justify-center gap-[14px]">
-            <RewardIcon />
+            <img
+              className="size-[80px]"
+              src="https://static.codatta.io/static/images/e6a4ecb424540bf69b1f59db166f15159b7af523.png"
+              alt=""
+            />
             <div className="flex-1">
               <div className="font-zendots text-2xl">{reward}</div>
               <div className="mt-[6px] text-sm font-semibold">Reward</div>
