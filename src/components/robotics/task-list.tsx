@@ -124,8 +124,13 @@ const RoboticsTaskList: React.FC = () => {
                   </div>
                 </div>
                 <div className="flex rounded-b-2xl bg-[#252532] px-5 py-3">
-                  <div className="flex h-[26px] items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF]">
-                    Reputation: {item.reputation}
+                  <div
+                    className={cn(
+                      'flex h-[26px] items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF]',
+                      item.user_reputation_flag === 0 ? 'bg-[#D92B2B1F] text-[#D92B2B]' : ''
+                    )}
+                  >
+                    Reputation: {item.reputation ?? 0}
                   </div>
                 </div>
               </div>
