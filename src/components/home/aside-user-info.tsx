@@ -8,7 +8,6 @@ import CheckinBtn from './aside-checkin'
 import Copy from '@/components/common/copy'
 
 import defaultAvatar from '@/assets/home/default-avatar.png'
-import ImageChrown from '@/assets/home/chrown.png'
 import ImageLevel from '@/assets/home/level.png'
 import gridTextureImage from '@/assets/home/grid-texture.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg'
@@ -50,7 +49,7 @@ export default function UserInfoSection() {
       {
         amount: pointsAmount === '0' ? '0.00' : pointsAmount,
         currency: 'Reward',
-        icon: ImageChrown,
+        icon: 'https://static.codatta.io/static/images/e6a4ecb424540bf69b1f59db166f15159b7af523.png',
         hasBg: true,
         link: '/app/settings/reward'
       }
