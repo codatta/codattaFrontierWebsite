@@ -8,11 +8,11 @@ import CheckinBtn from './aside-checkin'
 import Copy from '@/components/common/copy'
 
 import defaultAvatar from '@/assets/home/default-avatar.png'
-import ImageChrown from '@/assets/home/chrown.png'
 import ImageLevel from '@/assets/home/level.png'
 import gridTextureImage from '@/assets/home/grid-texture.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg'
+import RewardIcon from '@/assets/userinfo/reward-icon.svg'
 import XnyStakedIcon from '@/assets/userinfo/xny-staked-icon.svg'
 import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 
@@ -51,7 +51,7 @@ export default function UserInfoSection() {
       {
         amount: pointsAmount === '0' ? '0.00' : pointsAmount,
         currency: 'Reward',
-        icon: ImageChrown,
+        icon: RewardIcon,
         hasBg: true,
         link: '/app/settings/reward'
       },

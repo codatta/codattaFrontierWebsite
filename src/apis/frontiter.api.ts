@@ -85,6 +85,8 @@ export interface TaskDetail {
   chain_status: 0 | 1 | 2 | 3 | 4
   qualification?: string
   qualification_flag: 0 | 1
+  reputation: number
+  user_reputation_flag: 0 | 1
   tags: string[]
 }
 
