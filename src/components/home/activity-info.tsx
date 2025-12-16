@@ -174,7 +174,9 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
               {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
               {activity.reward_asset_type == 'XnYCoin' ? <XNYCoinIcon className="size-6"></XNYCoinIcon> : null}
               <span className="ml-1 text-lg font-bold text-[#FCC800]">
-                {formatNumber(activity.task_reward_config?.validation?.asset_amount || 0, 2)}
+                {activity.reward_asset_type === 'EQUAL_SPLIT_ON_END'
+                  ? 'Dynamic'
+                  : formatNumber(activity.task_reward_config?.validation?.asset_amount || 0, 2)}
               </span>
             </div>
             <div className="flex items-center">
