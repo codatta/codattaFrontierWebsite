@@ -2,6 +2,8 @@ import { StarFilled } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
 
+import { formatNumber } from '@/utils/str'
+
 function RateItem(props: { value: number; bgColor?: string }) {
   const { value, bgColor } = props
 
@@ -16,6 +18,33 @@ function RateItem(props: { value: number; bgColor?: string }) {
 }
 
 export default function ReputationRate(props: {
+  rate: number
+  count?: number
+  gap?: number
+  size?: number
+  color?: string
+  bgColor?: string
+  className?: string
+}) {
+  const { rate = 0, size, color, className } = props
+
+  const formattedRate = formatNumber(rate, 2)
+
+  return (
+    <div
+      className={cn('font-zendots text-lg', className)}
+      style={{
+        fontSize: size ? `${size}px` : undefined,
+        color: color
+      }}
+    >
+      {formattedRate}
+    </div>
+  )
+}
+
+/** old version */
+export function ReputationRateWithStar(props: {
   rate: number
   count?: number
   gap?: number

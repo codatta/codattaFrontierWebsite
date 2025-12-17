@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus, Check } from 'lucide-react'
 import dayjs, { Dayjs } from 'dayjs'
+import { cn } from '@udecode/cn'
 
 interface MobileDatePickerProps {
   value?: string | null
@@ -86,13 +87,6 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
     setIsOpen(false)
   }
 
-  const handleToday = () => {
-    const today = dayjs()
-    setTempSelectedDate(today)
-    setCurrentMonth(today)
-    setViewMode('date')
-  }
-
   const handleTitleClick = () => {
     if (viewMode === 'date') {
       setViewMode('year')
@@ -154,70 +148,89 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
         {displayValue}
       </button>
 
-      {/* Calendar Modal */}
+      {/* Calendar Drawer */}
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div className="fixed inset-0 z-50 animate-fade-in bg-black/20" onClick={handleCancel} />
+          <div className="fixed inset-0 z-50 bg-black/30 transition-opacity duration-300" onClick={handleCancel} />
 
-          {/* Calendar with frosted glass effect */}
-          <div className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-[360px] animate-scale-in rounded-3xl bg-white/60 p-5 shadow-app-btn backdrop-blur-md [animation-fill-mode:both]">
-            {/* Header */}
-            <div className="mb-5 flex items-center justify-between">
+          {/* Drawer */}
+          <div className="fixed inset-x-0 bottom-0 z-50 h-[500px] animate-slide-up rounded-t-3xl bg-white/80 px-5 pt-5 backdrop-blur-md">
+            {/* Header with Close and Confirm buttons */}
+            <div className="relative mb-8 flex items-center justify-between">
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="flex size-10 items-center justify-center rounded-full bg-white/75 shadow-app-btn transition-all"
+              >
+                <Plus size={24} className="rotate-45 text-gray-600" />
+              </button>
+              <div className="text-[18px] font-bold text-black">
+                {viewMode === 'date' && 'Select Date'}
+                {viewMode === 'month' && 'Select Month'}
+                {viewMode === 'year' && 'Select Year'}
+              </div>
+              <button
+                type="button"
+                onClick={handleConfirm}
+                className="flex size-10 items-center justify-center rounded-full bg-[#40E1EF] shadow-app-btn backdrop-blur-sm transition-all"
+              >
+                <Check size={20} className="text-white" />
+              </button>
+            </div>
+
+            {/* Calendar Navigation */}
+            <div className="mb-5 flex items-center gap-6">
               {viewMode === 'date' && (
                 <>
                   <button
                     type="button"
-                    onClick={handlePrevMonth}
-                    className="hover:shadow-md flex size-9 items-center justify-center rounded-xl bg-white/60 transition-all hover:bg-white/80"
-                  >
-                    <ChevronLeft size={20} className="text-[#40E1EF]" />
-                  </button>
-
-                  <button
-                    type="button"
                     onClick={handleTitleClick}
-                    className="text-[20px] font-bold text-gray-800 transition-colors hover:text-[#40E1EF]"
+                    className="flex items-center gap-2 text-[17px] font-bold text-black"
                   >
                     {MONTHS[currentMonth.month()]} {currentMonth.year()}
+                    <ChevronRight size={24} className="text-[#40E1EF]" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handlePrevMonth}
+                    className="ml-auto flex size-9 items-center justify-center transition-all"
+                  >
+                    <ChevronLeft size={24} className="text-[#40E1EF]" />
                   </button>
 
                   <button
                     type="button"
                     onClick={handleNextMonth}
-                    className="hover:shadow-md flex size-9 items-center justify-center rounded-xl bg-white/60 transition-all hover:bg-white/80"
+                    className="flex size-9 items-center justify-center transition-all"
                   >
-                    <ChevronRight size={20} className="text-[#40E1EF]" />
+                    <ChevronRight size={24} className="text-[#40E1EF]" />
                   </button>
                 </>
               )}
 
               {viewMode === 'month' && (
                 <>
+                  <div className="text-[17px] font-bold text-black">{tempYear}</div>
                   <button
                     type="button"
                     onClick={() => setViewMode('year')}
-                    className="hover:shadow-md flex size-9 items-center justify-center rounded-xl bg-white/60 transition-all hover:bg-white/80"
+                    className="ml-auto flex size-9 items-center justify-center transition-all"
                   >
-                    <ChevronLeft size={20} className="text-[#40E1EF]" />
+                    <ChevronLeft size={24} className="text-[#40E1EF]" />
                   </button>
-
-                  <div className="text-[20px] font-bold text-gray-800">{tempYear}</div>
-
-                  <div className="size-9"></div>
                 </>
               )}
 
               {viewMode === 'year' && (
                 <>
-                  <div className="size-9"></div>
-                  <div className="text-[20px] font-bold text-gray-800">Select Year</div>
+                  <div className="flex items-center gap-2 text-[17px] font-bold text-black">Select Year</div>
                   <button
                     type="button"
                     onClick={() => setViewMode('date')}
-                    className="hover:shadow-md flex size-9 items-center justify-center rounded-xl bg-white/60 transition-all hover:bg-white/80"
+                    className="ml-auto flex size-9 items-center justify-center transition-all"
                   >
-                    <ChevronLeft size={20} className="text-[#40E1EF]" />
+                    <ChevronLeft size={24} className="text-[#40E1EF]" />
                   </button>
                 </>
               )}
@@ -246,15 +259,26 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
                     const today = isToday(day)
 
                     return (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => handleDateSelect(day)}
-                        disabled={disabled}
-                        className={`flex size-10 items-center justify-center rounded-full text-[17px] font-medium transition-all ${!isCurrentMonth ? 'text-gray-300' : ''} ${disabled ? 'cursor-not-allowed text-gray-300' : ''} ${selected ? 'shadow-lg bg-[#40E1EF] text-white shadow-[#40E1EF]/30' : ''} ${!selected && !disabled && isCurrentMonth ? 'text-gray-700 hover:bg-white/80' : ''} ${today && !selected ? 'font-bold text-[#40E1EF]' : ''} `}
-                      >
-                        {day.date()}
-                      </button>
+                      <div className="flex w-full items-center justify-center">
+                        {isCurrentMonth ? (
+                          <button
+                            key={index}
+                            type="button"
+                            onClick={() => handleDateSelect(day)}
+                            disabled={disabled}
+                            className={cn(
+                              'flex size-10 items-center justify-center rounded-full text-[16px] transition-all',
+                              selected && 'bg-black text-white',
+                              !selected && !disabled && isCurrentMonth && 'text-black',
+                              today && !selected && 'font-bold text-[#40E1EF]'
+                            )}
+                          >
+                            {day.date()}
+                          </button>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
                     )
                   })}
                 </div>
@@ -271,11 +295,10 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
                       key={month}
                       type="button"
                       onClick={() => handleMonthSelect(index)}
-                      className={`rounded-2xl py-4 text-[15px] font-semibold transition-all ${
-                        isCurrentMonth
-                          ? 'shadow-lg bg-[#40E1EF] text-white shadow-[#40E1EF]/30'
-                          : 'hover:shadow-md bg-white/60 text-gray-700 hover:bg-white/80'
-                      }`}
+                      className={cn(
+                        'rounded-2xl py-4 text-[15px] font-semibold transition-all',
+                        isCurrentMonth ? 'bg-black text-white' : 'bg-white text-black'
+                      )}
                     >
                       {month.slice(0, 3)}
                     </button>
@@ -286,20 +309,22 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
 
             {/* Year View */}
             {viewMode === 'year' && (
-              <div className="scrollbar-hide max-h-[300px] overflow-y-auto">
-                <div className="grid grid-cols-3 gap-3">
+              <div className="scrollbar-hide box-border h-[360px] overflow-y-auto pb-5">
+                <div className="grid grid-cols-3 gap-3 pb-5">
                   {years.map((year) => {
-                    const isCurrentYear = year === currentMonth.year()
+                    const isSelectedYear = tempSelectedDate ? year === tempSelectedDate.year() : false
+                    const isCurrentYear = year === dayjs().year()
                     return (
                       <button
                         key={year}
                         type="button"
                         onClick={() => handleYearSelect(year)}
-                        className={`rounded-2xl py-4 text-[15px] font-semibold transition-all ${
-                          isCurrentYear
-                            ? 'shadow-lg bg-[#40E1EF] text-white shadow-[#40E1EF]/30'
-                            : 'hover:shadow-md bg-white/60 text-gray-700 hover:bg-white/80'
-                        }`}
+                        className={cn(
+                          'rounded-2xl py-4 text-[15px] font-semibold transition-all',
+                          isSelectedYear && 'bg-black text-white',
+                          isCurrentYear && !isSelectedYear && 'bg-white text-[#40E1EF]',
+                          !isCurrentYear && !isSelectedYear && 'bg-white text-black'
+                        )}
                       >
                         {year}
                       </button>
@@ -308,33 +333,6 @@ const MobileDatePicker: React.FC<MobileDatePickerProps> = ({
                 </div>
               </div>
             )}
-
-            {/* Footer - Today Button */}
-            <div className="mt-5 flex justify-between gap-3">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="hover:shadow-md rounded-xl bg-white/60 px-5 py-2.5 text-[15px] font-semibold text-gray-600 transition-all hover:bg-white/80"
-              >
-                Cancel
-              </button>
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={handleToday}
-                  className="hover:shadow-md rounded-xl bg-white/60 px-5 py-2.5 text-[15px] font-semibold text-[#40E1EF] transition-all hover:bg-white/80"
-                >
-                  Today
-                </button>
-                <button
-                  type="button"
-                  onClick={handleConfirm}
-                  className="shadow-lg hover:shadow-xl rounded-xl bg-[#40E1EF] px-5 py-2.5 text-[15px] font-semibold text-white shadow-[#40E1EF]/30 transition-all hover:bg-[#35c5d3]"
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
           </div>
         </>
       )}

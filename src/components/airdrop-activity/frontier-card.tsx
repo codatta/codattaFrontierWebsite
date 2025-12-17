@@ -1,13 +1,19 @@
 import { AirdropFrontierItem, AirdropFrontierTaskItem } from '@/apis/airdrop-actvitiy'
 import RewardBgIcon from '@/assets//task/reward-bg-icon.png'
-import { Avatar } from 'antd'
+import { Avatar, Tooltip } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
-import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import { useMemo } from 'react'
 import { Clock, Users2 } from 'lucide-react'
+
+import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
+import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
+import AirdropTagIcon from '@/assets/frontier/home/airdrop-tag-icon.svg?react'
+import ActivityTagIcon from '@/assets/frontier/home/activity-tag-icon.svg?react'
+
 import RewardIcon from '@/assets/airdrop-activity/diamond.webp'
+
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
+import React from 'react'
 
 const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
   <div
@@ -106,33 +112,48 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
       </div>
 
       {/* Quest List Section */}
-      <div className="px-6">
+      <div className="mt-8 space-y-7 px-6 pb-5">
         {frontier.tasks.map((task) => (
-          <div
-            key={task.task_id}
-            className="flex items-center justify-between gap-6 border-b border-white/10 py-4 last:border-b-0"
-          >
-            <div className="flex items-center gap-4">
-              {/* Quest Icon with Points */}
-              <div className="relative">
-                <RewardTag reward={{ score: task.score, icon: RewardIcon }}></RewardTag>
+          <div key={task.task_id} className="rounded-2xl border border-[#FFFFFF10]">
+            <div className="relative mt-px flex items-center justify-between gap-6 rounded-2xl bg-[#1C1C26] p-5">
+              <div className="absolute left-5 top-[-12px] flex items-center gap-2">
+                {task.tags?.map((tag: string) => (
+                  <React.Fragment key={tag}>
+                    {tag === 'airdrop' && (
+                      <Tooltip title="Airdrop">
+                        <AirdropTagIcon className="size-6" />
+                      </Tooltip>
+                    )}
+                    {tag === 'activity' && (
+                      <Tooltip title="Activity">
+                        <ActivityTagIcon className="size-6" />
+                      </Tooltip>
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+              <div className="flex items-center gap-4">
+                {/* Quest Icon with Points */}
+                <div className="relative">
+                  <RewardTag reward={{ score: task.score, icon: RewardIcon }}></RewardTag>
+                </div>
+
+                {/* Quest Title */}
+                <h3 className="line-clamp-2 font-medium text-white">{task.name}</h3>
               </div>
 
-              {/* Quest Title */}
-              <h3 className="line-clamp-2 font-medium text-white">{task.name}</h3>
+              {/* Submit Button */}
+              {task.status === 2 && <span className="text-white/40">Task Completed</span>}
+              {task.status !== 2 && (
+                <button
+                  disabled={isFinished || task.status === 0}
+                  onClick={() => goToForm(task)}
+                  className="w-[120px] rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
+                >
+                  {task.task_type_name ? task.task_type_name : 'Complete'}
+                </button>
+              )}
             </div>
-
-            {/* Submit Button */}
-            {task.status === 2 && <span className="text-white/40">Task Completed</span>}
-            {task.status !== 2 && (
-              <button
-                disabled={isFinished || task.status === 0}
-                onClick={() => goToForm(task)}
-                className="rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
-              >
-                Complete
-              </button>
-            )}
           </div>
         ))}
       </div>

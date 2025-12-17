@@ -6,8 +6,8 @@ export function splitTitle(str: string): string {
   return str.split(/(?=[A-Z])/).join(' ')
 }
 
-export function formatNumber(num: number = 0): string {
-  let numStr: string = num.toString()
+export function formatNumber(num: number = 0, toFixed?: number): string {
+  let numStr: string = toFixed == undefined ? num.toString() : num.toFixed(toFixed)
 
   numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 

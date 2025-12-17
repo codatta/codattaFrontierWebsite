@@ -41,6 +41,7 @@ const UserInfoDid = lazy(() => import('@/views/userinfo/did'))
 // account
 const AccountSignin = lazy(() => import('@/views/account/signin'))
 const ReferralLanding = lazy(() => import('@/views/referral-landing'))
+const AppShareLanding = lazy(() => import('@/views/account/app-share-landing'))
 const SocialLinkLanding = lazy(() => import('@/views/account/social-link-landing'))
 
 // frontiers
@@ -167,7 +168,10 @@ export default function Router() {
           <Route path="extension/signin" element={<ExtensionSignin />} />
           <Route path="social/link/:social_media" element={<SocialLinkLanding />}></Route>
         </Route>
-        <Route path="/referral/:code" element={<ReferralLanding />} />
+        <Route path="/referral">
+          <Route path="app/:code" element={<AppShareLanding />} />
+          <Route path=":code" element={<ReferralLanding />} />
+        </Route>
 
         <Route path="/frontier/project" element={<FrontierLayout />}>
           <Route path="FOOD_TPL_000001/:taskId" element={<FoodScienceTemplate templateId="FOOD_TPL_000001" />} />

@@ -1,22 +1,30 @@
-import React, { useEffect, useMemo } from 'react'
-import { Pagination, Spin } from 'antd'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Button, Pagination, Spin, Tooltip } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSnapshot } from 'valtio'
+
 import AngleRight from '@/assets/crypto/angle-right.svg'
+import FilterIcon from '@/assets/icons/filter.svg?react'
+import AirdropTagIcon from '@/assets/frontier/home/airdrop-tag-icon.svg?react'
+import ActivityTagIcon from '@/assets/frontier/home/activity-tag-icon.svg?react'
 
 import CustomEmpty from '@/components/common/empty'
 
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
 import { TaskDetail } from '@/apis/frontiter.api'
 import { cn } from '@udecode/cn'
+import RoboticsTaskFilterModal, { FilterState } from './task-filter-modal'
 
 const RoboticsTaskList: React.FC = () => {
   const navigate = useNavigate()
   const { frontier_id = 'ROBSTIC001' } = useParams()
 
   const {
-    pageData: { page, page_size, total, list, listLoading }
+    pageData: { page, page_size, total, list, listLoading, task_types }
   } = useSnapshot(frontiersStore)
+
+  const [filterModalOpen, setFilterModalOpen] = useState(false)
+
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
   }, [list])
@@ -29,6 +37,10 @@ const RoboticsTaskList: React.FC = () => {
     frontierStoreActions.changeFrontiersFilter({ page: page, frontier_id: frontier_id })
   }
 
+  const handleFilterApply = ({ task_types }: FilterState) => {
+    frontierStoreActions.changeFrontiersFilter({ task_types: task_types, frontier_id: frontier_id })
+  }
+
   useEffect(() => {
     frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size, frontier_id])
@@ -39,15 +51,23 @@ const RoboticsTaskList: React.FC = () => {
         <div className="flex">
           <div className="text-lg font-normal text-white/80">Start earning rewards!</div>
         </div>
-        <div
-          onClick={() => navigate(`/app/frontier/${frontier_id}/history`)}
-          className="flex cursor-pointer items-center"
-        >
-          <div className="text-xs font-normal text-white/80">History</div>
-          <AngleRight size={14} />
+        <div className="flex gap-4 text-base">
+          <Button
+            className="flex h-[44px] cursor-pointer items-center gap-[50px] rounded-full px-4"
+            onClick={() => setFilterModalOpen(true)}
+          >
+            <div className="">Filter</div>
+            <FilterIcon className="size-5" />
+          </Button>
+          <Button
+            onClick={() => navigate(`/app/frontier/${frontier_id}/history`)}
+            className="flex h-[44px] cursor-pointer items-center gap-1 rounded-full px-4"
+          >
+            <div className="">History</div>
+            <AngleRight size={14} />
+          </Button>
         </div>
       </div>
-
       <Spin spinning={listLoading}>
         <div className="mt-6">
           <div className="">
@@ -56,16 +76,42 @@ const RoboticsTaskList: React.FC = () => {
                 onClick={() => goToForm(item as TaskDetail)}
                 key={item.task_id}
                 className={cn(
-                  'mb-3 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6'
+                  'relative mb-5 flex cursor-pointer flex-row items-center justify-between gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:mb-7 md:p-6'
                 )}
               >
+                <div className="absolute left-6 top-[-12px] flex items-center gap-2">
+                  {item.tags?.map((tag) => (
+                    <React.Fragment key={tag}>
+                      {tag === 'airdrop' && (
+                        <Tooltip title="Airdrop">
+                          <AirdropTagIcon className="size-6" />
+                        </Tooltip>
+                      )}
+                      {tag === 'activity' && (
+                        <Tooltip title="Activity">
+                          <ActivityTagIcon className="size-6" />
+                        </Tooltip>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
                 <div className="flex flex-col items-center gap-1 md:flex-row md:gap-4">
                   {item.data_display.template_id !== 'CMU_TPL_000001' && (
                     <div className="flex w-full flex-none items-center justify-start gap-4 md:w-auto">
                       {item.reward_info?.map((reward) => (
-                        <div className="flex items-center text-center md:flex-col">
-                          <img src={reward.reward_icon} alt="" className="size-8 md:size-12" />
-                          <span>{reward.reward_value}</span>
+                        <div className="flex items-center text-center">
+                          <Tooltip
+                            title={
+                              reward.reward_mode === 'REGULAR'
+                                ? 'Instant reward granted for your submission'
+                                : reward.reward_mode === 'DYNAMIC'
+                                  ? 'Additional reward unlocked upon approval'
+                                  : ''
+                            }
+                          >
+                            <img src={reward.reward_icon} alt="" className="size-8 md:size-12" />
+                          </Tooltip>
+                          <span className="text-sm">x{reward.reward_value}</span>
                         </div>
                       ))}
                     </div>
@@ -73,7 +119,7 @@ const RoboticsTaskList: React.FC = () => {
                   <div className="order-first flex-auto break-all font-semibold md:order-last">{item.name}</div>
                 </div>
                 <div className="w-[88px] shrink-0 cursor-pointer rounded-full bg-[#875DFF] py-2 text-center text-xs text-[#FFFFFF]">
-                  Submit
+                  {item.task_type_name}
                 </div>
               </div>
             ))}
@@ -100,6 +146,12 @@ const RoboticsTaskList: React.FC = () => {
           </div>
         )}
       </Spin>
+      <RoboticsTaskFilterModal
+        open={filterModalOpen}
+        value={{ task_types: [...task_types] }}
+        onChange={handleFilterApply}
+        onClose={() => setFilterModalOpen(false)}
+      />
     </div>
   )
 }

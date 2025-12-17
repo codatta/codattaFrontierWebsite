@@ -3,12 +3,13 @@ import { ChevronLeft, ArrowUp } from 'lucide-react'
 interface MobileAppFrontierHeaderProps {
   title: string | React.ReactNode
   canSubmit: boolean
+  showSubmitButton: boolean
   onBack?: () => void
   onSubmit?: () => void
 }
 
 export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderProps) {
-  const { title, canSubmit, onBack, onSubmit } = props
+  const { title, canSubmit, showSubmitButton, onBack, onSubmit } = props
   return (
     <div className="text-black">
       <div className="h-[76px]"></div>
@@ -20,13 +21,15 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
           <ChevronLeft size={24}></ChevronLeft>
         </button>
         <div className="flex items-center justify-center">{title}</div>
-        <button
-          className="flex size-[44px] items-center justify-center rounded-full bg-[#40E1EF]/90 text-white shadow-app-btn backdrop-blur-sm transition-all disabled:bg-black/5 disabled:text-[#bbb]"
-          disabled={!canSubmit}
-          onClick={onSubmit}
-        >
-          <ArrowUp size={24}></ArrowUp>
-        </button>
+        {showSubmitButton && (
+          <button
+            className="flex size-[44px] items-center justify-center rounded-full bg-[#40E1EF]/90 text-white shadow-app-btn backdrop-blur-sm transition-all disabled:bg-black/5 disabled:text-[#bbb]"
+            disabled={!canSubmit}
+            onClick={onSubmit}
+          >
+            <ArrowUp size={24}></ArrowUp>
+          </button>
+        )}
       </div>
     </div>
   )
