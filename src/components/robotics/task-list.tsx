@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, message, Pagination, Spin, Tooltip } from 'antd'
+import { Button, Pagination, Spin, Tooltip } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 import { useSnapshot } from 'valtio'
@@ -10,10 +10,11 @@ import AirdropTagIcon from '@/assets/frontier/home/airdrop-tag-icon.svg?react'
 import ActivityTagIcon from '@/assets/frontier/home/activity-tag-icon.svg?react'
 
 import { frontiersStore, frontierStoreActions } from '@/stores/frontier.store'
-import { TaskDetail } from '@/apis/frontiter.api'
+import { TaskDetail, TaskStakeInfo } from '@/apis/frontiter.api'
 
 import CustomEmpty from '@/components/common/empty'
 import TaskFilterModal, { FilterState } from './task-filter-modal'
+import StakeModel from '@/components/settings/token-stake-modal'
 import ToStakeModal from './to-stake-modal'
 
 const TaskList: React.FC = () => {
@@ -26,7 +27,9 @@ const TaskList: React.FC = () => {
 
   const [filterModalOpen, setFilterModalOpen] = useState(false)
   const [stakeTaskId, setStakeTaskId] = useState('')
+  const [toStakeModalOpen, setToStakeModalOpen] = useState(false)
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
+  const [taskStakeInfo, setTaskStakeInfo] = useState<TaskStakeInfo>()
 
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
@@ -43,21 +46,23 @@ const TaskList: React.FC = () => {
   const handleTaskClick = (data: TaskDetail) => {
     console.log('Task clicked:', data)
 
-    if (data.user_reputation_flag === 0) {
+    if (data.user_reputation_flag === 2) {
       setStakeTaskId(data.task_id)
-      setStakeModalOpen(true)
+      setToStakeModalOpen(true)
       return
     }
 
-    if (data.user_reputation_flag === 2) {
-      message.error('Reputation not met!')
-      return
-    }
+    // if (data.user_reputation_flag === 2) {
+    //   message.error('Reputation not met!')
+    //   return
+    // }
     navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
-  const handleStake = () => {
-    setStakeModalOpen(false)
+  const handleStake = (stakeInfo: TaskStakeInfo) => {
+    setToStakeModalOpen(false)
+    setStakeModalOpen(true)
+    setTaskStakeInfo(stakeInfo)
   }
 
   useEffect(() => {
@@ -195,11 +200,12 @@ const TaskList: React.FC = () => {
         onClose={() => setFilterModalOpen(false)}
       />
       <ToStakeModal
-        open={stakeModalOpen}
-        onClose={() => setStakeModalOpen(false)}
+        open={toStakeModalOpen}
+        onClose={() => setToStakeModalOpen(false)}
         taskId={stakeTaskId}
         onStake={handleStake}
       />
+      <StakeModel open={stakeModalOpen} onClose={() => setStakeModalOpen(false)} taskStakeInfo={taskStakeInfo} />
     </div>
   )
 }

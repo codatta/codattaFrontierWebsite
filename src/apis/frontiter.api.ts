@@ -100,7 +100,6 @@ export interface TaskStakeInfo {
   user_level: number
   stake_asset_type: AssetType
   stake_amount: number
-  has_staked?: boolean
 }
 
 export interface FrontierListItem {

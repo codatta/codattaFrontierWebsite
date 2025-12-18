@@ -8,7 +8,7 @@ interface ToStakeModalProps {
   open: boolean
   onClose: () => void
   taskId: string
-  onStake: (task_id: string) => void
+  onStake: (stakInfo: TaskStakeInfo) => void
 }
 
 const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onStake }) => {
@@ -43,13 +43,14 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
 
         if (res.success) {
           const taskData = res.data
-          if (taskData.user_reputation_flag === 2) {
-            message.error('Reputation not met!').then(() => onClose())
-          } else if (taskData.user_reputation_flag !== 0) {
-            message.success('Reputation requirement met, no need to stake.').then(() => onClose())
-          } else {
-            settaskStakeInfo(taskData)
-          }
+          // if (taskData.user_reputation_flag === 2) {
+          //   message.error('Reputation not met!').then(() => onClose())
+          // } else
+          // if (taskData.user_reputation_flag !== 0) {
+          //   message.success('Reputation requirement met, no need to stake.').then(() => onClose())
+          // } else {
+          settaskStakeInfo(taskData)
+          // }
         } else {
           message.error(res.errorMessage || 'Failed to fetch task details')
           onClose()
@@ -101,26 +102,12 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
       </div>
 
       <div className="p-6 text-base">
-        {taskStakeInfo?.has_staked ? (
-          <>
-            <h2 className="mb-3 font-bold text-white">
-              Your current reputation hasn't met the participation gate for this task yet.
-            </h2>
+        <h2 className="mb-3 font-bold text-white">Your reputation for this task is still at the starting level.</h2>
 
-            <p className="mb-6 text-sm text-[#A0A0B0]">
-              Stake {stakeToKen} to build up your reputation and unlock this task.
-            </p>
-          </>
-        ) : (
-          <>
-            <h2 className="mb-3 font-bold text-white">Your reputation for this task is still at the starting level.</h2>
-
-            <p className="mb-6 text-sm text-[#A0A0B0]">
-              About <span className="font-semibold text-white">{percent}%</span> of the gate is already covered by your
-              rewards. Stake a bit more {stakeToKen} to unlock this task.
-            </p>
-          </>
-        )}
+        <p className="mb-6 text-sm text-[#A0A0B0]">
+          About <span className="font-semibold text-white">{percent}%</span> of the gate is already covered by your
+          rewards. Stake a bit more {stakeToKen} to unlock this task.
+        </p>
 
         {/* Progress Card */}
         <div className="mb-6 rounded-2xl bg-[#252532] p-5 text-base">
@@ -155,7 +142,7 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
 
             <Button
               type="primary"
-              onClick={() => onStake(taskId)}
+              onClick={() => onStake(taskStakeInfo!)}
               className="h-10 rounded-full border-none bg-gradient-to-r from-[#875DFF] to-[#6A45E6] px-8 text-sm"
             >
               Stake to unlock
