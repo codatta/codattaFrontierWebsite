@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios'
 import request, { PaginationResponse, TPagination } from './request'
 import { TaskInfo } from './booster.api'
+import { AssetType } from './common.api'
 
 interface Response<T> {
   data: T
@@ -85,9 +86,21 @@ export interface TaskDetail {
   chain_status: 0 | 1 | 2 | 3 | 4
   qualification?: string
   qualification_flag: 0 | 1
+
   reputation: number
-  user_reputation_flag: 0 | 1
+
+  user_reputation_flag: 0 | 1 | 2
   tags: string[]
+}
+
+export interface TaskStakeInfo {
+  user_reputation_flag: 0 | 1 | 2
+  user_reputation: number
+  need_reputation: number
+  user_level: number
+  stake_asset_type: AssetType
+  stake_amount: number
+  has_staked?: boolean
 }
 
 export interface FrontierListItem {
@@ -213,6 +226,13 @@ class frontier {
 
   async getTaskDetail(taskId: string) {
     const res = await this.request.post<Response<TaskDetail>>('/v2/frontier/task/detail', { task_id: taskId })
+    return res.data
+  }
+
+  async getTaskStakeInfo(taskId: string) {
+    const res = await this.request.post<Response<TaskStakeInfo>>('/v2/frontier/task/stake/check', {
+      task_id: taskId
+    })
     return res.data
   }
 
