@@ -19,7 +19,8 @@ export default function UserInfoReputation() {
     <div>
       <h3 className="mb-6 flex items-center justify-between text-[32px] font-bold leading-[48px]">
         <span>Reputation</span>
-        <div className="flex items-center gap-1 text-base font-normal">
+        <ReputationRate rate={info?.user_reputation || 0} size={24} color={'rgba(255, 168, 0, 0.88)'}></ReputationRate>
+        {/* <div className="flex items-center gap-1 text-base font-normal">
           <ReputationRate
             rate={info?.user_reputation || 0}
             size={20}
@@ -27,7 +28,7 @@ export default function UserInfoReputation() {
           ></ReputationRate>
           <span>/</span>
           100
-        </div>
+        </div> */}
       </h3>
       <ReputationRecords></ReputationRecords>
     </div>
