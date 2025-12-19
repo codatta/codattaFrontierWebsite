@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Button, Pagination, Spin, Tooltip } from 'antd'
+import { Button, message, Pagination, Spin, Tooltip } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
 import { cn } from '@udecode/cn'
 import { useSnapshot } from 'valtio'
@@ -46,16 +46,16 @@ const TaskList: React.FC = () => {
   const handleTaskClick = (data: TaskDetail) => {
     console.log('Task clicked:', data)
 
-    if (data.user_reputation_flag === 2) {
+    if (data.user_reputation_flag === 0) {
       setStakeTaskId(data.task_id)
       setToStakeModalOpen(true)
       return
     }
 
-    // if (data.user_reputation_flag === 2) {
-    //   message.error('Reputation not met!')
-    //   return
-    // }
+    if (data.user_reputation_flag === 2) {
+      message.error('Reputation not met!')
+      return
+    }
     navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
@@ -63,10 +63,6 @@ const TaskList: React.FC = () => {
     setToStakeModalOpen(false)
     setStakeModalOpen(true)
     setTaskStakeInfo(stakeInfo)
-  }
-
-  const handleStakeSuccess = () => {
-    frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }
 
   useEffect(() => {

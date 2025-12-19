@@ -5,7 +5,11 @@ import CryptoJS from 'crypto-js'
 export const md5Interceptor = (config: InternalAxiosRequestConfig<unknown>) => {
   const Timestamp = new Date().getTime()
   const salt = 'woshinibaba^***@113'
-  const requestUrl = `${config.baseURL}${config.url}`
+  // In development, we use relative baseURL '/api' for proxy, but the backend expects the signature
+  // to be generated based on the full URL (or at least that's how it was configured before).
+  // We prepend the host to match the previous behavior where baseURL was absolute in dev.
+  const host = import.meta.env.MODE === 'production' ? '' : 'https://app-test.b18a.io'
+  const requestUrl = `${host}${config.baseURL}${config.url}`
   const Signature = CryptoJS.MD5(requestUrl + Timestamp + salt).toString()
   if (!config.headers) config.headers = new AxiosHeaders()
   config.headers['Signature'] = Signature

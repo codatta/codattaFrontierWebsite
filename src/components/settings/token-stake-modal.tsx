@@ -301,19 +301,12 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     }
   }, [allowance, amount])
 
-  // Reputation Impact
-  const reputationImpact = useMemo(() => {
-    if (!taskStakeInfo || !amount) return null
-    const { need_reputation, user_reputation, stake_amount } = taskStakeInfo
-    if (stake_amount <= 0) return 0
-    const gap = Math.max(0, need_reputation - user_reputation)
-    const ratio = gap / stake_amount
-    const addedPoints = Math.floor(Number(amount) * ratio)
-    return addedPoints
-  }, [taskStakeInfo, amount])
-
-  const currentReputation = taskStakeInfo?.user_reputation || 0
-  const afterReputation = currentReputation + (reputationImpact || 0)
+  const currentReputation = formatNumber(taskStakeInfo?.user_reputation || 0, 2)
+  const afterReputation = formatNumber(taskStakeInfo?.user_reputation_new || 0, 2)
+  const reputationImpact = formatNumber(
+    (taskStakeInfo?.user_reputation_new || 0) - (taskStakeInfo?.user_reputation || 0),
+    2
+  )
 
   return (
     <Modal
