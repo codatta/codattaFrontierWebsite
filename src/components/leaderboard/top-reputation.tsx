@@ -10,7 +10,7 @@ import ReputationRate from '@/components/common/reputation-rate'
 
 import { rankStore } from '@/stores/rank.store'
 
-import { formatNumber, truncateStr } from '@/utils/str'
+import { truncateStr } from '@/utils/str'
 
 function UserRank(props: { rank: number; className: string }) {
   const { rank } = props
