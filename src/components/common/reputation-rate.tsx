@@ -17,34 +17,34 @@ function RateItem(props: { value: number; bgColor?: string }) {
   )
 }
 
-export default function ReputationRate(props: {
-  rate: number
-  count?: number
-  gap?: number
-  size?: number
-  color?: string
-  bgColor?: string
-  className?: string
-}) {
-  const { rate = 0, size, color, className } = props
+// export default function ReputationRate(props: {
+//   rate: number
+//   count?: number
+//   gap?: number
+//   size?: number
+//   color?: string
+//   bgColor?: string
+//   className?: string
+// }) {
+//   const { rate = 0, size, color, className } = props
 
-  const formattedRate = formatNumber(rate, 2)
+//   const formattedRate = formatNumber(rate, 2)
 
-  return (
-    <div
-      className={cn('font-zendots text-lg', className)}
-      style={{
-        fontSize: size ? `${size}px` : undefined,
-        color: color
-      }}
-    >
-      {formattedRate}
-    </div>
-  )
-}
+//   return (
+//     <div
+//       className={cn('font-zendots text-lg', className)}
+//       style={{
+//         fontSize: size ? `${size}px` : undefined,
+//         color: color
+//       }}
+//     >
+//       {formattedRate}
+//     </div>
+//   )
+// }
 
 /** old version */
-export function ReputationRateWithStar(props: {
+export function ReputationRate(props: {
   rate: number
   count?: number
   gap?: number
