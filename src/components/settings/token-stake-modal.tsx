@@ -3,7 +3,6 @@ import { Button, Input, Modal, message, Tooltip } from 'antd'
 import { InfoCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { Loader2 } from 'lucide-react'
-import { cn } from '@udecode/cn'
 
 import { TaskStakeInfo } from '@/apis/frontiter.api'
 import { formatNumber } from '@/utils/str'

@@ -213,6 +213,18 @@ export interface ClaimableReward {
   batch_ids: string
 }
 
+export type StakeStatus = 0 | 1 | 2 | 3 | 4
+export interface StakeRecordItem {
+  uid: null
+  stake_time: string
+  claim_time: string
+  tx_hash: string
+  asset_type: string
+  balance: number
+  status: StakeStatus
+  status_name: string
+}
+
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -413,6 +425,74 @@ class UserApi {
       code,
       task_id
     })
+    return data.data
+  }
+
+  async getStakeUid({ asset_type, amount, address }: { asset_type: string; amount: string; address: string }) {
+    const { data } = await request.post<Response<{ uid: string }>>('/v2/user/stake/record/gen', {
+      asset_type,
+      amount,
+      address
+    })
+    return data.data
+  }
+
+  async recordStakeTransaction({
+    uid,
+    asset_type,
+    amount,
+    address,
+    tx_hash,
+    gas_fee
+  }: {
+    uid: string
+    asset_type: string
+    amount: string
+    address: string
+    tx_hash?: string
+    gas_fee?: string
+  }) {
+    const { data } = await request.post<Response<{ uid: string; status: 0 | 1 }>>('/v2/user/stake/record/create', {
+      uid,
+      asset_type,
+      amount,
+      address,
+      tx_hash,
+      gas_fee
+    })
+    return data.data
+  }
+
+  async recordUnstakeTransaction({ uid }: { uid: string }) {
+    const { data } = await request.post<Response<{ uid: string; status: 0 | 1 }>>('/v2/user/unstake/record/create', {
+      uid
+    })
+    return data.data
+  }
+
+  async recordClaimTransaction({ uids }: { uids: string[] }) {
+    const { data } = await request.post<Response<{ uids: string[]; status: 0 | 1 }>>('/v2/user/stake/record/claim', {
+      uids
+    })
+    return data.data
+  }
+
+  async getStakeRecords({ page = 1, page_size = 10 }: { page?: number; page_size?: number }) {
+    const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>('/v2/user/stake/record/list', {
+      page_num: page,
+      page_size
+    })
+    return data.data
+  }
+
+  async getStakeHistory({ page = 1, page_size = 100 }: { page?: number; page_size?: number }) {
+    const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>(
+      '/v2/user/stake/history/list',
+      {
+        page_num: page,
+        page_size: page_size
+      }
+    )
     return data.data
   }
 }
