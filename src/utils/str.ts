@@ -7,7 +7,7 @@ export function splitTitle(str: string): string {
 }
 
 export function formatNumber(num: number = 0, toFixed?: number): string {
-  let numStr: string = toFixed == undefined ? num.toString() : num.toFixed(toFixed)
+  let numStr: string = toFixed == undefined ? Number(num.toString()).toString() : Number(num).toFixed(toFixed)
 
   numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
