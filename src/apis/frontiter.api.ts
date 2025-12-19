@@ -230,9 +230,10 @@ class frontier {
     return res.data
   }
 
-  async getTaskStakeInfo(taskId: string) {
+  async getTaskStakeInfo(taskId: string, stakeAmount?: string) {
     const res = await this.request.post<Response<TaskStakeInfo>>('/v2/frontier/task/stake/check', {
-      task_id: taskId
+      task_id: taskId,
+      stake_amount_new: stakeAmount
     })
     return res.data
   }

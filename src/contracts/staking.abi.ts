@@ -6,7 +6,7 @@ const MAINNET = bsc
 const CONTRACT_ADDRESS_TESTNET = '0x8e96C14CBC2f898652BD582D70EFF04f6089C478'
 const CONTRACT_ADDRESS_MAINNET = ''
 
-export const STAKE_ASSET_TYPE = import.meta.env.VITE_MODE === 'production' ? 'XNY' : 'SepoliaETH'
+export const STAKE_ASSET_TYPE = import.meta.env.VITE_MODE === 'production' ? 'XNY' : 'MTK'
 export const STAKE_TOKEN_ADRRESS =
   import.meta.env.VITE_MODE === 'production'
     ? '0xE3225e11Cab122F1a126A28997788E5230838ab9'

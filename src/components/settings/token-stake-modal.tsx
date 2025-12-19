@@ -177,11 +177,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
   // Contract Args for Stake
   const stakeArgs = useMemo(() => {
     if (!uid || !debouncedAmount) return []
-    try {
-      return [keccak256(stringToHex(uid)), parseEther(debouncedAmount)]
-    } catch {
-      return []
-    }
+    return [keccak256(stringToHex(uid)), parseEther(debouncedAmount)]
   }, [uid, debouncedAmount])
 
   // Gas Estimation for Stake
@@ -289,9 +285,9 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     onClose()
   }
 
-  const minStake = 1000 // Configurable?
+  const minStakeAmount = import.meta.env.VITE_MODE === 'production' ? (taskStakeInfo?.stake_amount ?? 0) : 1
   const isInsufficientBalance = Number(amount) > Number(balance)
-  const isValidAmount = Number(amount) >= minStake
+  const isValidAmount = Number(amount) >= Number(minStakeAmount)
   const needsApprove = useMemo(() => {
     if (!amount) return false
     try {
@@ -367,7 +363,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
 
                 <div className="mb-3 flex items-center justify-between text-base text-[#77777D]">
                   <span>
-                    Min stake: {formatNumber(minStake, 2)} {assetSymbol}
+                    Min stake: {formatNumber(minStakeAmount, 2)} {assetSymbol}
                   </span>
                   <span>
                     Balance:{' '}
