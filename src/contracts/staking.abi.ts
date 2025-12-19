@@ -1,31 +1,19 @@
-import { Abi, Chain, defineChain } from 'viem'
-import { bsc } from 'viem/chains'
+import { Abi, Chain } from 'viem'
+import { baseSepolia, bsc } from 'viem/chains'
 
-const TESTNET = defineChain({
-  id: 2368,
-  name: 'KiteAI Testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'KITE',
-    symbol: 'KITE'
-  },
-  rpcUrls: {
-    default: { http: ['https://rpc-testnet.gokite.ai/'] }
-  },
-  blockExplorers: {
-    default: {
-      name: 'kitescan',
-      url: 'https://testnet.kitescan.ai/'
-    }
-  }
-})
 const MAINNET = bsc
 
-const CONTRACT_ADDRESS_TESTNET = '0x7d71B0904F8A9766532A3EcFE267E65eF48E60DB'
-const CONTRACT_ADDRESS_MAINNET = '0xdf6F40b6608cAf9e76D65085EE2277B7E68eD759'
+const CONTRACT_ADDRESS_TESTNET = '0x8e96C14CBC2f898652BD582D70EFF04f6089C478'
+const CONTRACT_ADDRESS_MAINNET = ''
+
+export const STAKE_ASSET_TYPE = import.meta.env.VITE_MODE === 'production' ? 'XNY' : 'SepoliaETH'
+export const STAKE_TOKEN_ADRRESS =
+  import.meta.env.VITE_MODE === 'production'
+    ? '0xE3225e11Cab122F1a126A28997788E5230838ab9'
+    : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
-  chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : TESTNET,
+  chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : baseSepolia,
   address: import.meta.env.VITE_MODE === 'production' ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET,
   abi: [
     {

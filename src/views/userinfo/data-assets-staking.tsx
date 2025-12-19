@@ -4,6 +4,7 @@ import StakingIcon from '@/assets/settings/staking-icon.svg?react'
 
 import CurrentStakingTab from '@/components/settings/staking-current'
 import HistoryTab from '@/components/settings/staking-history'
+import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 
 export default function Staking() {
   const items: TabsProps['items'] = [
@@ -24,8 +25,8 @@ export default function Staking() {
       {/* Header */}
       <h3 className="mb-1 text-[32px] font-bold leading-[48px]">Staking</h3>
       <p className="text-sm text-[#BBBBBE]">
-        Staked XNY is only used as a signal in your reputation progress. No fixed yield or APR in this version.
-        Unstaking requires a 7-day unlocking period.
+        Staked {STAKE_ASSET_TYPE} is only used as a signal in your reputation progress. No fixed yield or APR in this
+        version. Unstaking requires a 7-day unlocking period.
       </p>
 
       {/* Summary Card */}
@@ -33,10 +34,10 @@ export default function Staking() {
         <div className="flex items-center font-bold uppercase">
           <StakingIcon className="size-12" />
           <div className="ml-4 mr-6 text-base">TOTAL STAKED</div>
-          <div className="text-xl">612,000 XNY</div>
+          <div className="text-xl">612,000 {STAKE_ASSET_TYPE}</div>
         </div>
         <Button type="primary" className="h-[38px] rounded-full bg-[#875DFF] px-4 text-sm">
-          Stake XNY
+          Stake {STAKE_ASSET_TYPE}
         </Button>
       </div>
 

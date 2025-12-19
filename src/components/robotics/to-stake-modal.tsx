@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Modal, message } from 'antd'
 import { ExclamationCircleFilled } from '@ant-design/icons'
+
 import frontiterApi, { TaskStakeInfo } from '@/apis/frontiter.api'
 import { formatNumber } from '@/utils/str'
+import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 
 interface ToStakeModalProps {
   open: boolean
@@ -18,9 +20,10 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
     if (!taskStakeInfo) return 0
     return Math.round((taskStakeInfo.user_reputation / taskStakeInfo.need_reputation) * 100)
   }, [taskStakeInfo])
-  const stakeToKen = useMemo(() => {
-    return taskStakeInfo?.stake_asset_type === 'XnYCoin' ? 'XNY' : taskStakeInfo?.stake_asset_type
-  }, [taskStakeInfo])
+  // const stakeToKen = useMemo(() => {
+  //   return taskStakeInfo?.stake_asset_type === 'XnYCoin' ? 'XNY' : taskStakeInfo?.stake_asset_type
+  // }, [taskStakeInfo])
+  const stakeToKen = STAKE_ASSET_TYPE
 
   useEffect(() => {
     if (!open) {

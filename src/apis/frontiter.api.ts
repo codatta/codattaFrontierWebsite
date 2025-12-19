@@ -97,9 +97,11 @@ export interface TaskStakeInfo {
   user_reputation_flag: 0 | 1 | 2
   user_reputation: number
   need_reputation: number
+  user_reputation_new: number
   user_level: number
   stake_asset_type: AssetType
   stake_amount: number
+  stake_amount_old: number
 }
 
 export interface FrontierListItem {

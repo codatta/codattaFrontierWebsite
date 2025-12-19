@@ -65,6 +65,10 @@ const TaskList: React.FC = () => {
     setTaskStakeInfo(stakeInfo)
   }
 
+  const handleStakeSuccess = () => {
+    frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
+  }
+
   useEffect(() => {
     frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }, [page, page_size, frontier_id])
