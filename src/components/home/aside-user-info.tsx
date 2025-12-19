@@ -152,7 +152,7 @@ function ReputationItem({
       <div className="flex items-center gap-3">
         <img src={ImageLevel} className="size-12" alt="" />
         <div>
-          <ReputationRate rate={reputation} className="font-zendots text-lg"></ReputationRate>
+          <ReputationRate rate={reputation} size={24}></ReputationRate>
           <p>Reputation</p>
         </div>
       </div>

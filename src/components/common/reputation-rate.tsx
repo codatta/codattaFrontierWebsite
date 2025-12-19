@@ -2,7 +2,7 @@ import { StarFilled } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
 
-import { formatNumber } from '@/utils/str'
+// import { formatNumber } from '@/utils/str'
 
 function RateItem(props: { value: number; bgColor?: string }) {
   const { value, bgColor } = props
@@ -44,7 +44,7 @@ function RateItem(props: { value: number; bgColor?: string }) {
 // }
 
 /** old version */
-export function ReputationRate(props: {
+export default function ReputationRate(props: {
   rate: number
   count?: number
   gap?: number
