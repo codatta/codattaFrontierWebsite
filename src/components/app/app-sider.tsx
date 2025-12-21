@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores/user.store'
 import { cn } from '@udecode/cn'
 import { Badge, Flex } from 'antd'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
+// import { ArrowUpRight } from 'lucide-react'
 import ImageLogo from '@/assets/images/logo-white.png'
 import IconHome from '@/assets/icons/app-nav/home.svg'
 import IconQuest from '@/assets/icons/app-nav/quest.svg'
@@ -352,10 +352,10 @@ function LogoSection() {
     >
       <div>
         <img src={ImageLogo} className="w-[128px]" />
-        <a className="mt-2 flex text-sm hover:text-primary" href="https://xny.ai/" target="_blank">
+        {/* <a className="mt-2 flex text-sm hover:text-primary" href="https://xny.ai/" target="_blank">
           <span className="mr-1">Powered by XnY</span>
           <ArrowUpRight strokeWidth={1.25} size={20} />
-        </a>
+        </a> */}
       </div>
     </div>
   )
