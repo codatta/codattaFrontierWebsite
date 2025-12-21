@@ -40,10 +40,10 @@ const Frontiers = () => {
       })
   }, [frontierList])
 
-  async function getFrontiers() {
+  async function getFrontiers(channel: string) {
     setLoading(true)
     try {
-      await frontierStoreActions.getFrontierList(info?.user_data?.channel || '')
+      await frontierStoreActions.getFrontierList(channel)
     } catch (error) {
       message.error(error.message)
     } finally {
@@ -64,8 +64,8 @@ const Frontiers = () => {
   }
 
   useEffect(() => {
-    getFrontiers()
-  }, [])
+    getFrontiers(info?.user_data?.channel || '')
+  }, [info])
 
   return (
     <div className="">
