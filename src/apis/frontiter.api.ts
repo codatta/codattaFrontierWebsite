@@ -244,8 +244,8 @@ class frontier {
     return res.data
   }
 
-  async getFrontiers(): Promise<Response<FrontierListItem[]>> {
-    const res = await this.request.post('/v2/frontier/list')
+  async getFrontiers(channel: string): Promise<Response<FrontierListItem[]>> {
+    const res = await this.request.post('/v2/frontier/list', { channel })
     return res.data
   }
 

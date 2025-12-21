@@ -11,12 +11,14 @@ import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'
 import { FrontierListItem } from '@/apis/frontiter.api'
 import { frontierStoreActions, useFrontierStore } from '@/stores/frontier.store'
 import { formatNumber } from '@/utils/str'
+import { useUserStore } from '@/stores/user.store'
 
 const Frontiers = () => {
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(true)
   const { frontierList } = useFrontierStore()
+  const { info } = useUserStore()
 
   const displayFrontiers = useMemo(() => {
     return frontierList
@@ -41,7 +43,7 @@ const Frontiers = () => {
   async function getFrontiers() {
     setLoading(true)
     try {
-      await frontierStoreActions.getFrontierList()
+      await frontierStoreActions.getFrontierList(info?.user_data?.channel || '')
     } catch (error) {
       message.error(error.message)
     } finally {
