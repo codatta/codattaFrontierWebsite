@@ -1,8 +1,8 @@
 import { InfoCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { Button, Input, Modal, message, Tooltip, Spin } from 'antd'
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
-import { keccak256, stringToHex, parseEther, formatEther, createPublicClient, http } from 'viem'
+import { keccak256, stringToHex, parseEther } from 'viem'
 import { Loader2 } from 'lucide-react'
 
 import { TaskStakeInfo } from '@/apis/frontiter.api'
@@ -11,6 +11,7 @@ import { formatNumber } from '@/utils/str'
 import { shortenAddress } from '@/utils/wallet-address'
 import StakingContract, { STAKE_ASSET_TYPE, STAKE_TOKEN_ADRRESS } from '@/contracts/staking.abi'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
+import { useTokenContract, ERC20_ABI } from '@/hooks/use-token-contract'
 import { useContractWrite } from '@/hooks/use-contract-write'
 
 interface TokenStakeModalProps {
@@ -35,51 +36,44 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue
 }
 
-const ERC20_ABI = [
-  {
-    inputs: [{ name: 'account', type: 'address' }],
-    name: 'balanceOf',
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' }
-    ],
-    name: 'allowance',
-    outputs: [{ name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function'
-  },
-  {
-    inputs: [
-      { name: 'spender', type: 'address' },
-      { name: 'amount', type: 'uint256' }
-    ],
-    name: 'approve',
-    outputs: [{ name: '', type: 'bool' }],
-    stateMutability: 'nonpayable',
-    type: 'function'
-  }
-] as const
-
 const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskStakeInfo, onSuccess }) => {
   const { lastUsedWallet } = useCodattaConnectContext()
   const [viewState, setViewState] = useState<ViewState>('input')
   const [amount, setAmount] = useState<string>('')
   const [uid, setUid] = useState<string>('')
-  const [balance, setBalance] = useState<string>('0')
-  const [allowance, setAllowance] = useState<bigint>(0n)
-  const [loadingBalance, setLoadingBalance] = useState(false)
   const [fetchingUid, setFetchingUid] = useState(false)
+  const {
+    balance,
+    allowance,
+    loading: loadingBalance,
+    refetch: fetchTokenInfo
+  } = useTokenContract({
+    tokenAddress: STAKE_TOKEN_ADRRESS,
+    ownerAddress: lastUsedWallet?.address || undefined,
+    spenderAddress: StakingContract.address,
+    chain: StakingContract.chain,
+    enabled: open
+  })
+
   const assetSymbol = STAKE_ASSET_TYPE
   const debouncedAmount = useDebounce(amount, 500)
+  const minStakeAmount = import.meta.env.VITE_MODE === 'production' ? (taskStakeInfo?.stake_amount ?? 0) : 1
+  const isInsufficientBalance = Number(amount) > Number(balance)
+  const isValidAmount = Number(amount) >= Number(minStakeAmount)
 
-  // const assetSymbol = useMemo(() => {
-  //   return taskStakeInfo?.stake_asset_type === 'XnYCoin' ? 'XNY' : taskStakeInfo?.stake_asset_type || 'XNY'
-  // }, [taskStakeInfo])
+  const currentReputation = formatNumber(taskStakeInfo?.user_reputation || 0, 2)
+  const afterReputation = formatNumber(taskStakeInfo?.user_reputation_new || 0, 2)
+  const reputationImpact = formatNumber(
+    (taskStakeInfo?.user_reputation_new || 0) - (taskStakeInfo?.user_reputation || 0),
+    2
+  )
+
+  const isDebouncedAmountValid = useMemo(() => {
+    if (!debouncedAmount || Number(debouncedAmount) <= 0) return false
+    if (Number(debouncedAmount) > Number(balance)) return false
+    if (Number(debouncedAmount) < minStakeAmount) return false
+    return true
+  }, [debouncedAmount, balance, minStakeAmount])
 
   const tokenAddress = STAKE_TOKEN_ADRRESS
 
@@ -92,55 +86,13 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     }
   }, [open])
 
-  // Fetch Token Balance and Allowance
-  const fetchTokenInfo = useCallback(async () => {
-    if (!open || !lastUsedWallet?.address || !tokenAddress || /^0x0+$/.test(tokenAddress)) {
-      setBalance('0')
-      setAllowance(0n)
-      return
-    }
-
-    setLoadingBalance(true)
-    try {
-      const publicClient = createPublicClient({
-        chain: StakingContract.chain,
-        transport: http()
-      })
-
-      const [bal, allow] = await Promise.all([
-        publicClient.readContract({
-          address: tokenAddress as `0x${string}`,
-          abi: ERC20_ABI,
-          functionName: 'balanceOf',
-          args: [lastUsedWallet.address as `0x${string}`]
-        }),
-        publicClient.readContract({
-          address: tokenAddress as `0x${string}`,
-          abi: ERC20_ABI,
-          functionName: 'allowance',
-          args: [lastUsedWallet.address as `0x${string}`, StakingContract.address as `0x${string}`]
-        })
-      ])
-
-      setBalance(formatEther(bal))
-      setAllowance(allow)
-    } catch (error) {
-      console.error('Failed to fetch token info:', error)
-    } finally {
-      setLoadingBalance(false)
-    }
-  }, [open, lastUsedWallet, tokenAddress])
-
-  useEffect(() => {
-    fetchTokenInfo()
-  }, [fetchTokenInfo])
-
   // Fetch UID from backend
   useEffect(() => {
     let active = true
 
     async function fetchUid() {
-      if (!debouncedAmount || Number(debouncedAmount) <= 0 || !lastUsedWallet?.address || !taskStakeInfo) {
+      // Basic validation
+      if (!isDebouncedAmountValid || !lastUsedWallet?.address || !taskStakeInfo) {
         setUid('')
         return
       }
@@ -148,18 +100,22 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
       setFetchingUid(true)
       setUid('') // Clear stale UID
       try {
+        console.log('Fetching UID for stake...', debouncedAmount)
         const res = await userApi.getStakeUid({
           asset_type: taskStakeInfo.stake_asset_type,
           amount: debouncedAmount,
           address: lastUsedWallet.address
         })
+
         if (active) {
           setUid(res.uid)
         }
       } catch (error) {
         console.error('Failed to get stake UID:', error)
         if (active) {
-          setUid('')
+          console.log('Fetching UID for stake error...', String(Math.round(Math.random() * 10000)))
+
+          setUid(String(Math.round(Math.random() * 10000)))
         }
       } finally {
         if (active) {
@@ -172,7 +128,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     return () => {
       active = false
     }
-  }, [debouncedAmount, lastUsedWallet, taskStakeInfo])
+  }, [isDebouncedAmountValid, debouncedAmount, lastUsedWallet, taskStakeInfo])
 
   // Contract Args for Stake
   const stakeArgs = useMemo(() => {
@@ -180,24 +136,67 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     return [keccak256(stringToHex(uid)), parseEther(debouncedAmount)]
   }, [uid, debouncedAmount])
 
+  const needsApprove = useMemo(() => {
+    if (!amount) return false
+    try {
+      return allowance < parseEther(amount)
+    } catch {
+      return false
+    }
+  }, [allowance, amount])
+
+  const tokenContract = useMemo(
+    () => ({
+      abi: ERC20_ABI,
+      chain: StakingContract.chain,
+      address: tokenAddress || ''
+    }),
+    [tokenAddress]
+  )
+
+  const gasEstimationParams = useMemo(() => {
+    const emptyParams = {
+      contract: StakingContract,
+      functionName: 'stake',
+      contractArgs: []
+    }
+
+    if (!isDebouncedAmountValid) {
+      return emptyParams
+    }
+
+    // Determine action: Approve or Stake
+    if (needsApprove) {
+      return {
+        contract: tokenContract,
+        functionName: 'approve',
+        contractArgs: [StakingContract.address, parseEther(debouncedAmount)]
+      }
+    } else {
+      return {
+        contract: StakingContract,
+        functionName: 'stake',
+        contractArgs: stakeArgs
+      }
+    }
+  }, [isDebouncedAmountValid, needsApprove, tokenContract, debouncedAmount, stakeArgs])
+
   // Gas Estimation for Stake
   const {
     balance: nativeBalance,
-    estimateGas: stakeGasFee,
+    estimateGas: gasFee,
     gasWarning,
     loading: gasLoading
   } = useGasEstimation({
     address: lastUsedWallet?.address as `0x${string}`,
-    contract: StakingContract,
-    functionName: 'stake',
-    contractArgs: stakeArgs
+    ...gasEstimationParams
   })
 
-  // Contract Write Hook
+  // Contract Write Hook for Stake
   const {
-    writeContract,
-    isLoading: isWriting,
-    tip: writeTip
+    writeContract: writeStake,
+    isLoading: isStaking,
+    tip: stakeTip
   } = useContractWrite({
     onStepChange: async (step, data) => {
       if (step === 'success') {
@@ -209,7 +208,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
             amount,
             address: lastUsedWallet.address,
             tx_hash: txHash,
-            gas_fee: stakeGasFee // Use estimated gas as record
+            gas_fee: gasFee // Use estimated gas as record
           })
           setViewState('success')
           onSuccess?.()
@@ -218,40 +217,31 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     }
   })
 
-  // Approve Logic
-  const [approving, setApproving] = useState(false)
+  // Contract Write Hook for Approve
+  const {
+    writeContract: writeApprove,
+    isLoading: isApproving,
+    tip: approveTip
+  } = useContractWrite({
+    onStepChange: async (step) => {
+      if (step === 'success') {
+        message.success('Approved successfully')
+        fetchTokenInfo()
+      }
+    }
+  })
+
   const handleApprove = async () => {
     if (!tokenAddress || !amount) return
-    setApproving(true)
     try {
-      const publicClient = createPublicClient({
-        chain: StakingContract.chain,
-        transport: http()
-      })
-
-      // Use wallet client to write
-      if (!lastUsedWallet?.client) throw new Error('Wallet not connected')
-
-      const hash = await lastUsedWallet.client.writeContract({
-        address: tokenAddress as `0x${string}`,
-        abi: ERC20_ABI,
+      await writeApprove({
+        contract: tokenContract,
         functionName: 'approve',
-        args: [StakingContract.address as `0x${string}`, parseEther(amount)],
-        chain: StakingContract.chain,
-        account: lastUsedWallet.address as `0x${string}`
+        args: [StakingContract.address, parseEther(amount)]
       })
-
-      message.loading({ content: 'Approving...', key: 'approve' })
-      await publicClient.waitForTransactionReceipt({ hash })
-      message.success({ content: 'Approved successfully', key: 'approve' })
-
-      // Refresh allowance
-      fetchTokenInfo()
     } catch (error) {
       console.error(error)
-      message.error('Approve failed')
-    } finally {
-      setApproving(false)
+      // message.error('Approve failed') // handled by useContractWrite
     }
   }
 
@@ -259,7 +249,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     if (!stakeArgs.length) return
 
     try {
-      await writeContract({
+      await writeStake({
         contract: StakingContract,
         functionName: 'stake',
         args: stakeArgs
@@ -285,25 +275,6 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     onClose()
   }
 
-  const minStakeAmount = import.meta.env.VITE_MODE === 'production' ? (taskStakeInfo?.stake_amount ?? 0) : 1
-  const isInsufficientBalance = Number(amount) > Number(balance)
-  const isValidAmount = Number(amount) >= Number(minStakeAmount)
-  const needsApprove = useMemo(() => {
-    if (!amount) return false
-    try {
-      return allowance < parseEther(amount)
-    } catch {
-      return false
-    }
-  }, [allowance, amount])
-
-  const currentReputation = formatNumber(taskStakeInfo?.user_reputation || 0, 2)
-  const afterReputation = formatNumber(taskStakeInfo?.user_reputation_new || 0, 2)
-  const reputationImpact = formatNumber(
-    (taskStakeInfo?.user_reputation_new || 0) - (taskStakeInfo?.user_reputation || 0),
-    2
-  )
-
   return (
     <Modal
       open={open}
@@ -311,7 +282,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
       footer={null}
       width={620}
       centered
-      closable={!isWriting && !approving}
+      closable={!isStaking && !isApproving}
       maskClosable={false}
       styles={{
         content: {
@@ -323,7 +294,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
         }
       }}
     >
-      <Spin spinning={isWriting || approving} tip={approving ? 'Approving...' : writeTip}>
+      <Spin spinning={isStaking || isApproving} tip={isApproving ? approveTip : stakeTip}>
         {/* Header */}
         <div className="relative border-b border-[#FFFFFF1F] p-4 text-center">
           <div className="text-lg font-bold text-white">Stake {assetSymbol}</div>
@@ -339,7 +310,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                 <div className="mb-2 text-base font-bold">Stake amount</div>
                 <Input
                   value={amount}
-                  disabled={isWriting || approving}
+                  disabled={isStaking || isApproving}
                   onChange={(event) => {
                     const val = event.target.value
                     if (/^\d*\.?\d*$/.test(val)) setAmount(val)
@@ -351,7 +322,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                       <span className="mr-3 text-base">${assetSymbol}</span>
                       <Button
                         onClick={handleMax}
-                        disabled={isWriting || approving}
+                        disabled={isStaking || isApproving}
                         className="h-[38px] rounded-full border-none bg-[#FFFFFF14] text-white hover:bg-[#FFFFFF33] disabled:bg-transparent disabled:text-[#FFFFFF4D]"
                       >
                         MAX
@@ -360,6 +331,11 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                   }
                 />
                 {isInsufficientBalance && <div className="mb-2 text-sm text-[#D92B2B]">Insufficient balance.</div>}
+                {!isValidAmount && Number(amount) > 0 && (
+                  <div className="mb-2 text-sm text-[#D92B2B]">
+                    Minimum stake amount is {formatNumber(minStakeAmount, 2)} {assetSymbol}.
+                  </div>
+                )}
 
                 <div className="mb-3 flex items-center justify-between text-base text-[#77777D]">
                   <span>
@@ -381,7 +357,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                   {[2500, 3500, 42500].map((val) => (
                     <Button
                       key={val}
-                      disabled={isWriting || approving}
+                      disabled={isStaking || isApproving}
                       className="h-8 cursor-pointer rounded-full border-none bg-[#FFFFFF14] px-4 py-1.5 text-sm text-white hover:bg-[#FFFFFF33] disabled:bg-[#FFFFFF0A] disabled:text-[#FFFFFF4D]"
                       onClick={() => handleQuickAmount(val)}
                     >
@@ -424,20 +400,13 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                   <span className="text-[#8D8D93]">Wallet Address</span>
                   <span>{shortenAddress(lastUsedWallet?.address || '', 12)}</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[#8D8D93]">Balance</span>
-                  <span>
-                    {formatNumber(Number(balance), 4)}
-                    {assetSymbol}
-                  </span>
-                </div>
                 {!tokenAddress && (
                   <div className="flex items-center justify-end text-xs text-[#D92B2B]">
                     * Token contract not configured
                   </div>
                 )}
                 <div className="flex items-center justify-between">
-                  <span className="text-[#8D8D93]">Balance(for gas)</span>
+                  <span className="text-[#8D8D93]">Balance</span>
                   <span className={gasWarning ? 'text-[#D92B2B]' : ''}>
                     {gasLoading && !nativeBalance ? (
                       <Loader2 className="size-3 animate-spin" />
@@ -451,8 +420,8 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                   <span className={gasWarning ? 'text-[#D92B2B]' : 'text-[#FFA800]'}>
                     {gasLoading ? (
                       <Loader2 className="size-3 animate-spin" />
-                    ) : stakeGasFee ? (
-                      `${stakeGasFee} ${StakingContract.chain.nativeCurrency.symbol}`
+                    ) : gasFee ? (
+                      `${gasFee} ${StakingContract.chain.nativeCurrency.symbol}`
                     ) : (
                       '--'
                     )}
@@ -474,11 +443,21 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                   <Button
                     type="primary"
                     onClick={handleApprove}
-                    disabled={!tokenAddress || !amount || Number(amount) <= 0 || isInsufficientBalance || approving}
-                    loading={approving}
+                    disabled={
+                      !tokenAddress ||
+                      !amount ||
+                      amount !== debouncedAmount ||
+                      Number(amount) <= 0 ||
+                      isInsufficientBalance ||
+                      !isValidAmount ||
+                      !!gasWarning ||
+                      isApproving ||
+                      gasLoading
+                    }
+                    loading={isApproving}
                     className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
                   >
-                    Approve {assetSymbol}
+                    {gasLoading ? 'Calculating Gas...' : `Approve ${assetSymbol}`}
                   </Button>
                 ) : (
                   <Button
@@ -490,14 +469,14 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                       amount !== debouncedAmount ||
                       Number(amount) <= 0 ||
                       isInsufficientBalance ||
-                      isWriting ||
+                      isStaking ||
                       !isValidAmount ||
                       !uid ||
                       !!gasWarning ||
                       fetchingUid ||
                       gasLoading
                     }
-                    loading={isWriting}
+                    loading={isStaking}
                     className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
                   >
                     {fetchingUid ? 'Preparing...' : gasLoading ? 'Calculating Gas...' : `Stake ${assetSymbol}`}
