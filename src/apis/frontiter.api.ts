@@ -71,6 +71,7 @@ export interface TaskDetail {
     hide?: boolean
     link?: string
     bot_id?: string
+    data_source?: string
   }
   questions?: CMUDataRequirements[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }

@@ -90,6 +90,8 @@ const FrontierSocialTelegramJoinGroup = lazy(() => import('@/views/frontiers/soc
 const FrontierSocialTwitterFollow = lazy(() => import('@/views/frontiers/social-tasks/twitter-follow'))
 const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social-tasks/twitter-retweet'))
 
+const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
+
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
 const CMUVideoLabelingTaskList = lazy(() => import('@/views/cmu-video-labeling/task-list'))
@@ -289,6 +291,11 @@ export default function Router() {
         <Route
           path="/frontier/project/FATE_TPL_000001/:taskId"
           element={<FateTpl000001 templateId="FATE_TPL_000001" />}
+        ></Route>
+
+        <Route
+          path="/frontier/project/VIVOLIGHT_VALIDATION/:taskId"
+          element={<VivolightValidation templateId="VIVOLIGHT_VALIDATION" />}
         ></Route>
         <Route path="/frontier/project/FATE_APP/:taskId" element={<FateApp templateId="FATE_APP" />}></Route>
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
