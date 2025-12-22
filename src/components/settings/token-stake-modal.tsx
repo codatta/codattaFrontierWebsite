@@ -2,7 +2,7 @@ import { InfoCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { Button, Input, Modal, message, Tooltip, Spin } from 'antd'
 import { useEffect, useState, useMemo } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
-import { keccak256, stringToHex, parseEther } from 'viem'
+import { parseEther } from 'viem'
 import { Loader2 } from 'lucide-react'
 
 import { TaskStakeInfo } from '@/apis/frontiter.api'
@@ -131,7 +131,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
   // Contract Args for Stake
   const stakeArgs = useMemo(() => {
     if (!uid || !debouncedAmount) return []
-    return [keccak256(stringToHex(uid)), parseEther(debouncedAmount)]
+    return [uid, parseEther(debouncedAmount)]
   }, [uid, debouncedAmount])
 
   const needsApprove = useMemo(() => {

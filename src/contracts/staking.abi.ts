@@ -6,15 +6,18 @@ const MAINNET = bsc
 const CONTRACT_ADDRESS_TESTNET = '0x8e96C14CBC2f898652BD582D70EFF04f6089C478'
 const CONTRACT_ADDRESS_MAINNET = ''
 
-export const STAKE_ASSET_TYPE = import.meta.env.VITE_MODE === 'production' ? 'XNY' : 'MTK'
-export const STAKE_TOKEN_ADRRESS =
-  import.meta.env.VITE_MODE === 'production'
-    ? '0xE3225e11Cab122F1a126A28997788E5230838ab9'
-    : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
+const isProduction = import.meta.env.VITE_MODE === 'production'
+const address = isProduction && CONTRACT_ADDRESS_MAINNET ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET
+const chain = isProduction ? MAINNET : baseSepolia
+
+export const STAKE_ASSET_TYPE = isProduction ? 'XNY' : 'MTK'
+export const STAKE_TOKEN_ADRRESS = isProduction
+  ? '0xE3225e11Cab122F1a126A28997788E5230838ab9'
+  : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
-  chain: import.meta.env.VITE_MODE === 'production' ? MAINNET : baseSepolia,
-  address: import.meta.env.VITE_MODE === 'production' ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET,
+  chain,
+  address,
   abi: [
     {
       type: 'function',
@@ -31,7 +34,7 @@ const contract: { abi: Abi; chain: Chain; address: string } = {
     },
     {
       type: 'function',
-      name: 'getTotalStaked',
+      name: 'getTotalStaked', //unused
       inputs: [],
       outputs: [
         {

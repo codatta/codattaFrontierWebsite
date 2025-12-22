@@ -1,12 +1,29 @@
 import { Button, Tabs, TabsProps } from 'antd'
+import { useCodattaConnectContext } from 'codatta-connect'
+import { formatEther } from 'viem'
+import { Loader2 } from 'lucide-react'
 
 import StakingIcon from '@/assets/settings/staking-icon.svg?react'
 
 import CurrentStakingTab from '@/components/settings/staking-current'
 import HistoryTab from '@/components/settings/staking-history'
-import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
+
+import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
+import { useContractRead } from '@/hooks/use-contract-read'
+import { formatNumber } from '@/utils/str'
 
 export default function Staking() {
+  const { lastUsedWallet } = useCodattaConnectContext()
+
+  const { data: totalStakedRaw, loading } = useContractRead<bigint>({
+    contract: StakingContract,
+    functionName: 'userTotalStaked',
+    args: [lastUsedWallet?.address],
+    enabled: !!lastUsedWallet?.address
+  })
+
+  const totalStaked = totalStakedRaw ? formatEther(totalStakedRaw) : '0'
+
   const items: TabsProps['items'] = [
     {
       key: 'current',
@@ -34,7 +51,15 @@ export default function Staking() {
         <div className="flex items-center font-bold uppercase">
           <StakingIcon className="size-12" />
           <div className="ml-4 mr-6 text-base">TOTAL STAKED</div>
-          <div className="text-xl">612,000 {STAKE_ASSET_TYPE}</div>
+          <div className="text-xl">
+            {loading ? (
+              <Loader2 className="animate-spin text-[#875DFF]" size={24} />
+            ) : (
+              <>
+                {formatNumber(Number(totalStaked), 2)} {STAKE_ASSET_TYPE}
+              </>
+            )}
+          </div>
         </div>
         <Button type="primary" className="h-[38px] rounded-full bg-[#875DFF] px-4 text-sm">
           Stake {STAKE_ASSET_TYPE}
