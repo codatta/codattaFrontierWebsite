@@ -114,8 +114,6 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
         console.error('Failed to get stake UID:', error)
         if (active) {
           console.log('Fetching UID for stake error...', String(Math.round(Math.random() * 10000)))
-
-          setUid(String(Math.round(Math.random() * 10000)))
         }
       } finally {
         if (active) {
