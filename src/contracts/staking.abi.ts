@@ -3,7 +3,7 @@ import { baseSepolia, bsc } from 'viem/chains'
 
 const MAINNET = bsc
 
-const CONTRACT_ADDRESS_TESTNET = '0x8e96C14CBC2f898652BD582D70EFF04f6089C478'
+const CONTRACT_ADDRESS_TESTNET = '0x32c3450Ad94E1ff27B4281B52859D918FB589b91'
 const CONTRACT_ADDRESS_MAINNET = ''
 
 const isProduction = import.meta.env.VITE_MODE === 'production'
@@ -20,22 +20,26 @@ const contract: { abi: Abi; chain: Chain; address: string } = {
   address,
   abi: [
     {
-      type: 'function',
-      name: 'UNLOCK_PERIOD',
-      inputs: [],
-      outputs: [
+      type: 'constructor',
+      inputs: [
         {
-          name: '',
-          type: 'uint256',
-          internalType: 'uint256'
+          name: '_stakingToken',
+          type: 'address',
+          internalType: 'address'
         }
       ],
-      stateMutability: 'view'
+      stateMutability: 'nonpayable'
     },
     {
       type: 'function',
-      name: 'getTotalStaked', //unused
-      inputs: [],
+      name: 'getTotalPositionsCount',
+      inputs: [
+        {
+          name: 'user',
+          type: 'address',
+          internalType: 'address'
+        }
+      ],
       outputs: [
         {
           name: '',
@@ -111,6 +115,57 @@ const contract: { abi: Abi; chain: Chain; address: string } = {
           name: '',
           type: 'uint256',
           internalType: 'uint256'
+        }
+      ],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'getUserPositions',
+      inputs: [
+        {
+          name: 'user',
+          type: 'address',
+          internalType: 'address'
+        },
+        {
+          name: 'offset',
+          type: 'uint256',
+          internalType: 'uint256'
+        },
+        {
+          name: 'limit',
+          type: 'uint256',
+          internalType: 'uint256'
+        }
+      ],
+      outputs: [
+        {
+          name: '',
+          type: 'tuple[]',
+          internalType: 'struct ILockedStaking.PositionEntry[]',
+          components: [
+            {
+              name: 'positionId',
+              type: 'bytes32',
+              internalType: 'bytes32'
+            },
+            {
+              name: 'amount',
+              type: 'uint128',
+              internalType: 'uint128'
+            },
+            {
+              name: 'startTime',
+              type: 'uint64',
+              internalType: 'uint64'
+            },
+            {
+              name: 'unlockTime',
+              type: 'uint64',
+              internalType: 'uint64'
+            }
+          ]
         }
       ],
       stateMutability: 'view'
@@ -313,6 +368,19 @@ const contract: { abi: Abi; chain: Chain; address: string } = {
           name: '',
           type: 'address',
           internalType: 'contract IERC20'
+        }
+      ],
+      stateMutability: 'view'
+    },
+    {
+      type: 'function',
+      name: 'unlockPeriod',
+      inputs: [],
+      outputs: [
+        {
+          name: '',
+          type: 'uint256',
+          internalType: 'uint256'
         }
       ],
       stateMutability: 'view'

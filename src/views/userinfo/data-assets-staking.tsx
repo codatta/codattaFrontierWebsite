@@ -16,8 +16,13 @@ import { useState } from 'react'
 
 export default function Staking() {
   const { lastUsedWallet } = useCodattaConnectContext()
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
 
-  const { data: totalStakedRaw, loading } = useContractRead<bigint>({
+  const {
+    data: totalStakedRaw,
+    loading,
+    refetch: refetchTotalStaked
+  } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'userTotalStaked',
     args: [lastUsedWallet?.address],
@@ -30,18 +35,20 @@ export default function Staking() {
     {
       key: 'current',
       label: 'Current staking',
-      children: <CurrentStakingTab />
+      children: <CurrentStakingTab refreshTrigger={refreshTrigger} />
     },
     {
       key: 'history',
       label: 'History',
-      children: <HistoryTab />
+      children: <HistoryTab refreshTrigger={refreshTrigger} />
     }
   ]
 
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
   const handleStakeSuccess = () => {
     setStakeModalOpen(false)
+    setRefreshTrigger((prev) => prev + 1)
+    refetchTotalStaked()
   }
 
   return (

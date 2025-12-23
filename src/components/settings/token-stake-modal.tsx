@@ -250,7 +250,6 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, onSucc
             gas_fee: gasFee // Use estimated gas as record
           })
           setViewState('success')
-          onSuccess?.()
         }
       }
     }
