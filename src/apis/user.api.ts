@@ -478,13 +478,13 @@ class UserApi {
     return data.data
   }
 
-  async getStakeRecords({ page = 1, page_size = 10 }: { page?: number; page_size?: number }) {
-    const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>('/v2/user/stake/record/list', {
-      page_num: page,
-      page_size
-    })
-    return data.data
-  }
+  // async getStakeRecords({ page = 1, page_size = 10 }: { page?: number; page_size?: number }) {
+  //   const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>('/v2/user/stake/record/list', {
+  //     page_num: page,
+  //     page_size
+  //   })
+  //   return data.data
+  // }
 
   async getStakeHistory({ page = 1, page_size = 100 }: { page?: number; page_size?: number }) {
     const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>(

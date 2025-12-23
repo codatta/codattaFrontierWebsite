@@ -104,7 +104,7 @@ function StakingTable<T extends object>({
   )
 }
 
-export default function CurrentStakingTab({ refreshTrigger }: { refreshTrigger?: number }) {
+export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigger?: number }) {
   const { lastUsedWallet } = useCodattaConnectContext()
   const [page, setPage] = useState(1)
   const pageSize = 10
