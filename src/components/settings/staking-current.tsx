@@ -1,4 +1,4 @@
-import { Button, TableProps, Spin, Pagination } from 'antd'
+import { Button, TableProps, Spin, Pagination, message } from 'antd'
 import { useState, useMemo } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { formatEther } from 'viem'
@@ -8,6 +8,7 @@ import StakingTable from './staking-table'
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { formatNumber } from '@/utils/str'
 import { useContractRead } from '@/hooks/use-contract-read'
+import { useContractWrite } from '@/hooks/use-contract-write'
 
 interface CurrentStakingItem {
   key: string
@@ -33,7 +34,11 @@ export default function CurrentStakingTab() {
   const pageSize = 10
 
   // 1. Get total count
-  const { data: count, loading: loadingCount } = useContractRead<bigint>({
+  const {
+    data: count,
+    loading: loadingCount,
+    refetch: refetchCount
+  } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'getUserActivePositionsCount',
     args: [lastUsedWallet?.address],
@@ -44,7 +49,11 @@ export default function CurrentStakingTab() {
   const offset = BigInt((page - 1) * pageSize)
   const limit = BigInt(pageSize)
 
-  const { data: positions, loading: loadingPositions } = useContractRead<PositionEntry[]>({
+  const {
+    data: positions,
+    loading: loadingPositions,
+    refetch: refetchPositions
+  } = useContractRead<PositionEntry[]>({
     contract: StakingContract,
     functionName: 'getUserActivePositions',
     args: [lastUsedWallet?.address, offset, limit],
@@ -52,14 +61,53 @@ export default function CurrentStakingTab() {
   })
 
   // 3. Get total staked amount
-  const { data: totalStakedAmount, loading: loadingTotal } = useContractRead<bigint>({
+  const {
+    data: totalStakedAmount,
+    loading: loadingTotal,
+    refetch: refetchTotal
+  } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'userTotalStaked',
     args: [lastUsedWallet?.address],
     enabled: !!lastUsedWallet?.address
   })
 
-  const loading = loadingCount || loadingPositions || loadingTotal
+  // 4. Check Withdrawable
+  const {
+    data: withdrawableData,
+    loading: loadingWithdrawable,
+    refetch: refetchWithdrawable
+  } = useContractRead<[bigint, readonly `0x${string}`[]]>({
+    contract: StakingContract,
+    functionName: 'getWithdrawableAmount',
+    args: [lastUsedWallet?.address],
+    enabled: !!lastUsedWallet?.address
+  })
+
+  const [totalClaimableAmount, claimablePositionIds] = withdrawableData || [0n, []]
+
+  const { writeContract, isLoading: isClaiming } = useContractWrite()
+
+  const handleClaimAll = async () => {
+    if (!claimablePositionIds || claimablePositionIds.length === 0) return
+
+    try {
+      await writeContract({
+        contract: StakingContract,
+        functionName: 'withdraw',
+        args: [claimablePositionIds]
+      })
+      message.success('Claimed successfully')
+      refetchCount()
+      refetchPositions()
+      refetchTotal()
+      refetchWithdrawable()
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const loading = loadingCount || loadingPositions || loadingTotal || loadingWithdrawable
 
   const data: CurrentStakingItem[] = useMemo(() => {
     if (!positions) return []
@@ -136,14 +184,17 @@ export default function CurrentStakingTab() {
     <Spin spinning={loading}>
       <div className="mb-3 flex items-center justify-between rounded-xl bg-[#875DFF]/10 px-6 py-5 text-base">
         <div>
-          <span className="text-white">{Number(count || 0)} active positions</span>
+          <span className="text-white">{claimablePositionIds?.length || 0} active positions</span>
           <span className="mx-2 text-[#BBBBBE]">·</span>
-          total <span className="text-[#875DFF]">
-            {formatNumber(Number(formatEther(totalStakedAmount || 0n)))}
-          </span>{' '}
+          total <span className="text-[#875DFF]">{formatNumber(Number(formatEther(totalClaimableAmount)))}</span>{' '}
           {STAKE_ASSET_TYPE}
         </div>
-        <Button className="h-[32px] rounded-full border border-[#875DFF] bg-transparent text-sm text-[#875DFF] hover:!border-white hover:!text-white">
+        <Button
+          loading={isClaiming}
+          disabled={!totalClaimableAmount || totalClaimableAmount === 0n}
+          onClick={handleClaimAll}
+          className="h-[32px] rounded-full border border-[#875DFF] bg-transparent text-sm text-[#875DFF] hover:!border-white hover:!text-white disabled:border-[#FFFFFF1F] disabled:text-[#BBBBBE]"
+        >
           Claim All
         </Button>
       </div>
