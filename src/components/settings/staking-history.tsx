@@ -26,7 +26,7 @@ function StakingTable<T extends object>({
   onPageChange
 }: StakingTableProps<T>) {
   return (
-    <div>
+    <div className="rounded-2xl bg-[#252532] p-6">
       <Table
         className="[&_.ant-table-placeholder]:border-b-0 [&_.ant-table-placeholder_.ant-empty-description]:text-[#BBBBBE] [&_.ant-table-placeholder_.ant-empty]:flex [&_.ant-table-placeholder_.ant-empty]:flex-col [&_.ant-table-placeholder_.ant-empty]:items-center [&_.ant-table-placeholder_.ant-table-cell]:!px-0 [&_.ant-table-placeholder_.ant-table-cell]:!text-center [&_.ant-table]:bg-transparent"
         columns={columns}
@@ -62,7 +62,7 @@ function StakingTable<T extends object>({
             cell: ({ children, ...props }: ComponentProps<'th'>) => (
               <th
                 {...props}
-                className={`border-b border-[#FFFFFF1F] p-4 text-left text-sm font-normal first:!pl-0 last:pl-8 ${props.className || ''}`}
+                className={`border-b border-[#FFFFFF1F] !bg-transparent p-4 text-left text-sm font-normal first:!pl-0 last:pl-8 ${props.className || ''}`}
               >
                 {children}
               </th>
@@ -123,7 +123,6 @@ interface HistoryTabProps {
 }
 
 export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
-  // TODO: Use refreshTrigger to refetch history when API is ready
   console.log('HistoryTab refreshTrigger', refreshTrigger)
 
   const columns: TableProps<HistoryItem>['columns'] = [
