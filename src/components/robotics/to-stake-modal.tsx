@@ -24,8 +24,7 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
   //   return taskStakeInfo?.stake_asset_type === 'XnYCoin' ? 'XNY' : taskStakeInfo?.stake_asset_type
   // }, [taskStakeInfo])
   const stakeToKen = STAKE_ASSET_TYPE
-  const stakeAmount =
-    import.meta.env.VITE_MODE === 'production' ? formatNumber(taskStakeInfo?.stake_amount ?? 0, 2) : '1.00'
+  const stakeAmount = formatNumber(taskStakeInfo?.stake_amount ?? 0, 2)
 
   useEffect(() => {
     if (!open) {

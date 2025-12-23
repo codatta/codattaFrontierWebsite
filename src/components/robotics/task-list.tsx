@@ -14,7 +14,7 @@ import { TaskDetail, TaskStakeInfo } from '@/apis/frontiter.api'
 
 import CustomEmpty from '@/components/common/empty'
 import TaskFilterModal, { FilterState } from './task-filter-modal'
-import StakeModel from '@/components/settings/token-stake-modal'
+import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
 import ToStakeModal from './to-stake-modal'
 
 const TaskList: React.FC = () => {
@@ -29,7 +29,8 @@ const TaskList: React.FC = () => {
   const [stakeTaskId, setStakeTaskId] = useState('')
   const [toStakeModalOpen, setToStakeModalOpen] = useState(false)
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
-  const [taskStakeInfo, setTaskStakeInfo] = useState<TaskStakeInfo>()
+  const [taskUrl, setTaskUrl] = useState('')
+  const [taskStakeConfig, setTaskStakeConfig] = useState<TaskStakeConfig>()
 
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
@@ -47,6 +48,7 @@ const TaskList: React.FC = () => {
     console.log('Task clicked:', data)
 
     if (data.user_reputation_flag === 0) {
+      setTaskUrl(`/app/frontier/project/${data.data_display.template_id}/${data.task_id}`)
       setStakeTaskId(data.task_id)
       setToStakeModalOpen(true)
       return
@@ -56,13 +58,21 @@ const TaskList: React.FC = () => {
       message.error('Reputation not met!')
       return
     }
-    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+    navigate(`/app/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handleStake = (stakeInfo: TaskStakeInfo) => {
     setToStakeModalOpen(false)
     setStakeModalOpen(true)
-    setTaskStakeInfo(stakeInfo)
+    setTaskStakeConfig({
+      ...stakeInfo,
+      taskUrl
+    })
+  }
+
+  const handleStakeSuccess = () => {
+    setStakeModalOpen(false)
+    frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }
 
   useEffect(() => {
@@ -205,7 +215,14 @@ const TaskList: React.FC = () => {
         taskId={stakeTaskId}
         onStake={handleStake}
       />
-      <StakeModel open={stakeModalOpen} onClose={() => setStakeModalOpen(false)} taskStakeInfo={taskStakeInfo} />
+      {stakeModalOpen && (
+        <StakeModel
+          open={true}
+          onClose={() => setStakeModalOpen(false)}
+          onSuccess={handleStakeSuccess}
+          taskStakeConfig={taskStakeConfig}
+        />
+      )}
     </div>
   )
 }

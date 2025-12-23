@@ -1,11 +1,11 @@
 import { InfoCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
 import { Button, Input, Modal, message, Tooltip, Spin } from 'antd'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { parseEther } from 'viem'
 import { Loader2 } from 'lucide-react'
 
-import { TaskStakeInfo } from '@/apis/frontiter.api'
+import frontierApi, { TaskStakeInfo, StakeReputationInfo } from '@/apis/frontiter.api'
 import userApi from '@/apis/user.api'
 import { formatNumber } from '@/utils/str'
 import { shortenAddress } from '@/utils/wallet-address'
@@ -13,12 +13,18 @@ import StakingContract, { STAKE_ASSET_TYPE, STAKE_TOKEN_ADRRESS } from '@/contra
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useTokenContract, ERC20_ABI } from '@/hooks/use-token-contract'
 import { useContractWrite } from '@/hooks/use-contract-write'
+import { useNavigate } from 'react-router-dom'
+
+export interface TaskStakeConfig extends TaskStakeInfo {
+  frontierUrl?: string
+  taskUrl?: string
+}
 
 interface TokenStakeModalProps {
   open: boolean
-  onClose: () => void
-  taskStakeInfo?: TaskStakeInfo
+  onClose?: () => void
   onSuccess?: () => void
+  taskStakeConfig?: Partial<TaskStakeConfig>
 }
 
 type ViewState = 'input' | 'success'
@@ -36,12 +42,15 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue
 }
 
-const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskStakeInfo, onSuccess }) => {
+const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, onSuccess, taskStakeConfig }) => {
   const { lastUsedWallet } = useCodattaConnectContext()
   const [viewState, setViewState] = useState<ViewState>('input')
   const [amount, setAmount] = useState<string>('')
   const [uid, setUid] = useState<string>('')
   const [fetchingUid, setFetchingUid] = useState(false)
+  const [calculatedReputation, setCalculatedReputation] = useState<StakeReputationInfo | null>(null)
+  const [calculatingReputation, setCalculatingReputation] = useState(false)
+  const isFromTask = !!taskStakeConfig?.taskUrl
   const {
     balance,
     allowance,
@@ -57,21 +66,28 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
 
   const assetSymbol = STAKE_ASSET_TYPE
   const debouncedAmount = useDebounce(amount, 500)
-  const minStakeAmount = import.meta.env.VITE_MODE === 'production' ? (taskStakeInfo?.stake_amount ?? 0) : 1
+  const minStakeAmount = taskStakeConfig?.stake_amount || 0
   const isInsufficientBalance = Number(amount) > Number(balance)
   const isValidAmount = Number(amount) >= Number(minStakeAmount)
 
-  const currentReputation = formatNumber(taskStakeInfo?.user_reputation || 0, 2)
-  const afterReputation = formatNumber(taskStakeInfo?.user_reputation_new || 0, 2)
+  const currentReputation = formatNumber(
+    calculatedReputation?.user_reputation ?? taskStakeConfig?.user_reputation ?? 0,
+    2
+  )
+  const afterReputation = formatNumber(
+    calculatedReputation?.user_reputation_new ?? taskStakeConfig?.user_reputation_new ?? 0,
+    2
+  )
   const reputationImpact = formatNumber(
-    (taskStakeInfo?.user_reputation_new || 0) - (taskStakeInfo?.user_reputation || 0),
+    (calculatedReputation?.user_reputation_new ?? taskStakeConfig?.user_reputation_new ?? 0) -
+      (calculatedReputation?.user_reputation ?? taskStakeConfig?.user_reputation ?? 0),
     2
   )
 
   const isDebouncedAmountValid = useMemo(() => {
     if (!debouncedAmount || Number(debouncedAmount) <= 0) return false
     if (Number(debouncedAmount) > Number(balance)) return false
-    if (Number(debouncedAmount) < minStakeAmount) return false
+    if (Number(debouncedAmount) < Number(minStakeAmount)) return false
     return true
   }, [debouncedAmount, balance, minStakeAmount])
 
@@ -83,8 +99,34 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
       setViewState('input')
       setAmount('')
       setUid('')
+      setCalculatedReputation(null)
     }
   }, [open])
+
+  // Calculate Reputation
+  useEffect(() => {
+    async function calculate() {
+      console.log('calculate', debouncedAmount, taskStakeConfig)
+      // if (!debouncedAmount || Number(debouncedAmount) <= 0 || !taskStakeConfig) {
+      //   setCalculatedReputation(null)
+      //   return
+      // }
+
+      setCalculatingReputation(true)
+      try {
+        const res = await frontierApi.calculateStakeReputation(taskStakeConfig?.stake_asset_type || '', debouncedAmount)
+        if (res.success) {
+          setCalculatedReputation(res.data)
+        }
+      } catch (error) {
+        console.error('Failed to calculate reputation:', error)
+      } finally {
+        setCalculatingReputation(false)
+      }
+    }
+
+    calculate()
+  }, [debouncedAmount, taskStakeConfig])
 
   // Fetch UID from backend
   useEffect(() => {
@@ -92,7 +134,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
 
     async function fetchUid() {
       // Basic validation
-      if (!isDebouncedAmountValid || !lastUsedWallet?.address || !taskStakeInfo) {
+      if (!isDebouncedAmountValid || !lastUsedWallet?.address || !taskStakeConfig) {
         setUid('')
         return
       }
@@ -102,7 +144,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
       try {
         console.log('Fetching UID for stake...', debouncedAmount)
         const res = await userApi.getStakeUid({
-          asset_type: taskStakeInfo.stake_asset_type,
+          asset_type: taskStakeConfig?.stake_asset_type || '',
           amount: debouncedAmount,
           address: lastUsedWallet.address
         })
@@ -126,7 +168,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
     return () => {
       active = false
     }
-  }, [isDebouncedAmountValid, debouncedAmount, lastUsedWallet, taskStakeInfo])
+  }, [isDebouncedAmountValid, debouncedAmount, lastUsedWallet, taskStakeConfig])
 
   // Contract Args for Stake
   const stakeArgs = useMemo(() => {
@@ -202,7 +244,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
           const txHash = (data as { hash: string }).hash
           await userApi.recordStakeTransaction({
             uid,
-            asset_type: taskStakeInfo?.stake_asset_type || '',
+            asset_type: taskStakeConfig?.stake_asset_type || '',
             amount,
             address: lastUsedWallet.address,
             tx_hash: txHash,
@@ -263,15 +305,30 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
   }
 
   const handleQuickAmount = (val: number) => {
-    setAmount(val.toString())
+    setAmount(String((val * Number(balance)) / 4))
   }
 
-  const handleBackToStaking = () => {
+  const navigate = useNavigate()
+  const handleSuccess = useCallback(() => {
     setViewState('input')
     setAmount('')
     setUid('')
-    onClose()
-  }
+    onSuccess?.()
+  }, [onSuccess])
+
+  const handleGoToStaking = useCallback(() => {
+    handleSuccess()
+  }, [handleSuccess])
+
+  const handleGoToTaskList = useCallback(() => {
+    handleSuccess()
+  }, [handleSuccess])
+
+  const handleGoToTask = useCallback(() => {
+    handleSuccess()
+    if (!taskStakeConfig?.taskUrl) return
+    navigate(taskStakeConfig?.taskUrl)
+  }, [handleSuccess, navigate, taskStakeConfig?.taskUrl])
 
   return (
     <Modal
@@ -352,14 +409,14 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
 
                 {/* Quick Amount Pills */}
                 <div className="mb-6 flex gap-3">
-                  {[2500, 3500, 42500].map((val) => (
+                  {[1, 2, 3].map((val) => (
                     <Button
                       key={val}
                       disabled={isStaking || isApproving}
                       className="h-8 cursor-pointer rounded-full border-none bg-[#FFFFFF14] px-4 py-1.5 text-sm text-white hover:bg-[#FFFFFF33] disabled:bg-[#FFFFFF0A] disabled:text-[#FFFFFF4D]"
                       onClick={() => handleQuickAmount(val)}
                     >
-                      {formatNumber(val)}
+                      {val}/4
                     </Button>
                   ))}
                 </div>
@@ -381,8 +438,14 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                   <div className="mt-2 flex items-center justify-between text-sm">
                     <span className="text-[#BBBBBE]">After</span>
                     <div className="flex items-center gap-2">
-                      <span className="text-base">{afterReputation} pts</span>
-                      {!!reputationImpact && <span className="text-[#00C853]">(+{reputationImpact})</span>}
+                      {calculatingReputation ? (
+                        <Loader2 className="size-4 animate-spin text-[#875DFF]" />
+                      ) : (
+                        <>
+                          <span className="text-base">{afterReputation} pts</span>
+                          {!!reputationImpact && <span className="text-[#00C853]">(+{reputationImpact})</span>}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -495,16 +558,41 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, taskSt
                 has been staked.
               </div>
               <div className="mb-8 text-center text-sm text-[#8D8D93]">
-                You can view this stake and your total balance in Staking {'>'} Current staking.
+                {isFromTask ? (
+                  <>Your eligibility for this task will be updated in the background.</>
+                ) : (
+                  <>You can view this stake and your total balance in Staking {'>'} Current staking.</>
+                )}
               </div>
 
-              <Button
-                type="primary"
-                onClick={handleBackToStaking}
-                className="h-10 w-[200px] rounded-full bg-[#875DFF] font-bold hover:bg-[#754DEB]"
-              >
-                Back to staking
-              </Button>
+              {isFromTask ? (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={handleGoToTask}
+                    className="h-10 w-[200px] cursor-pointer rounded-full bg-[#875DFF] font-semibold hover:bg-[#754DEB]"
+                  >
+                    Go to task
+                  </Button>
+                  <Button
+                    type="text"
+                    className="mt-2 h-10 w-[200px] cursor-pointer rounded-full font-semibold text-[#875DFF] hover:bg-[#754DEB] hover:text-white"
+                    onClick={handleGoToTaskList}
+                  >
+                    Back to task list
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    type="primary"
+                    onClick={handleGoToStaking}
+                    className="h-10 w-[200px] cursor-pointer rounded-full bg-[#875DFF] font-semibold hover:bg-[#754DEB]"
+                  >
+                    Back to staking
+                  </Button>
+                </>
+              )}
             </div>
           )}
         </div>

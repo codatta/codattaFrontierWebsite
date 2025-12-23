@@ -7,10 +7,12 @@ import StakingIcon from '@/assets/settings/staking-icon.svg?react'
 
 import CurrentStakingTab from '@/components/settings/staking-current'
 import HistoryTab from '@/components/settings/staking-history'
+import TokenStakeModal from '@/components/settings/token-stake-modal'
 
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { useContractRead } from '@/hooks/use-contract-read'
 import { formatNumber } from '@/utils/str'
+import { useState } from 'react'
 
 export default function Staking() {
   const { lastUsedWallet } = useCodattaConnectContext()
@@ -37,6 +39,11 @@ export default function Staking() {
     }
   ]
 
+  const [stakeModalOpen, setStakeModalOpen] = useState(false)
+  const handleStakeSuccess = () => {
+    setStakeModalOpen(false)
+  }
+
   return (
     <div className="flex flex-1 flex-col">
       {/* Header */}
@@ -61,7 +68,11 @@ export default function Staking() {
             )}
           </div>
         </div>
-        <Button type="primary" className="h-[38px] rounded-full bg-[#875DFF] px-4 text-sm">
+        <Button
+          type="primary"
+          className="h-[38px] rounded-full bg-[#875DFF] px-4 text-sm"
+          onClick={() => setStakeModalOpen(true)}
+        >
           Stake {STAKE_ASSET_TYPE}
         </Button>
       </div>
@@ -72,6 +83,14 @@ export default function Staking() {
         items={items}
         className="[&.ant-tabs-top>.ant-tabs-nav::before]:hidden [&_.ant-tabs-ink-bar]:bg-[#875DFF] [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!text-[#875DFF] [&_.ant-tabs-tab-btn]:text-base"
       />
+      {stakeModalOpen && (
+        <TokenStakeModal
+          open={true}
+          onClose={() => setStakeModalOpen(false)}
+          onSuccess={handleStakeSuccess}
+          taskStakeConfig={{ stake_asset_type: 'XnYCoin' }}
+        />
+      )}
     </div>
   )
 }
