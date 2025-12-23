@@ -1,4 +1,4 @@
-import { Button, TableProps, Spin, Pagination, message } from 'antd'
+import { Button, TableProps, Spin, message } from 'antd'
 import { useState, useMemo } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { formatEther } from 'viem'
@@ -9,6 +9,7 @@ import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { formatNumber } from '@/utils/str'
 import { useContractRead } from '@/hooks/use-contract-read'
 import { useContractWrite } from '@/hooks/use-contract-write'
+import userApi from '@/apis/user.api'
 
 interface CurrentStakingItem {
   key: string
@@ -60,17 +61,7 @@ export default function CurrentStakingTab() {
     enabled: !!lastUsedWallet?.address && !!count && count > 0n
   })
 
-  // 3. Get total staked amount
-  const {
-    data: totalStakedAmount,
-    loading: loadingTotal,
-    refetch: refetchTotal
-  } = useContractRead<bigint>({
-    contract: StakingContract,
-    functionName: 'userTotalStaked',
-    args: [lastUsedWallet?.address],
-    enabled: !!lastUsedWallet?.address
-  })
+  // 3. Get total staked amount (removed unused logic)
 
   // 4. Check Withdrawable
   const {
@@ -87,6 +78,8 @@ export default function CurrentStakingTab() {
   const [totalClaimableAmount, claimablePositionIds] = withdrawableData || [0n, []]
 
   const { writeContract, isLoading: isClaiming } = useContractWrite()
+  const { writeContract: writeUnstake, isLoading: isUnstaking } = useContractWrite()
+  const [unstakingId, setUnstakingId] = useState<string | null>(null)
 
   const handleClaimAll = async () => {
     if (!claimablePositionIds || claimablePositionIds.length === 0) return
@@ -100,25 +93,53 @@ export default function CurrentStakingTab() {
       message.success('Claimed successfully')
       refetchCount()
       refetchPositions()
-      refetchTotal()
       refetchWithdrawable()
     } catch (e) {
       console.error(e)
     }
   }
 
-  const loading = loadingCount || loadingPositions || loadingTotal || loadingWithdrawable
+  const handleUnstake = async (positionId: string) => {
+    setUnstakingId(positionId)
+    try {
+      const res = await writeUnstake({
+        contract: StakingContract,
+        functionName: 'unstake',
+        args: [[positionId]]
+      })
+      console.log('writeUnstake', res)
+
+      if (!res?.hash) throw new Error('Transaction failed')
+      const data = await userApi.recordUnstakeTransaction({ uid: positionId, tx_hash: res.hash })
+      if (data?.status !== 1) throw new Error('Unstake record failed')
+      console.log('recordUnstakeTransaction', data)
+      message.success('Unstake successfully')
+    } catch (e) {
+      message.error('Unstake failed')
+      console.error(e)
+    } finally {
+      refetchCount()
+      refetchPositions()
+      refetchWithdrawable()
+      setUnstakingId(null)
+    }
+  }
+
+  const loading = loadingCount || loadingPositions || loadingWithdrawable
 
   const data: CurrentStakingItem[] = useMemo(() => {
     if (!positions) return []
+
+    console.log('Positions', positions)
+
     return positions.map((pos) => ({
       key: pos.positionId,
       amount: `${formatNumber(Number(formatEther(pos.amount)))} ${STAKE_ASSET_TYPE}`,
       stakedAt: dayjs(Number(pos.startTime) * 1000).format('YYYY-MM-DD HH:mm'),
       unlockTime: pos.unlockTime > 0n ? dayjs(Number(pos.unlockTime) * 1000).format('YYYY-MM-DD HH:mm') : '-',
-      status: 'Staked',
+      status: pos.unlockTime > 0n ? 'Unstaking' : 'Staked',
+      active: pos.unlockTime > 0n ? false : true,
       tx: pos.positionId,
-      active: true,
       rawAmount: pos.amount
     }))
   }, [positions])
@@ -169,14 +190,22 @@ export default function CurrentStakingTab() {
       dataIndex: 'active',
       key: 'active',
       width: '10%',
-      render: (active: boolean) =>
-        active ? (
-          <Button type="text" className="h-[38px] w-[88px] rounded-full text-[#875DFF]">
+      render: (active: boolean, record: CurrentStakingItem) => {
+        const isLoading = isUnstaking && unstakingId === record.key
+        return active ? (
+          <Button
+            type="text"
+            className="h-[38px] w-[88px] rounded-full text-[#875DFF]"
+            onClick={() => handleUnstake(record.key)}
+            loading={isLoading}
+            disabled={isUnstaking && !isLoading}
+          >
             Unstake
           </Button>
         ) : (
           <div className="flex items-center justify-center text-[#BBBBBE]">-</div>
         )
+      }
     }
   ]
 
@@ -200,20 +229,14 @@ export default function CurrentStakingTab() {
       </div>
 
       {/* Table */}
-      <StakingTable<CurrentStakingItem> columns={columns} dataSource={data} />
-
-      {Number(count || 0) > pageSize && (
-        <div className="mt-4 flex justify-center">
-          <Pagination
-            current={page}
-            pageSize={pageSize}
-            total={Number(count || 0)}
-            onChange={(p) => setPage(p)}
-            showSizeChanger={false}
-            align="center"
-          />
-        </div>
-      )}
+      <StakingTable<CurrentStakingItem>
+        columns={columns}
+        dataSource={data}
+        total={Number(count || 0)}
+        current={page}
+        pageSize={pageSize}
+        onPageChange={(p) => setPage(p)}
+      />
     </Spin>
   )
 }

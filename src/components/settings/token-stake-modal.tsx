@@ -107,14 +107,13 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, onSucc
   useEffect(() => {
     async function calculate() {
       console.log('calculate', debouncedAmount, taskStakeConfig)
-      // if (!debouncedAmount || Number(debouncedAmount) <= 0 || !taskStakeConfig) {
-      //   setCalculatedReputation(null)
-      //   return
-      // }
 
       setCalculatingReputation(true)
       try {
-        const res = await frontierApi.calculateStakeReputation(taskStakeConfig?.stake_asset_type || '', debouncedAmount)
+        const res = await frontierApi.calculateStakeReputation(
+          taskStakeConfig?.stake_asset_type || '',
+          debouncedAmount || '0'
+        )
         if (res.success) {
           setCalculatedReputation(res.data)
         }

@@ -463,9 +463,10 @@ class UserApi {
     return data.data
   }
 
-  async recordUnstakeTransaction({ uid }: { uid: string }) {
-    const { data } = await request.post<Response<{ uid: string; status: 0 | 1 }>>('/v2/user/unstake/record/create', {
-      uid
+  async recordUnstakeTransaction({ uid, tx_hash }: { uid: string; tx_hash?: string }) {
+    const { data } = await request.post<Response<{ uid: string; status: 0 | 1 }>>('/v2/user/stake/record/unlock', {
+      uid,
+      tx_hash
     })
     return data.data
   }
