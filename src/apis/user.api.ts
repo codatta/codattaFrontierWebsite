@@ -494,7 +494,7 @@ class UserApi {
         page_size: page_size
       }
     )
-    return data.data
+    return data
   }
 }
 

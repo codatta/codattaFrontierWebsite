@@ -1,6 +1,9 @@
 import { Table, TableProps } from 'antd'
-import { ComponentProps } from 'react'
+import { ComponentProps, useEffect, useState, useCallback } from 'react'
 import { ExternalLink } from 'lucide-react'
+import dayjs from 'dayjs'
+import userApi, { StakeRecordItem } from '@/apis/user.api'
+import { formatNumber } from '@/utils/str'
 
 interface HistoryItem {
   key: string
@@ -86,44 +89,43 @@ function StakingTable<T extends object>({
   )
 }
 
-// Mock Data for History
-const historyData: HistoryItem[] = [
-  {
-    key: '1',
-    time: '2025-11-20 14:32',
-    amount: '5,000 XNY',
-    status: 'Unlocked',
-    tx: '0x9fA1...1234'
-  },
-  {
-    key: '2',
-    time: '2025-11-20 14:32',
-    amount: '5,000 XNY',
-    status: 'Unlocked',
-    tx: '0x9fA1...1234'
-  },
-  {
-    key: '3',
-    time: '2025-11-20 14:32',
-    amount: '5,000 XNY',
-    status: 'Unlocked',
-    tx: '0x9fA1...1234'
-  },
-  {
-    key: '4',
-    time: '2025-11-20 14:32',
-    amount: '5,000 XNY',
-    status: 'Unlocked',
-    tx: '0x9fA1...1234'
-  }
-]
-
 interface HistoryTabProps {
   refreshTrigger?: number
 }
 
 export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
-  console.log('HistoryTab refreshTrigger', refreshTrigger)
+  const [loading, setLoading] = useState(false)
+  const [data, setData] = useState<HistoryItem[]>([])
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1)
+  const pageSize = 10
+
+  const fetchHistory = useCallback(async () => {
+    try {
+      setLoading(true)
+      const res = await userApi.getStakeHistory({ page, page_size: pageSize })
+      const list = res.data?.list || []
+
+      const historyItems: HistoryItem[] = list.map((item: StakeRecordItem, index: number) => ({
+        key: `${item.tx_hash}-${index}`,
+        time: item.stake_time ? dayjs(item.stake_time.substring(0, 19) + 'Z').format('YYYY-MM-DD HH:mm') : '-',
+        amount: `${formatNumber(item.balance)} ${item.asset_type === 'XnYCoin' ? 'XNY' : item.asset_type}`,
+        status: item.status_name,
+        tx: item.tx_hash
+      }))
+
+      setData(historyItems)
+      setTotal(res.total_count || 0)
+    } catch (error) {
+      console.error('Failed to fetch stake history:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [page, pageSize])
+
+  useEffect(() => {
+    fetchHistory()
+  }, [fetchHistory, refreshTrigger])
 
   const columns: TableProps<HistoryItem>['columns'] = [
     {
@@ -144,7 +146,7 @@ export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
       key: 'status',
       width: '25%',
       render: (status: string) => (
-        <div className="flex w-[88px] items-center justify-center rounded-full border border-[#FFFFFF1F] py-1 text-sm text-[#BBBBBE]">
+        <div className="flex w-[120px] items-center justify-center rounded-full border border-[#FFFFFF1F] py-1 text-sm text-[#BBBBBE]">
           {status}
         </div>
       )
@@ -155,8 +157,13 @@ export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
       key: 'tx',
       width: '25%',
       render: (tx: string) => (
-        <a href="#" className="flex items-center gap-1 pl-4 text-[#875DFF] hover:underline">
-          TX:{tx} <ExternalLink size={24} />
+        <a
+          href={`https://scan.codatta.org/tx/${tx}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 pl-4 text-[#875DFF] hover:underline"
+        >
+          TX:{tx.slice(0, 6)}...{tx.slice(-4)} <ExternalLink size={24} />
         </a>
       )
     }
@@ -164,7 +171,15 @@ export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
 
   return (
     <div>
-      <StakingTable<HistoryItem> columns={columns} dataSource={historyData} />
+      <StakingTable<HistoryItem>
+        columns={columns}
+        dataSource={data}
+        loading={loading}
+        total={total}
+        current={page}
+        pageSize={pageSize}
+        onPageChange={(p) => setPage(p)}
+      />
     </div>
   )
 }
