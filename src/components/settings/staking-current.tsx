@@ -46,7 +46,7 @@ function StakingTable<T extends object>({
   return (
     <div className="rounded-2xl bg-[#252532] p-6">
       <Table
-        className="[&_.ant-table-placeholder]:border-b-0 [&_.ant-table-placeholder_.ant-empty-description]:text-[#BBBBBE] [&_.ant-table-placeholder_.ant-empty]:flex [&_.ant-table-placeholder_.ant-empty]:flex-col [&_.ant-table-placeholder_.ant-empty]:items-center [&_.ant-table-placeholder_.ant-table-cell]:!px-0 [&_.ant-table-placeholder_.ant-table-cell]:!text-center [&_.ant-table]:bg-transparent"
+        className="[&_.ant-table-placeholder_.ant-empty-description]:text-[#BBBBBE] [&_.ant-table-placeholder_.ant-empty]:flex [&_.ant-table-placeholder_.ant-empty]:flex-col [&_.ant-table-placeholder_.ant-empty]:items-center [&_.ant-table-placeholder_.ant-table-cell]:!px-0 [&_.ant-table-placeholder_.ant-table-cell]:!text-center [&_.ant-table]:bg-transparent"
         columns={columns}
         dataSource={dataSource}
         pagination={{
@@ -89,7 +89,11 @@ function StakingTable<T extends object>({
           },
           body: {
             row: ({ children, ...props }: ComponentProps<'tr'>) => (
-              <tr {...props} className={`border-b border-[#FFFFFF1F] last:border-b-0 ${props.className || ''}`}>
+              <tr
+                {...props}
+                className={`border-b border-[#FFFFFF1F] last:border-b-0 ${props.className || ''}`}
+                style={{ background: 'transparent' }}
+              >
                 {children}
               </tr>
             ),

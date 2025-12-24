@@ -1,5 +1,5 @@
 import { InfoCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
-import { Button, Input, Modal, message, Tooltip, Spin } from 'antd'
+import { Button, Input, Modal, Tooltip, Spin } from 'antd'
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { parseEther } from 'viem'
@@ -263,7 +263,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, onSucc
   } = useContractWrite({
     onStepChange: async (step) => {
       if (step === 'success') {
-        message.success('Approved successfully')
+        // message.success('Approved successfully')
         fetchTokenInfo()
       }
     }
@@ -391,7 +391,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = ({ open, onClose, onSucc
                 )}
 
                 <div className="mb-3 flex items-center justify-between text-base text-[#77777D]">
-                  <span>
+                  <span className={minStakeAmount === 0 ? 'invisible' : ''}>
                     Min stake: {formatNumber(minStakeAmount, 2)} {assetSymbol}
                   </span>
                   <span>

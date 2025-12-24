@@ -73,7 +73,11 @@ function StakingTable<T extends object>({
           },
           body: {
             row: ({ children, ...props }: ComponentProps<'tr'>) => (
-              <tr {...props} className={`border-b border-[#FFFFFF1F] last:border-b-0 ${props.className || ''}`}>
+              <tr
+                {...props}
+                className={`border-b border-[#FFFFFF1F] last:border-b-0 ${props.className || ''}`}
+                style={{ background: 'transparent' }}
+              >
                 {children}
               </tr>
             ),
@@ -109,7 +113,7 @@ export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
       const historyItems: HistoryItem[] = list.map((item: StakeRecordItem, index: number) => ({
         key: `${item.tx_hash}-${index}`,
         time: item.stake_time ? dayjs(item.stake_time.substring(0, 19) + 'Z').format('YYYY-MM-DD HH:mm') : '-',
-        amount: `${formatNumber(item.balance)} ${item.asset_type === 'XnYCoin' ? 'XNY' : item.asset_type}`,
+        amount: `${formatNumber(item.balance, 2)} ${item.asset_type === 'XnYCoin' ? 'XNY' : item.asset_type}`,
         status: item.status_name,
         tx: item.tx_hash
       }))
