@@ -46,7 +46,6 @@ export default function Staking() {
 
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
   const handleStakeSuccess = () => {
-    setStakeModalOpen(false)
     setRefreshTrigger((prev) => prev + 1)
     refetchTotalStaked()
   }

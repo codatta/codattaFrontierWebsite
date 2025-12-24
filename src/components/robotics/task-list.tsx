@@ -71,7 +71,6 @@ const TaskList: React.FC = () => {
   }
 
   const handleStakeSuccess = () => {
-    setStakeModalOpen(false)
     frontierStoreActions.changeFrontiersFilter({ page, page_size, frontier_id: frontier_id })
   }
 
