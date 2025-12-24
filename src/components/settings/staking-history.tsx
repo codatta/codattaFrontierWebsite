@@ -84,7 +84,11 @@ function StakingTable<T extends object>({
               </tr>
             ),
             cell: ({ children, ...props }: ComponentProps<'td'>) => (
-              <td {...props} className={`p-4 text-sm text-white first:!pl-0 last:pl-8 ${props.className || ''}`}>
+              <td
+                {...props}
+                className={`p-4 text-sm text-white first:!pl-0 last:pl-8 ${props.className || ''}`}
+                style={{ background: 'transparent' }}
+              >
                 {children}
               </td>
             )

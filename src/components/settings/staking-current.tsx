@@ -1,4 +1,4 @@
-import { Button, TableProps, Spin, message, Table } from 'antd'
+import { Button, TableProps, Spin, message, Table, Modal } from 'antd'
 import { useState, useMemo, ComponentProps, useEffect } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { formatEther } from 'viem'
@@ -9,6 +9,76 @@ import { formatNumber } from '@/utils/str'
 import { useContractRead } from '@/hooks/use-contract-read'
 import { useContractWrite } from '@/hooks/use-contract-write'
 import userApi from '@/apis/user.api'
+
+interface UnstakeModalProps {
+  open: boolean
+  onClose: () => void
+  onConfirm: () => void
+  amount: string
+  symbol: string
+  isLoading?: boolean
+}
+
+function UnstakeModal({ open, onClose, onConfirm, amount, symbol, isLoading }: UnstakeModalProps) {
+  return (
+    <Modal
+      open={open}
+      onCancel={onClose}
+      footer={null}
+      width={600}
+      centered
+      closable={!isLoading}
+      maskClosable={!isLoading}
+      styles={{
+        content: {
+          padding: 0,
+          backgroundColor: '#252532',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          border: '1px solid rgba(255, 255, 255, 0.1)'
+        },
+        header: {
+          backgroundColor: 'transparent',
+          marginBottom: 0,
+          padding: '20px 24px'
+        },
+        body: {
+          padding: '24px'
+        }
+      }}
+      title={<div className="text-lg font-bold text-white">Unstake {symbol}</div>}
+    >
+      <div className="mb-12 rounded-xl bg-[#1C1C26] p-6">
+        <div className="flex items-center justify-between text-lg">
+          <span className="font-bold text-white">Amount</span>
+          <span className="text-[#FFA800]">
+            <span className="font-bold">{formatNumber(Number(amount), 2)}</span> <span>{symbol}</span>
+          </span>
+        </div>
+        <div className="my-3 h-px bg-[#FFFFFF1F]"></div>
+        <ul className="list-outside list-disc space-y-2 pl-3 text-base text-[#BBBBBE]">
+          <li>
+            After you confirm, this stake will enter a 7-day unlocking period. During this time, it won’t be available
+            for use and will not count toward your reputation requirement.
+          </li>
+          <li>When the unlocking period ends, the {symbol} will automatically return to your available balance.</li>
+          <li>You can review this position later in Staking &gt; History.</li>
+        </ul>
+      </div>
+
+      <div className="flex justify-end">
+        <Button
+          type="primary"
+          onClick={onConfirm}
+          loading={isLoading}
+          className="h-10 rounded-full bg-[#875DFF] px-6 text-sm"
+        >
+          Confirm Unstake
+        </Button>
+      </div>
+    </Modal>
+  )
+}
 
 interface CurrentStakingItem {
   key: string
@@ -98,7 +168,11 @@ function StakingTable<T extends object>({
               </tr>
             ),
             cell: ({ children, ...props }: ComponentProps<'td'>) => (
-              <td {...props} className={`p-4 text-sm text-white first:!pl-0 last:pl-8 ${props.className || ''}`}>
+              <td
+                {...props}
+                className={`p-4 text-sm text-white first:!pl-0 last:pl-8 ${props.className || ''}`}
+                style={{ background: 'transparent' }}
+              >
                 {children}
               </td>
             )
@@ -168,6 +242,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   const { writeContract, isLoading: isClaiming } = useContractWrite()
   const { writeContract: writeUnstake, isLoading: isUnstaking } = useContractWrite()
   const [unstakingId, setUnstakingId] = useState<string | null>(null)
+  const [unstakeModalOpen, setUnstakeModalOpen] = useState(false)
+  const [selectedUnstakeItem, setSelectedUnstakeItem] = useState<CurrentStakingItem | null>(null)
 
   const handleClaimAll = async () => {
     if (!claimablePositionIds || claimablePositionIds.length === 0) return
@@ -187,7 +263,14 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
     }
   }
 
-  const handleUnstake = async (positionId: string) => {
+  const handleUnstakeClick = (item: CurrentStakingItem) => {
+    setSelectedUnstakeItem(item)
+    setUnstakeModalOpen(true)
+  }
+
+  const handleConfirmUnstake = async () => {
+    if (!selectedUnstakeItem) return
+    const positionId = selectedUnstakeItem.key
     setUnstakingId(positionId)
     try {
       const res = await writeUnstake({
@@ -202,6 +285,7 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
       if (data?.status !== 1) throw new Error('Unstake record failed')
       console.log('recordUnstakeTransaction', data)
       message.success('Unstake successfully')
+      setUnstakeModalOpen(false)
     } catch (e) {
       message.error('Unstake failed')
       console.error(e)
@@ -284,7 +368,7 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
           <Button
             type="text"
             className="h-[38px] w-[88px] rounded-full text-[#875DFF]"
-            onClick={() => handleUnstake(record.key)}
+            onClick={() => handleUnstakeClick(record)}
             loading={isLoading}
             disabled={isUnstaking && !isLoading}
           >
@@ -325,6 +409,17 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
         pageSize={pageSize}
         onPageChange={(p) => setPage(p)}
       />
+
+      {unstakeModalOpen && selectedUnstakeItem && (
+        <UnstakeModal
+          open={unstakeModalOpen}
+          onClose={() => setUnstakeModalOpen(false)}
+          onConfirm={handleConfirmUnstake}
+          amount={formatEther(selectedUnstakeItem.rawAmount)}
+          symbol={STAKE_ASSET_TYPE}
+          isLoading={isUnstaking}
+        />
+      )}
     </Spin>
   )
 }
