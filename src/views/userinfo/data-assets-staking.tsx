@@ -16,6 +16,7 @@ import { useState } from 'react'
 
 export default function Staking() {
   const { lastUsedWallet } = useCodattaConnectContext()
+  const userAddress = lastUsedWallet?.address
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const {
@@ -25,8 +26,8 @@ export default function Staking() {
   } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'userTotalStaked',
-    args: [lastUsedWallet?.address],
-    enabled: !!lastUsedWallet?.address
+    args: [userAddress],
+    enabled: !!userAddress
   })
 
   const totalStaked = totalStakedRaw ? formatEther(totalStakedRaw) : '0'

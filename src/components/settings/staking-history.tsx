@@ -2,8 +2,10 @@ import { Table, TableProps } from 'antd'
 import { ComponentProps, useEffect, useState, useCallback } from 'react'
 import { ExternalLink } from 'lucide-react'
 import dayjs from 'dayjs'
+
 import userApi, { StakeRecordItem } from '@/apis/user.api'
 import { formatNumber } from '@/utils/str'
+import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 
 interface HistoryItem {
   key: string
@@ -113,7 +115,8 @@ export default function HistoryTab({ refreshTrigger = 0 }: HistoryTabProps) {
       const historyItems: HistoryItem[] = list.map((item: StakeRecordItem, index: number) => ({
         key: `${item.tx_hash}-${index}`,
         time: item.stake_time ? dayjs(item.stake_time.substring(0, 19) + 'Z').format('YYYY-MM-DD HH:mm') : '-',
-        amount: `${formatNumber(item.balance, 2)} ${item.asset_type === 'XnYCoin' ? 'XNY' : item.asset_type}`,
+        // amount: `${formatNumber(item.balance, 2)} ${item.asset_type === 'XnYCoin' ? 'XNY' : item.asset_type}`,
+        amount: `${formatNumber(item.balance, 2)} ${STAKE_ASSET_TYPE}`,
         status: item.status_name,
         tx: item.tx_hash
       }))
