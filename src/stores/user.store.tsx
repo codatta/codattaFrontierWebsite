@@ -112,7 +112,8 @@ const userStore = proxy<UserStore>({
       avatar: '',
       referee_code: '',
       user_id: '',
-      did: ''
+      did: '',
+      channel: ''
     },
     user_reputation: 0,
     user_assets: [],

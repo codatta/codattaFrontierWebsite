@@ -352,10 +352,10 @@ function LogoSection() {
     >
       <div>
         <img src={ImageLogo} className="w-[128px]" />
-        <a className="mt-2 flex text-sm hover:text-primary" href="https://xny.ai/" target="_blank">
+        {/* <a className="mt-2 flex text-sm hover:text-primary" href="https://xny.ai/" target="_blank">
           <span className="mr-1">Powered by XnY</span>
           <ArrowUpRight strokeWidth={1.25} size={20} />
-        </a>
+        </a> */}
       </div>
     </div>
   )

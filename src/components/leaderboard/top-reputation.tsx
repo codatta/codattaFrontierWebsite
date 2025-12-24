@@ -6,6 +6,8 @@ import SilverMedal from '@/assets/leaderboard/silver-medal.svg'
 import BronzeMedal from '@/assets/leaderboard/bronze-medal.svg'
 
 import Empty from '@/components/common/empty'
+// import ReputationRate from '@/components/common/reputation-rate'
+
 import { rankStore } from '@/stores/rank.store'
 
 import { formatNumber, truncateStr } from '@/utils/str'
@@ -103,6 +105,7 @@ export default function Component() {
               >
                 {user.email || truncateStr(user.user_id, { len: 10, ellipsis: '***' })}
               </div>
+              {/* <ReputationRate gap={2} size={20} color="#FFA800E0" rate={user.reputation ?? 0}></ReputationRate> */}
               <div className="w-[108px] text-base font-bold text-[#875DFF]">
                 {formatNumber(user.reputation ?? 0, 2)}
               </div>

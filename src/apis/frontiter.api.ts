@@ -72,6 +72,7 @@ export interface TaskDetail {
     hide?: boolean
     link?: string
     bot_id?: string
+    data_source?: string
   }
   questions?: CMUDataRequirements[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }
@@ -278,8 +279,8 @@ class frontier {
     return res.data
   }
 
-  async getFrontiers(): Promise<Response<FrontierListItem[]>> {
-    const res = await this.request.post('/v2/frontier/list')
+  async getFrontiers(channel: string): Promise<Response<FrontierListItem[]>> {
+    const res = await this.request.post('/v2/frontier/list', { channel })
     return res.data
   }
 

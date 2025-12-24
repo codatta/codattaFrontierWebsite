@@ -22,6 +22,7 @@ export default function UserInfoReputation() {
         <div className="flex items-center gap-1 text-base font-normal">
           <ReputationRate
             rate={info?.user_reputation || 0}
+            size={20}
             className="font-inter text-xl font-bold text-[#875DFF]"
           ></ReputationRate>
           <span>/</span>

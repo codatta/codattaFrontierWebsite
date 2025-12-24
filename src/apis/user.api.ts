@@ -71,6 +71,7 @@ export interface UserInfo {
     user_id: string
     user_name: string
     did: string
+    channel: string
   }
   user_assets: UserAsset[]
   accounts_data: UserAccount[]

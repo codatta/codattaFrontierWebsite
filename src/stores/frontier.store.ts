@@ -139,8 +139,8 @@ function changeFrontiersHistoryFilter(page: number, frontier_id: string) {
   })
 }
 
-async function getFrontierList() {
-  const res = await frontierApi.getFrontiers()
+async function getFrontierList(channel: string) {
+  const res = await frontierApi.getFrontiers(channel)
   frontiersStore.frontierList = res.data || []
   return res.data
 }
