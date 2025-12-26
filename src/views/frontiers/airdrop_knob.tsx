@@ -1,39 +1,17 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
-import { ArrowLeft, X, Upload as UploadIcon, Check } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useParams } from 'react-router-dom'
-import { message, Spin, Input, Modal } from 'antd'
+import { message, Spin, Modal } from 'antd'
 import { Button } from '@/components/booster/button'
 import AuthChecker from '@/components/app/auth-checker'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import Guideline from '@/components/frontier/airdrop/knob/guideline'
-
-// Types
-interface Point {
-  x: number
-  y: number
-}
-
-interface Rect {
-  x1: number
-  y1: number
-  x2: number
-  y2: number
-  x3: number
-  y3: number
-  x4: number
-  y4: number
-  center?: Point
-}
-
-interface KnobFormData {
-  originalImage: string | null
-  annotatedImage: string | null
-  rectCoordinates: Rect | null
-  centerCoordinates: Point | null
-  pointerCoordinates: Point | null
-  scaleValue: string
-}
+import TaskSteps from '@/components/frontier/airdrop/knob/task-steps'
+import ImageUploader from '@/components/frontier/airdrop/knob/image-uploader'
+import AnnotationCanvas from '@/components/frontier/airdrop/knob/annotation-canvas'
+import ScaleInput from '@/components/frontier/airdrop/knob/scale-input'
+import { Point, Rect, KnobFormData } from '@/components/frontier/airdrop/knob/types'
 
 const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTemplateId }) => {
   const { taskId, templateId: paramTemplateId } = useParams()
@@ -335,10 +313,7 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
       if (handle) {
         state.isResizingRect = true
         state.resizeHandle = handle
-        state.rectStart = { x: rect.x1, y: rect.y1 } // store original but we mainly use rect state
-        // Actually we need the full rect state to resize correctly based on handle
-        // Storing current rect in state is enough as we read from 'rect' in render but here we need stable ref?
-        // 'rect' from closure is fine as we will update it via setRect
+        state.rectStart = { x: rect.x1, y: rect.y1 }
         e.preventDefault()
         return
       } else if (isPointInRect(x, y, rect)) {
@@ -375,8 +350,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
     if (state.isResizingRect && rect) {
       const newRect = { ...rect }
 
-      // We need to be careful. The logic in HTML used state.rectStart to capture initial state or just modified state.rect directly.
-      // Let's modify based on handle.
       switch (state.resizeHandle) {
         case 'nw':
           newRect.x1 = x
@@ -571,12 +544,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
       // We need to redraw to ensure clean state or annotated state
       redrawCanvas()
       const annotatedImage = canvas.toDataURL('image/png')
-
-      // For original image, we could redraw just image, but 'image' source is available.
-      // However, we need it resized to what we see? The HTML implementation used canvas.toDataURL for both.
-      // Let's stick to what the HTML did: same image for both fields?
-      // HTML: originalImage: canvas.toDataURL('image/png'), annotatedImage: canvas.toDataURL('image/png')
-      // This effectively sends the annotated version for both. I will follow this behavior.
       const originalImage = annotatedImage
 
       const submissionData: KnobFormData = {
@@ -610,8 +577,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
       })
 
       setModalShow(true)
-
-      // Reset local state if needed (modal handles navigation)
     } catch (error: unknown) {
       message.error((error as Error).message || 'Failed to submit!')
     } finally {
@@ -662,265 +627,40 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
 
             <div className="mt-8 grid grid-cols-1 items-start gap-5 xl:grid-cols-[360px_1fr]">
               {/* Left Panel */}
-              <div className="sticky top-6">
-                <div className="relative overflow-hidden rounded-2xl border border-[#8b5cf633] bg-[#1a1a1a] p-4 backdrop-blur-md">
-                  {/* Decor */}
-                  <div className="absolute inset-x-0 top-0 h-[3px] animate-pulse bg-gradient-to-r from-[#8b5cf6] via-[#667eea] to-[#8b5cf6] bg-[length:200%_100%]" />
-
-                  <h2 className="mb-4 flex items-center gap-2 border-l-[3px] border-[#6366f1] pl-3 text-lg font-bold">
-                    Task Steps
-                  </h2>
-
-                  <div className="space-y-2">
-                    {[
-                      {
-                        id: 1,
-                        title: 'Upload Knob Photo',
-                        content: 'Please upload a clear front-facing photo of an appliance knob'
-                      },
-                      {
-                        id: 2,
-                        title: 'Annotate Knob Outline',
-                        content: "Use a red rectangle to annotate the knob's outer contour"
-                      },
-                      {
-                        id: 3,
-                        title: 'Annotate Pointer Position',
-                        content: 'Use a brown dot to annotate the pointer position'
-                      },
-                      { id: 4, title: 'Fill Scale Value', content: 'Enter the scale value indicated by the pointer' }
-                    ].map((step) => {
-                      const isActive = step.id === currentStep
-                      const isCompleted = step.id < currentStep
-                      return (
-                        <div
-                          key={step.id}
-                          className={`rounded-xl border p-3 transition-all duration-300 ${
-                            isActive
-                              ? 'border-[#8b5cf680] bg-[#8b5cf626] shadow-[0_0_20px_rgba(139,92,246,0.2)]'
-                              : isCompleted
-                                ? 'border-[#22c55e4d] bg-[#22c55e1a]'
-                                : 'border-[#8b5cf633] bg-[#8b5cf614]'
-                          }`}
-                        >
-                          <div className="mb-2 flex items-center gap-3">
-                            <div
-                              className={`flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${
-                                isCompleted
-                                  ? 'bg-gradient-to-br from-[#22c55e] to-[#16a34a]'
-                                  : 'bg-gradient-to-br from-[#8b5cf6] to-[#667eea]'
-                              }`}
-                            >
-                              {isCompleted ? <Check size={16} /> : step.id}
-                            </div>
-                            <div className="text-base font-semibold">{step.title}</div>
-                          </div>
-                          {isActive && (
-                            <div className="ml-11 text-xs leading-relaxed text-[#d0d0d0]">{step.content}</div>
-                          )}
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  {/* Coordinates Display */}
-                  {(rect || pointer) && (
-                    <div className="mt-5 space-y-2 rounded-lg border border-[#8b5cf633] bg-[#8b5cf61a] p-4 text-xs">
-                      {rect && (
-                        <div>
-                          <span className="mb-1 block font-bold text-[#a78bfa]">Rectangle:</span>
-                          <div className="rounded bg-black/30 p-1 font-[monospace]">
-                            {`<${Math.round(rect.x1)},${Math.round(rect.y1)}>, <${Math.round(rect.x2)},${Math.round(rect.y2)}>`}
-                          </div>
-                        </div>
-                      )}
-                      {rect?.center && (
-                        <div>
-                          <span className="mb-1 block font-bold text-[#a78bfa]">Center:</span>
-                          <div className="rounded bg-black/30 p-1 font-[monospace]">
-                            {`<${Math.round(rect.center.x)},${Math.round(rect.center.y)}>`}
-                          </div>
-                        </div>
-                      )}
-                      {pointer && (
-                        <div>
-                          <span className="mb-1 block font-bold text-[#a78bfa]">Pointer:</span>
-                          <div className="rounded bg-black/30 p-1 font-[monospace]">
-                            {`<${Math.round(pointer.x)},${Math.round(pointer.y)}>`}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
+              <TaskSteps currentStep={currentStep} rect={rect} pointer={pointer} />
 
               {/* Right Panel */}
               <div className="flex flex-col gap-5">
                 {/* Upload Section */}
-                <div className="relative overflow-hidden rounded-2xl border border-[#8b5cf640] bg-[#1a1a1a] p-4 shadow-[0_18px_40px_rgba(15,23,42,0.85)]">
-                  <div className="absolute inset-x-0 top-0 h-[3px] animate-pulse bg-gradient-to-r from-[#8b5cf6] via-[#667eea] to-[#8b5cf6] bg-[length:200%_100%]" />
-                  <h2 className="mb-4 flex items-center gap-2 border-l-[3px] border-[#6366f1] pl-3 text-lg font-bold">
-                    Upload Image
-                  </h2>
-
-                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                    <div className="space-y-2">
-                      <div className="text-xs font-bold text-[#a78bfa]">Example: Original Image</div>
-                      <div
-                        className="flex h-[400px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-[#8b5cf64d] bg-black/30 transition-colors hover:border-[#8b5cf680]"
-                        onClick={() =>
-                          showImageModal(
-                            'https://codatta-v2.s3.ap-northeast-1.amazonaws.com/frontier/images/knob/raw.jpg'
-                          )
-                        }
-                      >
-                        <img
-                          src="https://codatta-v2.s3.ap-northeast-1.amazonaws.com/frontier/images/knob/raw.jpg"
-                          alt="Example"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                    </div>
-
-                    <div
-                      className={`relative h-[400px] w-full rounded-lg border-2 ${previewImage ? 'border-solid border-[#8b5cf680]' : 'border-dashed border-[#8b5cf64d]'} ${isDraggingFile ? 'border-[#8b5cf6] bg-[#8b5cf626]' : 'bg-black/30'} flex items-center justify-center overflow-hidden transition-all hover:bg-black/40`}
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                    >
-                      {!previewImage ? (
-                        <div
-                          className="flex size-full cursor-pointer flex-col items-center justify-center"
-                          onClick={() => fileInputRef.current?.click()}
-                        >
-                          <input
-                            ref={fileInputRef}
-                            type="file"
-                            className="hidden"
-                            accept="image/*"
-                            onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])}
-                          />
-                          <div className="mb-3 flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#8b5cf6] to-[#667eea] px-5 py-3 font-bold text-white shadow-app-btn transition-transform hover:-translate-y-0.5">
-                            <UploadIcon size={18} /> Upload Image
-                          </div>
-                          <div className="text-xs text-gray-400">Supports JPG, PNG formats</div>
-                          {isDraggingFile && <div className="mt-2 font-semibold text-[#a78bfa]">Drop image here</div>}
-                        </div>
-                      ) : (
-                        <div className="group relative flex size-full items-center justify-center">
-                          <div
-                            className="absolute right-2 top-2 z-10 flex size-8 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-black/70 text-white transition-colors hover:border-red-500 hover:bg-red-500"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              clearImage()
-                            }}
-                          >
-                            <X size={16} />
-                          </div>
-                          <img
-                            src={previewImage}
-                            alt="Preview"
-                            className="max-h-full max-w-full object-contain"
-                            onClick={() => showImageModal(previewImage)}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <ImageUploader
+                  previewImage={previewImage}
+                  isDraggingFile={isDraggingFile}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  onUpload={handleImageUpload}
+                  onClear={clearImage}
+                  onShowModal={showImageModal}
+                />
 
                 {/* Annotation Section */}
-                <div className="relative overflow-hidden rounded-2xl border border-[#8b5cf640] bg-[#1a1a1a] p-4 shadow-[0_18px_40px_rgba(15,23,42,0.85)]">
-                  <div className="absolute inset-x-0 top-0 h-[3px] animate-pulse bg-gradient-to-r from-[#8b5cf6] via-[#667eea] to-[#8b5cf6] bg-[length:200%_100%]" />
-                  <h2 className="mb-4 flex items-center gap-2 border-l-[3px] border-[#6366f1] pl-3 text-lg font-bold">
-                    Image Annotation
-                  </h2>
-
-                  <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                    <div className="space-y-2">
-                      <div className="text-xs font-bold text-[#a78bfa]">Example: Annotated Image</div>
-                      <div
-                        className="flex h-[400px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-[#8b5cf64d] bg-black/30 transition-colors hover:border-[#8b5cf680]"
-                        onClick={() =>
-                          showImageModal(
-                            'https://codatta-v2.s3.ap-northeast-1.amazonaws.com/frontier/images/knob/label.png'
-                          )
-                        }
-                      >
-                        <img
-                          src="https://codatta-v2.s3.ap-northeast-1.amazonaws.com/frontier/images/knob/label.png"
-                          alt="Example"
-                          className="max-h-full max-w-full object-contain"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      {image ? (
-                        <div>
-                          <div
-                            ref={containerRef}
-                            className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-xl bg-black"
-                          >
-                            <canvas
-                              ref={canvasRef}
-                              onMouseDown={handleMouseDown}
-                              onMouseMove={handleMouseMove}
-                              onMouseUp={handleMouseUp}
-                              onClick={handleClick}
-                              className="block touch-none"
-                            />
-                          </div>
-                          <div className="mt-4 flex gap-3">
-                            <Button
-                              disabled={!rect}
-                              onClick={handleClearRect}
-                              className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${!rect ? 'cursor-not-allowed border-[#8b5cf666] bg-transparent text-[#a78bfa] opacity-50' : 'border-[#8b5cf666] bg-[#8b5cf633] text-[#a78bfa] hover:bg-[#8b5cf64d]'}`}
-                              text="Clear Rectangle"
-                            />
-                            <Button
-                              disabled={!pointer}
-                              onClick={handleClearPointer}
-                              className={`rounded-lg border px-4 py-2 text-sm font-semibold transition-colors ${!pointer ? 'cursor-not-allowed border-[#8b5cf666] bg-transparent text-[#a78bfa] opacity-50' : 'border-[#8b5cf666] bg-[#8b5cf633] text-[#a78bfa] hover:bg-[#8b5cf64d]'}`}
-                              text="Clear Pointer"
-                            />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex h-[400px] w-full flex-col items-center justify-center text-[#888]">
-                          <div className="mb-4 text-5xl">📷</div>
-                          <div>Please upload an image first</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                <AnnotationCanvas
+                  image={image}
+                  rect={rect}
+                  pointer={pointer}
+                  containerRef={containerRef}
+                  canvasRef={canvasRef}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onClick={handleClick}
+                  onClearRect={handleClearRect}
+                  onClearPointer={handleClearPointer}
+                  onShowModal={showImageModal}
+                />
 
                 {/* Scale Value Section */}
-                <div className="relative overflow-hidden rounded-2xl border border-[#8b5cf640] bg-[#1a1a1a] p-4 shadow-[0_18px_40px_rgba(15,23,42,0.85)]">
-                  <h2 className="mb-4 flex items-center gap-2 border-l-[3px] border-[#6366f1] pl-3 text-lg font-bold">
-                    Fill Scale Value
-                  </h2>
-
-                  {pointer ? (
-                    <div className="mt-4">
-                      <label className="mb-2 block text-sm font-bold text-[#a78bfa]">
-                        Scale Value Indicated by Pointer
-                      </label>
-                      <Input
-                        value={scaleValue}
-                        onChange={(e) => setScaleValue(e.target.value)}
-                        placeholder="e.g., 60 min"
-                        className="w-full rounded-lg border border-[#8b5cf64d] bg-black/30 px-4 py-3 text-white placeholder:text-gray-500 hover:border-[#8b5cf6] focus:border-[#8b5cf6]"
-                      />
-                    </div>
-                  ) : (
-                    <div className="py-10 text-center text-[#888]">
-                      Please complete pointer position annotation first
-                    </div>
-                  )}
-                </div>
+                <ScaleInput pointer={pointer} scaleValue={scaleValue} onChange={setScaleValue} />
               </div>
             </div>
 
@@ -939,6 +679,12 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
               />
             </div>
           </div>
+
+          {/* <div className="mt-12 bg-[#D92B2B0A]">
+            <div className="mx-auto max-w-[1320px] px-6">
+              <ExpertRedline />
+            </div>
+          </div> */}
         </div>
 
         {/* Image Modal */}

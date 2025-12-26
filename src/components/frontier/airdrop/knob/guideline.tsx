@@ -1,45 +1,52 @@
 export default function Guideline() {
-  const list = {
-    task_description: {
-      des: (
-        <>
-          This task involves annotating appliance knobs from photos. You will upload a front-facing photo of a knob,
-          draw a red rectangle around the knob's outer contour, mark the pointer position with a brown dot, and enter
-          the scale value indicated by the pointer. Accurate annotations help build a high-quality dataset for knob
-          recognition and analysis.
-        </>
-      )
-    },
-    requirements: {
-      des: 'Please follow these requirements to ensure your submission meets quality standards:',
-      list: [
-        'Photo must clearly and completely contain the knob',
-        'Non-AI generated photos only',
-        'Must be front-facing view',
-        'Each image must contain exactly one knob',
-        'Knob must be centered in the photo',
-        'Scale markings around the knob must be in Chinese, English, or numbers, not just icons'
-      ]
-    }
-  }
-
   return (
     <div className="py-[30px] text-sm leading-[22px] text-[#8D8D93]">
       <h2 className="text-lg font-bold text-white">
         <span>📋 Guidelines</span>
       </h2>
-      <h3 className="mb-2 mt-4 font-semibold text-white">📋 Task Description </h3>
-      <p className="mt-2 leading-[22px]">{list.task_description.des}</p>
-      <h3 className="mb-2 mt-3 font-semibold text-white">📝 Requirements (Must Read)</h3>
-      <p className="mt-2 leading-[22px]">{list.requirements.des}</p>
-      <ul className="mt-2 list-none pl-0 leading-[22px]">
-        {list.requirements.list.map((req, idx) => (
-          <li key={idx} className="relative pl-6">
+
+      <div className="mt-4">
+        <h3 className="mb-2 font-semibold text-white">Task Description</h3>
+        <p className="leading-[22px]">
+          This task involves annotating appliance knobs from photos. You will upload a front-facing photo of a knob,
+          draw a red rectangle around the knob's outer contour, mark the pointer position with a brown dot, and enter
+          the scale value indicated by the pointer. Accurate annotations help build a high-quality dataset for knob
+          recognition and analysis.
+        </p>
+      </div>
+
+      <div className="mt-4">
+        <h3 className="mb-2 font-semibold text-white">Requirements (Must Read)</h3>
+        <p className="mb-2 leading-[22px]">
+          Please follow these requirements to ensure your submission meets quality standards:
+        </p>
+        <ul className="list-none space-y-1">
+          <li className="relative pl-6">
             <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
-            {req}
+            Photo must clearly and completely contain the knob
           </li>
-        ))}
-      </ul>
+          <li className="relative pl-6">
+            <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
+            Non-AI generated photos only
+          </li>
+          <li className="relative pl-6">
+            <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
+            Must be front-facing view
+          </li>
+          <li className="relative pl-6">
+            <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
+            Each image must contain exactly one knob
+          </li>
+          <li className="relative pl-6">
+            <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
+            Knob must be centered in the photo
+          </li>
+          <li className="relative pl-6">
+            <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
+            Scale markings around the knob must be in Chinese, English, or numbers, not just icons
+          </li>
+        </ul>
+      </div>
     </div>
   )
 }
