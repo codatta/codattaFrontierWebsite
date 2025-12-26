@@ -83,7 +83,7 @@ export function useGasEstimation({
 }) {
   const [loading, setLoading] = useState(true)
   const [balance, setBalance] = useState<string>('0')
-  const [estimateGas, setEstimateGas] = useState<string>('0')
+  const [estimateGas, setEstimateGas] = useState<string>('')
   const [gasLimit, setGasLimit] = useState<string>('0')
   const [gasWarning, setGasWarning] = useState('')
   const [gasChecked, setGasChecked] = useState(false)
@@ -98,15 +98,12 @@ export function useGasEstimation({
       })
       const balanceStr = formatEther(balance)
 
-      console.log('balance', balanceStr)
       setBalance(balanceStr)
       return balanceStr
     }
 
     const getEstimateGas = async (address: `0x${string}`) => {
       if (!address || contractArgs?.length === 0) return
-
-      console.log('contractArgs for gas estimation:', contractArgs)
 
       try {
         const data = encodeFunctionData({
@@ -125,34 +122,33 @@ export function useGasEstimation({
         setGasLimit(result.gasLimit.toString())
         setEstimateGas(result.totalCostFormatted)
 
-        console.log('Gas estimation complete:', {
-          gasLimit: result.gasLimit.toString(),
-          totalCost: result.totalCostFormatted,
-          chain: contract.chain.name
-        })
-
         return result.totalCostFormatted
       } catch (error) {
         console.error('Gas estimation failed:', error)
-        setEstimateGas('0')
+        setEstimateGas('')
         setGasLimit('0')
-        return '0'
+        return ''
       }
     }
 
     try {
-      if (!address || !contractArgs.length) return
+      if (!address) return
 
       setLoading(true)
       setGasWarning('')
       setGasChecked(false)
       const balance = await getBalance(address)
-      const estimateGas = await getEstimateGas(address)
+      let estimatedVal = ''
 
-      console.log('balance', balance, 'estimateGas', estimateGas)
+      if (contractArgs && contractArgs.length > 0) {
+        estimatedVal = (await getEstimateGas(address)) || ''
+      } else {
+        setEstimateGas('')
+        setGasLimit('0')
+      }
 
-      if (balance && estimateGas) {
-        if (Number(balance) < Number(estimateGas)) {
+      if (balance && estimatedVal) {
+        if (Number(balance) < Number(estimatedVal)) {
           setGasWarning('Balance insufficient to cover gas. Please top up and try again.')
         } else {
           setGasChecked(true)

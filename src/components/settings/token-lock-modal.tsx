@@ -17,10 +17,6 @@ import SuccessIcon from '@/assets/frontier/crypto/pc-approved-icon.svg'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 
-// ----------------------------------------------------------------------
-// Helpers
-// ----------------------------------------------------------------------
-
 function getAssetIcon(type: string) {
   if (type === 'USDT') return <USDTIcon />
   if (type === 'XNY' || type === 'XnYCoin') return <XnyIcon />
