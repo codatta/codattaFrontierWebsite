@@ -9,6 +9,7 @@ import { formatNumber } from '@/utils/str'
 import { useContractRead } from '@/hooks/use-contract-read'
 import { useContractWrite } from '@/hooks/use-contract-write'
 import userApi from '@/apis/user.api'
+import { cn } from '@udecode/cn'
 
 interface UnstakeModalProps {
   open: boolean
@@ -383,7 +384,12 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
 
   return (
     <Spin spinning={loading}>
-      <div className="mb-3 flex items-center justify-between rounded-xl bg-[#875DFF]/10 px-6 py-5 text-base">
+      <div
+        className={cn(
+          'mb-3 flex items-center justify-between rounded-xl bg-[#875DFF]/10 px-6 py-5 text-base',
+          (!totalClaimableAmount || totalClaimableAmount === 0n) && 'hidden'
+        )}
+      >
         <div>
           <span className="text-white">{claimablePositionIds?.length || 0} active positions</span>
           <span className="mx-2 text-[#BBBBBE]">·</span>
