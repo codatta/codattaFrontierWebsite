@@ -23,6 +23,7 @@ interface UploadProps {
   description?: string | React.ReactNode
   supportPdf?: boolean
   className?: string
+  itemClassName?: string
   onChange: (value: UploadedImage[]) => void
   maxCount?: number
 }
@@ -34,7 +35,9 @@ const Upload: React.FC<UploadProps> = ({
   error,
   description,
   supportPdf = false,
-  maxCount = 5
+  maxCount = 5,
+  className,
+  itemClassName
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -170,7 +173,8 @@ const Upload: React.FC<UploadProps> = ({
       className={cn(
         'flex h-[130px] min-w-[212px] flex-1 cursor-pointer items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] px-3 text-center text-[#606067] transition-colors hover:border-[#875DFF]',
         !value.length && 'aspect-auto border-solid py-6',
-        error && 'border-red-500'
+        error && 'border-red-500',
+        itemClassName
       )}
     >
       <div>
@@ -182,11 +186,14 @@ const Upload: React.FC<UploadProps> = ({
 
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className={cn('flex items-center gap-4', className)}>
         {value.map((image) => (
           <div
             key={image.hash}
-            className="group relative h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]"
+            className={cn(
+              'group relative h-[130px] w-[212px] overflow-hidden rounded-lg border border-[#FFFFFF1F]',
+              itemClassName
+            )}
           >
             {isPdf(image.fileType) ? (
               <div className="flex size-full flex-col items-center justify-center gap-2 bg-gray-800 p-3">
