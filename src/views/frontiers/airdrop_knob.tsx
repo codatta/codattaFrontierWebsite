@@ -7,7 +7,6 @@ import AuthChecker from '@/components/app/auth-checker'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import Guideline from '@/components/frontier/airdrop/knob/guideline'
-import TaskSteps from '@/components/frontier/airdrop/knob/task-steps'
 import ImageUploader from '@/components/frontier/airdrop/knob/image-uploader'
 import AnnotationCanvas, { AnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas'
 import ScaleInput from '@/components/frontier/airdrop/knob/scale-input'
@@ -19,7 +18,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
   const templateId = propTemplateId || paramTemplateId
 
   // State
-  const [currentStep, setCurrentStep] = useState(1)
   const [image, setImage] = useState<HTMLImageElement | null>(null)
   const [rect, setRect] = useState<Rect | null>(null)
   const [pointer, setPointer] = useState<Point | null>(null)
@@ -73,7 +71,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
       setRect(null)
       setPointer(null)
       setScaleValue('')
-      setCurrentStep(1)
       return
     }
 
@@ -91,7 +88,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
           setRect(null)
           setPointer(null)
           setScaleValue('')
-          setCurrentStep(2)
         }
       }
       img.src = newImg.url
@@ -156,20 +152,14 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
     setPointer(newPointer)
     if (newPointer === null) {
       setScaleValue('')
-      if (rect) setCurrentStep(3)
-    } else {
-      setCurrentStep(4)
     }
   }
 
   const handleRectChange = (newRect: Rect | null) => {
     setRect(newRect)
-    if (newRect) {
-      setCurrentStep(3)
-    } else {
+    if (!newRect) {
       setPointer(null)
       setScaleValue('')
-      setCurrentStep(2)
     }
   }
 
@@ -178,71 +168,68 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
     setImageModalVisible(true)
   }
 
+  const onBack = () => {
+    window.history.back()
+  }
+
   return (
     <AuthChecker>
       <Spin spinning={loading} className="min-h-screen">
-        <div className="min-h-screen bg-[#0a0a0a] py-6 font-inter text-white">
+        <div className="min-h-screen py-3 md:py-8">
           {/* Header */}
-          <div className="mb-8 border-b border-[#FFFFFF1F] pb-4">
-            <div className="mx-auto max-w-[1380px] px-6">
-              <div
-                className="mb-2 flex cursor-pointer items-center gap-2 text-sm text-gray-400"
-                onClick={() => window.history.back()}
-              >
-                <ArrowLeft size={16} /> Back
+          <div className="border-[#FFFFFF1F] pb-3 md:border-b md:pb-8">
+            <h1 className="mx-auto flex max-w-[1320px] items-center justify-between px-6 text-center text-base font-bold">
+              <div className="flex cursor-pointer items-center gap-2 text-sm font-normal text-[white]" onClick={onBack}>
+                <ArrowLeft size={18} /> Back
               </div>
-              <h1 className="bg-gradient-to-r from-white to-[#a78bfa] bg-clip-text text-center text-2xl font-bold text-transparent">
-                Knob Annotation Task
-              </h1>
-              <p className="mt-1 text-center text-sm text-[#a0a0a0]">
-                Please follow the steps to complete the collection and annotation of knob images
-              </p>
+              Knob Image Data Collection & Annotation
+              <span></span>
+            </h1>
+          </div>
+
+          <div className="mt-12 bg-[#FFFFFF0A]">
+            <div className="mx-auto max-w-[1320px] px-6">
+              <Guideline />
             </div>
           </div>
 
-          <div className="mx-auto max-w-[1380px] px-6">
-            <Guideline />
+          <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
+            {/* Upload Section */}
+            <ImageUploader value={uploadedImages} onChange={handleUploadChange} onShowModal={showImageModal} />
 
-            <div className="mt-8 grid grid-cols-1 items-start gap-5 xl:grid-cols-[360px_1fr]">
-              {/* Left Panel */}
-              <TaskSteps currentStep={currentStep} rect={rect} pointer={pointer} />
+            {/* Annotation Section */}
+            <AnnotationCanvas
+              ref={annotationCanvasRef}
+              image={image}
+              rect={rect}
+              pointer={pointer}
+              exampleImage="https://static.codatta.io/static/images/knob_label_1766728031053.png"
+              onRectChange={handleRectChange}
+              onPointerChange={handlePointerChange}
+              onShowModal={showImageModal}
+            />
 
-              {/* Right Panel */}
-              <div className="flex flex-col gap-5">
-                {/* Upload Section */}
-                <ImageUploader value={uploadedImages} onChange={handleUploadChange} onShowModal={showImageModal} />
-
-                {/* Annotation Section */}
-                <AnnotationCanvas
-                  ref={annotationCanvasRef}
-                  image={image}
-                  rect={rect}
-                  pointer={pointer}
-                  exampleImage="https://static.codatta.io/static/images/knob_label_1766728031053.png"
-                  onRectChange={handleRectChange}
-                  onPointerChange={handlePointerChange}
-                  onShowModal={showImageModal}
-                />
-
-                {/* Scale Value Section */}
-                <ScaleInput pointer={pointer} scaleValue={scaleValue} onChange={setScaleValue} />
-              </div>
+            {/* Scale Value Section */}
+            <ScaleInput pointer={pointer} scaleValue={scaleValue} onChange={setScaleValue} />
+          </div>
+          {/* 
+          <div className="mt-12 bg-[#D92B2B0A]">
+            <div className="mx-auto max-w-[1320px] px-6">
+              <ExpertRedline />
             </div>
+          </div> */}
 
-            {/* Submit Bar */}
-            <div className="mt-8 flex justify-center border-t border-[#1f2937e6] pb-20 pt-6">
-              <Button
-                disabled={!image || !rect || !pointer || !scaleValue}
-                onClick={handleSubmit}
-                loading={loading}
-                className={`rounded-xl px-8 py-3.5 font-bold text-white shadow-app-btn transition-all ${
-                  !image || !rect || !pointer || !scaleValue
-                    ? 'cursor-not-allowed bg-gray-600 opacity-50'
-                    : 'bg-gradient-to-br from-[#8b5cf6] to-[#667eea] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(139,92,246,0.5)]'
-                }`}
-                text="Submit Task"
-              />
-            </div>
+          {/* Submit Button */}
+          <div className="mt-12 flex justify-center pb-20">
+            <Button
+              disabled={!image || !rect || !pointer || !scaleValue}
+              onClick={handleSubmit}
+              loading={loading}
+              className={`h-[44px] w-full rounded-full text-base font-bold ${
+                !image || !rect || !pointer || !scaleValue ? 'opacity-50' : ''
+              } md:mx-auto md:w-[240px]`}
+              text="Submit"
+            />
           </div>
 
           {/* Image Modal */}

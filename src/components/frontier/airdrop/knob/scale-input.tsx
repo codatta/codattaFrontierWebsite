@@ -10,23 +10,28 @@ interface ScaleInputProps {
 
 const ScaleInput: React.FC<ScaleInputProps> = ({ pointer, scaleValue, onChange }) => {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#8b5cf640] bg-[#1a1a1a] p-4 shadow-[0_18px_40px_rgba(15,23,42,0.85)]">
-      <h2 className="mb-4 flex items-center gap-2 border-l-[3px] border-[#6366f1] pl-3 text-lg font-bold">
-        Fill Scale Value
-      </h2>
+    <div className="space-y-3">
+      <div className="block">
+        <h2 className="text-sm font-medium">
+          Step 4: Fill Scale Value<span className="text-red-400">*</span>
+        </h2>
+        <p className="mt-1 text-xs text-[#a0a0a0]">Enter the scale value indicated by the pointer</p>
+      </div>
 
       {pointer ? (
         <div className="mt-4">
-          <label className="mb-2 block text-sm font-bold text-[#a78bfa]">Scale Value Indicated by Pointer</label>
+          <label className="mb-2 block text-sm font-medium">Scale Value Indicated by Pointer</label>
           <Input
             value={scaleValue}
             onChange={(e) => onChange(e.target.value)}
             placeholder="e.g., 60 min"
-            className="w-full rounded-lg border border-[#8b5cf64d] bg-black/30 px-4 py-3 text-white placeholder:text-gray-500 hover:border-[#8b5cf6] focus:border-[#8b5cf6]"
+            className="w-full rounded-lg border-none bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 hover:bg-white/10 focus:border-blue-500 focus:outline-none"
           />
         </div>
       ) : (
-        <div className="py-10 text-center text-[#888]">Please complete pointer position annotation first</div>
+        <div className="rounded-lg border border-dashed border-[#FFFFFF1F] py-8 text-center text-xs text-[#888]">
+          Please complete pointer position annotation first
+        </div>
       )}
     </div>
   )
