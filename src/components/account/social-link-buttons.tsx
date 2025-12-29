@@ -50,7 +50,8 @@ export default function SocialLink() {
   const [xLinkInfo, setXLinkInfo] = useState<SocialAccountInfoItem | null>(null)
   const [discordLinkInfo, setDiscordLinkInfo] = useState<SocialAccountInfoItem | null>(null)
   const [telegramLinkInfo, setTelegramLinkInfo] = useState<SocialAccountInfoItem | null>(null)
-  const btnDisabled = !!info?.user_data?.did
+  // const btnDisabled = !!info?.user_data?.did
+  const btnDisabled = false
 
   useEffect(() => {
     if (!info?.social_account_info) return
