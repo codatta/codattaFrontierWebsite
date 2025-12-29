@@ -473,6 +473,7 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
 
     useImperativeHandle(ref, () => ({
       getAnnotatedImage: () => {
+        setSelectedId(null)
         if (!image) return ''
         const canvas = document.createElement('canvas')
         canvas.width = image.naturalWidth
@@ -600,7 +601,7 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
               )}
             </h2>
             <p className="mt-1 text-xs text-[#BBBBBE]">
-              Move the red dot to annotate the pointer position of the knob.
+              Move the brown dot to annotate the pointer position of the knob.
             </p>
             {/* Pointer Stats */}
             <div className="mt-3 h-[60px]">
@@ -701,34 +702,35 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                                   }}
                                 />
 
-                                {/* Corners & Anchors - Only show when selected */}
+                                {/* Corners - Always visible */}
+                                {corners.map((c) => (
+                                  <Circle
+                                    key={`corner-${c.i}`}
+                                    x={c.x}
+                                    y={c.y}
+                                    radius={6 / dimensions.scale}
+                                    fill={selectedId === 'rect' ? 'white' : 'red'}
+                                    stroke={selectedId === 'rect' ? '#10b981' : 'red'}
+                                    strokeWidth={selectedId === 'rect' ? 2 / dimensions.scale : 0}
+                                    draggable
+                                    onDragStart={() => setSelectedId('rect')}
+                                    onClick={() => setSelectedId('rect')}
+                                    onTap={() => setSelectedId('rect')}
+                                    onDragMove={(e) => handleCornerDrag(c.i, e)}
+                                    onMouseEnter={() => {
+                                      if (stageRef.current) {
+                                        stageRef.current.container().style.cursor = getCursorForCorner(c.i)
+                                      }
+                                    }}
+                                    onMouseLeave={() => {
+                                      if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                                    }}
+                                  />
+                                ))}
+
+                                {/* Edge Anchors - Only show when selected */}
                                 {selectedId === 'rect' && (
                                   <>
-                                    {/* Corners */}
-                                    {corners.map((c) => (
-                                      <Circle
-                                        key={`corner-${c.i}`}
-                                        x={c.x}
-                                        y={c.y}
-                                        radius={5 / dimensions.scale}
-                                        fill="white"
-                                        stroke="#10b981"
-                                        strokeWidth={2 / dimensions.scale}
-                                        draggable
-                                        onDragStart={() => setSelectedId('rect')}
-                                        onDragMove={(e) => handleCornerDrag(c.i, e)}
-                                        onMouseEnter={() => {
-                                          if (stageRef.current) {
-                                            stageRef.current.container().style.cursor = getCursorForCorner(c.i)
-                                          }
-                                        }}
-                                        onMouseLeave={() => {
-                                          if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                        }}
-                                      />
-                                    ))}
-
-                                    {/* Edge Anchors */}
                                     {edges.map((e) => {
                                       const mid = getMidpoint(e.p1, e.p2)
                                       return (
@@ -760,20 +762,13 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                             )
                           })()}
 
-                        {/* Center Point - Only show when selected? User didn't specify, but usually useful. 
-                            User said "no vertices and edge points" for default. 
-                            Let's keep center point hidden by default too if it acts like a handle, 
-                            or just keep it small. The prompt said "simple rectangle... no vertices".
-                            I'll hide it if not selected to be safe/cleaner. 
-                        */}
-                        {rect && rect.center && selectedId === 'rect' && (
+                        {/* Center Point - Always show if rect exists */}
+                        {rect && rect.center && (
                           <Circle
                             x={rect.center.x}
                             y={rect.center.y}
-                            radius={4 / dimensions.scale}
+                            radius={6 / dimensions.scale}
                             fill="#10b981"
-                            stroke="white"
-                            strokeWidth={2 / dimensions.scale}
                             listening={false}
                           />
                         )}
@@ -810,12 +805,12 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                               if (stage) stage.container().style.cursor = 'default'
                             }}
                           >
-                            {/* Simple dot, darker when selected */}
+                            {/* Pointer Style */}
                             <Circle
-                              radius={6 / dimensions.scale}
-                              fill={selectedId === 'pointer' ? 'rgba(16, 185, 129, 0.5)' : 'brown'}
-                              stroke={selectedId === 'pointer' ? '#FFFF00' : undefined}
-                              strokeWidth={selectedId === 'pointer' ? 2 / dimensions.scale : 0}
+                              radius={8 / dimensions.scale}
+                              fill="#964B00"
+                              stroke="white"
+                              strokeWidth={2 / dimensions.scale}
                             />
                           </Group>
                         )}
