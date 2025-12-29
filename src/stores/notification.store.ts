@@ -1,10 +1,11 @@
-import notificationApi, { NotificationItem } from '@/api-v1/notification.api'
+import notificationApi, { NotificationListItem, NotificationType } from '@/apis/notification.api'
+import notificationApiV1 from '@/api-v1/notification.api'
 import { message } from 'antd'
 import { proxy, useSnapshot } from 'valtio'
 
 type NotificationStore = {
   listLoading: boolean
-  list: NotificationItem[]
+  list: NotificationListItem[]
   unread: boolean
   total: number
   unRewardedTask: number
@@ -21,7 +22,7 @@ export const notificationStore = proxy<NotificationStore>({
 })
 
 async function getUnread() {
-  const { data } = await notificationApi.getNotificationUnread().catch((err) => {
+  const { data } = await notificationApiV1.getNotificationUnread().catch((err) => {
     message.error(err.message)
     return { data: { finished_task_count: 0, msg_unread_count: 0, unlocked_functions: [] } }
   })
@@ -30,11 +31,11 @@ async function getUnread() {
   notificationStore.unlockFunctions = data.unlocked_functions ?? []
 }
 
-async function getMessageList(page: number, pageSize: number, type?: string) {
+async function getMessageList(page: number, pageSize: number, type?: NotificationType) {
   notificationStore.listLoading = true
   const res = await notificationApi.getNotificationList(page, pageSize, type)
-  notificationStore.total = res.total_count
-  notificationStore.list = res.data
+  notificationStore.total = res.data.total_count
+  notificationStore.list = res.data.list
   notificationStore.listLoading = false
 }
 

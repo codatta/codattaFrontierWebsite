@@ -5,41 +5,26 @@ import { notificationStore, notificationStoreActions } from '@/stores/notificati
 import { Pagination, Select, Spin } from 'antd'
 import dayjs from 'dayjs'
 import CustomEmpty from '@/components/common/empty'
-import { NotificationItem } from '@/api-v1/notification.api'
+import { NotificationListItem } from '@/apis/notification.api'
 
 const FilterOptions = [
   { label: 'All', value: '' },
   { label: 'Validation', value: 'validation' },
   { label: 'Submission', value: 'submission' },
-  { label: 'Bounty', value: 'bounty' }
+  { label: 'System', value: 'system' }
 ]
 
-function MessageItem(props: { message: NotificationItem }) {
+function MessageItem(props: { message: NotificationListItem }) {
   const { message } = props
   const displayTime = dayjs(message.create_time * 1000).format('YYYY-MM-DD')
-  const messageRead: boolean = message.have_read == '1'
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg bg-gray-100 p-4 text-sm lg:flex-row">
-      <div className="flex gap-2 lg:w-[70%]">
-        {!messageRead && (
-          <div className="flex w-2 items-center justify-center">
-            <i className="block size-2 rounded-full bg-primary"></i>
-          </div>
-        )}
-
-        <div className={`break-all ${!messageRead ? 'text-gray-900' : 'text-gray-700'}`}>{message.msg_content}</div>
+    <div className="rounded-2xl border border-white/5 bg-[#252532] p-6">
+      <div className="flex">
+        <span>{message.msg_title}</span>
+        <span>{message.create_time}</span>
       </div>
-
-      <div className="flex w-full items-center gap-2 lg:w-[30%]">
-        <div className="w-[80px]">
-          <div className="inline-block rounded-2xl bg-gray-200 px-2 py-1 text-xs leading-[15px]">
-            {message.notify_type}
-          </div>
-        </div>
-
-        <div className="ml-auto w-[90px] flex-none text-right text-sm font-semibold text-gray-500">{displayTime}</div>
-      </div>
+      <div>{message.msg_content}</div>
     </div>
   )
 }
