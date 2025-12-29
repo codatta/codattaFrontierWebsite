@@ -424,7 +424,7 @@ export default function TokenClaimModal(props: TokenClaimModalProps) {
     props.onClose()
   }
 
-  async function handleOnEvmWalletConnect(wallet: EmvWalletConnectInfo) {
+  async function handleOnEvmWalletConnect(_wallet: EmvWalletConnectInfo) {
     setStep('select-token')
   }
 
