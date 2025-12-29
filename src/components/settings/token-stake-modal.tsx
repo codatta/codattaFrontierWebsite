@@ -530,7 +530,11 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
             </div>
           }
         />
-        {isInsufficientBalance && <div className="mb-2 text-sm text-[#D92B2B]">Insufficient balance.</div>}
+        {isInsufficientBalance && (
+          <div className="mb-2 text-sm text-[#D92B2B]">
+            Insufficient {assetSymbol} balance. Get more {assetSymbol} to continue.
+          </div>
+        )}
         {!isValidAmount && Number(amount) > 0 && (
           <div className="mb-2 text-sm text-[#D92B2B]">
             Minimum stake amount is {formatNumber(minStakeAmount, 2)} {assetSymbol}.
