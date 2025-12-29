@@ -1,15 +1,17 @@
 import { Button, TableProps, Spin, message, Table, Modal } from 'antd'
 import { useState, useMemo, ComponentProps, useEffect } from 'react'
-import { useCodattaConnectContext } from 'codatta-connect'
 import { formatEther } from 'viem'
 import dayjs from 'dayjs'
+import { cn } from '@udecode/cn'
+
+import { formatNumber } from '@/utils/str'
+import userApi from '@/apis/user.api'
 
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
-import { formatNumber } from '@/utils/str'
+
 import { useContractRead } from '@/hooks/use-contract-read'
 import { useContractWrite } from '@/hooks/use-contract-write'
-import userApi from '@/apis/user.api'
-import { cn } from '@udecode/cn'
+import { useCurrentWalletAddress } from '@/hooks/use-current-wallet-address'
 
 interface UnstakeModalProps {
   open: boolean
@@ -185,7 +187,7 @@ function StakingTable<T extends object>({
 }
 
 export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigger?: number }) {
-  const { lastUsedWallet } = useCodattaConnectContext()
+  const walletAddress = useCurrentWalletAddress()
   const [page, setPage] = useState(1)
   const pageSize = 10
 
@@ -197,8 +199,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'getTotalPositionsCount',
-    args: [lastUsedWallet?.address],
-    enabled: !!lastUsedWallet?.address
+    args: [walletAddress],
+    enabled: !!walletAddress
   })
 
   // 2. Get positions
@@ -212,8 +214,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   } = useContractRead<PositionEntry[]>({
     contract: StakingContract,
     functionName: 'getUserPositions',
-    args: [lastUsedWallet?.address, offset, limit],
-    enabled: !!lastUsedWallet?.address && !!count && count > 0n
+    args: [walletAddress, offset, limit],
+    enabled: !!walletAddress && !!count && count > 0n
   })
 
   // 3. Get total staked amount (removed unused logic)
@@ -226,8 +228,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   } = useContractRead<[bigint, readonly `0x${string}`[]]>({
     contract: StakingContract,
     functionName: 'getWithdrawableAmount',
-    args: [lastUsedWallet?.address],
-    enabled: !!lastUsedWallet?.address
+    args: [walletAddress],
+    enabled: !!walletAddress
   })
 
   useEffect(() => {
