@@ -69,6 +69,17 @@ export default function Healthcare() {
     window.history.back()
   }
 
+  function handleDownload() {
+    const url = 'https://huggingface.co/datasets/Codatta/Refined-TCGA-PRAD-Prostate-Cancer-Pathology-Dataset'
+    const isInApp = navigator.userAgent.match(/codatta/i)
+    if (isInApp) {
+      // TODO:
+      // window.native.call('downloadDataset', 'healthcare')
+    } else {
+      window.open(url, '_blank')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#F5F5F5]">
       <button
@@ -163,7 +174,10 @@ export default function Healthcare() {
           <button className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50">
             Contact Us
           </button>
-          <button className="flex-1 rounded-full bg-black py-4 font-medium text-white transition-colors hover:bg-gray-800">
+          <button
+            className="flex-1 rounded-full bg-black py-4 font-medium text-white transition-colors hover:bg-gray-800"
+            onClick={handleDownload}
+          >
             Download
           </button>
         </div>
