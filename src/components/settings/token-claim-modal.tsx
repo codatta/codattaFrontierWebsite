@@ -10,7 +10,8 @@ import {
   Chain,
   parseEther,
   keccak256,
-  stringToHex
+  stringToHex,
+  checksumAddress
 } from 'viem'
 import { bsc } from 'viem/chains'
 import { InfoCircleOutlined } from '@ant-design/icons'
@@ -147,7 +148,7 @@ function ClaimConfirm({
 
   const address = useMemo(() => {
     if (!lastUsedWallet) return null
-    return lastUsedWallet.address
+    return checksumAddress(lastUsedWallet.address as `0x${string}`)
   }, [lastUsedWallet])
 
   async function getBalance(address: `0x${string}`) {
@@ -424,7 +425,7 @@ export default function TokenClaimModal(props: TokenClaimModalProps) {
   }
 
   async function handleOnEvmWalletConnect(wallet: EmvWalletConnectInfo) {
-    console.log(wallet)
+    setStep('select-token')
   }
 
   function handleLoading(loading: boolean) {
