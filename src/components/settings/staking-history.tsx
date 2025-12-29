@@ -33,6 +33,7 @@ function StakingTable<T extends object>({
   return (
     <div className="rounded-2xl bg-[#252532] p-6">
       <Table
+        locale={{ emptyText: <p className="py-10">You don't have any unstaking history yet.</p> }}
         className="[&_.ant-table-placeholder]:border-b-0 [&_.ant-table-placeholder_.ant-empty-description]:text-[#BBBBBE] [&_.ant-table-placeholder_.ant-empty]:flex [&_.ant-table-placeholder_.ant-empty]:flex-col [&_.ant-table-placeholder_.ant-empty]:items-center [&_.ant-table-placeholder_.ant-table-cell]:!px-0 [&_.ant-table-placeholder_.ant-table-cell]:!text-center [&_.ant-table]:bg-transparent"
         columns={columns}
         dataSource={dataSource}

@@ -119,6 +119,7 @@ function StakingTable<T extends object>({
   return (
     <div className="rounded-2xl bg-[#252532] p-6">
       <Table
+        locale={{ emptyText: <p className="py-10">You don't have any active staking positions yet.</p> }}
         className="[&_.ant-table-placeholder_.ant-empty-description]:text-[#BBBBBE] [&_.ant-table-placeholder_.ant-empty]:flex [&_.ant-table-placeholder_.ant-empty]:flex-col [&_.ant-table-placeholder_.ant-empty]:items-center [&_.ant-table-placeholder_.ant-table-cell]:!px-0 [&_.ant-table-placeholder_.ant-table-cell]:!text-center [&_.ant-table]:bg-transparent"
         columns={columns}
         dataSource={dataSource}
@@ -189,7 +190,7 @@ function StakingTable<T extends object>({
 export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigger?: number }) {
   const walletAddress = useCurrentWalletAddress()
   const [page, setPage] = useState(1)
-  const pageSize = 10
+  const pageSize = 6
 
   // 1. Get total count
   const {
