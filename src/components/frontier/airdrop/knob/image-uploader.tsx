@@ -24,20 +24,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ value, onChange, onShowMo
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <div className="space-y-2">
-          <div className="text-xs font-bold text-[#a78bfa]">Example: Original Image</div>
-          <div
-            className="flex h-[400px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-colors hover:border-[#8b5cf680]"
-            onClick={() => onShowModal('https://static.codatta.io/static/images/knob_raw_1766728031053.jpg')}
-          >
-            <img
-              src="https://static.codatta.io/static/images/knob_raw_1766728031053.jpg"
-              alt="Example"
-              className="max-h-full max-w-full object-contain"
-            />
-          </div>
-        </div>
-
-        <div className="space-y-2">
           <div className="text-xs font-bold text-[#a78bfa]">Your Image</div>
           <div className="h-[400px] w-full">
             <UploadImg
@@ -52,6 +38,19 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ value, onChange, onShowMo
                   <span className="text-xs text-gray-400">Supports JPG, PNG</span>
                 </div>
               }
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <div className="text-xs font-bold text-[#a78bfa]">Example: Original Image</div>
+          <div
+            className="flex h-[400px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-colors hover:border-[#8b5cf680]"
+            onClick={() => onShowModal('https://static.codatta.io/static/images/knob_raw_1766728031053.jpg')}
+          >
+            <img
+              src="https://static.codatta.io/static/images/knob_raw_1766728031053.jpg"
+              alt="Example"
+              className="max-h-full max-w-full object-contain"
             />
           </div>
         </div>

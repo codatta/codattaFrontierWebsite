@@ -9,8 +9,8 @@ export default function Guideline() {
         <h3 className="mb-2 font-semibold text-white">Task Description</h3>
         <p className="leading-[22px]">
           This task involves annotating appliance knobs from photos. You will upload a front-facing photo of a knob,
-          draw a red rectangle around the knob's outer contour, mark the pointer position with a brown dot, and enter
-          the scale value indicated by the pointer. Accurate annotations help build a high-quality dataset for knob
+          mark the knob's outer contour with a red rectangle, mark the pointer position with a red dot, and enter the
+          scale value indicated by the pointer. Accurate annotations help build a high-quality dataset for knob
           recognition and analysis.
         </p>
       </div>

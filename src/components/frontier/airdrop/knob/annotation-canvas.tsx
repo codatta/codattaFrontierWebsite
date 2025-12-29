@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { Stage, Layer, Image as KonvaImage, Rect as KonvaRect, Circle, Line, Group } from 'react-konva'
 import Konva from 'konva'
-import { Button } from '@/components/booster/button'
 import { Rect, Point } from './types'
 
 export interface AnnotationCanvasRef {
@@ -12,6 +11,8 @@ interface AnnotationCanvasProps {
   image: HTMLImageElement | null
   rect: Rect | null
   pointer: Point | null
+  rectModified: boolean
+  pointerModified: boolean
   exampleImage?: string
   onRectChange: (rect: Rect | null) => void
   onPointerChange: (pointer: Point | null) => void
@@ -19,15 +20,21 @@ interface AnnotationCanvasProps {
 }
 
 const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
-  ({ image, rect, pointer, exampleImage, onRectChange, onPointerChange, onShowModal }, ref) => {
+  (
+    { image, rect, pointer, rectModified, pointerModified, exampleImage, onRectChange, onPointerChange, onShowModal },
+    ref
+  ) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const stageRef = useRef<Konva.Stage>(null)
+    const rectRef = useRef<Konva.Line>(null)
+    const pointerRef = useRef<Konva.Group>(null)
     const [dimensions, setDimensions] = useState({ width: 0, height: 0, scale: 1 })
     const [isDrawing, setIsDrawing] = useState(false)
     const [drawStart, setDrawStart] = useState<Point | null>(null)
     const [drawCurrent, setDrawCurrent] = useState<Point | null>(null)
     const [isDraggingShape, setIsDraggingShape] = useState(false)
     const [lastShapePos, setLastShapePos] = useState<Point | null>(null)
+    const [selectedId, setSelectedId] = useState<'rect' | 'pointer' | null>(null)
 
     const MIN_SIZE = 20
 
@@ -306,6 +313,17 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       // With new Quad editor, we check if target is part of the editor (Circle or Line)
       const target = e.target
 
+      // Deselect if clicking on empty space
+      const isShape =
+        target.name() === 'quad-edge' ||
+        target.name() === 'pointer' ||
+        target.getParent()?.name() === 'pointer' ||
+        target instanceof Konva.Circle // Corners/anchors
+
+      if (!isShape) {
+        setSelectedId(null)
+      }
+
       // Handle Shape Drag Start
       if (target instanceof Konva.Line && target.name() === 'quad-edge') {
         const stage = e.target.getStage()
@@ -516,42 +534,57 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
           <div>
             <h2 className="flex items-center gap-2 text-sm font-medium">
               Step 2: Annotate Knob Outline<span className="text-red-400">*</span>
-              {rect && (
+              {rectModified && (
                 <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
                   ✓
                 </span>
               )}
             </h2>
-            <p className="mt-1 text-xs text-[#a0a0a0]">Use a red rectangle to annotate the knob's outer contour</p>
+            <p className="mt-1 text-xs text-[#BBBBBE]">
+              Click the red rectangle to activate, then adjust position and size to annotate the knob&apos;s outer
+              contour (do not only frame the pointer or include the scale area).
+            </p>
             {/* Rect Stats */}
-            <div className="mt-3">
+            <div className="mt-3 h-[60px]">
               {rect ? (
-                <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-gray-300">
-                  <div className="flex justify-between gap-2">
-                    <span className="text-gray-600">TL</span>
-                    <span>
-                      {Math.round(rect.x1)}, {Math.round(rect.y1)}
-                    </span>
+                !rectModified ? (
+                  <div className="rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 p-4 text-center text-sm text-[#BBBBBE]">
+                    Adjust the red rectangle to match the knob&apos;s outer contour
                   </div>
-                  <div className="flex justify-between gap-2">
-                    <span className="text-gray-600">TR</span>
-                    <span>
-                      {Math.round(rect.x2)}, {Math.round(rect.y2)}
-                    </span>
+                ) : (
+                  <div className="text-sm text-[#BBBBBE]">
+                    <div className="flex gap-5">
+                      <div>
+                        <div>
+                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P1</span>
+                          <span>
+                            {Math.round(rect.x1)}, {Math.round(rect.y1)}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P2</span>
+                          <span>
+                            {Math.round(rect.x4)}, {Math.round(rect.y4)}
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P3</span>
+                          <span>
+                            {Math.round(rect.x2)}, {Math.round(rect.y2)}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P4</span>
+                          <span>
+                            {Math.round(rect.x3)}, {Math.round(rect.y3)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between gap-2">
-                    <span className="text-gray-600">BR</span>
-                    <span>
-                      {Math.round(rect.x3)}, {Math.round(rect.y3)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between gap-2">
-                    <span className="text-gray-600">BL</span>
-                    <span>
-                      {Math.round(rect.x4)}, {Math.round(rect.y4)}
-                    </span>
-                  </div>
-                </div>
+                )
               ) : (
                 <div className="text-xs italic text-gray-600">No shape drawn</div>
               )}
@@ -560,44 +593,37 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
           <div>
             <h2 className="flex items-center gap-2 text-sm font-medium">
               Step 3: Annotate Pointer Position<span className="text-red-400">*</span>
-              {pointer && (
+              {pointerModified && (
                 <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
                   ✓
                 </span>
               )}
             </h2>
-            <p className="mt-1 text-xs text-[#a0a0a0]">Use a brown dot to annotate the pointer position</p>
+            <p className="mt-1 text-xs text-[#BBBBBE]">
+              Move the red dot to annotate the pointer position of the knob.
+            </p>
             {/* Pointer Stats */}
-            <div className="mt-3">
+            <div className="mt-3 h-[60px]">
               {pointer ? (
-                <div className="flex items-center gap-2 text-sm font-bold text-white">
-                  <span className="rounded bg-white/10 px-1.5 py-0.5 text-white">P</span>
-                  <span>
-                    {Math.round(pointer.x)}, {Math.round(pointer.y)}
-                  </span>
-                </div>
+                !pointerModified ? (
+                  <div className="rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 p-4 text-center text-sm text-[#BBBBBE]">
+                    Move the point to the current indicator position
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2 text-sm text-[#BBBBBE]">
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P</span>
+                    <span>
+                      {Math.round(pointer.x)}, {Math.round(pointer.y)}
+                    </span>
+                  </div>
+                )
               ) : (
                 <div className="text-xs italic text-gray-600">Not active</div>
               )}
             </div>
           </div>
         </div>
-
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          <div className="space-y-2">
-            <div className="text-xs font-bold text-[#a78bfa]">Example: Annotated Image</div>
-            <div
-              className="flex h-[400px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-colors hover:border-[#8b5cf680]"
-              onClick={() => exampleImage && onShowModal(exampleImage)}
-            >
-              {exampleImage ? (
-                <img src={exampleImage} alt="Example" className="max-h-full max-w-full object-contain" />
-              ) : (
-                <div className="text-gray-500">No example image available</div>
-              )}
-            </div>
-          </div>
-
           <div className="space-y-2">
             <div className="text-xs font-bold text-[#a78bfa]">Your Annotation</div>
             <div>
@@ -658,12 +684,15 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                               <>
                                 {/* The Polygon Shape */}
                                 <Line
+                                  ref={rectRef}
                                   points={[x1, y1, x2, y2, x3, y3, x4, y4]}
                                   closed
-                                  stroke="red"
-                                  strokeWidth={4 / dimensions.scale}
+                                  stroke={selectedId === 'rect' ? '#10b981' : 'red'}
+                                  strokeWidth={2 / dimensions.scale}
                                   fill="transparent"
                                   name="quad-edge"
+                                  onClick={() => setSelectedId('rect')}
+                                  onTap={() => setSelectedId('rect')}
                                   onMouseEnter={() => {
                                     if (stageRef.current) stageRef.current.container().style.cursor = 'move'
                                   }}
@@ -672,64 +701,76 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                                   }}
                                 />
 
-                                {/* Corners */}
-                                {corners.map((c) => (
-                                  <Circle
-                                    key={`corner-${c.i}`}
-                                    x={c.x}
-                                    y={c.y}
-                                    radius={7 / dimensions.scale}
-                                    fill="white"
-                                    stroke="red"
-                                    strokeWidth={2 / dimensions.scale}
-                                    draggable
-                                    onDragMove={(e) => handleCornerDrag(c.i, e)}
-                                    onMouseEnter={() => {
-                                      if (stageRef.current) {
-                                        stageRef.current.container().style.cursor = getCursorForCorner(c.i)
-                                      }
-                                    }}
-                                    onMouseLeave={() => {
-                                      if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                    }}
-                                  />
-                                ))}
+                                {/* Corners & Anchors - Only show when selected */}
+                                {selectedId === 'rect' && (
+                                  <>
+                                    {/* Corners */}
+                                    {corners.map((c) => (
+                                      <Circle
+                                        key={`corner-${c.i}`}
+                                        x={c.x}
+                                        y={c.y}
+                                        radius={5 / dimensions.scale}
+                                        fill="white"
+                                        stroke="#10b981"
+                                        strokeWidth={2 / dimensions.scale}
+                                        draggable
+                                        onDragStart={() => setSelectedId('rect')}
+                                        onDragMove={(e) => handleCornerDrag(c.i, e)}
+                                        onMouseEnter={() => {
+                                          if (stageRef.current) {
+                                            stageRef.current.container().style.cursor = getCursorForCorner(c.i)
+                                          }
+                                        }}
+                                        onMouseLeave={() => {
+                                          if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                                        }}
+                                      />
+                                    ))}
 
-                                {/* Edge Anchors */}
-                                {edges.map((e) => {
-                                  const mid = getMidpoint(e.p1, e.p2)
-                                  return (
-                                    <Circle
-                                      key={`edge-${e.i}`}
-                                      x={mid.x}
-                                      y={mid.y}
-                                      radius={6 / dimensions.scale}
-                                      fill="white"
-                                      stroke="red"
-                                      strokeWidth={2 / dimensions.scale}
-                                      draggable
-                                      onDragMove={(evt) => handleEdgeDrag(e.i, evt)}
-                                      onMouseEnter={() => {
-                                        if (stageRef.current) {
-                                          stageRef.current.container().style.cursor = getCursorForEdge(e.i)
-                                        }
-                                      }}
-                                      onMouseLeave={() => {
-                                        if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                      }}
-                                    />
-                                  )
-                                })}
+                                    {/* Edge Anchors */}
+                                    {edges.map((e) => {
+                                      const mid = getMidpoint(e.p1, e.p2)
+                                      return (
+                                        <Circle
+                                          key={`edge-${e.i}`}
+                                          x={mid.x}
+                                          y={mid.y}
+                                          radius={4 / dimensions.scale}
+                                          fill="white"
+                                          stroke="#10b981"
+                                          strokeWidth={2 / dimensions.scale}
+                                          draggable
+                                          onDragStart={() => setSelectedId('rect')}
+                                          onDragMove={(evt) => handleEdgeDrag(e.i, evt)}
+                                          onMouseEnter={() => {
+                                            if (stageRef.current) {
+                                              stageRef.current.container().style.cursor = getCursorForEdge(e.i)
+                                            }
+                                          }}
+                                          onMouseLeave={() => {
+                                            if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                                          }}
+                                        />
+                                      )
+                                    })}
+                                  </>
+                                )}
                               </>
                             )
                           })()}
 
-                        {/* Center Point */}
-                        {rect && rect.center && (
+                        {/* Center Point - Only show when selected? User didn't specify, but usually useful. 
+                            User said "no vertices and edge points" for default. 
+                            Let's keep center point hidden by default too if it acts like a handle, 
+                            or just keep it small. The prompt said "simple rectangle... no vertices".
+                            I'll hide it if not selected to be safe/cleaner. 
+                        */}
+                        {rect && rect.center && selectedId === 'rect' && (
                           <Circle
                             x={rect.center.x}
                             y={rect.center.y}
-                            radius={5 / dimensions.scale}
+                            radius={4 / dimensions.scale}
                             fill="#10b981"
                             stroke="white"
                             strokeWidth={2 / dimensions.scale}
@@ -740,10 +781,14 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                         {/* Pointer */}
                         {pointer && (
                           <Group
+                            ref={pointerRef}
                             name="pointer"
                             x={pointer.x}
                             y={pointer.y}
                             draggable
+                            onClick={() => setSelectedId('pointer')}
+                            onTap={() => setSelectedId('pointer')}
+                            onDragStart={() => setSelectedId('pointer')}
                             onDragMove={(e) => {
                               onPointerChange({
                                 x: e.target.x(),
@@ -765,39 +810,17 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                               if (stage) stage.container().style.cursor = 'default'
                             }}
                           >
+                            {/* Simple dot, darker when selected */}
                             <Circle
-                              radius={12 / dimensions.scale}
-                              fill="rgba(139, 69, 19, 0.5)"
-                              stroke="white"
-                              strokeWidth={2 / dimensions.scale}
+                              radius={6 / dimensions.scale}
+                              fill={selectedId === 'pointer' ? 'rgba(16, 185, 129, 0.5)' : 'brown'}
+                              stroke={selectedId === 'pointer' ? '#FFFF00' : undefined}
+                              strokeWidth={selectedId === 'pointer' ? 2 / dimensions.scale : 0}
                             />
-                            <Circle radius={2 / dimensions.scale} fill="white" />
                           </Group>
                         )}
                       </Layer>
                     </Stage>
-                  </div>
-                  <div className="mt-4 flex gap-3">
-                    <Button
-                      disabled={!rect}
-                      onClick={() => onRectChange(null)}
-                      className={`h-9 rounded-lg border px-4 text-xs font-medium transition-colors ${
-                        !rect
-                          ? 'cursor-not-allowed border-[#FFFFFF1F] bg-white/5 text-gray-500'
-                          : 'border-[#FFFFFF1F] bg-white/5 text-white hover:border-white/20 hover:bg-white/10'
-                      }`}
-                      text="Clear Rectangle"
-                    />
-                    <Button
-                      disabled={!pointer}
-                      onClick={() => onPointerChange(null)}
-                      className={`h-9 rounded-lg border px-4 text-xs font-medium transition-colors ${
-                        !pointer
-                          ? 'cursor-not-allowed border-[#FFFFFF1F] bg-white/5 text-gray-500'
-                          : 'border-[#FFFFFF1F] bg-white/5 text-white hover:border-white/20 hover:bg-white/10'
-                      }`}
-                      text="Clear Pointer"
-                    />
                   </div>
                 </div>
               ) : (
@@ -805,6 +828,19 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                   <div className="mb-4 text-5xl">📷</div>
                   <div>Please upload an image first</div>
                 </div>
+              )}
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="text-xs font-bold text-[#a78bfa]">Example: Annotated Image</div>
+            <div
+              className="flex h-[400px] w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-colors hover:border-[#8b5cf680]"
+              onClick={() => exampleImage && onShowModal(exampleImage)}
+            >
+              {exampleImage ? (
+                <img src={exampleImage} alt="Example" className="max-h-full max-w-full object-contain" />
+              ) : (
+                <div className="text-gray-500">No example image available</div>
               )}
             </div>
           </div>

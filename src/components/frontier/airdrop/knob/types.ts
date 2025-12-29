@@ -16,10 +16,11 @@ export interface Rect {
 }
 
 export interface KnobFormData {
-  originalImage: string | null
-  annotatedImage: string | null
-  rectCoordinates: Rect | null
-  centerCoordinates: Point | null
-  pointerCoordinates: Point | null
-  scaleValue: string
+  original_image: string | null
+  original_image_hash: string | null
+  annotated_image: string | null
+  annotated_image_hash: string | null
+  rect: Rect | null
+  pointer_point: Point | null
+  scale_value: string
 }
