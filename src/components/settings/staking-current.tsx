@@ -258,11 +258,14 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
         functionName: 'withdraw',
         args: [claimablePositionIds]
       })
+      const data = await userApi.recordStakeClaimTransaction({ uids: claimablePositionIds as string[] })
+      if (data?.status !== 1) throw new Error('Claim failed')
       message.success('Claimed successfully')
       refetchCount()
       refetchPositions()
       refetchWithdrawable()
     } catch (e) {
+      message.error('Claim failed')
       console.error(e)
     }
   }
