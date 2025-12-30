@@ -144,7 +144,6 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
       return
     }
 
-    const trimmedScaleValue = scaleValue.trim()
     if (!trimmedScaleValue) {
       setScaleValueError('Please enter a scale value')
       message.error('Please enter a scale value')
@@ -231,11 +230,23 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
     }
   }
 
+  // Debounce scale value trimming
+  const [trimmedScaleValue, setTrimmedScaleValue] = useState('')
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const trimmed = scaleValue.trim()
+      setTrimmedScaleValue(trimmed)
+      if (trimmed) {
+        setScaleValueError('')
+      }
+    }, 300)
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [scaleValue])
+
   const handleScaleValueChange = (val: string) => {
     setScaleValue(val)
-    if (val.trim()) {
-      setScaleValueError('')
-    }
   }
 
   const showImageModal = (src: string) => {
@@ -304,11 +315,11 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
           {/* Submit Button */}
           <div className="mt-12 flex justify-center pb-20">
             <Button
-              disabled={!image || !rect || !pointer}
+              disabled={!image || !rectModified || !pointerModified || !trimmedScaleValue}
               onClick={handleSubmit}
               loading={submitting}
               className={`h-[44px] w-full rounded-full text-base font-bold ${
-                !image || !rect || !pointer ? 'opacity-50' : ''
+                !image || !rectModified || !pointerModified || !trimmedScaleValue ? 'opacity-50' : ''
               } md:mx-auto md:w-[240px]`}
               text="Submit"
             />
