@@ -204,7 +204,7 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
     if (!isDebouncedAmountValid) return emptyParams
 
     if (needsApprove) {
-      const approveAmount = Number(debouncedAmount) > 10000 ? debouncedAmount : '500000'
+      const approveAmount = Math.max(Number(debouncedAmount), 1e10).toString()
       return {
         contract: tokenContract,
         functionName: 'approve',
@@ -408,7 +408,9 @@ const ReputationImpactSection = ({ logic }: { logic: ReturnType<typeof useStakeL
     <div className="rounded-xl bg-[#1C1C26] p-4 text-base">
       <div className="mb-4 flex items-center gap-2 font-bold">
         Reputation Impact
-        <Tooltip title="This stake counts toward your reputation requirement. Unstaking takes 7 days before your XNY becomes available again.">
+        <Tooltip
+          title={`This stake counts toward your reputation requirement. Unstaking takes 7 days before your ${STAKE_ASSET_TYPE} becomes available again.`}
+        >
           <InfoCircleOutlined className="text-[#8D8D93]" />
         </Tooltip>
       </div>
@@ -592,29 +594,33 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
       )}
 
       {/* Action Buttons */}
-      <div className="flex w-full justify-center">
+      <div className="flex w-full flex-col items-center justify-center">
         {needsApprove ? (
-          <Button
-            type="primary"
-            onClick={handleApprove}
-            disabled={
-              !STAKE_TOKEN_ADRRESS ||
-              !amount ||
-              amount !== debouncedAmount ||
-              Number(amount) <= 0 ||
-              isInsufficientBalance ||
-              !isValidAmount ||
-              !!gasWarning ||
-              isApproving ||
-              gasLoading ||
-              approveStep === 'success'
-            }
-            loading={isApproving}
-            className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
-          >
-            {/* {gasLoading ? 'Calculating Gas...' : `Approve ${assetSymbol}`} */}
-            {gasLoading ? 'Calculating Gas...' : `Approve ${assetSymbol} (1/2)`}
-          </Button>
+          <>
+            <Button
+              type="primary"
+              onClick={handleApprove}
+              disabled={
+                !STAKE_TOKEN_ADRRESS ||
+                !amount ||
+                amount !== debouncedAmount ||
+                Number(amount) <= 0 ||
+                isInsufficientBalance ||
+                !isValidAmount ||
+                !!gasWarning ||
+                isApproving ||
+                gasLoading ||
+                approveStep === 'success'
+              }
+              loading={isApproving}
+              className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
+            >
+              {gasLoading ? 'Calculating Gas...' : `Approve ${assetSymbol} (1/2)`}
+            </Button>
+            <div className="mt-2 text-center text-xs text-[#8D8D93]">
+              You’ll be asked to confirm twice in your wallet.
+            </div>
+          </>
         ) : (
           <Button
             type="primary"
@@ -753,7 +759,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = (props) => {
       footer={null}
       width={620}
       centered
-      closable={!isLoading}
+      closable={!isLoading && !state.isAmountLocked}
       maskClosable={false}
       styles={{
         content: {

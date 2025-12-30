@@ -31,11 +31,21 @@ export default function Staking() {
 
   const totalStaked = totalStakedRaw ? formatEther(totalStakedRaw) : '0'
 
+  // Moved items definition inside render to access setActiveTab
+
+  const [stakeModalOpen, setStakeModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('current')
+
+  const handleStakeSuccess = () => {
+    setRefreshTrigger((prev) => prev + 1)
+    refetchTotalStaked()
+  }
+
   const items: TabsProps['items'] = [
     {
       key: 'current',
       label: 'Current staking',
-      children: <CurrentStakingTab refreshTrigger={refreshTrigger} />
+      children: <CurrentStakingTab refreshTrigger={refreshTrigger} onGoToHistory={() => setActiveTab('history')} />
     },
     {
       key: 'history',
@@ -43,12 +53,6 @@ export default function Staking() {
       children: <HistoryTab refreshTrigger={refreshTrigger} />
     }
   ]
-
-  const [stakeModalOpen, setStakeModalOpen] = useState(false)
-  const handleStakeSuccess = () => {
-    setRefreshTrigger((prev) => prev + 1)
-    refetchTotalStaked()
-  }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -85,7 +89,8 @@ export default function Staking() {
 
       {/* Tabs and Content */}
       <Tabs
-        defaultActiveKey="current"
+        activeKey={activeTab}
+        onChange={setActiveTab}
         items={items}
         className="[&.ant-tabs-top>.ant-tabs-nav::before]:hidden [&_.ant-tabs-ink-bar]:bg-[#875DFF] [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!text-[#875DFF] [&_.ant-tabs-tab-btn]:text-base"
       />
