@@ -1,28 +1,39 @@
-import { useMemo } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 
-import { useUserStore } from '@/stores/user.store'
+const MAX_POLL_COUNT = 6
+const POLL_INTERVAL = 500
 
 export function useCurrentWalletAddress() {
   const { lastUsedWallet } = useCodattaConnectContext()
-  const { info } = useUserStore()
+  const [walletAddress, setWalletAddress] = useState<`0x${string}` | null>(null)
+  const timer = useRef<NodeJS.Timeout>()
+  const pollCount = useRef<number>(0)
 
-  const walletAddress = useMemo(() => {
-    // 1. Priority: Connected Wallet (active session)
-    if (lastUsedWallet?.address) {
-      return lastUsedWallet.address
-    }
+  useEffect(() => {
+    clearTimeout(timer.current)
 
-    // 2. Fallback: User Store (bound account)
-    if (info?.accounts_data) {
-      const currentAccount = info.accounts_data.find((item) => item.current_account)
-      if (currentAccount && ['blockchain', 'wallet', 'block_chain'].includes(currentAccount.account_type)) {
-        return currentAccount.account
+    const checkAndPoll = () => {
+      if (!lastUsedWallet?.address) {
+        if (pollCount.current < MAX_POLL_COUNT) {
+          pollCount.current += 1
+          timer.current = setTimeout(checkAndPoll, POLL_INTERVAL)
+        }
+        return
       }
+
+      if (lastUsedWallet.address !== walletAddress) {
+        setWalletAddress(lastUsedWallet.address)
+      }
+      pollCount.current = 0
     }
 
-    return undefined
-  }, [lastUsedWallet?.address, info?.accounts_data])
+    checkAndPoll()
+
+    return () => {
+      clearTimeout(timer.current)
+    }
+  }, [lastUsedWallet, walletAddress])
 
   return walletAddress
 }
