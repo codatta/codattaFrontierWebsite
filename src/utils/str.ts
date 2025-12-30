@@ -7,11 +7,11 @@ export function splitTitle(str: string): string {
 }
 
 export function formatNumber(num: number = 0, toFixed?: number): string {
-  let numStr: string = toFixed == undefined ? Number(num.toString()).toString() : Number(num).toFixed(toFixed)
+  const numStr: string = toFixed == undefined ? Number(num).toString() : Number(num).toFixed(toFixed)
 
-  numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-
-  return numStr
+  const parts = numStr.split('.')
+  parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  return parts.join('.')
 }
 
 export function truncateStr(

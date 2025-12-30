@@ -2,7 +2,7 @@ import axios from 'axios'
 import { baseResponseInterceptor, requestInterceptor, md5Interceptor } from './interceptor'
 
 const request = axios.create({
-  baseURL: import.meta.env.MODE === 'production' ? '/api' : 'https://app-test.b18a.io/api'
+  baseURL: '/api'
 })
 
 request.interceptors.request.use(md5Interceptor)
