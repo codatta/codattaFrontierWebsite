@@ -204,10 +204,11 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
     if (!isDebouncedAmountValid) return emptyParams
 
     if (needsApprove) {
+      const approveAmount = Number(debouncedAmount) > 10000 ? debouncedAmount : '500000'
       return {
         contract: tokenContract,
         functionName: 'approve',
-        contractArgs: [StakingContract.address, parseEther(debouncedAmount)]
+        contractArgs: [StakingContract.address, parseEther(approveAmount)]
       }
     } else {
       return {
@@ -303,10 +304,11 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
     if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
 
     try {
+      const approveAmount = Number(amount) > 10000 ? amount : '10000'
       await writeApprove({
         contract: tokenContract,
         functionName: 'approve',
-        args: [StakingContract.address, parseEther(amount)]
+        args: [StakingContract.address, parseEther(approveAmount)]
       })
     } catch (error) {
       console.error(error)
