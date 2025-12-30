@@ -9,7 +9,9 @@ import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useContractWrite } from '@/hooks/use-contract-write'
 
 import LockRewardContract from '@/contracts/lockup-reward.abi'
+import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { shortenAddress } from '@/utils/wallet-address'
+import { formatNumber } from '@/utils/str'
 
 import SuccessIcon from '@/assets/frontier/crypto/pc-approved-icon.svg'
 
@@ -210,7 +212,7 @@ function UnlockConfirm({ tokenIds, tokens, onClose, onSuccess }: UnlockConfirmPr
   )
 }
 
-function UnlockSuccess({ txHash, onClose }: { txHash: string; onClose: () => void }) {
+function UnlockSuccess({ txHash, onClose, amount }: { txHash: string; onClose: () => void; amount: number }) {
   const navigate = useNavigate()
 
   const handleConfirm = () => {
@@ -219,14 +221,14 @@ function UnlockSuccess({ txHash, onClose }: { txHash: string; onClose: () => voi
   }
   return (
     <div className="p-6 text-base">
-      <div className="mb-6 text-lg font-bold text-white">Claim all</div>
+      <div className="mb-6 text-lg font-bold text-white">Claim completed</div>
 
       <div className="flex flex-col items-center justify-center rounded-2xl border border-[#FFFFFF1F] bg-[#252532] px-4 py-10">
         <img src={SuccessIcon} alt="Success" className="mb-6 size-[72px]" />
 
         <p className="mb-2 max-w-[340px] text-center text-white">
-          All unlocked rewards have been claimed from the lock-up contract and sent to your wallet. You can check the
-          details anytime in Claim History
+          {formatNumber(amount, 2)} {STAKE_ASSET_TYPE} has been returned to your wallet. You can find the record in
+          Staking History.
         </p>
 
         {txHash && (
@@ -247,7 +249,7 @@ function UnlockSuccess({ txHash, onClose }: { txHash: string; onClose: () => voi
           className="h-[42px] bg-white px-6 text-[#1C1C26] hover:!bg-black/80 hover:text-white"
           onClick={handleConfirm}
         >
-          Go to Claim History
+          View History
         </Button>
       </div>
     </div>
@@ -306,7 +308,13 @@ export default function TokenUnlockModal(props: TokenUnlockModalProps) {
         />
       )}
 
-      {viewState === 'success' && <UnlockSuccess txHash={txHash} onClose={props.onClose} />}
+      {viewState === 'success' && (
+        <UnlockSuccess
+          txHash={txHash}
+          onClose={props.onClose}
+          amount={props.tokens.reduce((acc, cur) => acc + Number(cur.amount), 0)}
+        />
+      )}
     </Modal>
   )
 }
