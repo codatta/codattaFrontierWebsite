@@ -18,7 +18,7 @@ export default function AsideReferral() {
   }
 
   const shareLink = useMemo(() => {
-    const shareCode = info?.user_data.referee_code || ''
+    const shareCode = info?.user_data?.referee_code || ''
     return `${location.origin}/referral/${shareCode}`
   }, [info])
 
