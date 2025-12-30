@@ -78,6 +78,7 @@ const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdro
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
 const AirdropFoodApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
+const AirdropKnob = lazy(() => import('@/views/frontiers/airdrop_knob'))
 
 const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
@@ -217,6 +218,7 @@ export default function Router() {
           path="/frontier/project/AIRDROP_FOOD_APP/:taskId"
           element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
         />
+        <Route path="/frontier/project/AIRDROP_KNOB/:taskId" element={<AirdropKnob templateId="AIRDROP_KNOB" />} />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
