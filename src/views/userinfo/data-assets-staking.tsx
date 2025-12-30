@@ -1,5 +1,5 @@
 import { Button, Tabs, TabsProps } from 'antd'
-import { useCodattaConnectContext } from 'codatta-connect'
+import { useState } from 'react'
 import { formatEther } from 'viem'
 import { Loader2 } from 'lucide-react'
 
@@ -11,12 +11,11 @@ import TokenStakeModal from '@/components/settings/token-stake-modal'
 
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { useContractRead } from '@/hooks/use-contract-read'
+import { useCurrentWalletAddress } from '@/hooks/use-current-wallet-address'
 import { formatNumber } from '@/utils/str'
-import { useState } from 'react'
 
 export default function Staking() {
-  const { lastUsedWallet } = useCodattaConnectContext()
-  const userAddress = lastUsedWallet?.address
+  const walletAddress = useCurrentWalletAddress()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const {
@@ -26,8 +25,8 @@ export default function Staking() {
   } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'userTotalStaked',
-    args: [userAddress],
-    enabled: !!userAddress
+    args: [walletAddress],
+    enabled: !!walletAddress
   })
 
   const totalStaked = totalStakedRaw ? formatEther(totalStakedRaw) : '0'
