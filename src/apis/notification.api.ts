@@ -38,9 +38,9 @@ class NotificationApi {
     return res.data
   }
 
-  async setNotificationRead(msg_id: string) {
+  async setNotificationRead(msg_ids: string[]) {
     const res = await this.request.post<Response<'ok'>>('/v2/msg/read/set', {
-      msg_id
+      msg_id: msg_ids.join(',')
     })
     return res.data
   }
