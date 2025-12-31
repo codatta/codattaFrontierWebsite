@@ -15,7 +15,7 @@ import { TaskDetail, TaskStakeInfo } from '@/apis/frontiter.api'
 import CustomEmpty from '@/components/common/empty'
 import TaskFilterModal, { FilterState } from './task-filter-modal'
 import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
-import ToStakeModal from './to-stake-modal'
+import ToStakeModal from '@/components/settings/to-stake-modal'
 
 const TaskList: React.FC = () => {
   const navigate = useNavigate()

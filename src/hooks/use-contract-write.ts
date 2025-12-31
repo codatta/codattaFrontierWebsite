@@ -114,7 +114,7 @@ export function useContractWrite(options?: {
     reset,
     step,
     tip: STEP_TIPS[step],
-    isLoading: step !== 'idle' && step !== 'success',
+    isLoading: step !== 'idle' && step !== 'success' && step !== 'error',
     error
   }
 }

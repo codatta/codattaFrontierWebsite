@@ -88,6 +88,12 @@ module.exports = {
           inset -1px -1px 0.5px rgba(255, 255, 255, 0.4),
           1px 1px 10px rgba(60, 60, 0, 0.05),
           0px 0px 8px rgba(60, 60, 0, 0.05)
+      `,
+      glass: `
+          inset 1px 1px 1px rgba(255, 255, 255, 0.9),
+          inset -1px -1px 0.5px rgba(255, 255, 255, 0.5),
+          0px 1px 18px rgba(60, 60, 0, 0.03),
+          0px 0px 12px rgba(60, 60, 0, 0.02)
       `
     }
   },

@@ -1,9 +1,10 @@
 import { AirdropFrontierItem, AirdropFrontierTaskItem } from '@/apis/airdrop-actvitiy'
 import RewardBgIcon from '@/assets//task/reward-bg-icon.png'
-import { Avatar, Tooltip } from 'antd'
+import { Avatar, Tooltip, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Clock, Users2 } from 'lucide-react'
+import { cn } from '@udecode/cn'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
@@ -12,8 +13,12 @@ import ActivityTagIcon from '@/assets/frontier/home/activity-tag-icon.svg?react'
 
 import RewardIcon from '@/assets/airdrop-activity/diamond.webp'
 
-import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
+import { airdropActivityActions, useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 import React from 'react'
+
+import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
+import ToStakeModal from '@/components/settings/to-stake-modal'
+import { TaskStakeInfo } from '@/apis/frontiter.api'
 
 const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
   <div
@@ -33,7 +38,13 @@ const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
 export default function AirdropActivityFrontierCard({ frontier }: { readonly frontier: AirdropFrontierItem }) {
   const navigate = useNavigate()
 
-  const { currentAirdropInfo } = useAirdropActivityStore()
+  const { currentAirdropInfo, currentAirdropSeasonId } = useAirdropActivityStore()
+
+  const [stakeTaskId, setStakeTaskId] = useState('')
+  const [toStakeModalOpen, setToStakeModalOpen] = useState(false)
+  const [stakeModalOpen, setStakeModalOpen] = useState(false)
+  const [taskUrl, setTaskUrl] = useState('')
+  const [taskStakeConfig, setTaskStakeConfig] = useState<TaskStakeConfig>()
 
   const isFinished = useMemo(() => {
     if (!currentAirdropInfo) return false
@@ -56,8 +67,35 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
     }
   }, [currentAirdropInfo])
 
-  const goToForm = (task: AirdropFrontierTaskItem) => {
-    navigate(`/frontier/project/${task.template_id}/${task.task_id}`)
+  const handleTaskClick = (task: AirdropFrontierTaskItem) => {
+    const url = `/frontier/project/${task.template_id}/${task.task_id}`
+    if (task.user_reputation_flag === 0) {
+      setTaskUrl(url)
+      setStakeTaskId(task.task_id)
+      setToStakeModalOpen(true)
+      return
+    }
+
+    if (task.user_reputation_flag === 2) {
+      message.error('Reputation not met!')
+      return
+    }
+    navigate(url)
+  }
+
+  const handleStake = (stakeInfo: TaskStakeInfo) => {
+    setToStakeModalOpen(false)
+    setStakeModalOpen(true)
+    setTaskStakeConfig({
+      ...stakeInfo,
+      taskUrl
+    })
+  }
+
+  const handleStakeSuccess = () => {
+    if (currentAirdropSeasonId) {
+      airdropActivityActions.getAirdropFrontierList(currentAirdropSeasonId, 1, 20)
+    }
   }
 
   const rewardImage = useMemo(() => {
@@ -115,7 +153,12 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
       <div className="mt-8 space-y-7 px-6 pb-5">
         {frontier.tasks.map((task) => (
           <div key={task.task_id} className="rounded-2xl border border-[#FFFFFF10]">
-            <div className="relative mt-px flex items-center justify-between gap-6 rounded-2xl bg-[#1C1C26] p-5">
+            <div
+              className={cn(
+                'relative flex items-center justify-between gap-6 rounded-t-2xl p-5',
+                task.user_reputation_flag === 2 ? 'bg-[#FFFFFF1F]' : 'bg-[#1C1C26]'
+              )}
+            >
               <div className="absolute left-5 top-[-12px] flex items-center gap-2">
                 {task.tags?.map((tag: string) => (
                   <React.Fragment key={tag}>
@@ -146,17 +189,42 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
               {task.status === 2 && <span className="text-white/40">Task Completed</span>}
               {task.status !== 2 && (
                 <button
-                  disabled={isFinished || task.status === 0}
-                  onClick={() => goToForm(task)}
+                  disabled={isFinished || task.status === 0 || task.user_reputation_flag === 2}
+                  onClick={() => handleTaskClick(task)}
                   className="w-[120px] rounded-full bg-primary px-6 py-1.5 text-sm font-medium text-white transition-colors hover:bg-primary disabled:bg-gray-400 disabled:hover:bg-gray-400"
                 >
                   {task.task_type_name ? task.task_type_name : 'Complete'}
                 </button>
               )}
             </div>
+            <div className="flex rounded-b-2xl bg-[#252532] px-5 py-3">
+              {task.user_reputation_flag === 0 ? (
+                <div className="flex h-[26px] items-center rounded-lg bg-[#D92B2B1F] px-2 text-sm text-[#D92B2B]">
+                  Reputation: Too low
+                </div>
+              ) : (
+                <div className="flex h-[26px] items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF]">
+                  Reputation: {task.reputation ?? 0}
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
+      <ToStakeModal
+        open={toStakeModalOpen}
+        onClose={() => setToStakeModalOpen(false)}
+        taskId={stakeTaskId}
+        onStake={handleStake}
+      />
+      {stakeModalOpen && (
+        <StakeModel
+          open={true}
+          onClose={() => setStakeModalOpen(false)}
+          onSuccess={handleStakeSuccess}
+          taskStakeConfig={taskStakeConfig}
+        />
+      )}
     </div>
   )
 }

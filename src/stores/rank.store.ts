@@ -1,4 +1,5 @@
-import reputationApi, { type UserContribution, type UserReputation } from '@/api-v1/reputation.api'
+import reputationApiV1 from '@/api-v1/reputation.api'
+import reputationApi, { type UserContribution, type UserReputation } from '@/apis/reputation.api'
 import { proxy } from 'valtio'
 
 type TRankStore = {
@@ -26,7 +27,7 @@ async function getReputationRank() {
 }
 
 async function getContributionRank() {
-  const { data } = await reputationApi.getTopContributions()
+  const { data } = await reputationApiV1.getTopContributions()
   rankStore.contributorsRank = data || []
   rankStore.top5Contributors = data?.slice(0, 5) || []
 }

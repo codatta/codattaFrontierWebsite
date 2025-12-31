@@ -1,25 +1,42 @@
 import { Button, TableProps, Spin, message, Table, Modal } from 'antd'
+import { CheckCircleFilled } from '@ant-design/icons'
 import { useState, useMemo, ComponentProps, useEffect } from 'react'
-import { useCodattaConnectContext } from 'codatta-connect'
 import { formatEther } from 'viem'
 import dayjs from 'dayjs'
+import { cn } from '@udecode/cn'
 
-import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { formatNumber } from '@/utils/str'
-import { useContractRead } from '@/hooks/use-contract-read'
-import { useContractWrite } from '@/hooks/use-contract-write'
 import userApi from '@/apis/user.api'
 
-interface UnstakeModalProps {
+import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
+
+import { useContractRead } from '@/hooks/use-contract-read'
+import { useContractWrite } from '@/hooks/use-contract-write'
+import { useCurrentWalletAddress } from '@/hooks/use-current-wallet-address'
+
+interface StakingActionModalProps {
   open: boolean
   onClose: () => void
-  onConfirm: () => void
+  type: 'unstake' | 'claim_success'
   amount: string
   symbol: string
+  onConfirm?: () => void
   isLoading?: boolean
+  onViewHistory?: () => void
 }
 
-function UnstakeModal({ open, onClose, onConfirm, amount, symbol, isLoading }: UnstakeModalProps) {
+function StakingActionModal({
+  open,
+  onClose,
+  type,
+  amount,
+  symbol,
+  onConfirm,
+  isLoading,
+  onViewHistory
+}: StakingActionModalProps) {
+  const isUnstake = type === 'unstake'
+
   return (
     <Modal
       open={open}
@@ -27,8 +44,8 @@ function UnstakeModal({ open, onClose, onConfirm, amount, symbol, isLoading }: U
       footer={null}
       width={600}
       centered
-      closable={!isLoading}
-      maskClosable={!isLoading}
+      closable={isUnstake ? !isLoading : true}
+      maskClosable={isUnstake ? !isLoading : true}
       styles={{
         content: {
           padding: 0,
@@ -37,45 +54,73 @@ function UnstakeModal({ open, onClose, onConfirm, amount, symbol, isLoading }: U
           overflow: 'hidden',
           border: '1px solid rgba(255, 255, 255, 0.1)'
         },
-        header: {
-          backgroundColor: 'transparent',
-          marginBottom: 0,
-          padding: '20px 24px'
-        },
-        body: {
-          padding: '24px'
-        }
+        header: isUnstake
+          ? {
+              backgroundColor: 'transparent',
+              marginBottom: 0,
+              padding: '20px 24px'
+            }
+          : undefined,
+        body: isUnstake
+          ? {
+              padding: '24px'
+            }
+          : undefined
       }}
-      title={<div className="text-lg font-bold text-white">Unstake {symbol}</div>}
+      title={isUnstake ? <div className="text-lg font-bold text-white">Unstake {symbol}</div> : null}
     >
-      <div className="mb-12 rounded-xl bg-[#1C1C26] p-6">
-        <div className="flex items-center justify-between text-lg">
-          <span className="font-bold text-white">Amount</span>
-          <span className="text-[#FFA800]">
-            <span className="font-bold">{formatNumber(Number(amount), 2)}</span> <span>{symbol}</span>
-          </span>
-        </div>
-        <div className="my-3 h-px bg-[#FFFFFF1F]"></div>
-        <ul className="list-outside list-disc space-y-2 pl-3 text-base text-[#BBBBBE]">
-          <li>
-            After you confirm, this stake will enter a 7-day unlocking period. During this time, it won’t be available
-            for use and will not count toward your reputation requirement.
-          </li>
-          <li>When the unlocking period ends, the {symbol} will automatically return to your available balance.</li>
-          <li>You can review this position later in Staking &gt; History.</li>
-        </ul>
-      </div>
+      {isUnstake ? (
+        <>
+          <div className="mb-12 rounded-xl bg-[#1C1C26] p-6">
+            <div className="flex items-center justify-between text-lg">
+              <span className="font-bold text-white">Amount</span>
+              <span className="text-[#FFA800]">
+                <span className="font-bold">{formatNumber(Number(amount), 2)}</span> <span>{symbol}</span>
+              </span>
+            </div>
+            <div className="my-3 h-px bg-[#FFFFFF1F]"></div>
+            <ul className="list-outside list-disc space-y-2 pl-3 text-base text-[#BBBBBE]">
+              <li>
+                After you confirm, this stake will enter a 7-day unlocking period. During this time, it won’t be
+                available for use and will not count toward your reputation requirement.
+              </li>
+              <li>When the unlocking period ends, the {symbol} will automatically return to your available balance.</li>
+              <li>You can review this position later in Staking &gt; History.</li>
+            </ul>
+          </div>
 
-      <div className="flex justify-end">
-        <Button
-          type="primary"
-          onClick={onConfirm}
-          loading={isLoading}
-          className="h-10 rounded-full bg-[#875DFF] px-6 text-sm"
-        >
-          Confirm Unstake
-        </Button>
-      </div>
+          <div className="flex justify-end">
+            <Button
+              type="primary"
+              onClick={onConfirm}
+              loading={isLoading}
+              className="h-10 rounded-full bg-[#875DFF] px-6 text-sm"
+            >
+              Confirm Unstake
+            </Button>
+          </div>
+        </>
+      ) : (
+        <div className="flex flex-col items-center px-6 py-12">
+          <CheckCircleFilled className="mb-6 text-[64px] text-[#00C853]" />
+          <div className="mb-2 text-2xl font-bold text-white">Claim completed</div>
+          <div className="mb-8 max-w-[340px] text-center text-[#BBBBBE]">
+            Once the transaction is confirmed on-chain (up to ~10 minutes),{' '}
+            <span className="font-bold text-white">
+              {formatNumber(Number(amount), 2)} {symbol}
+            </span>{' '}
+            will be returned to your wallet and appear in History.
+          </div>
+
+          <Button
+            type="primary"
+            onClick={onViewHistory}
+            className="h-10 w-[200px] cursor-pointer rounded-full bg-[#875DFF] font-semibold hover:bg-[#754DEB]"
+          >
+            View History
+          </Button>
+        </div>
+      )}
     </Modal>
   )
 }
@@ -116,6 +161,7 @@ function StakingTable<T extends object>({
   return (
     <div className="rounded-2xl bg-[#252532] p-6">
       <Table
+        locale={{ emptyText: <p className="py-10">You don't have any active staking positions yet.</p> }}
         className="[&_.ant-table-placeholder_.ant-empty-description]:text-[#BBBBBE] [&_.ant-table-placeholder_.ant-empty]:flex [&_.ant-table-placeholder_.ant-empty]:flex-col [&_.ant-table-placeholder_.ant-empty]:items-center [&_.ant-table-placeholder_.ant-table-cell]:!px-0 [&_.ant-table-placeholder_.ant-table-cell]:!text-center [&_.ant-table]:bg-transparent"
         columns={columns}
         dataSource={dataSource}
@@ -183,10 +229,16 @@ function StakingTable<T extends object>({
   )
 }
 
-export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigger?: number }) {
-  const { lastUsedWallet } = useCodattaConnectContext()
+export default function CurrentStakingTab({
+  refreshTrigger = 0,
+  onGoToHistory
+}: {
+  refreshTrigger?: number
+  onGoToHistory?: () => void
+}) {
+  const walletAddress = useCurrentWalletAddress()
   const [page, setPage] = useState(1)
-  const pageSize = 10
+  const pageSize = 6
 
   // 1. Get total count
   const {
@@ -196,8 +248,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'getTotalPositionsCount',
-    args: [lastUsedWallet?.address],
-    enabled: !!lastUsedWallet?.address
+    args: [walletAddress],
+    enabled: !!walletAddress
   })
 
   // 2. Get positions
@@ -211,8 +263,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   } = useContractRead<PositionEntry[]>({
     contract: StakingContract,
     functionName: 'getUserPositions',
-    args: [lastUsedWallet?.address, offset, limit],
-    enabled: !!lastUsedWallet?.address && !!count && count > 0n
+    args: [walletAddress, offset, limit],
+    enabled: !!walletAddress && !!count && count > 0n
   })
 
   // 3. Get total staked amount (removed unused logic)
@@ -225,8 +277,8 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   } = useContractRead<[bigint, readonly `0x${string}`[]]>({
     contract: StakingContract,
     functionName: 'getWithdrawableAmount',
-    args: [lastUsedWallet?.address],
-    enabled: !!lastUsedWallet?.address
+    args: [walletAddress],
+    enabled: !!walletAddress
   })
 
   useEffect(() => {
@@ -243,10 +295,14 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
   const { writeContract: writeUnstake, isLoading: isUnstaking } = useContractWrite()
   const [unstakingId, setUnstakingId] = useState<string | null>(null)
   const [unstakeModalOpen, setUnstakeModalOpen] = useState(false)
+  const [claimSuccessOpen, setClaimSuccessOpen] = useState(false)
+  const [claimedAmount, setClaimedAmount] = useState('0')
   const [selectedUnstakeItem, setSelectedUnstakeItem] = useState<CurrentStakingItem | null>(null)
 
   const handleClaimAll = async () => {
     if (!claimablePositionIds || claimablePositionIds.length === 0) return
+
+    const currentAmount = formatEther(totalClaimableAmount)
 
     try {
       await writeContract({
@@ -254,11 +310,17 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
         functionName: 'withdraw',
         args: [claimablePositionIds]
       })
-      message.success('Claimed successfully')
+      const data = await userApi.recordStakeClaimTransaction({ uids: claimablePositionIds as string[] })
+      if (data?.status !== 1) throw new Error('Claim failed')
+      // message.success('Claimed successfully')
+      setClaimedAmount(currentAmount)
+      setClaimSuccessOpen(true)
+
       refetchCount()
       refetchPositions()
       refetchWithdrawable()
     } catch (e) {
+      message.error('Claim failed')
       console.error(e)
     }
   }
@@ -383,7 +445,12 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
 
   return (
     <Spin spinning={loading}>
-      <div className="mb-3 flex items-center justify-between rounded-xl bg-[#875DFF]/10 px-6 py-5 text-base">
+      <div
+        className={cn(
+          'mb-3 flex items-center justify-between rounded-xl bg-[#875DFF]/10 px-6 py-5 text-base',
+          (!totalClaimableAmount || totalClaimableAmount === 0n) && 'hidden'
+        )}
+      >
         <div>
           <span className="text-white">{claimablePositionIds?.length || 0} active positions</span>
           <span className="mx-2 text-[#BBBBBE]">·</span>
@@ -411,13 +478,28 @@ export default function CurrentStakingTab({ refreshTrigger = 0 }: { refreshTrigg
       />
 
       {unstakeModalOpen && selectedUnstakeItem && (
-        <UnstakeModal
+        <StakingActionModal
           open={unstakeModalOpen}
           onClose={() => setUnstakeModalOpen(false)}
-          onConfirm={handleConfirmUnstake}
+          type="unstake"
           amount={formatEther(selectedUnstakeItem.rawAmount)}
           symbol={STAKE_ASSET_TYPE}
+          onConfirm={handleConfirmUnstake}
           isLoading={isUnstaking}
+        />
+      )}
+
+      {claimSuccessOpen && (
+        <StakingActionModal
+          open={claimSuccessOpen}
+          onClose={() => setClaimSuccessOpen(false)}
+          type="claim_success"
+          amount={claimedAmount}
+          symbol={STAKE_ASSET_TYPE}
+          onViewHistory={() => {
+            setClaimSuccessOpen(false)
+            onGoToHistory?.()
+          }}
         />
       )}
     </Spin>

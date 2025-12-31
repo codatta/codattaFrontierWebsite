@@ -1,5 +1,5 @@
 import { Button, Tabs, TabsProps } from 'antd'
-import { useCodattaConnectContext } from 'codatta-connect'
+import { useState } from 'react'
 import { formatEther } from 'viem'
 import { Loader2 } from 'lucide-react'
 
@@ -11,12 +11,11 @@ import TokenStakeModal from '@/components/settings/token-stake-modal'
 
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { useContractRead } from '@/hooks/use-contract-read'
+import { useCurrentWalletAddress } from '@/hooks/use-current-wallet-address'
 import { formatNumber } from '@/utils/str'
-import { useState } from 'react'
 
 export default function Staking() {
-  const { lastUsedWallet } = useCodattaConnectContext()
-  const userAddress = lastUsedWallet?.address
+  const walletAddress = useCurrentWalletAddress()
   const [refreshTrigger, setRefreshTrigger] = useState(0)
 
   const {
@@ -26,17 +25,27 @@ export default function Staking() {
   } = useContractRead<bigint>({
     contract: StakingContract,
     functionName: 'userTotalStaked',
-    args: [userAddress],
-    enabled: !!userAddress
+    args: [walletAddress],
+    enabled: !!walletAddress
   })
 
   const totalStaked = totalStakedRaw ? formatEther(totalStakedRaw) : '0'
+
+  // Moved items definition inside render to access setActiveTab
+
+  const [stakeModalOpen, setStakeModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('current')
+
+  const handleStakeSuccess = () => {
+    setRefreshTrigger((prev) => prev + 1)
+    refetchTotalStaked()
+  }
 
   const items: TabsProps['items'] = [
     {
       key: 'current',
       label: 'Current staking',
-      children: <CurrentStakingTab refreshTrigger={refreshTrigger} />
+      children: <CurrentStakingTab refreshTrigger={refreshTrigger} onGoToHistory={() => setActiveTab('history')} />
     },
     {
       key: 'history',
@@ -44,12 +53,6 @@ export default function Staking() {
       children: <HistoryTab refreshTrigger={refreshTrigger} />
     }
   ]
-
-  const [stakeModalOpen, setStakeModalOpen] = useState(false)
-  const handleStakeSuccess = () => {
-    setRefreshTrigger((prev) => prev + 1)
-    refetchTotalStaked()
-  }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -86,7 +89,8 @@ export default function Staking() {
 
       {/* Tabs and Content */}
       <Tabs
-        defaultActiveKey="current"
+        activeKey={activeTab}
+        onChange={setActiveTab}
         items={items}
         className="[&.ant-tabs-top>.ant-tabs-nav::before]:hidden [&_.ant-tabs-ink-bar]:bg-[#875DFF] [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:font-semibold [&_.ant-tabs-tab-active_.ant-tabs-tab-btn]:!text-[#875DFF] [&_.ant-tabs-tab-btn]:text-base"
       />

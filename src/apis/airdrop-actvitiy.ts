@@ -68,6 +68,8 @@ export interface AirdropFrontierTaskItem {
   status: 0 | 1 | 2 // 0-not started, 1-in progress, 2-completed
   tags?: readonly string[]
   task_type_name?: string
+  reputation?: number
+  user_reputation_flag?: 0 | 1 | 2
 }
 
 export interface AirdropSeasonRankItem {
