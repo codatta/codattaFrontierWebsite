@@ -1,5 +1,7 @@
 import { Microscope, Brain, ChevronLeft } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
+import { useState } from 'react'
+import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
 
 // Chart data
 const chartData = [
@@ -54,6 +56,8 @@ const ChartLegend = () => {
 }
 
 export default function Healthcare() {
+  const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
+
   const usageItems = [
     {
       icon: <Brain className="size-full text-black" />,
@@ -142,7 +146,7 @@ export default function Healthcare() {
         <div className="mb-9">
           <h2 className="mb-4 text-xl font-bold text-black">Usage</h2>
           <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-6 shadow-glass">
+            <div className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-4 shadow-glass">
               <div
                 className="mb-4 flex size-11 items-center justify-center rounded-full p-[8px]"
                 style={{
@@ -152,9 +156,9 @@ export default function Healthcare() {
               >
                 {usageItems[0].icon}
               </div>
-              <h3 className="mb-2 text-[15px] font-semibold text-black">{usageItems[0].title}</h3>
+              <h3 className="text-[15px] font-semibold text-black">{usageItems[0].title}</h3>
             </div>
-            <div className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-6 shadow-glass">
+            <div className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-4 shadow-glass">
               <div
                 className="mb-4 flex size-11 items-center justify-center rounded-full p-[8px]"
                 style={{
@@ -164,14 +168,17 @@ export default function Healthcare() {
               >
                 {usageItems[1].icon}
               </div>
-              <h3 className="mb-2 text-[15px] font-semibold text-black">{usageItems[1].title}</h3>
+              <h3 className="text-[15px] font-semibold text-black">{usageItems[1].title}</h3>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="sticky bottom-6 mb-8 flex gap-4">
-          <button className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50">
+          <button
+            className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50"
+            onClick={() => setShowCommercialDrawer(true)}
+          >
             Contact Us
           </button>
           <button
@@ -182,6 +189,9 @@ export default function Healthcare() {
           </button>
         </div>
       </div>
+
+      {/* Commercial Access Drawer */}
+      <CommercialAccessDrawer open={showCommercialDrawer} onClose={() => setShowCommercialDrawer(false)} />
     </div>
   )
 }

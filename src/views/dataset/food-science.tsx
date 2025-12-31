@@ -1,5 +1,7 @@
 import { Search, UtensilsCrossed, ChefHat, Camera, Target, ChevronLeft } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
+import { useState } from 'react'
+import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
 
 // Chart data - ordered to match UI clockwise from top
 const chartData = [
@@ -56,6 +58,8 @@ const ChartLegend = () => {
   )
 }
 export default function FoodScience() {
+  const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
+
   const usageItems = [
     {
       icon: <UtensilsCrossed className="size-full text-black" />,
@@ -182,7 +186,10 @@ export default function FoodScience() {
 
         {/* Action Buttons */}
         <div className="sticky bottom-6 mb-8 flex gap-4">
-          <button className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50">
+          <button
+            className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50"
+            onClick={() => setShowCommercialDrawer(true)}
+          >
             Contact Us
           </button>
           <button
@@ -193,6 +200,9 @@ export default function FoodScience() {
           </button>
         </div>
       </div>
+
+      {/* Commercial Access Drawer */}
+      <CommercialAccessDrawer open={showCommercialDrawer} onClose={() => setShowCommercialDrawer(false)} />
     </div>
   )
 }

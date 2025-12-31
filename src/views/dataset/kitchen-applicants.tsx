@@ -1,6 +1,10 @@
 import { Eye, Box, Gauge, Sparkles, ChevronLeft } from 'lucide-react'
+import { useState } from 'react'
+import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
 
 export default function KitchenApplicants() {
+  const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
+
   const usageItems = [
     {
       icon: <Eye className="size-full text-black" />,
@@ -93,7 +97,7 @@ export default function KitchenApplicants() {
             {usageItems.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-6 shadow-glass"
+                className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-4 shadow-glass"
               >
                 <div
                   className="mb-4 flex size-11 items-center justify-center rounded-full p-[8px]"
@@ -112,7 +116,10 @@ export default function KitchenApplicants() {
 
         {/* Action Buttons */}
         <div className="sticky bottom-6 mb-8 flex gap-4">
-          <button className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50">
+          <button
+            className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50"
+            onClick={() => setShowCommercialDrawer(true)}
+          >
             Contact Us
           </button>
           <button
@@ -123,6 +130,9 @@ export default function KitchenApplicants() {
           </button>
         </div>
       </div>
+
+      {/* Commercial Access Drawer */}
+      <CommercialAccessDrawer open={showCommercialDrawer} onClose={() => setShowCommercialDrawer(false)} />
     </div>
   )
 }

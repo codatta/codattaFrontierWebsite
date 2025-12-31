@@ -1,5 +1,7 @@
 import { TestTube, Briefcase, ChevronLeft } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
+import { useState } from 'react'
+import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
 
 // Chart data for Distribution by Chain
 const chainData = [
@@ -109,6 +111,8 @@ const CategoryLegend = () => {
 }
 
 export default function CryptoAddresses() {
+  const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
+
   const usageItems = [
     {
       icon: <TestTube className="size-full text-black" />,
@@ -212,7 +216,7 @@ export default function CryptoAddresses() {
             {usageItems.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-6 shadow-glass"
+                className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-4 shadow-glass"
               >
                 <div
                   className="mb-4 flex size-11 items-center justify-center rounded-full p-[8px]"
@@ -223,7 +227,7 @@ export default function CryptoAddresses() {
                 >
                   {item.icon}
                 </div>
-                <h3 className="mb-2 text-[15px] font-semibold text-black">{item.title}</h3>
+                <h3 className="text-[15px] font-semibold text-black">{item.title}</h3>
               </div>
             ))}
           </div>
@@ -231,7 +235,10 @@ export default function CryptoAddresses() {
 
         {/* Action Buttons */}
         <div className="sticky bottom-6 mb-8 flex gap-4">
-          <button className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50">
+          <button
+            className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50"
+            onClick={() => setShowCommercialDrawer(true)}
+          >
             Contact Us
           </button>
           <button
@@ -242,6 +249,9 @@ export default function CryptoAddresses() {
           </button>
         </div>
       </div>
+
+      {/* Commercial Access Drawer */}
+      <CommercialAccessDrawer open={showCommercialDrawer} onClose={() => setShowCommercialDrawer(false)} />
     </div>
   )
 }
