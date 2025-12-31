@@ -4,15 +4,16 @@ import { baseSepolia, bsc } from 'viem/chains'
 const MAINNET = bsc
 
 const CONTRACT_ADDRESS_TESTNET = '0x32c3450Ad94E1ff27B4281B52859D918FB589b91'
-const CONTRACT_ADDRESS_MAINNET = ''
+const CONTRACT_ADDRESS_MAINNET = '0xECe50d58C51Bc195a346C4Ce374b681a0A857Cc2'
 
-const isProduction = import.meta.env.VITE_MODE === 'production'
+const isProduction = true // TODO rm online
+// const isProduction = import.meta.env.VITE_MODE === 'production'
 const address = isProduction && CONTRACT_ADDRESS_MAINNET ? CONTRACT_ADDRESS_MAINNET : CONTRACT_ADDRESS_TESTNET
 const chain = isProduction ? MAINNET : baseSepolia
 
 export const STAKE_ASSET_TYPE = isProduction ? 'XNY' : 'MTK'
 export const STAKE_TOKEN_ADRRESS = isProduction
-  ? '0xE3225e11Cab122F1a126A28997788E5230838ab9'
+  ? '0x7dE3Ed7e50905bfCf907fcFeb55F999424f1FE98'
   : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
