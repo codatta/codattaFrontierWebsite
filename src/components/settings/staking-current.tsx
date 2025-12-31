@@ -105,10 +105,11 @@ function StakingActionModal({
           <CheckCircleFilled className="mb-6 text-[64px] text-[#00C853]" />
           <div className="mb-2 text-2xl font-bold text-white">Claim completed</div>
           <div className="mb-8 max-w-[340px] text-center text-[#BBBBBE]">
+            Once the transaction is confirmed on-chain (up to ~10 minutes),{' '}
             <span className="font-bold text-white">
               {formatNumber(Number(amount), 2)} {symbol}
             </span>{' '}
-            has been returned to your wallet. You can find the record in Staking History.
+            will be returned to your wallet and appear in History.
           </div>
 
           <Button
