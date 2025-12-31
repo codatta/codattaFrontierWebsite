@@ -48,7 +48,7 @@ const TaskList: React.FC = () => {
     console.log('Task clicked:', data)
 
     if (data.user_reputation_flag === 0) {
-      setTaskUrl(`/app/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+      setTaskUrl(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
       setStakeTaskId(data.task_id)
       setToStakeModalOpen(true)
       return
@@ -58,7 +58,7 @@ const TaskList: React.FC = () => {
       message.error('Reputation not met!')
       return
     }
-    navigate(`/app/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handleStake = (stakeInfo: TaskStakeInfo) => {
