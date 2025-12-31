@@ -1,7 +1,7 @@
 import { Abi, Chain } from 'viem'
-import { baseSepolia, bsc } from 'viem/chains'
+import { baseSepolia, base } from 'viem/chains'
 
-const MAINNET = bsc
+const MAINNET = base
 
 const CONTRACT_ADDRESS_TESTNET = '0x32c3450Ad94E1ff27B4281B52859D918FB589b91'
 const CONTRACT_ADDRESS_MAINNET = '0xECe50d58C51Bc195a346C4Ce374b681a0A857Cc2'
