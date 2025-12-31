@@ -166,7 +166,10 @@ const TaskList: React.FC = () => {
                     {item.task_type_name}
                   </div>
                 </div>
-                <div className="flex rounded-b-2xl bg-[#252532] px-5 py-3">
+                <div
+                  className="flex rounded-b-2xl bg-[#252532] px-5 py-3"
+                  style={{ display: !item.reputation ? 'none' : 'flex' }}
+                >
                   {item.user_reputation_flag === 0 ? (
                     <div className="flex h-[26px] items-center rounded-lg bg-[#D92B2B1F] px-2 text-sm text-[#D92B2B]">
                       Reputation: Too low
