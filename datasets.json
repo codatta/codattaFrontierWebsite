@@ -1,0 +1,114 @@
+[
+  {
+    "key": "food-science",
+    "name": "Food Science",
+    "image": "https://static.codatta.io/dataset/food-science.png",
+    "url": "https://app-test.b18a.io/dataset/food-science",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "100k+"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "28MB"
+      }
+    ]
+  },
+  {
+    "key": "healthcare",
+    "name": "Refined TCGA PRAD Prostate Cancer Pathology Dataset",
+    "image": "https://static.codatta.io/dataset/healthcare.png",
+    "url": "https://app-test.b18a.io/dataset/healthcare",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "138"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "57kB"
+      }
+    ]
+  },
+  {
+    "key": "crypto-addresses",
+    "name": "Crypto Addresses/Transactions Labeled data",
+    "image": "https://static.codatta.io/dataset/crypto-addresses.png",
+    "url": "https://app-test.b18a.io/dataset/crypto-addresses",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "10k+"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "865kB"
+      }
+    ]
+  },
+  {
+    "key": "robotics",
+    "name": "Embodiment data (Robotics)",
+    "image": "https://static.codatta.io/dataset/robotics.png",
+    "url": "https://app-test.b18a.io/dataset/robotics",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "50"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "38MB"
+      }
+    ]
+  },
+  {
+    "key": "kitchen-applicants",
+    "name": "Kitchen Applicants",
+    "image": "https://static.codatta.io/dataset/kitchen-applicants.png",
+    "url": "https://app-test.b18a.io/dataset/kitchen-applicants",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "408"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "1.7GB"
+      }
+    ]
+  },
+  {
+    "key": "fashion",
+    "name": "Fashion",
+    "image": "https://static.codatta.io/dataset/fashion.png",
+    "url": "https://app-test.b18a.io/dataset/fashion",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "1k+"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "164MB"
+      }
+    ]
+  },
+  {
+    "key": "llm-failure-cases",
+    "name": "LLM-Failure-Cases (LLM)",
+    "image": "https://static.codatta.io/dataset/llm-failure-cases.png",
+    "url": "https://app-test.b18a.io/dataset/llm-failure-cases",
+    "tags": [
+      {
+        "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
+        "text": "1k+"
+      },
+      {
+        "image": "https://static.codatta.io/static/images/7915b65d3e47329fbd08b9b60969e2d4714d6af1.png",
+        "text": "164MB"
+      }
+    ]
+  }
+]

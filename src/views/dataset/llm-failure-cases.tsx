@@ -1,6 +1,10 @@
 import { Shield, Languages, Target, ChevronLeft } from 'lucide-react'
+import { useState } from 'react'
+import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
 
 export default function LLMFailureCases() {
+  const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
+
   const usageItems = [
     {
       icon: <Shield className="size-full text-black" />,
@@ -18,6 +22,17 @@ export default function LLMFailureCases() {
 
   function onBack() {
     window.history.back()
+  }
+
+  function handleDownload() {
+    const url = 'https://huggingface.co/datasets/Codatta/LLM-Failure-Cases'
+    const isInApp = navigator.userAgent.match(/codatta/i)
+    if (isInApp) {
+      // TODO:
+      // window.native.call('downloadDataset', 'llm-failure-cases')
+    } else {
+      window.open(url, '_blank')
+    }
   }
 
   return (
@@ -79,7 +94,7 @@ export default function LLMFailureCases() {
             {usageItems.map((item, index) => (
               <div
                 key={index}
-                className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-6 shadow-glass"
+                className="flex flex-col items-start justify-between rounded-[26px] bg-white/60 p-4 shadow-glass"
               >
                 <div
                   className="mb-4 flex size-11 items-center justify-center rounded-full p-[8px]"
@@ -98,14 +113,23 @@ export default function LLMFailureCases() {
 
         {/* Action Buttons */}
         <div className="sticky bottom-6 mb-8 flex gap-4">
-          <button className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50">
+          <button
+            className="flex-1 rounded-full bg-white/60 py-4 font-medium text-black shadow-glass backdrop-blur-md transition-colors hover:bg-gray-50"
+            onClick={() => setShowCommercialDrawer(true)}
+          >
             Contact Us
           </button>
-          <button className="flex-1 rounded-full bg-black py-4 font-medium text-white transition-colors hover:bg-gray-800">
+          <button
+            className="flex-1 rounded-full bg-black py-4 font-medium text-white transition-colors hover:bg-gray-800"
+            onClick={handleDownload}
+          >
             Download
           </button>
         </div>
       </div>
+
+      {/* Commercial Access Drawer */}
+      <CommercialAccessDrawer open={showCommercialDrawer} onClose={() => setShowCommercialDrawer(false)} />
     </div>
   )
 }
