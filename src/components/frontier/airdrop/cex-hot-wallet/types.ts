@@ -1,38 +1,38 @@
 import { UploadedImage } from '@/components/frontier/airdrop/UploadImg'
 
 export interface DepositFormData {
-  exchangeName: string
-  depositScreenshot: UploadedImage[]
-  depositNetwork: string
-  depositToken: string
-  depositAmount: string
-  depositDate: string
-  exchangeDepositAddress: string
-  depositTxHash: string
-  explorerScreenshot: UploadedImage[]
-  depositFromAddress: string
-  depositToAddress: string
+  exchange_name: string
+  deposit_screenshot: UploadedImage[]
+  deposit_network: string
+  deposit_token: string
+  deposit_amount: string
+  deposit_date: string
+  exchange_deposit_address: string
+  deposit_tx_hash: string
+  explorer_screenshot: UploadedImage[]
+  deposit_from_address: string
+  deposit_to_address: string
 
   // Outgoing transaction section
-  hasOutgoingTransaction: 'yes' | 'no' | null
-  outgoingTransactionScreenshot: UploadedImage[]
-  outgoingTransactionHash: string
-  outgoingTxScreenshot: UploadedImage[]
-  outgoingTxFromAddress: string
-  outgoingTxToAddress: string
+  has_outgoing_transaction: 'yes' | 'no' | null
+  outgoing_transaction_screenshot: UploadedImage[]
+  outgoing_transaction_hash: string
+  outgoing_tx_screenshot: UploadedImage[]
+  outgoing_tx_from_address: string
+  outgoing_tx_to_address: string
 }
 
 export interface WithdrawFormData {
-  exchangeName: string
-  exchangeScreenshot: UploadedImage[]
-  withdrawNetwork: string
-  withdrawCoin: string
-  withdrawAmount: string
-  withdrawNetworkFee: string
-  withdrawalAddress: string
-  withdrawalTxHash: string
-  transactionDate: string
-  explorerScreenshot: UploadedImage[]
-  senderAddress: string
-  receiverAddress: string
+  exchange_name: string
+  exchange_screenshot: UploadedImage[]
+  withdraw_network: string
+  withdraw_coin: string
+  withdraw_amount: string
+  withdraw_network_fee: string
+  withdrawal_address: string
+  withdrawal_tx_hash: string
+  transaction_date: string
+  explorer_screenshot: UploadedImage[]
+  sender_address: string
+  receiver_address: string
 }

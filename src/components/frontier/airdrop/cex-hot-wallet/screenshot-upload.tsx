@@ -9,6 +9,7 @@ interface ScreenshotUploadProps {
   onShowModal: (src: string) => void
   hint?: string
   required?: boolean
+  error?: string
 }
 
 export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
@@ -18,7 +19,8 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
   onChange,
   onShowModal,
   hint,
-  required = true
+  required = true,
+  error
 }) => {
   return (
     <div className="mb-6 flex flex-col gap-3">
@@ -68,6 +70,7 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
               }
             />
           </div>
+          {error && <p className="text-xs text-red-500">{error}</p>}
         </div>
       </div>
 

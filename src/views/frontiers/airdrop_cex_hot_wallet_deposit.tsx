@@ -15,8 +15,10 @@ import { SupportedNetworksTip } from '@/components/frontier/airdrop/cex-hot-wall
 import { DepositFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
-import { ConfigProvider, DatePicker, Input, message, Modal, Select, Spin, theme } from 'antd'
+import { ConfigProvider, DatePicker, Input, message, Modal, Radio, Select, Spin, theme } from 'antd'
+import type { RadioChangeEvent } from 'antd'
 import locale from 'antd/es/date-picker/locale/en_US'
+import { isValidCryptoString } from '@/utils/str'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -30,24 +32,26 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
   // Form State
   const [formData, setFormData] = useState<DepositFormData>({
-    exchangeName: '',
-    depositScreenshot: [],
-    depositNetwork: '',
-    depositToken: '',
-    depositAmount: '',
-    depositDate: '',
-    exchangeDepositAddress: '',
-    depositTxHash: '',
-    explorerScreenshot: [],
-    depositFromAddress: '',
-    depositToAddress: '',
-    hasOutgoingTransaction: null,
-    outgoingTransactionScreenshot: [],
-    outgoingTransactionHash: '',
-    outgoingTxScreenshot: [],
-    outgoingTxFromAddress: '',
-    outgoingTxToAddress: ''
+    exchange_name: '',
+    deposit_screenshot: [],
+    deposit_network: '',
+    deposit_token: '',
+    deposit_amount: '',
+    deposit_date: '',
+    exchange_deposit_address: '',
+    deposit_tx_hash: '',
+    explorer_screenshot: [],
+    deposit_from_address: '',
+    deposit_to_address: '',
+    has_outgoing_transaction: null,
+    outgoing_transaction_screenshot: [],
+    outgoing_transaction_hash: '',
+    outgoing_tx_screenshot: [],
+    outgoing_tx_from_address: '',
+    outgoing_tx_to_address: ''
   })
+
+  const [errors, setErrors] = useState<Partial<Record<keyof DepositFormData, string>>>({})
 
   // UI State
   const [loading, setLoading] = useState(false)
@@ -89,48 +93,51 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
   // Update Links and Options
   useEffect(() => {
-    if (formData.exchangeName) {
-      setExchangeUrl(EXCHANGE_URLS[formData.exchangeName] || '')
-      setDepositHistoryUrl(DEPOSIT_HISTORY_URLS[formData.exchangeName] || '')
+    if (formData.exchange_name) {
+      setExchangeUrl(EXCHANGE_URLS[formData.exchange_name] || '')
+      setDepositHistoryUrl(DEPOSIT_HISTORY_URLS[formData.exchange_name] || '')
     }
-  }, [formData.exchangeName])
+  }, [formData.exchange_name])
 
   useEffect(() => {
-    if (formData.depositNetwork) {
-      setTokenOptions(NETWORK_TOKEN_OPTIONS[formData.depositNetwork] || [])
+    if (formData.deposit_network) {
+      setTokenOptions(NETWORK_TOKEN_OPTIONS[formData.deposit_network] || [])
     }
-  }, [formData.depositNetwork])
+  }, [formData.deposit_network])
 
   useEffect(() => {
-    if (formData.depositNetwork && formData.depositTxHash) {
-      const url = EXPLORER_URLS[formData.depositNetwork]?.replace('{tx}', formData.depositTxHash)
+    if (formData.deposit_network && formData.deposit_tx_hash) {
+      const url = EXPLORER_URLS[formData.deposit_network]?.replace('{tx}', formData.deposit_tx_hash)
       setExplorerUrl(url || '')
     } else {
       setExplorerUrl('')
     }
-  }, [formData.depositNetwork, formData.depositTxHash])
+  }, [formData.deposit_network, formData.deposit_tx_hash])
 
   useEffect(() => {
-    if (formData.depositNetwork && formData.depositToAddress) {
-      const url = EXPLORER_ADDRESS_URLS[formData.depositNetwork]?.replace('{address}', formData.depositToAddress)
+    if (formData.deposit_network && formData.deposit_to_address) {
+      const url = EXPLORER_ADDRESS_URLS[formData.deposit_network]?.replace('{address}', formData.deposit_to_address)
       setToAddressUrl(url || '')
     } else {
       setToAddressUrl('')
     }
-  }, [formData.depositNetwork, formData.depositToAddress])
+  }, [formData.deposit_network, formData.deposit_to_address])
 
   useEffect(() => {
-    if (formData.depositNetwork && formData.outgoingTransactionHash) {
-      const url = EXPLORER_URLS[formData.depositNetwork]?.replace('{tx}', formData.outgoingTransactionHash)
+    if (formData.deposit_network && formData.outgoing_transaction_hash) {
+      const url = EXPLORER_URLS[formData.deposit_network]?.replace('{tx}', formData.outgoing_transaction_hash)
       setOutgoingTxUrl(url || '')
     } else {
       setOutgoingTxUrl('')
     }
-  }, [formData.depositNetwork, formData.outgoingTransactionHash])
+  }, [formData.deposit_network, formData.outgoing_transaction_hash])
 
   // Handlers
   const handleChange = <K extends keyof DepositFormData>(field: K, value: DepositFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
   }
 
   const showImageModal = (src: string) => {
@@ -139,42 +146,127 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
   }
 
   const validateForm = () => {
-    const required = [
-      formData.exchangeName,
-      formData.depositScreenshot.length > 0,
-      formData.depositNetwork,
-      formData.depositToken,
-      formData.depositAmount,
-      formData.depositDate,
-      formData.exchangeDepositAddress,
-      formData.depositTxHash,
-      formData.explorerScreenshot.length > 0,
-      formData.depositFromAddress,
-      formData.depositToAddress,
-      formData.hasOutgoingTransaction
-    ]
+    const newErrors: Partial<Record<keyof DepositFormData, string>> = {}
+    let isValid = true
 
-    if (required.some((v) => !v)) return false
+    // Helper to check string emptiness
+    const isEmpty = (val: string) => !val || !val.trim()
 
-    if (formData.hasOutgoingTransaction === 'yes') {
-      const outgoingRequired = [
-        formData.outgoingTransactionScreenshot.length > 0,
-        formData.outgoingTransactionHash,
-        formData.outgoingTxScreenshot.length > 0,
-        formData.outgoingTxFromAddress,
-        formData.outgoingTxToAddress
-      ]
-      if (outgoingRequired.some((v) => !v)) return false
-    }
+    // 1. Required fields check
+    if (isEmpty(formData.deposit_amount)) newErrors.deposit_amount = 'Deposit Amount is required'
+    else if (isNaN(Number(formData.deposit_amount))) newErrors.deposit_amount = 'Amount must be a number'
+
+    if (!formData.deposit_date) newErrors.deposit_date = 'Deposit Date is required'
 
     // Date validation
-    const date = new Date(formData.depositDate)
-    const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    if (diffDays > 30) return false
+    if (formData.deposit_date) {
+      const date = new Date(formData.deposit_date)
+      const now = new Date()
+      const diffTime = Math.abs(now.getTime() - date.getTime())
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      if (diffDays > 30) {
+        newErrors.deposit_date = 'Date must be within last 30 days'
+      }
+    }
 
-    return true
+    // Address and Hash validation
+    if (isEmpty(formData.exchange_deposit_address)) {
+      newErrors.exchange_deposit_address = 'Exchange Deposit Address is required'
+    } else if (!isValidCryptoString(formData.exchange_deposit_address, 20)) {
+      newErrors.exchange_deposit_address = 'Invalid address format (min 20 characters)'
+    }
+
+    if (isEmpty(formData.deposit_tx_hash)) {
+      newErrors.deposit_tx_hash = 'Deposit TxHash is required'
+    } else if (!isValidCryptoString(formData.deposit_tx_hash, 30)) {
+      newErrors.deposit_tx_hash = 'Invalid transaction hash format (min 30 characters)'
+    }
+
+    if (formData.explorer_screenshot.length === 0)
+      newErrors.explorer_screenshot = 'Blockchain Explorer Screenshot is required'
+
+    if (isEmpty(formData.deposit_from_address)) {
+      newErrors.deposit_from_address = 'From Address is required'
+    } else if (!isValidCryptoString(formData.deposit_from_address, 20)) {
+      newErrors.deposit_from_address = 'Invalid address format (min 20 characters)'
+    }
+
+    if (isEmpty(formData.deposit_to_address)) {
+      newErrors.deposit_to_address = 'To Address is required'
+    } else if (!isValidCryptoString(formData.deposit_to_address, 20)) {
+      newErrors.deposit_to_address = 'Invalid address format (min 20 characters)'
+    }
+
+    // Sender and Receiver address must not be the same
+    if (
+      !newErrors.deposit_from_address &&
+      !newErrors.deposit_to_address &&
+      formData.deposit_from_address.trim() === formData.deposit_to_address.trim()
+    ) {
+      newErrors.deposit_from_address = 'From and To addresses cannot be the same'
+      newErrors.deposit_to_address = 'From and To addresses cannot be the same'
+    }
+
+    if (!formData.has_outgoing_transaction) {
+      newErrors.has_outgoing_transaction = 'Please select an option'
+    }
+
+    if (formData.has_outgoing_transaction === 'yes') {
+      if (formData.outgoing_transaction_screenshot.length === 0)
+        newErrors.outgoing_transaction_screenshot = 'Transaction Screenshot is required'
+
+      if (isEmpty(formData.outgoing_transaction_hash)) {
+        newErrors.outgoing_transaction_hash = 'Transaction Hash is required'
+      } else if (!isValidCryptoString(formData.outgoing_transaction_hash, 30)) {
+        newErrors.outgoing_transaction_hash = 'Invalid transaction hash format (min 30 characters)'
+      }
+
+      if (formData.outgoing_tx_screenshot.length === 0)
+        newErrors.outgoing_tx_screenshot = 'Transaction Screenshot is required'
+
+      if (isEmpty(formData.outgoing_tx_from_address)) {
+        newErrors.outgoing_tx_from_address = 'From Address is required'
+      } else if (!isValidCryptoString(formData.outgoing_tx_from_address, 20)) {
+        newErrors.outgoing_tx_from_address = 'Invalid address format (min 20 characters)'
+      }
+
+      if (isEmpty(formData.outgoing_tx_to_address)) {
+        newErrors.outgoing_tx_to_address = 'To Address is required'
+      } else if (!isValidCryptoString(formData.outgoing_tx_to_address, 20)) {
+        newErrors.outgoing_tx_to_address = 'Invalid address format (min 20 characters)'
+      }
+
+      // Check addresses equality for outgoing
+      if (
+        !newErrors.outgoing_tx_from_address &&
+        !newErrors.outgoing_tx_to_address &&
+        formData.outgoing_tx_from_address.trim() === formData.outgoing_tx_to_address.trim()
+      ) {
+        newErrors.outgoing_tx_from_address = 'From and To addresses cannot be the same'
+        newErrors.outgoing_tx_to_address = 'From and To addresses cannot be the same'
+      }
+    }
+
+    // Image hash check
+    if (formData.deposit_screenshot.length > 0 && formData.explorer_screenshot.length > 0) {
+      if (
+        formData.deposit_screenshot[0].hash &&
+        formData.explorer_screenshot[0].hash &&
+        formData.deposit_screenshot[0].hash === formData.explorer_screenshot[0].hash
+      ) {
+        newErrors.deposit_screenshot = 'Screenshots cannot be the same image'
+        newErrors.explorer_screenshot = 'Screenshots cannot be the same image'
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      isValid = false
+    } else {
+      setErrors({})
+    }
+
+    return isValid
   }
 
   const handleSubmit = async () => {
@@ -186,39 +278,35 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
     setSubmitting(true)
     try {
       const payload = {
-        task_type: 'deposit',
-        deposit: {
-          exchange_name: formData.exchangeName,
-          exchange_ui_screenshot_file: formData.depositScreenshot[0]?.fileName,
-          exchange_ui_screenshot_hash: formData.depositScreenshot[0]?.hash,
-          exchange_ui_screenshot_url: formData.depositScreenshot[0]?.url,
-          network: formData.depositNetwork,
-          token: formData.depositToken,
-          deposit_amount: formData.depositAmount,
-          deposit_date: formData.depositDate,
-          exchange_deposit_address: formData.exchangeDepositAddress,
-          deposit_txhash: formData.depositTxHash,
-          explorer_screenshot_file: formData.explorerScreenshot[0]?.fileName,
-          explorer_screenshot_hash: formData.explorerScreenshot[0]?.hash,
-          explorer_screenshot_url: formData.explorerScreenshot[0]?.url,
-          from_address: formData.depositFromAddress,
-          to_address: formData.depositToAddress,
-          has_outgoing_transaction: formData.hasOutgoingTransaction === 'yes',
-          ...(formData.hasOutgoingTransaction === 'yes'
-            ? {
-                outgoing_transaction_screenshot_file: formData.outgoingTransactionScreenshot[0]?.fileName,
-                outgoing_transaction_screenshot_hash: formData.outgoingTransactionScreenshot[0]?.hash,
-                outgoing_transaction_screenshot_url: formData.outgoingTransactionScreenshot[0]?.url,
-                outgoing_transaction_hash: formData.outgoingTransactionHash,
-                outgoing_tx_screenshot_file: formData.outgoingTxScreenshot[0]?.fileName,
-                outgoing_tx_screenshot_hash: formData.outgoingTxScreenshot[0]?.hash,
-                outgoing_tx_screenshot_url: formData.outgoingTxScreenshot[0]?.url,
-                outgoing_tx_from_address: formData.outgoingTxFromAddress,
-                outgoing_tx_to_address: formData.outgoingTxToAddress
-              }
-            : {})
-        },
-        submitted_at: Date.now()
+        exchange_name: formData.exchange_name,
+        exchange_ui_screenshot_file: formData.deposit_screenshot[0]?.fileName,
+        exchange_ui_screenshot_hash: formData.deposit_screenshot[0]?.hash,
+        exchange_ui_screenshot_url: formData.deposit_screenshot[0]?.url,
+        network: formData.deposit_network,
+        token: formData.deposit_token,
+        deposit_amount: formData.deposit_amount.trim(),
+        deposit_date: formData.deposit_date,
+        exchange_deposit_address: formData.exchange_deposit_address.trim(),
+        deposit_txhash: formData.deposit_tx_hash.trim(),
+        explorer_screenshot_file: formData.explorer_screenshot[0]?.fileName,
+        explorer_screenshot_hash: formData.explorer_screenshot[0]?.hash,
+        explorer_screenshot_url: formData.explorer_screenshot[0]?.url,
+        from_address: formData.deposit_from_address.trim(),
+        to_address: formData.deposit_to_address.trim(),
+        has_outgoing_transaction: formData.has_outgoing_transaction === 'yes',
+        ...(formData.has_outgoing_transaction === 'yes'
+          ? {
+              outgoing_transaction_screenshot_file: formData.outgoing_transaction_screenshot[0]?.fileName,
+              outgoing_transaction_screenshot_hash: formData.outgoing_transaction_screenshot[0]?.hash,
+              outgoing_transaction_screenshot_url: formData.outgoing_transaction_screenshot[0]?.url,
+              outgoing_transaction_hash: formData.outgoing_transaction_hash.trim(),
+              outgoing_tx_screenshot_file: formData.outgoing_tx_screenshot[0]?.fileName,
+              outgoing_tx_screenshot_hash: formData.outgoing_tx_screenshot[0]?.hash,
+              outgoing_tx_screenshot_url: formData.outgoing_tx_screenshot[0]?.url,
+              outgoing_tx_from_address: formData.outgoing_tx_from_address.trim(),
+              outgoing_tx_to_address: formData.outgoing_tx_to_address.trim()
+            }
+          : {})
       }
 
       await frontiterApi.submitTask(taskId!, {
@@ -299,8 +387,9 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     className={selectClass}
                     popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                     placeholder="Select exchange"
-                    value={formData.exchangeName || undefined}
-                    onChange={(value) => handleChange('exchangeName', value)}
+                    value={formData.exchange_name || undefined}
+                    onChange={(value) => handleChange('exchange_name', value)}
+                    status={errors.exchange_name ? 'error' : ''}
                   >
                     {Object.keys(EXCHANGE_URLS).map((ex) => (
                       <Option key={ex} value={ex}>
@@ -308,6 +397,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       </Option>
                     ))}
                   </Select>
+                  {errors.exchange_name && <p className="text-xs text-red-500">{errors.exchange_name}</p>}
                 </div>
               </StepContainer>
 
@@ -384,10 +474,11 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 <ScreenshotUpload
                   label="Exchange UI Screenshot"
                   exampleImage="https://static.codatta.io/static/images/deposit_1_1767511761924.png"
-                  value={formData.depositScreenshot}
-                  onChange={(v) => handleChange('depositScreenshot', v)}
+                  value={formData.deposit_screenshot}
+                  onChange={(v) => handleChange('deposit_screenshot', v)}
                   onShowModal={showImageModal}
                   hint="Full-page screenshot including: URL, exchange logo, deposit address, token, amount, and TxHash."
+                  error={errors.deposit_screenshot}
                 />
 
                 <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -399,8 +490,9 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       className={selectClass}
                       popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                       placeholder="Select network"
-                      value={formData.depositNetwork || undefined}
-                      onChange={(value) => handleChange('depositNetwork', value)}
+                      value={formData.deposit_network || undefined}
+                      onChange={(value) => handleChange('deposit_network', value)}
+                      status={errors.deposit_network ? 'error' : ''}
                     >
                       {Object.keys(NETWORK_TOKEN_OPTIONS).map((net) => (
                         <Option key={net} value={net}>
@@ -408,6 +500,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                         </Option>
                       ))}
                     </Select>
+                    {errors.deposit_network && <p className="text-xs text-red-500">{errors.deposit_network}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -418,9 +511,10 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       className={selectClass}
                       popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                       placeholder="Select token"
-                      value={formData.depositToken || undefined}
-                      onChange={(value) => handleChange('depositToken', value)}
-                      disabled={!formData.depositNetwork}
+                      value={formData.deposit_token || undefined}
+                      onChange={(value) => handleChange('deposit_token', value)}
+                      disabled={!formData.deposit_network}
+                      status={errors.deposit_token ? 'error' : ''}
                     >
                       {tokenOptions.map((t) => (
                         <Option key={t} value={t}>
@@ -428,6 +522,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                         </Option>
                       ))}
                     </Select>
+                    {errors.deposit_token && <p className="text-xs text-red-500">{errors.deposit_token}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -437,22 +532,28 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     <Input
                       className={inputClass}
                       placeholder="Deposit amount"
-                      value={formData.depositAmount}
-                      onChange={(e) => handleChange('depositAmount', e.target.value)}
+                      value={formData.deposit_amount}
+                      onChange={(e) => handleChange('deposit_amount', e.target.value)}
+                      status={errors.deposit_amount ? 'error' : ''}
                     />
+                    {errors.deposit_amount && <p className="text-xs text-red-500">{errors.deposit_amount}</p>}
                   </div>
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
                   <label className={labelClass}>
-                    Exchange Deposit Address (Receiver) <span className="text-red-500">*</span>
+                    Exchange Deposit To Address (Receiver) <span className="text-red-500">*</span>
                   </label>
                   <Input
                     className={inputClass}
                     placeholder="Exchange deposit address"
-                    value={formData.exchangeDepositAddress}
-                    onChange={(e) => handleChange('exchangeDepositAddress', e.target.value)}
+                    value={formData.exchange_deposit_address}
+                    onChange={(e) => handleChange('exchange_deposit_address', e.target.value)}
+                    status={errors.exchange_deposit_address ? 'error' : ''}
                   />
+                  {errors.exchange_deposit_address && (
+                    <p className="text-xs text-red-500">{errors.exchange_deposit_address}</p>
+                  )}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -462,9 +563,11 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   <Input
                     className={inputClass}
                     placeholder="Transaction hash from exchange UI"
-                    value={formData.depositTxHash}
-                    onChange={(e) => handleChange('depositTxHash', e.target.value)}
+                    value={formData.deposit_tx_hash}
+                    onChange={(e) => handleChange('deposit_tx_hash', e.target.value)}
+                    status={errors.deposit_tx_hash ? 'error' : ''}
                   />
+                  {errors.deposit_tx_hash && <p className="text-xs text-red-500">{errors.deposit_tx_hash}</p>}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -474,12 +577,14 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   <DatePicker
                     locale={locale}
                     className={`${inputClass} !flex !w-full`}
-                    value={formData.depositDate ? dayjs(formData.depositDate) : null}
-                    onChange={(_, dateString) => handleChange('depositDate', dateString as string)}
+                    value={formData.deposit_date ? dayjs(formData.deposit_date) : null}
+                    onChange={(_, dateString) => handleChange('deposit_date', dateString as string)}
                     maxDate={dayjs()}
                     minDate={dayjs().subtract(30, 'day')}
                     popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
+                    status={errors.deposit_date ? 'error' : ''}
                   />
+                  {errors.deposit_date && <p className="text-xs text-red-500">{errors.deposit_date}</p>}
                   <div className="text-[11px] text-[#888]">Select deposit date (within last 30 days)</div>
                 </div>
               </StepContainer>
@@ -511,10 +616,11 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 <ScreenshotUpload
                   label="Blockchain Explorer Screenshot"
                   exampleImage="https://static.codatta.io/static/images/deposit_2_1767511761924.png"
-                  value={formData.explorerScreenshot}
-                  onChange={(v) => handleChange('explorerScreenshot', v)}
+                  value={formData.explorer_screenshot}
+                  onChange={(v) => handleChange('explorer_screenshot', v)}
                   onShowModal={showImageModal}
                   hint="Full-page screenshot including: URL, TxHash, From address, and To address."
+                  error={errors.explorer_screenshot}
                 />
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -524,9 +630,11 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   <Input
                     className={inputClass}
                     placeholder="Your wallet address"
-                    value={formData.depositFromAddress}
-                    onChange={(e) => handleChange('depositFromAddress', e.target.value)}
+                    value={formData.deposit_from_address}
+                    onChange={(e) => handleChange('deposit_from_address', e.target.value)}
+                    status={errors.deposit_from_address ? 'error' : ''}
                   />
+                  {errors.deposit_from_address && <p className="text-xs text-red-500">{errors.deposit_from_address}</p>}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -536,9 +644,11 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   <Input
                     className={inputClass}
                     placeholder="Exchange deposit address"
-                    value={formData.depositToAddress}
-                    onChange={(e) => handleChange('depositToAddress', e.target.value)}
+                    value={formData.deposit_to_address}
+                    onChange={(e) => handleChange('deposit_to_address', e.target.value)}
+                    status={errors.deposit_to_address ? 'error' : ''}
                   />
+                  {errors.deposit_to_address && <p className="text-xs text-red-500">{errors.deposit_to_address}</p>}
                 </div>
               </StepContainer>
 
@@ -584,8 +694,8 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 <div className="mb-4 flex items-center gap-5">
                   <span className="text-xs text-white">Any outgoing transaction with amount &gt; 0?</span>
                   <Radio.Group
-                    value={formData.hasOutgoingTransaction}
-                    onChange={(e) => handleChange('hasOutgoingTransaction', e.target.value)}
+                    value={formData.has_outgoing_transaction}
+                    onChange={(e: RadioChangeEvent) => handleChange('has_outgoing_transaction', e.target.value)}
                     className="flex gap-5"
                   >
                     <Radio value="yes" className="!text-xs !font-medium !text-[#d0d0d0]">
@@ -595,17 +705,21 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       No
                     </Radio>
                   </Radio.Group>
+                  {errors.has_outgoing_transaction && (
+                    <p className="text-xs text-red-500">{errors.has_outgoing_transaction}</p>
+                  )}
                 </div>
 
-                {formData.hasOutgoingTransaction === 'yes' && (
-                  <div className="animate-in fade-in slide-in-from-top-2">
+                {formData.has_outgoing_transaction === 'yes' && (
+                  <div className="animate-fade-down animate-duration-300">
                     <ScreenshotUpload
                       label="Transaction Screenshot"
                       exampleImage="https://static.codatta.io/static/images/deposit_3_1767511761924.png"
-                      value={formData.outgoingTransactionScreenshot}
-                      onChange={(v) => handleChange('outgoingTransactionScreenshot', v)}
+                      value={formData.outgoing_transaction_screenshot}
+                      onChange={(v) => handleChange('outgoing_transaction_screenshot', v)}
                       onShowModal={showImageModal}
                       hint="Full-page screenshot including: URL, TxHash, From/To addresses, and amount."
+                      error={errors.outgoing_transaction_screenshot}
                     />
                     <div className="mt-3 flex flex-col gap-2">
                       <label className={labelClass}>
@@ -614,16 +728,20 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       <Input
                         className={inputClass}
                         placeholder="Outgoing transaction hash"
-                        value={formData.outgoingTransactionHash}
-                        onChange={(e) => handleChange('outgoingTransactionHash', e.target.value)}
+                        value={formData.outgoing_transaction_hash}
+                        onChange={(e) => handleChange('outgoing_transaction_hash', e.target.value)}
+                        status={errors.outgoing_transaction_hash ? 'error' : ''}
                       />
+                      {errors.outgoing_transaction_hash && (
+                        <p className="text-xs text-red-500">{errors.outgoing_transaction_hash}</p>
+                      )}
                     </div>
                   </div>
                 )}
               </StepContainer>
 
               {/* Step 6 */}
-              {formData.hasOutgoingTransaction === 'yes' && (
+              {formData.has_outgoing_transaction === 'yes' && (
                 <StepContainer step={6} title="Submit Outgoing Transaction Details">
                   <div className="mb-4">
                     <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
@@ -650,10 +768,11 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   <ScreenshotUpload
                     label="Transaction Screenshot"
                     exampleImage="https://static.codatta.io/static/images/deposit_4_1767511761924.png"
-                    value={formData.outgoingTxScreenshot}
-                    onChange={(v) => handleChange('outgoingTxScreenshot', v)}
+                    value={formData.outgoing_tx_screenshot}
+                    onChange={(v) => handleChange('outgoing_tx_screenshot', v)}
                     onShowModal={showImageModal}
                     hint="Full-page screenshot including: URL, TxHash, From address, and To address."
+                    error={errors.outgoing_tx_screenshot}
                   />
 
                   <div className="mt-3 flex flex-col gap-2">
@@ -663,9 +782,13 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     <Input
                       className={inputClass}
                       placeholder="Exchange deposit address"
-                      value={formData.outgoingTxFromAddress}
-                      onChange={(e) => handleChange('outgoingTxFromAddress', e.target.value)}
+                      value={formData.outgoing_tx_from_address}
+                      onChange={(e) => handleChange('outgoing_tx_from_address', e.target.value)}
+                      status={errors.outgoing_tx_from_address ? 'error' : ''}
                     />
+                    {errors.outgoing_tx_from_address && (
+                      <p className="text-xs text-red-500">{errors.outgoing_tx_from_address}</p>
+                    )}
                   </div>
 
                   <div className="mt-3 flex flex-col gap-2">
@@ -675,9 +798,13 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     <Input
                       className={inputClass}
                       placeholder="Exchange hot wallet address"
-                      value={formData.outgoingTxToAddress}
-                      onChange={(e) => handleChange('outgoingTxToAddress', e.target.value)}
+                      value={formData.outgoing_tx_to_address}
+                      onChange={(e) => handleChange('outgoing_tx_to_address', e.target.value)}
+                      status={errors.outgoing_tx_to_address ? 'error' : ''}
                     />
+                    {errors.outgoing_tx_to_address && (
+                      <p className="text-xs text-red-500">{errors.outgoing_tx_to_address}</p>
+                    )}
                   </div>
                 </StepContainer>
               )}
@@ -690,12 +817,9 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
               <div className="mt-12 flex justify-center pb-20">
                 <Button
-                  disabled={!validateForm()}
                   onClick={handleSubmit}
                   loading={submitting}
-                  className={`h-[44px] w-full rounded-full text-base font-bold ${
-                    !validateForm() ? 'opacity-50' : ''
-                  } md:mx-auto md:w-[240px]`}
+                  className="h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:w-[240px]"
                   text="Submit"
                 />
               </div>

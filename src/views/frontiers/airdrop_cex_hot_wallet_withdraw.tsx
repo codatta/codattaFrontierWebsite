@@ -14,6 +14,7 @@ import { SupportedNetworksTip } from '@/components/frontier/airdrop/cex-hot-wall
 import { WithdrawFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
+import { isValidCryptoString } from '@/utils/str'
 import { ConfigProvider, DatePicker, Input, message, Modal, Select, Spin, theme } from 'antd'
 import locale from 'antd/es/date-picker/locale/en_US'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
@@ -29,19 +30,21 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
   // Form State
   const [formData, setFormData] = useState<WithdrawFormData>({
-    exchangeName: '',
-    exchangeScreenshot: [],
-    withdrawNetwork: '',
-    withdrawCoin: '',
-    withdrawAmount: '',
-    withdrawNetworkFee: '',
-    withdrawalAddress: '',
-    withdrawalTxHash: '',
-    transactionDate: '',
-    explorerScreenshot: [],
-    senderAddress: '',
-    receiverAddress: ''
+    exchange_name: '',
+    exchange_screenshot: [],
+    withdraw_network: '',
+    withdraw_coin: '',
+    withdraw_amount: '',
+    withdraw_network_fee: '',
+    withdrawal_address: '',
+    withdrawal_tx_hash: '',
+    transaction_date: '',
+    explorer_screenshot: [],
+    sender_address: '',
+    receiver_address: ''
   })
+
+  const [errors, setErrors] = useState<Partial<Record<keyof WithdrawFormData, string>>>({})
 
   // UI State
   const [loading, setLoading] = useState(false)
@@ -78,29 +81,32 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }, [checkTaskStatus])
 
   useEffect(() => {
-    if (formData.exchangeName) {
-      setExchangeUrl(EXCHANGE_URLS[formData.exchangeName] || '')
-      setWithdrawHistoryUrl(WITHDRAWAL_HISTORY_URLS[formData.exchangeName] || '')
+    if (formData.exchange_name) {
+      setExchangeUrl(EXCHANGE_URLS[formData.exchange_name] || '')
+      setWithdrawHistoryUrl(WITHDRAWAL_HISTORY_URLS[formData.exchange_name] || '')
     }
-  }, [formData.exchangeName])
+  }, [formData.exchange_name])
 
   useEffect(() => {
-    if (formData.withdrawNetwork) {
-      setCoinOptions(NETWORK_COIN_OPTIONS[formData.withdrawNetwork] || [])
+    if (formData.withdraw_network) {
+      setCoinOptions(NETWORK_COIN_OPTIONS[formData.withdraw_network] || [])
     }
-  }, [formData.withdrawNetwork])
+  }, [formData.withdraw_network])
 
   useEffect(() => {
-    if (formData.withdrawNetwork && formData.withdrawalTxHash) {
-      const url = EXPLORER_URLS[formData.withdrawNetwork]?.replace('{tx}', formData.withdrawalTxHash)
+    if (formData.withdraw_network && formData.withdrawal_tx_hash) {
+      const url = EXPLORER_URLS[formData.withdraw_network]?.replace('{tx}', formData.withdrawal_tx_hash)
       setExplorerUrl(url || '')
     } else {
       setExplorerUrl('')
     }
-  }, [formData.withdrawNetwork, formData.withdrawalTxHash])
+  }, [formData.withdraw_network, formData.withdrawal_tx_hash])
 
   const handleChange = <K extends keyof WithdrawFormData>(field: K, value: WithdrawFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
   }
 
   const showImageModal = (src: string) => {
@@ -109,31 +115,101 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }
 
   const validateForm = () => {
-    const required = [
-      formData.exchangeName,
-      formData.exchangeScreenshot.length > 0,
-      formData.withdrawNetwork,
-      formData.withdrawCoin,
-      formData.withdrawAmount,
-      formData.withdrawNetworkFee,
-      formData.withdrawalAddress,
-      formData.withdrawalTxHash,
-      formData.transactionDate,
-      formData.explorerScreenshot.length > 0,
-      formData.senderAddress,
-      formData.receiverAddress
-    ]
+    const newErrors: Partial<Record<keyof WithdrawFormData, string>> = {}
+    let isValid = true
 
-    if (required.some((v) => !v)) return false
+    // Helper to check string emptiness
+    const isEmpty = (val: string) => !val || !val.trim()
+
+    // 1. Required fields check
+    if (!formData.exchange_name) newErrors.exchange_name = 'Exchange Name is required'
+    if (formData.exchange_screenshot.length === 0) newErrors.exchange_screenshot = 'Exchange UI Screenshot is required'
+    if (!formData.withdraw_network) newErrors.withdraw_network = 'Network is required'
+    if (!formData.withdraw_coin) newErrors.withdraw_coin = 'Coin is required'
+
+    if (isEmpty(formData.withdraw_amount)) {
+      newErrors.withdraw_amount = 'Withdraw Amount is required'
+    } else if (isNaN(Number(formData.withdraw_amount))) {
+      // 2. Amount must be a number
+      newErrors.withdraw_amount = 'Amount must be a number'
+    }
+
+    if (isEmpty(formData.withdraw_network_fee)) {
+      newErrors.withdraw_network_fee = 'Network Fee is required'
+    } else if (isNaN(Number(formData.withdraw_network_fee))) {
+      // 2. Network fee must be a number
+      newErrors.withdraw_network_fee = 'Network Fee must be a number'
+    }
+
+    // 3. Address and Hash format check
+    if (isEmpty(formData.withdrawal_address)) {
+      newErrors.withdrawal_address = 'Withdrawal Address is required'
+    } else if (!isValidCryptoString(formData.withdrawal_address, 20)) {
+      newErrors.withdrawal_address = 'Invalid address format (min 20 characters, alphanumeric only)'
+    }
+
+    if (isEmpty(formData.withdrawal_tx_hash)) {
+      newErrors.withdrawal_tx_hash = 'Transaction Hash is required'
+    } else if (!isValidCryptoString(formData.withdrawal_tx_hash, 30)) {
+      newErrors.withdrawal_tx_hash = 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+    }
+
+    if (!formData.transaction_date) newErrors.transaction_date = 'Transaction Date is required'
 
     // Date validation
-    const date = new Date(formData.transactionDate)
-    const now = new Date()
-    const diffTime = Math.abs(now.getTime() - date.getTime())
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    if (diffDays > 30) return false
+    if (formData.transaction_date) {
+      const date = new Date(formData.transaction_date)
+      const now = new Date()
+      const diffTime = Math.abs(now.getTime() - date.getTime())
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+      if (diffDays > 30) {
+        newErrors.transaction_date = 'Date must be within last 30 days'
+      }
+    }
 
-    return true
+    if (formData.explorer_screenshot.length === 0)
+      newErrors.explorer_screenshot = 'Blockchain Explorer Screenshot is required'
+
+    if (isEmpty(formData.sender_address)) {
+      newErrors.sender_address = 'Sender Address is required'
+    } else if (!isValidCryptoString(formData.sender_address, 20)) {
+      newErrors.sender_address = 'Invalid address format (min 20 characters, alphanumeric only)'
+    }
+
+    if (isEmpty(formData.receiver_address)) {
+      newErrors.receiver_address = 'Receiver Address is required'
+    } else if (!isValidCryptoString(formData.receiver_address, 20)) {
+      newErrors.receiver_address = 'Invalid address format (min 20 characters, alphanumeric only)'
+    }
+
+    // 4. Sender Address and Receiver Address must not be the same
+    if (
+      !newErrors.sender_address &&
+      !newErrors.receiver_address &&
+      formData.sender_address.trim() === formData.receiver_address.trim()
+    ) {
+      newErrors.sender_address = 'Sender and Receiver addresses cannot be the same'
+      newErrors.receiver_address = 'Sender and Receiver addresses cannot be the same'
+    }
+
+    // 5. Image hash check
+    if (formData.exchange_screenshot.length > 0 && formData.explorer_screenshot.length > 0) {
+      const exchangeImg = formData.exchange_screenshot[0]
+      const explorerImg = formData.explorer_screenshot[0]
+      if (exchangeImg.hash && explorerImg.hash && exchangeImg.hash === explorerImg.hash) {
+        newErrors.exchange_screenshot = 'Screenshots cannot be the same image'
+        newErrors.explorer_screenshot = 'Screenshots cannot be the same image'
+      }
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors)
+      isValid = false
+    } else {
+      setErrors({})
+    }
+
+    return isValid
   }
 
   const handleSubmit = async () => {
@@ -145,26 +221,22 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
     setSubmitting(true)
     try {
       const payload = {
-        task_type: 'withdrawal',
-        withdrawal: {
-          exchange_name: formData.exchangeName,
-          exchange_ui_screenshot_file: formData.exchangeScreenshot[0]?.fileName,
-          exchange_ui_screenshot_hash: formData.exchangeScreenshot[0]?.hash,
-          exchange_ui_screenshot_url: formData.exchangeScreenshot[0]?.url,
-          network: formData.withdrawNetwork,
-          coin: formData.withdrawCoin,
-          withdraw_amount: formData.withdrawAmount,
-          network_fee: formData.withdrawNetworkFee,
-          withdrawal_address: formData.withdrawalAddress,
-          withdrawal_txhash: formData.withdrawalTxHash,
-          transaction_date: formData.transactionDate,
-          explorer_screenshot_file: formData.explorerScreenshot[0]?.fileName,
-          explorer_screenshot_hash: formData.explorerScreenshot[0]?.hash,
-          explorer_screenshot_url: formData.explorerScreenshot[0]?.url,
-          sender_address: formData.senderAddress,
-          receiver_address: formData.receiverAddress
-        },
-        submitted_at: Date.now()
+        exchange_name: formData.exchange_name,
+        exchange_ui_screenshot_file: formData.exchange_screenshot[0]?.fileName,
+        exchange_ui_screenshot_hash: formData.exchange_screenshot[0]?.hash,
+        exchange_ui_screenshot_url: formData.exchange_screenshot[0]?.url,
+        network: formData.withdraw_network,
+        coin: formData.withdraw_coin,
+        withdraw_amount: formData.withdraw_amount.trim(),
+        network_fee: formData.withdraw_network_fee.trim(),
+        withdrawal_address: formData.withdrawal_address.trim(),
+        withdrawal_tx_hash: formData.withdrawal_tx_hash.trim(),
+        transaction_date: formData.transaction_date,
+        explorer_screenshot_file: formData.explorer_screenshot[0]?.fileName,
+        explorer_screenshot_hash: formData.explorer_screenshot[0]?.hash,
+        explorer_screenshot_url: formData.explorer_screenshot[0]?.url,
+        sender_address: formData.sender_address.trim(),
+        receiver_address: formData.receiver_address.trim()
       }
 
       await frontiterApi.submitTask(taskId!, {
@@ -243,8 +315,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     className={selectClass}
                     popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                     placeholder="Select exchange"
-                    value={formData.exchangeName || undefined}
-                    onChange={(value) => handleChange('exchangeName', value)}
+                    value={formData.exchange_name || undefined}
+                    onChange={(value) => handleChange('exchange_name', value)}
+                    status={errors.exchange_name ? 'error' : ''}
                   >
                     {Object.keys(EXCHANGE_URLS).map((ex) => (
                       <Option key={ex} value={ex}>
@@ -252,6 +325,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                       </Option>
                     ))}
                   </Select>
+                  {errors.exchange_name && <p className="text-xs text-red-500">{errors.exchange_name}</p>}
                 </div>
               </StepContainer>
 
@@ -327,10 +401,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 <ScreenshotUpload
                   label="Exchange UI Screenshot"
                   exampleImage="https://static.codatta.io/static/images/withdraw_1_1767511761924.png"
-                  value={formData.exchangeScreenshot}
-                  onChange={(v) => handleChange('exchangeScreenshot', v)}
+                  value={formData.exchange_screenshot}
+                  onChange={(v) => handleChange('exchange_screenshot', v)}
                   onShowModal={showImageModal}
                   hint="Full-page screenshot including: URL, exchange logo, withdrawal address, token, amount, date/time, and TxHash."
+                  error={errors.exchange_screenshot}
                 />
 
                 <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2">
@@ -342,8 +417,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                       className={selectClass}
                       popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                       placeholder="Select network"
-                      value={formData.withdrawNetwork || undefined}
-                      onChange={(value) => handleChange('withdrawNetwork', value)}
+                      value={formData.withdraw_network || undefined}
+                      onChange={(value) => handleChange('withdraw_network', value)}
+                      status={errors.withdraw_network ? 'error' : ''}
                     >
                       {Object.keys(NETWORK_COIN_OPTIONS).map((net) => (
                         <Option key={net} value={net}>
@@ -351,6 +427,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                         </Option>
                       ))}
                     </Select>
+                    {errors.withdraw_network && <p className="text-xs text-red-500">{errors.withdraw_network}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -361,9 +438,10 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                       className={selectClass}
                       popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                       placeholder="Select coin"
-                      value={formData.withdrawCoin || undefined}
-                      onChange={(value) => handleChange('withdrawCoin', value)}
-                      disabled={!formData.withdrawNetwork}
+                      value={formData.withdraw_coin || undefined}
+                      onChange={(value) => handleChange('withdraw_coin', value)}
+                      disabled={!formData.withdraw_network}
+                      status={errors.withdraw_coin ? 'error' : ''}
                     >
                       {coinOptions.map((t) => (
                         <Option key={t} value={t}>
@@ -371,6 +449,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                         </Option>
                       ))}
                     </Select>
+                    {errors.withdraw_coin && <p className="text-xs text-red-500">{errors.withdraw_coin}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -380,9 +459,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     <Input
                       className={inputClass}
                       placeholder="Exact withdrawal amount from the record"
-                      value={formData.withdrawAmount}
-                      onChange={(e) => handleChange('withdrawAmount', e.target.value)}
+                      value={formData.withdraw_amount}
+                      onChange={(e) => handleChange('withdraw_amount', e.target.value)}
+                      status={errors.withdraw_amount ? 'error' : ''}
                     />
+                    {errors.withdraw_amount && <p className="text-xs text-red-500">{errors.withdraw_amount}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -392,9 +473,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     <Input
                       className={inputClass}
                       placeholder="Network fee / withdrawal fee"
-                      value={formData.withdrawNetworkFee}
-                      onChange={(e) => handleChange('withdrawNetworkFee', e.target.value)}
+                      value={formData.withdraw_network_fee}
+                      onChange={(e) => handleChange('withdraw_network_fee', e.target.value)}
+                      status={errors.withdraw_network_fee ? 'error' : ''}
                     />
+                    {errors.withdraw_network_fee && (
+                      <p className="text-xs text-red-500">{errors.withdraw_network_fee}</p>
+                    )}
                   </div>
                 </div>
 
@@ -405,9 +490,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Input
                     className={inputClass}
                     placeholder="Your wallet address that received the withdrawal"
-                    value={formData.withdrawalAddress}
-                    onChange={(e) => handleChange('withdrawalAddress', e.target.value)}
+                    value={formData.withdrawal_address}
+                    onChange={(e) => handleChange('withdrawal_address', e.target.value)}
+                    status={errors.withdrawal_address ? 'error' : ''}
                   />
+                  {errors.withdrawal_address && <p className="text-xs text-red-500">{errors.withdrawal_address}</p>}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -417,9 +504,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Input
                     className={inputClass}
                     placeholder="Transaction hash from the exchange"
-                    value={formData.withdrawalTxHash}
-                    onChange={(e) => handleChange('withdrawalTxHash', e.target.value)}
+                    value={formData.withdrawal_tx_hash}
+                    onChange={(e) => handleChange('withdrawal_tx_hash', e.target.value)}
+                    status={errors.withdrawal_tx_hash ? 'error' : ''}
                   />
+                  {errors.withdrawal_tx_hash && <p className="text-xs text-red-500">{errors.withdrawal_tx_hash}</p>}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -429,12 +518,14 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <DatePicker
                     locale={locale}
                     className={`${inputClass} !flex !w-full`}
-                    value={formData.transactionDate ? dayjs(formData.transactionDate) : null}
-                    onChange={(_, dateString) => handleChange('transactionDate', dateString as string)}
+                    value={formData.transaction_date ? dayjs(formData.transaction_date) : null}
+                    onChange={(_, dateString) => handleChange('transaction_date', dateString as string)}
                     maxDate={dayjs()}
                     minDate={dayjs().subtract(30, 'day')}
                     popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
+                    status={errors.transaction_date ? 'error' : ''}
                   />
+                  {errors.transaction_date && <p className="text-xs text-red-500">{errors.transaction_date}</p>}
                 </div>
               </StepContainer>
 
@@ -466,10 +557,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 <ScreenshotUpload
                   label="Blockchain Explorer Screenshot"
                   exampleImage="https://static.codatta.io/static/images/withdraw_2_1767511761924.png"
-                  value={formData.explorerScreenshot}
-                  onChange={(v) => handleChange('explorerScreenshot', v)}
+                  value={formData.explorer_screenshot}
+                  onChange={(v) => handleChange('explorer_screenshot', v)}
                   onShowModal={showImageModal}
                   hint="Full-page screenshot including: URL, TxHash, From address, and To address."
+                  error={errors.explorer_screenshot}
                 />
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -479,9 +571,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Input
                     className={inputClass}
                     placeholder="Hot wallet address that sent the funds"
-                    value={formData.senderAddress}
-                    onChange={(e) => handleChange('senderAddress', e.target.value)}
+                    value={formData.sender_address}
+                    onChange={(e) => handleChange('sender_address', e.target.value)}
+                    status={errors.sender_address ? 'error' : ''}
                   />
+                  {errors.sender_address && <p className="text-xs text-red-500">{errors.sender_address}</p>}
                   <div className="text-[11px] text-[#888]">
                     This is the hot wallet address controlled by the exchange
                   </div>
@@ -494,9 +588,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Input
                     className={inputClass}
                     placeholder="Your wallet address that received the funds"
-                    value={formData.receiverAddress}
-                    onChange={(e) => handleChange('receiverAddress', e.target.value)}
+                    value={formData.receiver_address}
+                    onChange={(e) => handleChange('receiver_address', e.target.value)}
+                    status={errors.receiver_address ? 'error' : ''}
                   />
+                  {errors.receiver_address && <p className="text-xs text-red-500">{errors.receiver_address}</p>}
                 </div>
               </StepContainer>
 
@@ -508,12 +604,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
               <div className="mt-12 flex justify-center pb-20">
                 <Button
-                  disabled={!validateForm()}
                   onClick={handleSubmit}
                   loading={submitting}
-                  className={`h-[44px] w-full rounded-full text-base font-bold ${
-                    !validateForm() ? 'opacity-50' : ''
-                  } md:mx-auto md:w-[240px]`}
+                  className="h-[44px] w-full rounded-full text-base font-bold md:mx-auto md:w-[240px]"
                   text="Submit"
                 />
               </div>
