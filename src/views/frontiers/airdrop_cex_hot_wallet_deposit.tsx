@@ -233,7 +233,9 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
   // Common Input Styles
   const inputClass =
-    'w-full rounded-lg border border-[#8b5cf64d] bg-black/40 px-3 py-2.5 text-[13px] text-white outline-none transition-all focus:border-[#8b5cf6] focus:shadow-[0_0_0_3px_rgba(139,92,246,0.2)] placeholder:text-[#666]'
+    'w-full rounded-lg border-none bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 hover:bg-white/10 focus:border-blue-500 focus:outline-none text-xs'
+
+  const labelClass = 'text-xs font-medium text-[#d0d0d0]'
 
   return (
     <AuthChecker>
@@ -261,15 +263,15 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
             </div>
           </div>
 
-          <div className="mx-auto mt-8 max-w-[1200px] px-6 pb-20">
+          <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6 pb-20">
             {/* Step 1 */}
-            <StepContainer step={1} title="Confirm Exchange">
-              <div className="mb-3 text-[13px] text-white">
-                Select the exchange where you have deposit records. Ensure deposits are enabled for required networks
-                and tokens.
-              </div>
+            <StepContainer
+              step={1}
+              title="Confirm Exchange"
+              description="Select the exchange where you have deposit records. Ensure deposits are enabled for required networks and tokens."
+            >
               <div className="flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Exchange Name <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -292,7 +294,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               <div className="mb-3 text-[13px] text-white">Navigate to the deposit history page on your exchange.</div>
               <div className="space-y-3">
                 <div>
-                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">Official website</label>
+                  <label className={`mb-1 block ${labelClass}`}>Official website</label>
                   <a
                     href={exchangeUrl || '#'}
                     target="_blank"
@@ -311,7 +313,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   </a>
                 </div>
                 <div>
-                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">Deposit history URL</label>
+                  <label className={`mb-1 block ${labelClass}`}>Deposit history URL</label>
                   <a
                     href={depositHistoryUrl || '#'}
                     target="_blank"
@@ -365,7 +367,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
               <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Network <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -383,7 +385,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Token <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -402,7 +404,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Deposit Amount <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -416,7 +418,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Exchange Deposit Address (Receiver) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -429,7 +431,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Deposit TxHash <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -442,7 +444,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Deposit Date <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -491,7 +493,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               />
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   From (Your Wallet Address) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -504,7 +506,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   To (Exchange Deposit Address) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -518,7 +520,15 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
             </StepContainer>
 
             {/* Step 5 */}
-            <StepContainer step={5} title="Check if Deposit Address Has Outgoing Transactions">
+            <StepContainer
+              step={5}
+              title="Check if Deposit Address Has Outgoing Transactions"
+              warning={
+                <div className="text-[#facc15]">
+                  <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
+                </div>
+              }
+            >
               <div className="mb-4">
                 <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
                   Open To address on block explorer
@@ -549,8 +559,8 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               </div>
 
               <div className="mb-4 flex items-center gap-5">
-                <span className="text-[13px] text-white">Any outgoing transaction with amount &gt; 0?</span>
-                <label className="flex cursor-pointer items-center gap-2 text-[#d0d0d0]">
+                <span className="text-xs text-white">Any outgoing transaction with amount &gt; 0?</span>
+                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-[#d0d0d0]">
                   <input
                     type="radio"
                     name="hasOutgoing"
@@ -560,7 +570,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   />
                   Yes
                 </label>
-                <label className="flex cursor-pointer items-center gap-2 text-[#d0d0d0]">
+                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-[#d0d0d0]">
                   <input
                     type="radio"
                     name="hasOutgoing"
@@ -583,7 +593,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     hint="Full-page screenshot including: URL, TxHash, From/To addresses, and amount."
                   />
                   <div className="mt-3 flex flex-col gap-2">
-                    <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                    <label className={labelClass}>
                       Transaction Hash <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -633,7 +643,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 />
 
                 <div className="mt-3 flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     From (Exchange Deposit Address) <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -646,7 +656,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     To (Exchange Hot Wallet) <span className="text-red-500">*</span>
                   </label>
                   <input

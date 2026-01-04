@@ -178,14 +178,16 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }
 
   const inputClass =
-    'w-full rounded-lg border border-[#8b5cf64d] bg-black/40 px-3 py-2.5 text-[13px] text-white outline-none transition-all focus:border-[#8b5cf6] focus:shadow-[0_0_0_3px_rgba(139,92,246,0.2)] placeholder:text-[#666]'
+    'w-full rounded-lg border-none bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 hover:bg-white/10 focus:border-blue-500 focus:outline-none text-xs'
+
+  const labelClass = 'text-xs font-medium text-[#d0d0d0]'
 
   return (
     <AuthChecker>
       <Spin spinning={loading} className="min-h-screen">
         <div className="min-h-screen bg-[#111] py-3 text-white md:py-8">
           <div className="border-[#FFFFFF1F] pb-3 md:border-b md:pb-8">
-            <h1 className="mx-auto flex max-w-[1200px] items-center justify-between px-6 text-center text-base font-bold">
+            <h1 className="mx-auto flex max-w-[1320px] items-center justify-between px-6 text-center text-base font-bold">
               <div
                 className="flex cursor-pointer items-center gap-2 text-sm font-normal text-white hover:opacity-80"
                 onClick={() => window.history.back()}
@@ -199,13 +201,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
             </h1>
           </div>
 
-          <div className="mt-8 bg-[#FFFFFF0A] py-2">
-            <div className="mx-auto max-w-[1200px] px-6">
+          <div className="mt-12 bg-[#FFFFFF0A] py-2">
+            <div className="mx-auto max-w-[1320px] px-6">
               <WithdrawGuideline />
             </div>
           </div>
 
-          <div className="mx-auto mt-8 max-w-[1200px] px-6 pb-20">
+          <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6 pb-20">
             {/* Step 1 */}
             <StepContainer step={1} title="Confirm Exchange">
               <div className="mb-3 text-[13px] text-white">
@@ -213,7 +215,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 networks and tokens.
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Exchange Name <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -232,13 +234,14 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
             </StepContainer>
 
             {/* Step 2 */}
-            <StepContainer step={2} title="Navigate to Withdrawal History Page">
-              <div className="mb-3 text-[13px] text-white">
-                Navigate to the withdrawal history page on your exchange.
-              </div>
+            <StepContainer
+              step={2}
+              title="Navigate to Withdrawal History Page"
+              description="Navigate to the withdrawal history page on your exchange."
+            >
               <div className="space-y-3">
                 <div>
-                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">Official website</label>
+                  <label className={`mb-1 block ${labelClass}`}>Official website</label>
                   <a
                     href={exchangeUrl || '#'}
                     target="_blank"
@@ -257,7 +260,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   </a>
                 </div>
                 <div>
-                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">Withdrawal history URL</label>
+                  <label className={`mb-1 block ${labelClass}`}>Withdrawal history URL</label>
                   <a
                     href={withdrawHistoryUrl || '#'}
                     target="_blank"
@@ -307,7 +310,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
               <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2">
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Network <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -325,7 +328,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Coin <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -344,7 +347,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Withdraw Amount <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -357,7 +360,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                  <label className={labelClass}>
                     Network Fee <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -371,7 +374,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Your Withdrawal Wallet Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -384,7 +387,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Transaction Hash (TxHash) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -397,7 +400,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Transaction Date <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -412,11 +415,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
             </StepContainer>
 
             {/* Step 4 */}
-            <StepContainer step={4} title="Find Transaction on Blockchain Explorer">
+            <StepContainer
+              step={4}
+              title="Find Transaction on Blockchain Explorer"
+              description="Open the withdrawal transaction on the block explorer to verify details."
+            >
               <div className="mb-4">
-                <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                  Open this transaction on block explorer
-                </label>
                 <a
                   href={explorerUrl || '#'}
                   target="_blank"
@@ -445,7 +449,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               />
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Sender Address (From) <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -459,7 +463,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </div>
 
               <div className="mt-3 flex flex-col gap-2">
-                <label className="text-[13px] font-semibold text-[#d0d0d0]">
+                <label className={labelClass}>
                   Receiver Address (To) <span className="text-red-500">*</span>
                 </label>
                 <input

@@ -21,46 +21,57 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
   required = true
 }) => {
   return (
-    <div className="mb-3 flex flex-col gap-2">
-      <label className="flex items-center gap-1 text-[13px] font-semibold text-[#d0d0d0]">
-        {label}
-        {required && <span className="text-red-500">*</span>}
-        <span className="ml-1.5 inline-flex items-center gap-1 rounded-full border border-[#facc15]/90 bg-[#0f172f]/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#facc15] shadow-[0_0_10px_rgba(251,191,36,0.1)]">
-          <span className="size-1.5 rounded-full bg-[#facc15] shadow-[0_0_0_3px_rgba(250,204,21,0.4)]" />
-          Key evidence
-        </span>
-      </label>
+    <div className="mb-6 flex flex-col gap-3">
+      {/* Label is removed here as it is usually handled by the StepContainer title/description or passed as label prop if needed for specific inputs, 
+          but for ScreenshotUpload acting as the main content of a step, we might want to hide the label if it's redundant with the step title.
+          However, keeping it minimal as per request. The Knob ImageUploader doesn't have a separate label above the grid, it puts "Step 1..." in the header. 
+          Here we keep the label if provided but minimal.
+      */}
+      {label && (
+        <label className="flex items-center gap-1 text-xs font-medium text-[#d0d0d0]">
+          {label}
+          {required && <span className="text-red-500">*</span>}
+          <span className="ml-1.5 inline-flex items-center gap-1 rounded-full border border-[#facc15]/90 bg-[#0f172f]/95 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#facc15] shadow-[0_0_10px_rgba(251,191,36,0.1)]">
+            <span className="size-1.5 rounded-full bg-[#facc15] shadow-[0_0_0_3px_rgba(250,204,21,0.4)]" />
+            Key evidence
+          </span>
+        </label>
+      )}
 
-      <div className="mt-2 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <div className="text-[13px] font-semibold text-[#a78bfa]">Example Screenshot:</div>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        {/* Example Image Section */}
+        <div className="space-y-2">
+          <div className="text-xs font-bold text-[#a78bfa]">Example Screenshot</div>
           <div
-            className="w-full cursor-pointer overflow-hidden rounded-lg border border-[#8b5cf64d] bg-black/30 transition-all hover:scale-[1.01] hover:border-[#8b5cf680]"
+            className="w-full cursor-pointer overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-all hover:border-[#8b5cf680]"
             onClick={() => onShowModal(exampleImage)}
           >
             <img src={exampleImage} alt="Example" className="block max-h-[400px] w-full object-contain" />
           </div>
         </div>
 
-        <div className="h-full min-h-[200px]">
-          <UploadImg
-            value={value}
-            onChange={onChange}
-            maxCount={1}
-            className="size-full rounded-lg border border-dashed border-[#8b5cf64d] bg-black/30 hover:bg-black/40"
-            itemClassName="h-full w-full !max-w-none !min-w-0 !aspect-auto"
-            description={
-              <div className="flex flex-col items-center">
-                <span className="mb-1 text-base">📷</span>
-                <span className="text-sm font-semibold text-white">Upload screenshot</span>
-                <span className="text-xs text-gray-400">No image selected</span>
-              </div>
-            }
-          />
+        {/* Upload Section */}
+        <div className="space-y-2">
+          <div className="text-xs font-bold text-[#a78bfa]">Your Screenshot</div>
+          <div className="h-full min-h-[200px]">
+            <UploadImg
+              value={value}
+              onChange={onChange}
+              maxCount={1}
+              className="size-full rounded-lg border border-[#FFFFFF1F]"
+              itemClassName="h-full w-full !max-w-none !min-w-0 !aspect-auto"
+              description={
+                <div className="flex flex-col items-center">
+                  <span className="mb-2 text-lg font-semibold text-white">Click or Drop to Upload</span>
+                  <span className="text-xs text-gray-400">Supports JPG, PNG</span>
+                </div>
+              }
+            />
+          </div>
         </div>
       </div>
 
-      {hint && <div className="mt-0.5 text-[11px] text-[#888888]">{hint}</div>}
+      {hint && <div className="mt-1 text-[11px] text-[#888888]">{hint}</div>}
     </div>
   )
 }
