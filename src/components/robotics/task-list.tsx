@@ -15,7 +15,7 @@ import { TaskDetail, TaskStakeInfo } from '@/apis/frontiter.api'
 import CustomEmpty from '@/components/common/empty'
 import TaskFilterModal, { FilterState } from './task-filter-modal'
 import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
-import ToStakeModal from './to-stake-modal'
+import ToStakeModal from '@/components/settings/to-stake-modal'
 
 const TaskList: React.FC = () => {
   const navigate = useNavigate()
@@ -48,7 +48,7 @@ const TaskList: React.FC = () => {
     console.log('Task clicked:', data)
 
     if (data.user_reputation_flag === 0) {
-      setTaskUrl(`/app/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+      setTaskUrl(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
       setStakeTaskId(data.task_id)
       setToStakeModalOpen(true)
       return
@@ -58,7 +58,7 @@ const TaskList: React.FC = () => {
       message.error('Reputation not met!')
       return
     }
-    navigate(`/app/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
   }
 
   const handleStake = (stakeInfo: TaskStakeInfo) => {
@@ -166,7 +166,10 @@ const TaskList: React.FC = () => {
                     {item.task_type_name}
                   </div>
                 </div>
-                <div className="flex rounded-b-2xl bg-[#252532] px-5 py-3">
+                <div
+                  className="flex rounded-b-2xl bg-[#252532] px-5 py-3"
+                  style={{ display: !item.reputation ? 'none' : 'flex' }}
+                >
                   {item.user_reputation_flag === 0 ? (
                     <div className="flex h-[26px] items-center rounded-lg bg-[#D92B2B1F] px-2 text-sm text-[#D92B2B]">
                       Reputation: Too low

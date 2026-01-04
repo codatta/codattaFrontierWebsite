@@ -1,45 +1,33 @@
 import TransitionEffect from '@/components/common/transition-effect'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSnapshot } from 'valtio'
 import { notificationStore, notificationStoreActions } from '@/stores/notification.store'
 import { Pagination, Select, Spin } from 'antd'
 import dayjs from 'dayjs'
 import CustomEmpty from '@/components/common/empty'
-import { NotificationItem } from '@/api-v1/notification.api'
+import notificationApi, { NotificationListItem, NotificationType } from '@/apis/notification.api'
 
 const FilterOptions = [
   { label: 'All', value: '' },
   { label: 'Validation', value: 'validation' },
   { label: 'Submission', value: 'submission' },
-  { label: 'Bounty', value: 'bounty' }
+  { label: 'System', value: 'system' }
 ]
 
-function MessageItem(props: { message: NotificationItem }) {
+function MessageItem(props: { message: NotificationListItem }) {
   const { message } = props
-  const displayTime = dayjs(message.create_time * 1000).format('YYYY-MM-DD')
-  const messageRead: boolean = message.have_read == '1'
+  const displayTime = dayjs(message.create_time * 1000).format('YYYY-MM-DD HH:mm')
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg bg-gray-100 p-4 text-sm lg:flex-row">
-      <div className="flex gap-2 lg:w-[70%]">
-        {!messageRead && (
-          <div className="flex w-2 items-center justify-center">
-            <i className="block size-2 rounded-full bg-primary"></i>
-          </div>
-        )}
-
-        <div className={`break-all ${!messageRead ? 'text-gray-900' : 'text-gray-700'}`}>{message.msg_content}</div>
+    <div className="rounded-2xl border border-white/5 bg-[#252532] p-6 text-base">
+      <div className="mb-4 flex text-white">
+        <span className="flex items-center gap-3 font-bold">
+          {message.have_read === 0 ? <div className="size-1.5 rounded-full bg-[red]"></div> : null}
+          <span> {message.msg_title} </span>
+        </span>
+        <span className="ml-auto">{displayTime}</span>
       </div>
-
-      <div className="flex w-full items-center gap-2 lg:w-[30%]">
-        <div className="w-[80px]">
-          <div className="inline-block rounded-2xl bg-gray-200 px-2 py-1 text-xs leading-[15px]">
-            {message.notify_type}
-          </div>
-        </div>
-
-        <div className="ml-auto w-[90px] flex-none text-right text-sm font-semibold text-gray-500">{displayTime}</div>
-      </div>
+      <div className="text-[#77777D]">{message.msg_content}</div>
     </div>
   )
 }
@@ -72,7 +60,7 @@ export default function Component() {
   const page_size = 20
   const { list, total, listLoading } = useSnapshot(notificationStore)
   const [page, setPage] = useState(1)
-  const [filter, setFilter] = useState<null | string>('')
+  const [filter, setFilter] = useState<NotificationType>()
 
   useEffect(() => {
     notificationStoreActions.getMessageList(page, page_size, filter || undefined)
@@ -82,12 +70,17 @@ export default function Component() {
     setPage(pageNum)
   }
 
-  function handleFilterChange(filterValue: string) {
+  function handleFilterChange(filterValue: NotificationType | undefined) {
     setFilter(filterValue)
     setPage(1)
   }
 
-  const MessageList = list.map((item) => <MessageItem key={item.msg_id} message={item} />)
+  const MessageList = useMemo(() => {
+    const unReadMessageIds = list.filter((item) => item.have_read === 0).map((item) => item.msg_id)
+    if (unReadMessageIds.length > 0) notificationApi.setNotificationRead(unReadMessageIds)
+
+    return list.map((item) => <MessageItem key={item.msg_id} message={item} />)
+  }, [list])
 
   return (
     <TransitionEffect className="min-h-[calc(100vh-200px)]">

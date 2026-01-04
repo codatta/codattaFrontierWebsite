@@ -76,6 +76,7 @@
     "react-router-dom": "^7.0.1",
     "react-syntax-highlighter": "^16.1.0",
     "react-vant": "^3.3.5",
+    "recharts": "^3.6.0",
     "rehype-katex": "^7.0.1",
     "remark-gfm": "^4.0.1",
     "remark-math": "^6.0.0",

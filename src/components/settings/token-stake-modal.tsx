@@ -1,6 +1,6 @@
 import { InfoCircleOutlined, CheckCircleFilled } from '@ant-design/icons'
-import { Button, Input, Modal, Tooltip, Spin } from 'antd'
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { Button, Input, Modal, Tooltip, Spin, message } from 'antd'
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import { useCodattaConnectContext } from 'codatta-connect'
 import { parseEther } from 'viem'
 import { Loader2 } from 'lucide-react'
@@ -58,6 +58,9 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
   const { lastUsedWallet } = useCodattaConnectContext()
   const [viewState, setViewState] = useState<ViewState>('input')
   const [amount, setAmount] = useState<string>('')
+  const [isAmountLocked, setIsAmountLocked] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string>('')
+  const errorTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
   const [uid, setUid] = useState<string>('')
   const [fetchingUid, setFetchingUid] = useState(false)
   const [calculatedReputation, setCalculatedReputation] = useState<StakeReputationInfo | null>(null)
@@ -123,15 +126,12 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
 
   // 3. Effects
 
-  // Reset state when opening
+  // Cleanup timeout
   useEffect(() => {
-    if (open) {
-      setViewState('input')
-      setAmount('')
-      setUid('')
-      setCalculatedReputation(null)
+    return () => {
+      if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
     }
-  }, [open])
+  }, [])
 
   // Calculate Reputation
   useEffect(() => {
@@ -204,10 +204,11 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
     if (!isDebouncedAmountValid) return emptyParams
 
     if (needsApprove) {
+      const approveAmount = Math.max(Number(debouncedAmount), 1e10).toString()
       return {
         contract: tokenContract,
         functionName: 'approve',
-        contractArgs: [StakingContract.address, parseEther(debouncedAmount)]
+        contractArgs: [StakingContract.address, parseEther(approveAmount)]
       }
     } else {
       return {
@@ -232,7 +233,9 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
   const {
     writeContract: writeStake,
     isLoading: isStaking,
-    tip: stakeTip
+    tip: stakeTip,
+    reset: resetStake,
+    step: stakeStep
   } = useContractWrite({
     onStepChange: async (step, data) => {
       if (step === 'success') {
@@ -257,31 +260,67 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
   const {
     writeContract: writeApprove,
     isLoading: isApproving,
-    tip: approveTip
+    tip: approveTip,
+    reset: resetApprove,
+    step: approveStep
   } = useContractWrite({
     onStepChange: async (step) => {
       if (step === 'success') {
         fetchTokenInfo()
+        setIsAmountLocked(true)
       }
     }
   })
 
+  // Reset state when opening
+  useEffect(() => {
+    if (open) {
+      setViewState('input')
+      setAmount('')
+      setIsAmountLocked(false)
+      setErrorMsg('')
+      setUid('')
+      setCalculatedReputation(null)
+      resetStake()
+      resetApprove()
+    }
+  }, [open, resetStake, resetApprove])
+
   // 5. Handlers
+  const handleError = (msg: string) => {
+    setErrorMsg(msg)
+    message.error(msg)
+    if (errorTimeoutRef.current) {
+      clearTimeout(errorTimeoutRef.current)
+    }
+    errorTimeoutRef.current = setTimeout(() => {
+      setErrorMsg('')
+    }, 2000)
+  }
+
   const handleApprove = async () => {
     if (!STAKE_TOKEN_ADRRESS || !amount) return
+    setErrorMsg('')
+    if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
+
     try {
+      const approveAmount = Number(amount) > 10000 ? amount : '10000'
       await writeApprove({
         contract: tokenContract,
         functionName: 'approve',
-        args: [StakingContract.address, parseEther(amount)]
+        args: [StakingContract.address, parseEther(approveAmount)]
       })
     } catch (error) {
       console.error(error)
+      handleError('Transaction failed. Please try again.')
     }
   }
 
   const handleStake = async () => {
     if (!stakeArgs.length) return
+    setErrorMsg('')
+    if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current)
+
     try {
       await writeStake({
         contract: StakingContract,
@@ -290,6 +329,7 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
       })
     } catch (error) {
       console.error(error)
+      handleError('Transaction failed. Please try again.')
     }
   }
 
@@ -300,6 +340,8 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
     state: {
       viewState,
       amount,
+      isAmountLocked,
+      errorMsg,
       uid,
       fetchingUid,
       calculatedReputation,
@@ -324,7 +366,9 @@ const useStakeLogic = ({ open, taskStakeConfig, onSuccess }: TokenStakeModalProp
       isStaking,
       isApproving,
       approveTip,
-      stakeTip
+      stakeTip,
+      stakeStep,
+      approveStep
     },
     handlers: {
       setAmount,
@@ -364,7 +408,9 @@ const ReputationImpactSection = ({ logic }: { logic: ReturnType<typeof useStakeL
     <div className="rounded-xl bg-[#1C1C26] p-4 text-base">
       <div className="mb-4 flex items-center gap-2 font-bold">
         Reputation Impact
-        <Tooltip title="This stake counts toward your reputation requirement. Unstaking takes 7 days before your XNY becomes available again.">
+        <Tooltip
+          title={`This stake counts toward your reputation requirement. Unstaking takes 7 days before your ${STAKE_ASSET_TYPE} becomes available again.`}
+        >
           <InfoCircleOutlined className="text-[#8D8D93]" />
         </Tooltip>
       </div>
@@ -443,6 +489,8 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
   const {
     amount,
     debouncedAmount,
+    isAmountLocked,
+    errorMsg,
     isInsufficientBalance,
     isValidAmount,
     minStakeAmount,
@@ -451,11 +499,11 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
     uid,
     fetchingUid
   } = state
-  const { balance, loadingBalance, isStaking, isApproving, gasWarning, gasLoading } = contracts
+  const { balance, loadingBalance, isStaking, isApproving, gasWarning, gasLoading, stakeStep, approveStep } = contracts
   const { setAmount, handleMax, handleQuickAmount, handleApprove, handleStake } = handlers
 
   const isLoading = isStaking || isApproving
-  const isDisabled = isLoading
+  const isDisabled = isLoading || isAmountLocked
 
   return (
     <>
@@ -486,7 +534,11 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
             </div>
           }
         />
-        {isInsufficientBalance && <div className="mb-2 text-sm text-[#D92B2B]">Insufficient balance.</div>}
+        {isInsufficientBalance && (
+          <div className="mb-2 text-sm text-[#D92B2B]">
+            Insufficient {assetSymbol} balance. Get more {assetSymbol} to continue.
+          </div>
+        )}
         {!isValidAmount && Number(amount) > 0 && (
           <div className="mb-2 text-sm text-[#D92B2B]">
             Minimum stake amount is {formatNumber(minStakeAmount, 2)} {assetSymbol}.
@@ -533,28 +585,42 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
         </div>
       )}
 
+      {/* Error Message */}
+      {errorMsg && (
+        <div className="mb-6 flex items-center justify-center gap-2 text-sm text-[#D92B2B]">
+          <InfoCircleOutlined />
+          <span>{errorMsg}</span>
+        </div>
+      )}
+
       {/* Action Buttons */}
-      <div className="flex w-full justify-center">
+      <div className="flex w-full flex-col items-center justify-center">
         {needsApprove ? (
-          <Button
-            type="primary"
-            onClick={handleApprove}
-            disabled={
-              !STAKE_TOKEN_ADRRESS ||
-              !amount ||
-              amount !== debouncedAmount ||
-              Number(amount) <= 0 ||
-              isInsufficientBalance ||
-              !isValidAmount ||
-              !!gasWarning ||
-              isApproving ||
-              gasLoading
-            }
-            loading={isApproving}
-            className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
-          >
-            {gasLoading ? 'Calculating Gas...' : `Approve ${assetSymbol}`}
-          </Button>
+          <>
+            <Button
+              type="primary"
+              onClick={handleApprove}
+              disabled={
+                !STAKE_TOKEN_ADRRESS ||
+                !amount ||
+                amount !== debouncedAmount ||
+                Number(amount) <= 0 ||
+                isInsufficientBalance ||
+                !isValidAmount ||
+                !!gasWarning ||
+                isApproving ||
+                gasLoading ||
+                approveStep === 'success'
+              }
+              loading={isApproving}
+              className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
+            >
+              {gasLoading ? 'Calculating Gas...' : `Approve ${assetSymbol} (1/2)`}
+            </Button>
+            <div className="mt-2 text-center text-xs text-[#8D8D93]">
+              You’ll be asked to confirm twice in your wallet.
+            </div>
+          </>
         ) : (
           <Button
             type="primary"
@@ -570,12 +636,14 @@ const StakeInputView = ({ logic }: { logic: ReturnType<typeof useStakeLogic> }) 
               !uid ||
               !!gasWarning ||
               fetchingUid ||
-              gasLoading
+              gasLoading ||
+              stakeStep === 'success'
             }
             loading={isStaking}
             className="h-10 w-[240px] rounded-full text-sm disabled:opacity-50"
           >
-            {fetchingUid ? 'Preparing...' : gasLoading ? 'Calculating Gas...' : `Stake ${assetSymbol}`}
+            {/* {fetchingUid ? 'Preparing...' : gasLoading ? 'Calculating Gas...' : `Stake ${assetSymbol}`} */}
+            {fetchingUid ? 'Preparing...' : gasLoading ? 'Calculating Gas...' : `Stake ${assetSymbol} (2/2)`}
           </Button>
         )}
       </div>
@@ -691,7 +759,7 @@ const TokenStakeModal: React.FC<TokenStakeModalProps> = (props) => {
       footer={null}
       width={620}
       centered
-      closable={!isLoading}
+      closable={!isLoading && !state.isAmountLocked}
       maskClosable={false}
       styles={{
         content: {

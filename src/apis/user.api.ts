@@ -472,9 +472,9 @@ class UserApi {
     return data.data
   }
 
-  async recordStakeClaimTransaction({ uids }: { uids: string[] }) {
+  async recordStakeClaimTransaction({ uids = [] }: { uids: string[] }) {
     const { data } = await request.post<Response<{ uids: string[]; status: 0 | 1 }>>('/v2/user/stake/record/claim', {
-      uids
+      uids: uids.join(',')
     })
     return data.data
   }
