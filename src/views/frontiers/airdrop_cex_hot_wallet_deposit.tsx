@@ -23,6 +23,7 @@ import { ArrowLeft, ExternalLink } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { UploadedImage } from '@/components/frontier/airdrop/UploadImg'
 
 const { Option } = Select
 
@@ -135,9 +136,37 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
   // Handlers
   const handleChange = <K extends keyof DepositFormData>(field: K, value: DepositFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }))
-    }
+
+    setErrors((prev) => {
+      const newErrors = { ...prev }
+      delete newErrors[field]
+
+      // If changing outgoing transaction toggle or any screenshot, clear "duplicate" errors from all image fields
+      // because changing one might resolve the conflict for others.
+      const isImageField =
+        field === 'deposit_screenshot' ||
+        field === 'explorer_screenshot' ||
+        field === 'outgoing_transaction_screenshot' ||
+        field === 'outgoing_tx_screenshot'
+
+      if (field === 'has_outgoing_transaction' || isImageField) {
+        const duplicateErrorMsg = 'Screenshots cannot be the same image'
+        const imageFields: (keyof DepositFormData)[] = [
+          'deposit_screenshot',
+          'explorer_screenshot',
+          'outgoing_transaction_screenshot',
+          'outgoing_tx_screenshot'
+        ]
+
+        imageFields.forEach((imgField) => {
+          if (newErrors[imgField] === duplicateErrorMsg) {
+            delete newErrors[imgField]
+          }
+        })
+      }
+
+      return newErrors
+    })
   }
 
   const showImageModal = (src: string) => {
@@ -248,16 +277,30 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
     }
 
     // Image hash check
-    if (formData.deposit_screenshot.length > 0 && formData.explorer_screenshot.length > 0) {
-      if (
-        formData.deposit_screenshot[0].hash &&
-        formData.explorer_screenshot[0].hash &&
-        formData.deposit_screenshot[0].hash === formData.explorer_screenshot[0].hash
-      ) {
-        newErrors.deposit_screenshot = 'Screenshots cannot be the same image'
-        newErrors.explorer_screenshot = 'Screenshots cannot be the same image'
+    const hashMap = new Map<string, (keyof DepositFormData)[]>()
+    const addImageToCheck = (field: keyof DepositFormData, list: UploadedImage[]) => {
+      if (list && list.length > 0 && list[0]?.hash) {
+        const hash = list[0].hash
+        const fields = hashMap.get(hash) || []
+        fields.push(field)
+        hashMap.set(hash, fields)
       }
     }
+
+    addImageToCheck('deposit_screenshot', formData.deposit_screenshot)
+    addImageToCheck('explorer_screenshot', formData.explorer_screenshot)
+    if (formData.has_outgoing_transaction === 'yes') {
+      addImageToCheck('outgoing_transaction_screenshot', formData.outgoing_transaction_screenshot)
+      addImageToCheck('outgoing_tx_screenshot', formData.outgoing_tx_screenshot)
+    }
+
+    hashMap.forEach((fields) => {
+      if (fields.length > 1) {
+        fields.forEach((field) => {
+          newErrors[field] = 'Screenshots cannot be the same image'
+        })
+      }
+    })
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
