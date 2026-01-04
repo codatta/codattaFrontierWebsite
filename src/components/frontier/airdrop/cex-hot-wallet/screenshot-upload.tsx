@@ -40,20 +40,20 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {/* Example Image Section */}
-        <div className="space-y-2">
+        <div className="flex flex-col space-y-2">
           <div className="text-xs font-bold text-[#a78bfa]">Example Screenshot</div>
           <div
-            className="w-full cursor-pointer overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-all hover:border-[#8b5cf680]"
+            className="w-full flex-1 cursor-pointer overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black/30 transition-all hover:border-[#8b5cf680]"
             onClick={() => onShowModal(exampleImage)}
           >
-            <img src={exampleImage} alt="Example" className="block max-h-[400px] w-full object-contain" />
+            <img src={exampleImage} alt="Example" className="block size-full object-contain" />
           </div>
         </div>
 
         {/* Upload Section */}
-        <div className="space-y-2">
+        <div className="flex flex-col space-y-2">
           <div className="text-xs font-bold text-[#a78bfa]">Your Screenshot</div>
-          <div className="h-full min-h-[200px]">
+          <div className="min-h-[200px] flex-1">
             <UploadImg
               value={value}
               onChange={onChange}

@@ -11,13 +11,18 @@ import {
 import { DepositGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
 import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step-container'
+import { SupportedNetworksTip } from '@/components/frontier/airdrop/cex-hot-wallet/supported-networks-tip'
 import { DepositFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
-import { message, Modal, Spin } from 'antd'
+import { ConfigProvider, DatePicker, Input, message, Modal, Select, Spin, theme } from 'antd'
+import locale from 'antd/es/date-picker/locale/en_US'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import dayjs from 'dayjs'
+
+const { Option } = Select
 
 const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: propTemplateId }) => {
   const { taskId, templateId: paramTemplateId } = useParams()
@@ -233,484 +238,492 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
   // Common Input Styles
   const inputClass =
-    'w-full rounded-lg border-none bg-white/5 px-4 py-3 text-white transition-colors placeholder:text-gray-500 hover:bg-white/10 focus:border-blue-500 focus:outline-none text-xs'
+    '!w-full !rounded-lg !border-none !bg-white/5 !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
+
+  const selectClass =
+    'w-full [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-none [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center'
 
   const labelClass = 'text-xs font-medium text-[#d0d0d0]'
 
   return (
     <AuthChecker>
-      <Spin spinning={loading} className="min-h-screen">
-        <div className="min-h-screen bg-[#111] py-3 text-white md:py-8">
-          {/* Header */}
-          <div className="border-[#FFFFFF1F] pb-3 md:border-b md:pb-8">
-            <h1 className="mx-auto flex max-w-[1200px] items-center justify-between px-6 text-center text-base font-bold">
-              <div
-                className="flex cursor-pointer items-center gap-2 text-sm font-normal text-white hover:opacity-80"
-                onClick={() => window.history.back()}
-              >
-                <ArrowLeft size={18} /> Back
-              </div>
-              <span className="bg-gradient-to-br from-white to-[#a78bfa] bg-clip-text text-transparent">
+      <ConfigProvider
+        theme={{
+          algorithm: theme.darkAlgorithm,
+          components: {
+            Select: {
+              optionSelectedBg: 'rgba(255, 255, 255, 0.1)',
+              optionActiveBg: 'rgba(255, 255, 255, 0.05)'
+            },
+            DatePicker: {
+              cellActiveWithRangeBg: 'rgba(59, 130, 246, 0.3)',
+              cellHoverWithRangeBg: 'rgba(59, 130, 246, 0.2)'
+            }
+          }
+        }}
+      >
+        <Spin spinning={loading} className="min-h-screen">
+          <div className="min-h-screen py-3 md:py-8">
+            {/* Header */}
+            <div className="border-[#FFFFFF1F] pb-3 md:border-b md:pb-8">
+              <h1 className="mx-auto flex max-w-[1320px] items-center justify-between px-6 text-center text-base font-bold">
+                <div
+                  className="flex cursor-pointer items-center gap-2 text-sm font-normal text-white hover:opacity-80"
+                  onClick={() => window.history.back()}
+                >
+                  <ArrowLeft size={18} /> Back
+                </div>
                 CEX Deposit Hot Wallet Collection
-              </span>
-              <span className="w-[60px]"></span>
-            </h1>
-          </div>
-
-          <div className="mt-8 bg-[#FFFFFF0A] py-2">
-            <div className="mx-auto max-w-[1200px] px-6">
-              <DepositGuideline />
+                <span className="w-[60px]"></span>
+              </h1>
             </div>
-          </div>
 
-          <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6 pb-20">
-            {/* Step 1 */}
-            <StepContainer
-              step={1}
-              title="Confirm Exchange"
-              description="Select the exchange where you have deposit records. Ensure deposits are enabled for required networks and tokens."
-            >
-              <div className="flex flex-col gap-2">
-                <label className={labelClass}>
-                  Exchange Name <span className="text-red-500">*</span>
-                </label>
-                <select
-                  className={inputClass}
-                  value={formData.exchangeName}
-                  onChange={(e) => handleChange('exchangeName', e.target.value)}
-                >
-                  <option value="">Select exchange</option>
-                  {Object.keys(EXCHANGE_URLS).map((ex) => (
-                    <option key={ex} value={ex}>
-                      {ex}
-                    </option>
-                  ))}
-                </select>
+            <div className="mt-12 bg-[#FFFFFF0A]">
+              <div className="mx-auto max-w-[1320px] px-6">
+                <DepositGuideline />
               </div>
-            </StepContainer>
+            </div>
 
-            {/* Step 2 */}
-            <StepContainer step={2} title="Navigate to Deposit History Page">
-              <div className="mb-3 text-[13px] text-white">Navigate to the deposit history page on your exchange.</div>
-              <div className="space-y-3">
-                <div>
-                  <label className={`mb-1 block ${labelClass}`}>Official website</label>
-                  <a
-                    href={exchangeUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !exchangeUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                    }`}
-                  >
-                    {exchangeUrl ? (
-                      <>
-                        <ExternalLink size={14} /> {exchangeUrl.replace('https://', '')}
-                      </>
-                    ) : (
-                      '(Select an exchange to view)'
-                    )}
-                  </a>
-                </div>
-                <div>
-                  <label className={`mb-1 block ${labelClass}`}>Deposit history URL</label>
-                  <a
-                    href={depositHistoryUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !depositHistoryUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                    }`}
-                  >
-                    {depositHistoryUrl ? (
-                      <>
-                        <ExternalLink size={14} /> {depositHistoryUrl.replace('https://', '')}
-                      </>
-                    ) : (
-                      '(Select an exchange to view)'
-                    )}
-                  </a>
-                </div>
-                <div className="text-[11px] text-[#888]">
-                  Note: Links are auto-generated for reference only. If invalid, navigate manually on the exchange
-                  website.
-                </div>
-              </div>
-            </StepContainer>
-
-            {/* Step 3 */}
-            <StepContainer
-              step={3}
-              title="Select Your Deposit Record"
-              warning={
-                <div>
-                  <div className="font-bold">Requirements:</div>
-                  <ul className="mb-2 list-none pl-4 text-xs">
-                    <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                      Within last 30 days
-                    </li>
-                    <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                      Supported Network/Token
-                    </li>
-                  </ul>
-                </div>
-              }
-            >
-              <ScreenshotUpload
-                label="Exchange UI Screenshot"
-                exampleImage="https://static.codatta.io/static/images/deposit_1_1767511761924.png"
-                value={formData.depositScreenshot}
-                onChange={(v) => handleChange('depositScreenshot', v)}
-                onShowModal={showImageModal}
-                hint="Full-page screenshot including: URL, exchange logo, deposit address, token, amount, and TxHash."
-              />
-
-              <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
+              {/* Step 1 */}
+              <StepContainer
+                step={1}
+                title="Confirm Exchange"
+                description="Select the exchange where you have deposit records. Ensure deposits are enabled for required networks and tokens."
+              >
                 <div className="flex flex-col gap-2">
                   <label className={labelClass}>
-                    Network <span className="text-red-500">*</span>
+                    Exchange Name <span className="text-red-500">*</span>
                   </label>
-                  <select
-                    className={inputClass}
-                    value={formData.depositNetwork}
-                    onChange={(e) => handleChange('depositNetwork', e.target.value)}
+                  <Select
+                    className={selectClass}
+                    popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
+                    placeholder="Select exchange"
+                    value={formData.exchangeName || undefined}
+                    onChange={(value) => handleChange('exchangeName', value)}
                   >
-                    <option value="">Select network</option>
-                    {Object.keys(NETWORK_TOKEN_OPTIONS).map((net) => (
-                      <option key={net} value={net}>
-                        {net}
-                      </option>
+                    {Object.keys(EXCHANGE_URLS).map((ex) => (
+                      <Option key={ex} value={ex}>
+                        {ex}
+                      </Option>
                     ))}
-                  </select>
+                  </Select>
                 </div>
+              </StepContainer>
 
-                <div className="flex flex-col gap-2">
-                  <label className={labelClass}>
-                    Token <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    className={inputClass}
-                    value={formData.depositToken}
-                    onChange={(e) => handleChange('depositToken', e.target.value)}
-                    disabled={!formData.depositNetwork}
-                  >
-                    <option value="">Select token</option>
-                    {tokenOptions.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
+              {/* Step 2 */}
+              <StepContainer step={2} title="Navigate to Deposit History Page">
+                <div className="mb-3 text-[13px] text-white">
+                  Navigate to the deposit history page on your exchange.
                 </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className={labelClass}>
-                    Deposit Amount <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={inputClass}
-                    placeholder="Deposit amount"
-                    value={formData.depositAmount}
-                    onChange={(e) => handleChange('depositAmount', e.target.value)}
-                  />
+                <div className="space-y-3">
+                  <div>
+                    <label className={`mb-1 block ${labelClass}`}>Official website</label>
+                    <a
+                      href={exchangeUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
+                        !exchangeUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
+                      }`}
+                    >
+                      {exchangeUrl ? (
+                        <>
+                          <ExternalLink size={14} /> {exchangeUrl.replace('https://', '')}
+                        </>
+                      ) : (
+                        '(Select an exchange to view)'
+                      )}
+                    </a>
+                  </div>
+                  <div>
+                    <label className={`mb-1 block ${labelClass}`}>Deposit history URL</label>
+                    <a
+                      href={depositHistoryUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
+                        !depositHistoryUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
+                      }`}
+                    >
+                      {depositHistoryUrl ? (
+                        <>
+                          <ExternalLink size={14} /> {depositHistoryUrl.replace('https://', '')}
+                        </>
+                      ) : (
+                        '(Select an exchange to view)'
+                      )}
+                    </a>
+                  </div>
+                  <div className="text-[11px] text-[#888]">
+                    Note: Links are auto-generated for reference only. If invalid, navigate manually on the exchange
+                    website.
+                  </div>
                 </div>
-              </div>
+              </StepContainer>
 
-              <div className="mt-3 flex flex-col gap-2">
-                <label className={labelClass}>
-                  Exchange Deposit Address (Receiver) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className={inputClass}
-                  placeholder="Exchange deposit address"
-                  value={formData.exchangeDepositAddress}
-                  onChange={(e) => handleChange('exchangeDepositAddress', e.target.value)}
+              {/* Step 3 */}
+              <StepContainer
+                step={3}
+                title="Select Your Deposit Record"
+                warning={
+                  <div>
+                    <div className="font-bold">Requirements:</div>
+                    <ul className="mb-2 list-none pl-4 text-xs">
+                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
+                        Within last 30 days
+                      </li>
+                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
+                        Supported Network/Token
+                      </li>
+                    </ul>
+                    <SupportedNetworksTip />
+                  </div>
+                }
+              >
+                <ScreenshotUpload
+                  label="Exchange UI Screenshot"
+                  exampleImage="https://static.codatta.io/static/images/deposit_1_1767511761924.png"
+                  value={formData.depositScreenshot}
+                  onChange={(v) => handleChange('depositScreenshot', v)}
+                  onShowModal={showImageModal}
+                  hint="Full-page screenshot including: URL, exchange logo, deposit address, token, amount, and TxHash."
                 />
-              </div>
 
-              <div className="mt-3 flex flex-col gap-2">
-                <label className={labelClass}>
-                  Deposit TxHash <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className={inputClass}
-                  placeholder="Transaction hash from exchange UI"
-                  value={formData.depositTxHash}
-                  onChange={(e) => handleChange('depositTxHash', e.target.value)}
-                />
-              </div>
-
-              <div className="mt-3 flex flex-col gap-2">
-                <label className={labelClass}>
-                  Deposit Date <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  className={`${inputClass} [color-scheme:dark]`}
-                  value={formData.depositDate}
-                  onChange={(e) => handleChange('depositDate', e.target.value)}
-                  max={new Date().toISOString().split('T')[0]}
-                  min={new Date(Date.now() - 30 * 86400000).toISOString().split('T')[0]}
-                />
-                <div className="text-[11px] text-[#888]">Select deposit date (within last 30 days)</div>
-              </div>
-            </StepContainer>
-
-            {/* Step 4 */}
-            <StepContainer step={4} title="Find Transaction on Blockchain Explorer">
-              <div className="mb-4">
-                <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                  Open deposit transaction on block explorer
-                </label>
-                <a
-                  href={explorerUrl || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                    !explorerUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                  }`}
-                >
-                  {explorerUrl ? (
-                    <>
-                      <ExternalLink size={14} /> {explorerUrl}
-                    </>
-                  ) : (
-                    '(Fill Network and Deposit TxHash in Step 3 to view)'
-                  )}
-                </a>
-              </div>
-
-              <ScreenshotUpload
-                label="Blockchain Explorer Screenshot"
-                exampleImage="https://static.codatta.io/static/images/deposit_2_1767511761924.png"
-                value={formData.explorerScreenshot}
-                onChange={(v) => handleChange('explorerScreenshot', v)}
-                onShowModal={showImageModal}
-                hint="Full-page screenshot including: URL, TxHash, From address, and To address."
-              />
-
-              <div className="mt-3 flex flex-col gap-2">
-                <label className={labelClass}>
-                  From (Your Wallet Address) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className={inputClass}
-                  placeholder="Your wallet address"
-                  value={formData.depositFromAddress}
-                  onChange={(e) => handleChange('depositFromAddress', e.target.value)}
-                />
-              </div>
-
-              <div className="mt-3 flex flex-col gap-2">
-                <label className={labelClass}>
-                  To (Exchange Deposit Address) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  className={inputClass}
-                  placeholder="Exchange deposit address"
-                  value={formData.depositToAddress}
-                  onChange={(e) => handleChange('depositToAddress', e.target.value)}
-                />
-              </div>
-            </StepContainer>
-
-            {/* Step 5 */}
-            <StepContainer
-              step={5}
-              title="Check if Deposit Address Has Outgoing Transactions"
-              warning={
-                <div className="text-[#facc15]">
-                  <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
-                </div>
-              }
-            >
-              <div className="mb-4">
-                <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                  Open To address on block explorer
-                </label>
-                <a
-                  href={toAddressUrl || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                    !toAddressUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                  }`}
-                >
-                  {toAddressUrl ? (
-                    <>
-                      <ExternalLink size={14} /> {toAddressUrl}
-                    </>
-                  ) : (
-                    '(Fill Network and To address in Step 4 to view)'
-                  )}
-                </a>
-                <div className="mt-1 text-[11px] text-[#888]">
-                  Auto-generated from Step 4. Check for outgoing transactions to identify the hot wallet.
-                </div>
-              </div>
-
-              <div className="mb-4 rounded-md border-l-4 border-yellow-500 bg-yellow-500/10 px-3 py-2.5 text-xs text-gray-200">
-                <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
-              </div>
-
-              <div className="mb-4 flex items-center gap-5">
-                <span className="text-xs text-white">Any outgoing transaction with amount &gt; 0?</span>
-                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-[#d0d0d0]">
-                  <input
-                    type="radio"
-                    name="hasOutgoing"
-                    className="size-4"
-                    checked={formData.hasOutgoingTransaction === 'yes'}
-                    onChange={() => handleChange('hasOutgoingTransaction', 'yes')}
-                  />
-                  Yes
-                </label>
-                <label className="flex cursor-pointer items-center gap-2 text-xs font-medium text-[#d0d0d0]">
-                  <input
-                    type="radio"
-                    name="hasOutgoing"
-                    className="size-4"
-                    checked={formData.hasOutgoingTransaction === 'no'}
-                    onChange={() => handleChange('hasOutgoingTransaction', 'no')}
-                  />
-                  No
-                </label>
-              </div>
-
-              {formData.hasOutgoingTransaction === 'yes' && (
-                <div className="animate-in fade-in slide-in-from-top-2">
-                  <ScreenshotUpload
-                    label="Transaction Screenshot"
-                    exampleImage="https://static.codatta.io/static/images/deposit_3_1767511761924.png"
-                    value={formData.outgoingTransactionScreenshot}
-                    onChange={(v) => handleChange('outgoingTransactionScreenshot', v)}
-                    onShowModal={showImageModal}
-                    hint="Full-page screenshot including: URL, TxHash, From/To addresses, and amount."
-                  />
-                  <div className="mt-3 flex flex-col gap-2">
+                <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="flex flex-col gap-2">
                     <label className={labelClass}>
-                      Transaction Hash <span className="text-red-500">*</span>
+                      Network <span className="text-red-500">*</span>
                     </label>
-                    <input
-                      type="text"
+                    <Select
+                      className={selectClass}
+                      popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
+                      placeholder="Select network"
+                      value={formData.depositNetwork || undefined}
+                      onChange={(value) => handleChange('depositNetwork', value)}
+                    >
+                      {Object.keys(NETWORK_TOKEN_OPTIONS).map((net) => (
+                        <Option key={net} value={net}>
+                          {net}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className={labelClass}>
+                      Token <span className="text-red-500">*</span>
+                    </label>
+                    <Select
+                      className={selectClass}
+                      popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
+                      placeholder="Select token"
+                      value={formData.depositToken || undefined}
+                      onChange={(value) => handleChange('depositToken', value)}
+                      disabled={!formData.depositNetwork}
+                    >
+                      {tokenOptions.map((t) => (
+                        <Option key={t} value={t}>
+                          {t}
+                        </Option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label className={labelClass}>
+                      Deposit Amount <span className="text-red-500">*</span>
+                    </label>
+                    <Input
                       className={inputClass}
-                      placeholder="Outgoing transaction hash"
-                      value={formData.outgoingTransactionHash}
-                      onChange={(e) => handleChange('outgoingTransactionHash', e.target.value)}
+                      placeholder="Deposit amount"
+                      value={formData.depositAmount}
+                      onChange={(e) => handleChange('depositAmount', e.target.value)}
                     />
                   </div>
                 </div>
-              )}
-            </StepContainer>
 
-            {/* Step 6 */}
-            {formData.hasOutgoingTransaction === 'yes' && (
-              <StepContainer step={6} title="Submit Outgoing Transaction Details">
+                <div className="mt-3 flex flex-col gap-2">
+                  <label className={labelClass}>
+                    Exchange Deposit Address (Receiver) <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    className={inputClass}
+                    placeholder="Exchange deposit address"
+                    value={formData.exchangeDepositAddress}
+                    onChange={(e) => handleChange('exchangeDepositAddress', e.target.value)}
+                  />
+                </div>
+
+                <div className="mt-3 flex flex-col gap-2">
+                  <label className={labelClass}>
+                    Deposit TxHash <span className="text-red-500">*</span>
+                  </label>
+                  <Input
+                    className={inputClass}
+                    placeholder="Transaction hash from exchange UI"
+                    value={formData.depositTxHash}
+                    onChange={(e) => handleChange('depositTxHash', e.target.value)}
+                  />
+                </div>
+
+                <div className="mt-3 flex flex-col gap-2">
+                  <label className={labelClass}>
+                    Deposit Date <span className="text-red-500">*</span>
+                  </label>
+                  <DatePicker
+                    locale={locale}
+                    className={`${inputClass} !flex !w-full`}
+                    value={formData.depositDate ? dayjs(formData.depositDate) : null}
+                    onChange={(_, dateString) => handleChange('depositDate', dateString as string)}
+                    maxDate={dayjs()}
+                    minDate={dayjs().subtract(30, 'day')}
+                    popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
+                  />
+                  <div className="text-[11px] text-[#888]">Select deposit date (within last 30 days)</div>
+                </div>
+              </StepContainer>
+
+              {/* Step 4 */}
+              <StepContainer step={4} title="Find Transaction on Blockchain Explorer">
                 <div className="mb-4">
                   <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                    Open outgoing transaction on block explorer
+                    Open deposit transaction on block explorer
                   </label>
                   <a
-                    href={outgoingTxUrl || '#'}
+                    href={explorerUrl || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !outgoingTxUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
+                      !explorerUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
                     }`}
                   >
-                    {outgoingTxUrl ? (
+                    {explorerUrl ? (
                       <>
-                        <ExternalLink size={14} /> {outgoingTxUrl}
+                        <ExternalLink size={14} /> {explorerUrl}
                       </>
                     ) : (
-                      '(Fill Network and Transaction Hash in Step 5 to view)'
+                      '(Fill Network and Deposit TxHash in Step 3 to view)'
                     )}
                   </a>
                 </div>
 
                 <ScreenshotUpload
-                  label="Transaction Screenshot"
-                  exampleImage="https://static.codatta.io/static/images/deposit_4_1767511761924.png"
-                  value={formData.outgoingTxScreenshot}
-                  onChange={(v) => handleChange('outgoingTxScreenshot', v)}
+                  label="Blockchain Explorer Screenshot"
+                  exampleImage="https://static.codatta.io/static/images/deposit_2_1767511761924.png"
+                  value={formData.explorerScreenshot}
+                  onChange={(v) => handleChange('explorerScreenshot', v)}
                   onShowModal={showImageModal}
                   hint="Full-page screenshot including: URL, TxHash, From address, and To address."
                 />
 
                 <div className="mt-3 flex flex-col gap-2">
                   <label className={labelClass}>
-                    From (Exchange Deposit Address) <span className="text-red-500">*</span>
+                    From (Your Wallet Address) <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     className={inputClass}
-                    placeholder="Exchange deposit address"
-                    value={formData.outgoingTxFromAddress}
-                    onChange={(e) => handleChange('outgoingTxFromAddress', e.target.value)}
+                    placeholder="Your wallet address"
+                    value={formData.depositFromAddress}
+                    onChange={(e) => handleChange('depositFromAddress', e.target.value)}
                   />
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
                   <label className={labelClass}>
-                    To (Exchange Hot Wallet) <span className="text-red-500">*</span>
+                    To (Exchange Deposit Address) <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
+                  <Input
                     className={inputClass}
-                    placeholder="Exchange hot wallet address"
-                    value={formData.outgoingTxToAddress}
-                    onChange={(e) => handleChange('outgoingTxToAddress', e.target.value)}
+                    placeholder="Exchange deposit address"
+                    value={formData.depositToAddress}
+                    onChange={(e) => handleChange('depositToAddress', e.target.value)}
                   />
                 </div>
               </StepContainer>
-            )}
 
-            <div className="mt-12 bg-[#D92B2B0A]">
-              <div className="mx-auto max-w-[1320px] px-6">
-                <ExpertRedline />
+              {/* Step 5 */}
+              <StepContainer
+                step={5}
+                title="Check if Deposit Address Has Outgoing Transactions"
+                warning={
+                  <div className="text-[#facc15]">
+                    <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
+                  </div>
+                }
+              >
+                <div className="mb-4">
+                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
+                    Open To address on block explorer
+                  </label>
+                  <a
+                    href={toAddressUrl || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
+                      !toAddressUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
+                    }`}
+                  >
+                    {toAddressUrl ? (
+                      <>
+                        <ExternalLink size={14} /> {toAddressUrl}
+                      </>
+                    ) : (
+                      '(Fill Network and To address in Step 4 to view)'
+                    )}
+                  </a>
+                  <div className="mt-1 text-[11px] text-[#888]">
+                    Auto-generated from Step 4. Check for outgoing transactions to identify the hot wallet.
+                  </div>
+                </div>
+
+                <div className="mb-4 rounded-md border-l-4 border-yellow-500 bg-yellow-500/10 px-3 py-2.5 text-xs text-gray-200">
+                  <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
+                </div>
+
+                <div className="mb-4 flex items-center gap-5">
+                  <span className="text-xs text-white">Any outgoing transaction with amount &gt; 0?</span>
+                  <Radio.Group
+                    value={formData.hasOutgoingTransaction}
+                    onChange={(e) => handleChange('hasOutgoingTransaction', e.target.value)}
+                    className="flex gap-5"
+                  >
+                    <Radio value="yes" className="!text-xs !font-medium !text-[#d0d0d0]">
+                      Yes
+                    </Radio>
+                    <Radio value="no" className="!text-xs !font-medium !text-[#d0d0d0]">
+                      No
+                    </Radio>
+                  </Radio.Group>
+                </div>
+
+                {formData.hasOutgoingTransaction === 'yes' && (
+                  <div className="animate-in fade-in slide-in-from-top-2">
+                    <ScreenshotUpload
+                      label="Transaction Screenshot"
+                      exampleImage="https://static.codatta.io/static/images/deposit_3_1767511761924.png"
+                      value={formData.outgoingTransactionScreenshot}
+                      onChange={(v) => handleChange('outgoingTransactionScreenshot', v)}
+                      onShowModal={showImageModal}
+                      hint="Full-page screenshot including: URL, TxHash, From/To addresses, and amount."
+                    />
+                    <div className="mt-3 flex flex-col gap-2">
+                      <label className={labelClass}>
+                        Transaction Hash <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        className={inputClass}
+                        placeholder="Outgoing transaction hash"
+                        value={formData.outgoingTransactionHash}
+                        onChange={(e) => handleChange('outgoingTransactionHash', e.target.value)}
+                      />
+                    </div>
+                  </div>
+                )}
+              </StepContainer>
+
+              {/* Step 6 */}
+              {formData.hasOutgoingTransaction === 'yes' && (
+                <StepContainer step={6} title="Submit Outgoing Transaction Details">
+                  <div className="mb-4">
+                    <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
+                      Open outgoing transaction on block explorer
+                    </label>
+                    <a
+                      href={outgoingTxUrl || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
+                        !outgoingTxUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
+                      }`}
+                    >
+                      {outgoingTxUrl ? (
+                        <>
+                          <ExternalLink size={14} /> {outgoingTxUrl}
+                        </>
+                      ) : (
+                        '(Fill Network and Transaction Hash in Step 5 to view)'
+                      )}
+                    </a>
+                  </div>
+
+                  <ScreenshotUpload
+                    label="Transaction Screenshot"
+                    exampleImage="https://static.codatta.io/static/images/deposit_4_1767511761924.png"
+                    value={formData.outgoingTxScreenshot}
+                    onChange={(v) => handleChange('outgoingTxScreenshot', v)}
+                    onShowModal={showImageModal}
+                    hint="Full-page screenshot including: URL, TxHash, From address, and To address."
+                  />
+
+                  <div className="mt-3 flex flex-col gap-2">
+                    <label className={labelClass}>
+                      From (Exchange Deposit Address) <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      className={inputClass}
+                      placeholder="Exchange deposit address"
+                      value={formData.outgoingTxFromAddress}
+                      onChange={(e) => handleChange('outgoingTxFromAddress', e.target.value)}
+                    />
+                  </div>
+
+                  <div className="mt-3 flex flex-col gap-2">
+                    <label className={labelClass}>
+                      To (Exchange Hot Wallet) <span className="text-red-500">*</span>
+                    </label>
+                    <Input
+                      className={inputClass}
+                      placeholder="Exchange hot wallet address"
+                      value={formData.outgoingTxToAddress}
+                      onChange={(e) => handleChange('outgoingTxToAddress', e.target.value)}
+                    />
+                  </div>
+                </StepContainer>
+              )}
+
+              <div className="mt-12 bg-[#D92B2B0A]">
+                <div className="mx-auto max-w-[1320px] px-6">
+                  <ExpertRedline />
+                </div>
+              </div>
+
+              <div className="mt-12 flex justify-center pb-20">
+                <Button
+                  disabled={!validateForm()}
+                  onClick={handleSubmit}
+                  loading={submitting}
+                  className={`h-[44px] w-full rounded-full text-base font-bold ${
+                    !validateForm() ? 'opacity-50' : ''
+                  } md:mx-auto md:w-[240px]`}
+                  text="Submit"
+                />
               </div>
             </div>
 
-            <div className="mt-12 flex justify-center">
-              <Button
-                disabled={!validateForm()}
-                onClick={handleSubmit}
-                loading={submitting}
-                className={`h-[44px] w-full rounded-full text-base font-bold md:w-[280px] ${
-                  !validateForm() ? 'opacity-50' : ''
-                }`}
-                text="Submit Deposit Task"
-              />
-            </div>
+            <Modal
+              open={imageModalVisible}
+              footer={null}
+              onCancel={() => setImageModalVisible(false)}
+              width="90%"
+              centered
+              styles={{
+                content: { backgroundColor: 'transparent', boxShadow: 'none' },
+                body: { padding: 0, display: 'flex', justifyContent: 'center' }
+              }}
+              closeIcon={
+                <span className="flex size-10 items-center justify-center rounded-full bg-[#8b5cf64d] text-2xl text-white hover:bg-[#8b5cf699]">
+                  ×
+                </span>
+              }
+            >
+              <img src={modalImageSrc} alt="Preview" className="max-h-[90vh] max-w-full rounded-xl" />
+            </Modal>
+
+            <SubmitSuccessModal points={rewardPoints} open={modalShow} onClose={() => window.history.back()} />
           </div>
-
-          <Modal
-            open={imageModalVisible}
-            footer={null}
-            onCancel={() => setImageModalVisible(false)}
-            width="90%"
-            centered
-            styles={{
-              content: { backgroundColor: 'transparent', boxShadow: 'none' },
-              body: { padding: 0, display: 'flex', justifyContent: 'center' }
-            }}
-            closeIcon={
-              <span className="flex size-10 items-center justify-center rounded-full bg-[#8b5cf64d] text-2xl text-white hover:bg-[#8b5cf699]">
-                ×
-              </span>
-            }
-          >
-            <img src={modalImageSrc} alt="Preview" className="max-h-[90vh] max-w-full rounded-xl" />
-          </Modal>
-
-          <SubmitSuccessModal points={rewardPoints} open={modalShow} onClose={() => window.history.back()} />
-        </div>
-      </Spin>
+        </Spin>
+      </ConfigProvider>
     </AuthChecker>
   )
 }
