@@ -3,7 +3,7 @@
     "key": "food-science",
     "name": "Food Science",
     "image": "https://static.codatta.io/dataset/food-science.png",
-    "url": "https://app-test.b18a.io/dataset/food-science",
+    "url": "https://app.codatta.io/datasets/food-science",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
@@ -19,7 +19,7 @@
     "key": "healthcare",
     "name": "Refined TCGA PRAD Prostate Cancer Pathology Dataset",
     "image": "https://static.codatta.io/dataset/healthcare.png",
-    "url": "https://app-test.b18a.io/dataset/healthcare",
+    "url": "https://app.codatta.io/datasets/healthcare",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
@@ -35,7 +35,7 @@
     "key": "crypto-addresses",
     "name": "Crypto Addresses/Transactions Labeled data",
     "image": "https://static.codatta.io/dataset/crypto-addresses.png",
-    "url": "https://app-test.b18a.io/dataset/crypto-addresses",
+    "url": "https://app.codatta.io/datasets/crypto-addresses",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
@@ -51,7 +51,7 @@
     "key": "robotics",
     "name": "Embodiment data (Robotics)",
     "image": "https://static.codatta.io/dataset/robotics.png",
-    "url": "https://app-test.b18a.io/dataset/robotics",
+    "url": "https://app.codatta.io/datasets/robotics",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
@@ -67,7 +67,7 @@
     "key": "kitchen-applicants",
     "name": "Kitchen Applicants",
     "image": "https://static.codatta.io/dataset/kitchen-applicants.png",
-    "url": "https://app-test.b18a.io/dataset/kitchen-applicants",
+    "url": "https://app.codatta.io/datasets/kitchen-applicants",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
@@ -83,7 +83,7 @@
     "key": "fashion",
     "name": "Fashion",
     "image": "https://static.codatta.io/dataset/fashion.png",
-    "url": "https://app-test.b18a.io/dataset/fashion",
+    "url": "https://app.codatta.io/datasets/fashion",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
@@ -99,7 +99,7 @@
     "key": "llm-failure-cases",
     "name": "LLM-Failure-Cases (LLM)",
     "image": "https://static.codatta.io/dataset/llm-failure-cases.png",
-    "url": "https://app-test.b18a.io/dataset/llm-failure-cases",
+    "url": "https://app.codatta.io/datasets/llm-failure-cases",
     "tags": [
       {
         "image": "https://static.codatta.io/static/images/73c7b53060f1ff5065efd3568a2c9283a6bdf9c6.png",
