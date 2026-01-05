@@ -9,7 +9,7 @@ import { referralStoreActions, useReferralStore } from '@/stores/referral.store'
 import userApi from '@/apis/user.api'
 import SocialShare from '@/components/referral/social-share'
 import Empty from '@/components/common/empty'
-import CoinSvgImage from '@/assets/common/coin.svg'
+import CoinSvgImage from '@/assets/userinfo/reward-icon.svg'
 import AntdTheme from '@/styles/antd.theme'
 import ReferralGiftBoxImage from '@/assets/referral/referral-gift-box.png'
 import dayjs from 'dayjs'
@@ -42,7 +42,7 @@ function ChestSuccessModal({
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 flex size-6 items-center justify-center text-white hover:text-white/70"
+            className="absolute right-0 top-0 flex size-6 items-center justify-center text-white hover:text-white/70"
           >
             <X size={20} />
           </button>
@@ -51,24 +51,24 @@ function ChestSuccessModal({
           <h2 className="mb-6 text-2xl font-bold text-white">Congratulations!</h2>
 
           {/* Coin Icon with Background */}
-          <div className="relative mb-6 flex items-center justify-center">
+          <div className="relative mb-10 flex items-center justify-center rounded-2xl border-2 border-white/60 bg-primary">
             {/* Purple background with stripes */}
+
             <div
               className="relative flex size-32 items-center justify-center rounded-2xl"
               style={{
                 background: 'linear-gradient(135deg, #5734BB 0%, #8B5CF6 100%)',
                 backgroundImage:
-                  'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                  'repeating-linear-gradient(0deg, transparent, transparent 4px, rgba(255,255,255,0.1) 4px, rgba(255,255,255,0.1) 8px)'
               }}
             >
-              {/* Coin Icon */}
-              <img src={CoinSvgImage} alt="Coin" className="relative z-10 size-20" />
+              <div className="absolute bottom-0 right-0 rounded-br-2xl rounded-tl-2xl bg-[#5734BB] px-3 py-1">
+                <span className="text-lg font-bold text-white">+{rewardValue}</span>
+              </div>
+              <img src={CoinSvgImage} alt="Coin" className="relative size-20" />
             </div>
 
             {/* Reward Value Badge */}
-            <div className="absolute -bottom-2 -right-2 rounded-lg bg-[#5734BB] px-3 py-1">
-              <span className="text-lg font-bold text-white">+{rewardValue}</span>
-            </div>
           </div>
 
           {/* Claim Button */}
@@ -76,7 +76,8 @@ function ChestSuccessModal({
             type="primary"
             size="large"
             onClick={onClose}
-            className="h-12 w-full bg-primary text-base font-semibold"
+            className="h-12 w-[120px] bg-primary text-base font-semibold"
+            shape="round"
           >
             Claim
           </Button>
