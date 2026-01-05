@@ -112,10 +112,10 @@ export default function FashionValidation({ templateId }: { templateId: string }
           <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-6 py-12 lg:grid-cols-2">
             {/* Left Column - Image Viewer */}
             <div className="flex flex-col gap-4">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#18181B]">
-                <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="w-full">
+              <div className="relative aspect-[1/1] overflow-hidden rounded-2xl bg-[#FAFAFA]">
+                <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="size-full">
                   {FASHION_IMAGES.map((img, idx) => (
-                    <div key={idx} className="flex items-center justify-center bg-black">
+                    <div key={idx} className="flex aspect-[1/1] w-full items-center justify-center">
                       <img src={img} alt={`Fashion item ${idx + 1}`} className="size-full object-contain" />
                     </div>
                   ))}
