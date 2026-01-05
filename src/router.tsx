@@ -95,6 +95,7 @@ const FrontierSocialTwitterFollow = lazy(() => import('@/views/frontiers/social-
 const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social-tasks/twitter-retweet'))
 
 const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
+const FashionValidation = lazy(() => import('@/views/frontiers/fashion_validation'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -319,6 +320,11 @@ export default function Router() {
         <Route
           path="/frontier/project/VIVOLIGHT_VALIDATION/:taskId"
           element={<VivolightValidation templateId="VIVOLIGHT_VALIDATION" />}
+        ></Route>
+
+        <Route
+          path="/frontier/project/FASHION_VALIDATION/:taskId"
+          element={<FashionValidation templateId="FASHION_VALIDATION" />}
         ></Route>
 
         <Route path="datasets">
