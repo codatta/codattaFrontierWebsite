@@ -308,7 +308,7 @@ export default function Component() {
                               )}
                             </td>
                             <td className="py-4 text-center">
-                              {item.chest_count > 0 && (
+                              {item.reward > 0 && (
                                 <span className="inline-block rounded-full bg-[#008573]/15 px-3 py-1 font-bold text-[#008573]">
                                   + {item.reward}
                                 </span>
