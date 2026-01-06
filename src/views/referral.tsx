@@ -172,7 +172,7 @@ export default function Component() {
           <div className="flex-1 rounded-3xl bg-[#252532] p-6">
             <h3 className="mb-1 text-xl font-bold">Invite Friends, Earn Together</h3>
             <p className="text-sm text-white/60">
-              Invite a friend, both get <span className="font-semibold text-primary">100</span> pts.
+              Invite a friend, both get <span className="font-semibold text-primary">100</span> Points.
             </p>
 
             {/* Metrics Cards */}
