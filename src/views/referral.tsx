@@ -161,8 +161,6 @@ export default function Component() {
     getReferralInfo()
   }, [])
 
-  const hasMoreHistory = referralList.length > 4
-
   return (
     <TransitionEffect className="text-white/85">
       <h2 className="mb-6 text-[32px] font-semibold leading-[48px]">Referral</h2>
