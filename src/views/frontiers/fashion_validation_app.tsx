@@ -88,7 +88,7 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
   const totalImages = FASHION_IMAGES.length
 
   const [loading, setLoading] = useState(false)
-  const [modalShow, setModalShow] = useState(false)
+  const [modalShow, setModalShow] = useState(true)
   const [rewardPoints, setRewardPoints] = useState(0)
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -183,7 +183,7 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
       await frontiterApi.submitTask(taskId, {
         taskId,
         templateId,
-        data: { answers: serializedAnswers }
+        data: { answers: serializedAnswers, channel: 'app' }
       })
       setModalShow(true)
     } catch (error) {
@@ -198,8 +198,9 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
     if (!taskId) return
     setLoading(true)
     try {
+      console.log('template_id', templateId)
       const res = await frontiterApi.getTaskDetail(taskId)
-      if (res.data.data_display.template_id !== templateId) {
+      if (!templateId?.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
       }
       const totalRewards = res.data.reward_info
@@ -240,18 +241,18 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
   return (
     <AuthChecker>
       <Spin spinning={loading}>
-        <div className="min-h-screen bg-[#F7F8FA] pb-8">
-          <MobileAppFrontierHeader
-            title={<span className="font-bold">Fashion</span>}
-            canSubmit={false}
-            onBack={onBack}
-            showSubmitButton={false}
-          />
+        <div className="flex h-screen flex-col gap-8 bg-[#F5F5F5]">
+          <div className="z-10 flex-none bg-[#F7F8FA]">
+            <MobileAppFrontierHeader
+              title={<span className="font-bold">Fashion</span>}
+              canSubmit={false}
+              onBack={onBack}
+              showSubmitButton={false}
+            />
 
-          <div className="space-y-8 px-4">
             {/* Image preview */}
-            <div className="mb-6 mt-2">
-              <div className="relative aspect-[370/200] rounded-[26px] bg-[#FAFAFA] shadow-[0_25px_45px_rgba(18,22,34,0.12)]">
+            <div className="px-4">
+              <div className="relative aspect-[370/200] rounded-[26px] bg-[#FAFAFA]">
                 <div className="aspect-[370/200] overflow-hidden rounded-[26px]">
                   <img
                     src={currentImageUrl}
@@ -265,77 +266,81 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
                 </div>
               </div>
             </div>
+          </div>
 
-            <QuestionSection title="Is this image valid?">
-              <div className="grid grid-cols-2 gap-3">
-                {QUESTION_OPTIONS.q1.map((option) => (
-                  <OptionButton
-                    key={option.value}
-                    label={option.label}
-                    description={option.description}
-                    selected={currentAnswer?.is_valid === option.value}
-                    onClick={() => handleValiditySelect(option.value as 'valid' | 'invalid')}
-                    icon={ICON_MAP[option.value]}
-                  />
-                ))}
-              </div>
-            </QuestionSection>
-
-            {showTypeQuestion && (
-              <QuestionSection title="What is the image type?">
+          <div className="flex-1 overflow-y-auto px-4 pb-8">
+            <div className="space-y-8">
+              <QuestionSection title="Is this image valid?">
                 <div className="grid grid-cols-2 gap-3">
-                  {QUESTION_OPTIONS.q2.map((option) => (
+                  {QUESTION_OPTIONS.q1.map((option) => (
                     <OptionButton
                       key={option.value}
                       label={option.label}
-                      selected={currentAnswer?.image_type === option.value}
-                      onClick={() => handleImageTypeSelect(option.value as 'flat' | 'model' | 'collage' | 'poster')}
+                      description={option.description}
+                      selected={currentAnswer?.is_valid === option.value}
+                      onClick={() => handleValiditySelect(option.value as 'valid' | 'invalid')}
                       icon={ICON_MAP[option.value]}
                     />
                   ))}
                 </div>
               </QuestionSection>
-            )}
 
-            {showCategoryQuestion && (
-              <QuestionSection title="Main category?">
-                <div className="grid grid-cols-2 gap-3">
-                  {QUESTION_OPTIONS.q3.map((option) => (
-                    <OptionButton
-                      key={option.value}
-                      label={option.label}
-                      selected={currentAnswer?.category === option.value}
-                      onClick={() => handleCategorySelect(option.value as 'top' | 'bottom' | 'full' | 'accessory')}
-                      icon={ICON_MAP[option.value]}
-                    />
-                  ))}
-                </div>
-              </QuestionSection>
-            )}
+              {showTypeQuestion && (
+                <QuestionSection title="What is the image type?">
+                  <div className="grid grid-cols-2 gap-3">
+                    {QUESTION_OPTIONS.q2.map((option) => (
+                      <OptionButton
+                        key={option.value}
+                        label={option.label}
+                        selected={currentAnswer?.image_type === option.value}
+                        onClick={() => handleImageTypeSelect(option.value as 'flat' | 'model' | 'collage' | 'poster')}
+                        icon={ICON_MAP[option.value]}
+                      />
+                    ))}
+                  </div>
+                </QuestionSection>
+              )}
 
-            {showViewpointQuestion && (
-              <QuestionSection title="Model viewpoint?">
-                <div className="grid grid-cols-2 gap-3">
-                  {QUESTION_OPTIONS.q4.map((option) => (
-                    <OptionButton
-                      key={option.value}
-                      label={option.label}
-                      selected={currentAnswer?.viewpoint === option.value}
-                      onClick={() => handleViewpointSelect(option.value as 'front' | 'back' | 'side')}
-                      icon={ICON_MAP[option.value]}
-                    />
-                  ))}
-                </div>
-              </QuestionSection>
-            )}
+              {showCategoryQuestion && (
+                <QuestionSection title="Main category?">
+                  <div className="grid grid-cols-2 gap-3">
+                    {QUESTION_OPTIONS.q3.map((option) => (
+                      <OptionButton
+                        key={option.value}
+                        label={option.label}
+                        selected={currentAnswer?.category === option.value}
+                        onClick={() => handleCategorySelect(option.value as 'top' | 'bottom' | 'full' | 'accessory')}
+                        icon={ICON_MAP[option.value]}
+                      />
+                    ))}
+                  </div>
+                </QuestionSection>
+              )}
 
-            <button
-              onClick={handleNextOrSubmit}
-              disabled={!canContinue}
-              className="h-[56px] w-full rounded-full bg-black text-[17px] font-semibold leading-[56px] text-white transition-all disabled:bg-black/20 disabled:text-white/60"
-            >
-              {isLastImage ? 'Submit' : 'Continue'}
-            </button>
+              {showViewpointQuestion && (
+                <QuestionSection title="Model viewpoint?">
+                  <div className="grid grid-cols-2 gap-3">
+                    {QUESTION_OPTIONS.q4.map((option) => (
+                      <OptionButton
+                        key={option.value}
+                        label={option.label}
+                        selected={currentAnswer?.viewpoint === option.value}
+                        onClick={() => handleViewpointSelect(option.value as 'front' | 'back' | 'side')}
+                        icon={ICON_MAP[option.value]}
+                      />
+                    ))}
+                  </div>
+                </QuestionSection>
+              )}
+
+              <button
+                onClick={handleNextOrSubmit}
+                disabled={!canContinue}
+                className="h-[56px] w-full rounded-full bg-black text-[17px] font-semibold leading-[56px] text-white transition-all disabled:bg-black/20 disabled:text-white/60"
+              >
+                {isLastImage ? 'Submit' : 'Continue'}
+              </button>
+            </div>
           </div>
 
           <SuccessModal

@@ -73,7 +73,8 @@ export default function FashionValidation({ templateId }: { templateId: string }
           taskId: taskId!,
           templateId: templateId,
           data: {
-            answers: newAnswers
+            answers: newAnswers,
+            channel: 'web'
           }
         })
         setModalShow(true)
