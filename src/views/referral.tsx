@@ -172,7 +172,7 @@ export default function Component() {
           <div className="flex-1 rounded-3xl bg-[#252532] p-6">
             <h3 className="mb-1 text-xl font-bold">Invite Friends, Earn Together</h3>
             <p className="text-sm text-white/60">
-              Invite a friend, both get <span className="font-semibold text-primary">100</span> pts.
+              Invite a friend, both get <span className="font-semibold text-primary">100</span> Points.
             </p>
 
             {/* Metrics Cards */}
@@ -308,7 +308,7 @@ export default function Component() {
                               )}
                             </td>
                             <td className="py-4 text-center">
-                              {item.chest_count > 0 && (
+                              {item.reward > 0 && (
                                 <span className="inline-block rounded-full bg-[#008573]/15 px-3 py-1 font-bold text-[#008573]">
                                   + {item.reward}
                                 </span>
