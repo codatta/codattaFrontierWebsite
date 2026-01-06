@@ -85,18 +85,26 @@ export interface UserUpdateParams {
 
 export interface InviteRecord {
   user_id: string
-  name: string
-  reward: string
-  reward_value: number
-  reward_type: 'score' | 'nft'
-  time: string
-  soul_id?: number
+  user_name: string
+  avatar: string
+  gmt_create: number
+  reward: number
+  chest_count: number
+}
+
+export interface InviteRecordResponse {
+  list: InviteRecord[]
+  page_num: 1
+  page_size: 10
+  total_count: 0
 }
 
 export interface InviteDetail {
-  total_invite_count: number
-  total_available_count: number
-  progress: InviteProgressItem[]
+  user_count: number
+  reward: number
+  chest_total_count: number
+  chest_claimed_count: number
+  chest_available_count: number
 }
 
 export interface InviteProgressItem {
@@ -262,8 +270,16 @@ class UserApi {
     return data
   }
 
-  async getInviteDetail() {
-    const { data } = await request.get<Response<InviteDetail>>('/v2/invite/detail')
+  async getInviteInfo() {
+    const { data } = await request.get<Response<InviteDetail>>('/v2/inviter/info')
+    return data
+  }
+
+  async openReferralChest() {
+    const { data } =
+      await request.post<Response<{ status: number; reward_value: number; reward_type: 'POINTS' }>>(
+        '/v2/inviter/chest/claim'
+      )
     return data
   }
 
@@ -273,8 +289,16 @@ class UserApi {
     return data
   }
 
-  async getInviteRecords() {
-    const { data } = await request.post<PaginationResponse<InviteRecord[]>>('/v2/invite/history', {})
+  async getInviteRecords(params: { page_num: number; page_size: number; start_time?: Date; end_time?: Date }) {
+    const { page_num, page_size, start_time, end_time } = params
+    const start_time_unix = start_time ? start_time.getTime() / 1000 : undefined
+    const end_time_unix = end_time ? end_time.getTime() / 1000 : undefined
+    const { data } = await request.post<Response<InviteRecordResponse>>('/v2/inviter/list', {
+      page_num,
+      page_size,
+      start_time: start_time_unix,
+      end_time: end_time_unix
+    })
     return data
   }
 
