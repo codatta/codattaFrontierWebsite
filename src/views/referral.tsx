@@ -2,7 +2,7 @@ import { message, Button, Input, Modal, ConfigProvider, Pagination } from 'antd'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useEffect, useMemo, useState } from 'react'
 import ReactGA from 'react-ga4'
-import { Loader2, X } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import TransitionEffect from '@/components/common/transition-effect'
 import { useUserStore } from '@/stores/user.store'
 import { referralStoreActions, useReferralStore } from '@/stores/referral.store'
@@ -39,14 +39,6 @@ function ChestSuccessModal({
     <ConfigProvider theme={modalTheme}>
       <Modal closeIcon={null} open={open} centered onCancel={onClose} footer={null} width={400}>
         <div className="relative flex flex-col items-center p-6">
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute right-0 top-0 flex size-6 items-center justify-center text-white hover:text-white/70"
-          >
-            <X size={20} />
-          </button>
-
           {/* Title */}
           <h2 className="mb-6 text-2xl font-bold text-white">Congratulations!</h2>
 
