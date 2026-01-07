@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 're
 import { Stage, Layer, Image as KonvaImage, Rect as KonvaRect, Circle, Line, Group } from 'react-konva'
 import Konva from 'konva'
 import { Rect, Point } from './types'
+import { Spin } from 'antd'
 
 export interface AnnotationCanvasRef {
   getAnnotatedImage: () => string
@@ -14,6 +15,7 @@ interface AnnotationCanvasProps {
   rectModified: boolean
   pointerModified: boolean
   exampleImage?: string
+  loading?: boolean
   onRectChange: (rect: Rect | null) => void
   onPointerChange: (pointer: Point | null) => void
   onShowModal: (src: string) => void
@@ -21,7 +23,18 @@ interface AnnotationCanvasProps {
 
 const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
   (
-    { image, rect, pointer, rectModified, pointerModified, exampleImage, onRectChange, onPointerChange, onShowModal },
+    {
+      image,
+      rect,
+      pointer,
+      rectModified,
+      pointerModified,
+      exampleImage,
+      loading = false,
+      onRectChange,
+      onPointerChange,
+      onShowModal
+    },
     ref
   ) => {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -628,202 +641,205 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
           <div className="space-y-2">
             <div className="text-xs font-bold text-[#a78bfa]">Your Annotation</div>
             <div>
-              {image ? (
-                <div>
-                  <div
-                    ref={containerRef}
-                    className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black"
-                  >
-                    <Stage
-                      ref={stageRef}
-                      width={dimensions.width}
-                      height={dimensions.height}
-                      onMouseDown={handleStageMouseDown}
-                      onMouseMove={handleStageMouseMove}
-                      onMouseUp={handleStageMouseUp}
-                      onMouseLeave={handleStageMouseUp}
+              <Spin spinning={loading}>
+                {image ? (
+                  <div>
+                    <div
+                      ref={containerRef}
+                      className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black"
                     >
-                      <Layer scaleX={dimensions.scale} scaleY={dimensions.scale}>
-                        <KonvaImage image={image} />
+                      <Stage
+                        ref={stageRef}
+                        width={dimensions.width}
+                        height={dimensions.height}
+                        onMouseDown={handleStageMouseDown}
+                        onMouseMove={handleStageMouseMove}
+                        onMouseUp={handleStageMouseUp}
+                        onMouseLeave={handleStageMouseUp}
+                      >
+                        <Layer scaleX={dimensions.scale} scaleY={dimensions.scale}>
+                          <KonvaImage image={image} />
 
-                        {/* Temporary Drawing Rect */}
-                        {isDrawing && drawStart && drawCurrent && (
-                          <KonvaRect
-                            x={Math.min(drawStart.x, drawCurrent.x)}
-                            y={Math.min(drawStart.y, drawCurrent.y)}
-                            width={Math.abs(drawCurrent.x - drawStart.x)}
-                            height={Math.abs(drawCurrent.y - drawStart.y)}
-                            stroke="red"
-                            strokeWidth={2 / dimensions.scale}
-                          />
-                        )}
+                          {/* Temporary Drawing Rect */}
+                          {isDrawing && drawStart && drawCurrent && (
+                            <KonvaRect
+                              x={Math.min(drawStart.x, drawCurrent.x)}
+                              y={Math.min(drawStart.y, drawCurrent.y)}
+                              width={Math.abs(drawCurrent.x - drawStart.x)}
+                              height={Math.abs(drawCurrent.y - drawStart.y)}
+                              stroke="red"
+                              strokeWidth={2 / dimensions.scale}
+                            />
+                          )}
 
-                        {/* Edited Quadrilateral */}
-                        {rect &&
-                          image &&
-                          (() => {
-                            const coords = getCoords()
-                            if (!coords) return null
-                            const { x1, y1, x2, y2, x3, y3, x4, y4 } = coords
+                          {/* Edited Quadrilateral */}
+                          {rect &&
+                            image &&
+                            (() => {
+                              const coords = getCoords()
+                              if (!coords) return null
+                              const { x1, y1, x2, y2, x3, y3, x4, y4 } = coords
 
-                            const corners = [
-                              { x: x1, y: y1, i: 1 },
-                              { x: x2, y: y2, i: 2 },
-                              { x: x3, y: y3, i: 3 },
-                              { x: x4, y: y4, i: 4 }
-                            ]
+                              const corners = [
+                                { x: x1, y: y1, i: 1 },
+                                { x: x2, y: y2, i: 2 },
+                                { x: x3, y: y3, i: 3 },
+                                { x: x4, y: y4, i: 4 }
+                              ]
 
-                            // Edges: 1-2, 2-3, 3-4, 4-1
-                            const edges = [
-                              { p1: corners[0], p2: corners[1], i: 0 },
-                              { p1: corners[1], p2: corners[2], i: 1 },
-                              { p1: corners[2], p2: corners[3], i: 2 },
-                              { p1: corners[3], p2: corners[0], i: 3 }
-                            ]
+                              // Edges: 1-2, 2-3, 3-4, 4-1
+                              const edges = [
+                                { p1: corners[0], p2: corners[1], i: 0 },
+                                { p1: corners[1], p2: corners[2], i: 1 },
+                                { p1: corners[2], p2: corners[3], i: 2 },
+                                { p1: corners[3], p2: corners[0], i: 3 }
+                              ]
 
-                            return (
-                              <>
-                                {/* The Polygon Shape */}
-                                <Line
-                                  ref={rectRef}
-                                  points={[x1, y1, x2, y2, x3, y3, x4, y4]}
-                                  closed
-                                  stroke={selectedId === 'rect' ? '#10b981' : 'red'}
-                                  strokeWidth={2 / dimensions.scale}
-                                  fill="transparent"
-                                  name="quad-edge"
-                                  onClick={() => setSelectedId('rect')}
-                                  onTap={() => setSelectedId('rect')}
-                                  onMouseEnter={() => {
-                                    if (stageRef.current) stageRef.current.container().style.cursor = 'move'
-                                  }}
-                                  onMouseLeave={() => {
-                                    if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                  }}
-                                />
-
-                                {/* Corners - Always visible */}
-                                {corners.map((c) => (
-                                  <Circle
-                                    key={`corner-${c.i}`}
-                                    x={c.x}
-                                    y={c.y}
-                                    radius={6 / dimensions.scale}
-                                    fill={selectedId === 'rect' ? 'white' : 'red'}
+                              return (
+                                <>
+                                  {/* The Polygon Shape */}
+                                  <Line
+                                    ref={rectRef}
+                                    points={[x1, y1, x2, y2, x3, y3, x4, y4]}
+                                    closed
                                     stroke={selectedId === 'rect' ? '#10b981' : 'red'}
-                                    strokeWidth={selectedId === 'rect' ? 2 / dimensions.scale : 0}
-                                    draggable
-                                    onDragStart={() => setSelectedId('rect')}
+                                    strokeWidth={2 / dimensions.scale}
+                                    fill="transparent"
+                                    name="quad-edge"
                                     onClick={() => setSelectedId('rect')}
                                     onTap={() => setSelectedId('rect')}
-                                    onDragMove={(e) => handleCornerDrag(c.i, e)}
                                     onMouseEnter={() => {
-                                      if (stageRef.current) {
-                                        stageRef.current.container().style.cursor = getCursorForCorner(c.i)
-                                      }
+                                      if (stageRef.current) stageRef.current.container().style.cursor = 'move'
                                     }}
                                     onMouseLeave={() => {
                                       if (stageRef.current) stageRef.current.container().style.cursor = 'default'
                                     }}
                                   />
-                                ))}
 
-                                {/* Edge Anchors - Only show when selected */}
-                                {selectedId === 'rect' && (
-                                  <>
-                                    {edges.map((e) => {
-                                      const mid = getMidpoint(e.p1, e.p2)
-                                      return (
-                                        <Circle
-                                          key={`edge-${e.i}`}
-                                          x={mid.x}
-                                          y={mid.y}
-                                          radius={4 / dimensions.scale}
-                                          fill="white"
-                                          stroke="#10b981"
-                                          strokeWidth={2 / dimensions.scale}
-                                          draggable
-                                          onDragStart={() => setSelectedId('rect')}
-                                          onDragMove={(evt) => handleEdgeDrag(e.i, evt)}
-                                          onMouseEnter={() => {
-                                            if (stageRef.current) {
-                                              stageRef.current.container().style.cursor = getCursorForEdge(e.i)
-                                            }
-                                          }}
-                                          onMouseLeave={() => {
-                                            if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                          }}
-                                        />
-                                      )
-                                    })}
-                                  </>
-                                )}
-                              </>
-                            )
-                          })()}
+                                  {/* Corners - Always visible */}
+                                  {corners.map((c) => (
+                                    <Circle
+                                      key={`corner-${c.i}`}
+                                      x={c.x}
+                                      y={c.y}
+                                      radius={6 / dimensions.scale}
+                                      fill={selectedId === 'rect' ? 'white' : 'red'}
+                                      stroke={selectedId === 'rect' ? '#10b981' : 'red'}
+                                      strokeWidth={selectedId === 'rect' ? 2 / dimensions.scale : 0}
+                                      draggable
+                                      onDragStart={() => setSelectedId('rect')}
+                                      onClick={() => setSelectedId('rect')}
+                                      onTap={() => setSelectedId('rect')}
+                                      onDragMove={(e) => handleCornerDrag(c.i, e)}
+                                      onMouseEnter={() => {
+                                        if (stageRef.current) {
+                                          stageRef.current.container().style.cursor = getCursorForCorner(c.i)
+                                        }
+                                      }}
+                                      onMouseLeave={() => {
+                                        if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                                      }}
+                                    />
+                                  ))}
 
-                        {/* Center Point - Always show if rect exists */}
-                        {rect && rect.center && (
-                          <Circle
-                            x={rect.center.x}
-                            y={rect.center.y}
-                            radius={6 / dimensions.scale}
-                            fill="#10b981"
-                            listening={false}
-                          />
-                        )}
+                                  {/* Edge Anchors - Only show when selected */}
+                                  {selectedId === 'rect' && (
+                                    <>
+                                      {edges.map((e) => {
+                                        const mid = getMidpoint(e.p1, e.p2)
+                                        return (
+                                          <Circle
+                                            key={`edge-${e.i}`}
+                                            x={mid.x}
+                                            y={mid.y}
+                                            radius={4 / dimensions.scale}
+                                            fill="white"
+                                            stroke="#10b981"
+                                            strokeWidth={2 / dimensions.scale}
+                                            draggable
+                                            onDragStart={() => setSelectedId('rect')}
+                                            onDragMove={(evt) => handleEdgeDrag(e.i, evt)}
+                                            onMouseEnter={() => {
+                                              if (stageRef.current) {
+                                                stageRef.current.container().style.cursor = getCursorForEdge(e.i)
+                                              }
+                                            }}
+                                            onMouseLeave={() => {
+                                              if (stageRef.current)
+                                                stageRef.current.container().style.cursor = 'default'
+                                            }}
+                                          />
+                                        )
+                                      })}
+                                    </>
+                                  )}
+                                </>
+                              )
+                            })()}
 
-                        {/* Pointer */}
-                        {pointer && (
-                          <Group
-                            ref={pointerRef}
-                            name="pointer"
-                            x={pointer.x}
-                            y={pointer.y}
-                            draggable
-                            onClick={() => setSelectedId('pointer')}
-                            onTap={() => setSelectedId('pointer')}
-                            onDragStart={() => setSelectedId('pointer')}
-                            onDragMove={(e) => {
-                              onPointerChange({
-                                x: e.target.x(),
-                                y: e.target.y()
-                              })
-                            }}
-                            onDragEnd={(e) => {
-                              onPointerChange({
-                                x: e.target.x(),
-                                y: e.target.y()
-                              })
-                            }}
-                            onMouseEnter={() => {
-                              const stage = stageRef.current
-                              if (stage) stage.container().style.cursor = 'pointer'
-                            }}
-                            onMouseLeave={() => {
-                              const stage = stageRef.current
-                              if (stage) stage.container().style.cursor = 'default'
-                            }}
-                          >
-                            {/* Pointer Style */}
+                          {/* Center Point - Always show if rect exists */}
+                          {rect && rect.center && (
                             <Circle
-                              radius={8 / dimensions.scale}
-                              fill="#964B00"
-                              stroke="white"
-                              strokeWidth={2 / dimensions.scale}
+                              x={rect.center.x}
+                              y={rect.center.y}
+                              radius={6 / dimensions.scale}
+                              fill="#10b981"
+                              listening={false}
                             />
-                          </Group>
-                        )}
-                      </Layer>
-                    </Stage>
+                          )}
+
+                          {/* Pointer */}
+                          {pointer && (
+                            <Group
+                              ref={pointerRef}
+                              name="pointer"
+                              x={pointer.x}
+                              y={pointer.y}
+                              draggable
+                              onClick={() => setSelectedId('pointer')}
+                              onTap={() => setSelectedId('pointer')}
+                              onDragStart={() => setSelectedId('pointer')}
+                              onDragMove={(e) => {
+                                onPointerChange({
+                                  x: e.target.x(),
+                                  y: e.target.y()
+                                })
+                              }}
+                              onDragEnd={(e) => {
+                                onPointerChange({
+                                  x: e.target.x(),
+                                  y: e.target.y()
+                                })
+                              }}
+                              onMouseEnter={() => {
+                                const stage = stageRef.current
+                                if (stage) stage.container().style.cursor = 'pointer'
+                              }}
+                              onMouseLeave={() => {
+                                const stage = stageRef.current
+                                if (stage) stage.container().style.cursor = 'default'
+                              }}
+                            >
+                              {/* Pointer Style */}
+                              <Circle
+                                radius={8 / dimensions.scale}
+                                fill="#964B00"
+                                stroke="white"
+                                strokeWidth={2 / dimensions.scale}
+                              />
+                            </Group>
+                          )}
+                        </Layer>
+                      </Stage>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 text-[#888]">
-                  <div className="mb-4 text-5xl">📷</div>
-                  <div>Please upload an image first</div>
-                </div>
-              )}
+                ) : (
+                  <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 text-[#888]">
+                    <div className="mb-4 text-5xl">📷</div>
+                    <div>Please upload an image first</div>
+                  </div>
+                )}
+              </Spin>
             </div>
           </div>
           <div className="space-y-2">

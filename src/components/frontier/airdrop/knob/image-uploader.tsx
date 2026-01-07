@@ -1,9 +1,9 @@
 import React from 'react'
-import UploadImg, { UploadedImage } from '../UploadImg'
+import UploadImg, { UploadChangeContext, UploadedImage } from '../UploadImg'
 
 interface ImageUploaderProps {
   value: UploadedImage[]
-  onChange: (value: UploadedImage[]) => void
+  onChange: (value: UploadedImage[], context?: UploadChangeContext) => void
   onShowModal: (src: string) => void
 }
 
