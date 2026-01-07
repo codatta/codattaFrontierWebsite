@@ -170,7 +170,9 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
       return
     }
 
-    const serializedAnswers: FashionAnswer[] = answers.map((item, index) => ({
+    // TODO
+
+    const serializedAnswers = answers.map((item, index) => ({
       image_url: item?.image_url || FASHION_IMAGES[index],
       is_valid: item!.is_valid as 'valid' | 'invalid',
       image_type: item?.image_type,
