@@ -16,6 +16,13 @@ export interface UploadedImage {
   fileSize?: number // Store file size in bytes
 }
 
+export type UploadChangeType = 'uploading' | 'done' | 'error' | 'removed'
+
+export interface UploadChangeContext {
+  type: UploadChangeType
+  item?: UploadedImage
+}
+
 interface UploadProps {
   value: UploadedImage[]
   allUploadedImages?: UploadedImage[] // All images for cross-validation
@@ -24,7 +31,7 @@ interface UploadProps {
   supportPdf?: boolean
   className?: string
   itemClassName?: string
-  onChange: (value: UploadedImage[]) => void
+  onChange: (value: UploadedImage[], context?: UploadChangeContext) => void
   maxCount?: number
 }
 
@@ -83,7 +90,10 @@ const Upload: React.FC<UploadProps> = ({
     if (newUploadingImages.length === 0) return
 
     // Add files to state with 'uploading' status first
-    onChange([...value, ...newUploadingImages])
+    onChange([...value, ...newUploadingImages], {
+      type: 'uploading',
+      item: newUploadingImages[0]
+    })
 
     // Process each file
     let currentImages = [...value, ...newUploadingImages]
@@ -103,26 +113,32 @@ const Upload: React.FC<UploadProps> = ({
         const res = await commonApi.uploadFile(image.file)
 
         // Update the specific image from 'uploading' to 'done'
-        currentImages = currentImages.map((img) =>
-          img.hash === image.hash
-            ? {
-                ...img,
-                url: res.file_path,
-                hash,
-                status: 'done',
-                file: undefined,
-                fileType: image.file?.type,
-                fileName: image.fileName,
-                fileSize: image.fileSize
-              }
-            : img
-        )
-        onChange(currentImages)
+        let updatedItem: UploadedImage | undefined
+        currentImages = currentImages.map((img) => {
+          if (img.hash === image.hash) {
+            updatedItem = {
+              ...img,
+              url: res.file_path,
+              hash,
+              status: 'done',
+              file: undefined, // Free memory
+              fileType: image.file?.type,
+              fileName: image.fileName,
+              fileSize: image.fileSize
+            }
+            return updatedItem
+          }
+          return img
+        })
+        onChange(currentImages, { type: 'done', item: updatedItem })
       } catch (err) {
         message.error(err instanceof Error ? err.message : 'An unknown error occurred.')
-        // Update the specific image to 'error' status
-        currentImages = currentImages.map((img) => (img.hash === image.hash ? { ...img, status: 'error' } : img))
-        onChange(currentImages)
+        // Remove the failed image from the list
+        const failedItem = currentImages.find((img) => img.hash === image.hash)
+        const errorItem = failedItem ? { ...failedItem, status: 'error' as const } : undefined
+
+        currentImages = currentImages.filter((img) => img.hash !== image.hash)
+        onChange(currentImages, { type: 'error', item: errorItem })
       }
     }
 
@@ -146,7 +162,11 @@ const Upload: React.FC<UploadProps> = ({
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault()
 
   const removeImage = (hashToRemove: string) => {
-    onChange(value.filter((image) => image.hash !== hashToRemove))
+    const removedItem = value.find((image) => image.hash === hashToRemove)
+    onChange(
+      value.filter((image) => image.hash !== hashToRemove),
+      { type: 'removed', item: removedItem }
+    )
   }
 
   const handlePreview = (image: UploadedImage) => {
