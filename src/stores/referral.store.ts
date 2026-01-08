@@ -1,31 +1,46 @@
 import { proxy } from 'valtio'
 import { useSnapshot } from 'valtio'
-import userApi, { InviteProgressItem, InviteRecord } from '@/apis/user.api'
+import userApi, { InviteDetail, InviteRecord } from '@/apis/user.api'
 
 type TReferralStore = {
   referralList: InviteRecord[]
-  referralProgress: InviteProgressItem[]
+  referralInfo: InviteDetail
+  chestProgress: number
 }
 
 export const referralStore = proxy<TReferralStore>({
   referralList: [],
-  referralProgress: []
+  referralInfo: {
+    user_count: 0,
+    reward: 0,
+    chest_total_count: 0,
+    chest_claimed_count: 0,
+    chest_available_count: 0
+  },
+  chestProgress: 0
 })
 
 export const useReferralStore = () => useSnapshot(referralStore)
 
-async function getReferralList() {
-  const res = await userApi.getInviteRecords()
-  referralStore.referralList = res.data
+async function getReferralList(page: number) {
+  const res = await userApi.getInviteRecords({
+    page_num: page,
+    page_size: 10,
+    start_time: undefined,
+    end_time: undefined
+  })
+  referralStore.referralList = res.data?.list || []
+  return res
 }
 
-async function getReferralProgress() {
-  const res = await userApi.getInviteDetail()
-  referralStore.referralProgress = res.data.progress
-  return res.data.progress
+async function getInviteInfo() {
+  const res = await userApi.getInviteInfo()
+  referralStore.referralInfo = res.data
+  referralStore.chestProgress = res.data.user_count % 5
+  return res.data
 }
 
 export const referralStoreActions = {
   getReferralList,
-  getReferralProgress
+  getInviteInfo
 }
