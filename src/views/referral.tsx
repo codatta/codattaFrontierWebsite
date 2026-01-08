@@ -182,7 +182,7 @@ export default function Component() {
               </div>
               <div className="rounded-xl bg-white/5 p-4 xl:w-1/2">
                 <div className="mb-1 text-center text-sm leading-[36px] text-white/60">
-                  Chest every 5 invites Daily limit: 10
+                  Chest every 5 invites Daily limit: 10 users
                 </div>
                 <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
                   <div
