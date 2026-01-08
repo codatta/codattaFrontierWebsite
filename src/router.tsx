@@ -215,7 +215,6 @@ export default function Router() {
           element={
             <AppContainerDetector
               inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
-              // notInApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
               notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
             />
           }

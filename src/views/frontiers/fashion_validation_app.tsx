@@ -1,13 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Spin, message } from 'antd'
+import { Spin, message, Carousel } from 'antd'
+import { CarouselRef } from 'antd/es/carousel'
 import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import frontiterApi from '@/apis/frontiter.api'
-import { FashionAnswer, FASHION_IMAGES, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
+import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
 import {
   ValidIcon,
   InvalidIcon,
@@ -85,16 +86,18 @@ const ICON_MAP: Record<string, React.ElementType> = {
 
 const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) => {
   const { taskId } = useParams()
-  const totalImages = FASHION_IMAGES.length
+  const [questions, setQuestions] = useState<FashionQuestion[]>([])
+  const [frontierId, setFrontierId] = useState<string>()
+  const totalImages = questions.length
 
   const [loading, setLoading] = useState(false)
-  const [modalShow, setModalShow] = useState(true)
-  const [rewardPoints, setRewardPoints] = useState(0)
+  const [modalShow, setModalShow] = useState(false)
+  // const [rewardPoints, setRewardPoints] = useState(0)
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [answers, setAnswers] = useState<FashionAnswerDraft[]>([])
-
-  const currentImageUrl = FASHION_IMAGES[currentImageIndex]
+  const carouselRef = useRef<CarouselRef>(null)
+  const currentImageUrl = questions[currentImageIndex]?.image_url || ''
   const currentAnswer = useMemo(
     () => answers[currentImageIndex] || { image_url: currentImageUrl },
     [answers, currentImageIndex, currentImageUrl]
@@ -160,7 +163,9 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
     if (!canContinue) return
 
     if (!isLastImage) {
-      setCurrentImageIndex((prev) => Math.min(prev + 1, totalImages - 1))
+      const nextIndex = Math.min(currentImageIndex + 1, totalImages - 1)
+      setCurrentImageIndex(nextIndex)
+      carouselRef.current?.goTo(nextIndex)
       window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
@@ -173,7 +178,7 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
     // TODO
 
     const serializedAnswers = answers.map((item, index) => ({
-      image_url: item?.image_url || FASHION_IMAGES[index],
+      image_url: item?.image_url || questions[index]?.image_url,
       is_valid: item!.is_valid as 'valid' | 'invalid',
       image_type: item?.image_type,
       category: item?.category,
@@ -205,11 +210,19 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
       if (!templateId?.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
       }
-      const totalRewards = res.data.reward_info
-        .filter((item) => item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS')
-        .reduce((acc, cur) => acc + cur.reward_value, 0)
-      setRewardPoints(totalRewards)
-      setAnswers(FASHION_IMAGES.map((url) => ({ image_url: url })))
+      // const totalRewards = res.data.reward_info
+      //   .filter((item) => item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS')
+      //   .reduce((acc, cur) => acc + cur.reward_value, 0)
+      // setRewardPoints(totalRewards)
+      const fetchedQuestions = (res.data.questions as unknown[] as FashionQuestion[]) || []
+      if (!fetchedQuestions?.length) {
+        throw new Error('Questions not found!')
+      }
+
+      console.log('frontieId', res.data.frontier_id)
+      setFrontierId(res.data.frontier_id)
+      setQuestions(fetchedQuestions)
+      setAnswers(fetchedQuestions.map((q) => ({ image_url: q.image_url })))
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to load task detail.'
       message.error(errMsg)
@@ -247,6 +260,7 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
           <div className="z-10 flex-none bg-[#F7F8FA]">
             <MobileAppFrontierHeader
               title={<span className="font-bold">Fashion</span>}
+              frontieId={frontierId}
               canSubmit={false}
               onBack={onBack}
               showSubmitButton={false}
@@ -254,18 +268,40 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
 
             {/* Image preview */}
             <div className="px-4">
-              <div className="relative aspect-[370/200] rounded-[26px] bg-[#FAFAFA]">
-                <div className="aspect-[370/200] overflow-hidden rounded-[26px]">
-                  <img
-                    src={currentImageUrl}
-                    alt={`fashion-${currentImageIndex + 1}`}
-                    className="mx-auto max-h-full max-w-full object-cover"
-                  />
-                </div>
-                <div className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-[#0000001A] bg-white/40 px-2 py-1 text-sm font-semibold backdrop-blur-sm">
-                  <span className="text-[17px] font-bold text-[#40E1EF]">{currentImageIndex + 1}</span>
-                  <span className="text-[13px] text-[#666666]">/{totalImages}</span>
-                </div>
+              <div className="relative overflow-hidden rounded-[26px] bg-[#FAFAFA]">
+                {questions.length > 1 ? (
+                  <div className="relative aspect-[370/200] size-full">
+                    <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="size-full">
+                      {questions.map((question, idx) => (
+                        <div key={idx} className="flex aspect-[370/200] w-full items-center justify-center">
+                          <img
+                            src={question.image_url}
+                            alt={`fashion-${idx + 1}`}
+                            className="size-full object-contain"
+                          />
+                        </div>
+                      ))}
+                    </Carousel>
+                  </div>
+                ) : (
+                  <div className={cn('bg-[#FAFAFA]', questions.length === 0 ? 'aspect-[370/200]' : '')}>
+                    <img
+                      src={questions[0]?.image_url}
+                      alt={`fashion-1`}
+                      className={cn(
+                        'mx-auto h-full max-w-full object-contain',
+                        questions.length === 0 ? 'invisible' : ''
+                      )}
+                    />
+                  </div>
+                )}
+
+                {totalImages > 1 && (
+                  <div className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-[#0000001A] bg-white/40 px-2 py-1 text-sm font-semibold backdrop-blur-sm">
+                    <span className="text-[17px] font-bold text-[#40E1EF]">{currentImageIndex + 1}</span>
+                    <span className="text-[13px] text-[#666666]">/{totalImages}</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -349,8 +385,8 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
             open={modalShow}
             onClose={onBack}
             title="Successful"
-            message="Other rewards will issue automatically after answer verification."
-            points={rewardPoints}
+            message="To receive your reward, please verify the task on the Binance Wallet campaign page."
+            // points={rewardPoints}
             buttonText="Got it"
           />
         </div>

@@ -17,8 +17,9 @@ interface AppContainerDetectorProps {
 
 export default function AppContainerDetector({ inApp, notInApp, customUserAgent }: AppContainerDetectorProps) {
   const isInApp = useMemo(() => {
+    // location.hash is used for local development to mock app container
     const userAgent = (customUserAgent || navigator.userAgent).toLowerCase()
-    return userAgent.includes('codatta')
+    return userAgent.includes('codatta') || location.hash?.toLowerCase().includes('codatta')
   }, [customUserAgent])
 
   return <>{isInApp ? inApp : notInApp}</>
