@@ -10,6 +10,7 @@ interface MobileAppFrontierHeaderProps {
 
 export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderProps) {
   const { title, canSubmit, showSubmitButton, onBack, onSubmit } = props
+
   return (
     <div className="text-black">
       <div className="h-[76px]"></div>

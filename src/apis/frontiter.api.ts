@@ -229,6 +229,11 @@ export interface GenerateFingerprintParams {
 class frontier {
   constructor(private request: AxiosInstance) {}
 
+  async getFeedTaskDetail(uid: string) {
+    const res = await this.request.post<Response<TaskDetail>>('/app/feed/task/info', { uid: uid })
+    return res.data
+  }
+
   async getTaskDetail(taskId: string) {
     const res = await this.request.post<Response<TaskDetail>>('/v2/frontier/task/detail', { task_id: taskId })
     return res.data

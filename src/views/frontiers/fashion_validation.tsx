@@ -7,11 +7,12 @@ import { CarouselRef } from 'antd/es/carousel'
 import AuthChecker from '@/components/app/auth-checker'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import { FashionValidationForm } from '@/components/frontier/fashion/form'
-import { FashionAnswer, FASHION_IMAGES } from '@/components/frontier/fashion/constants'
+import { FashionQuestion, FashionAnswer } from '@/components/frontier/fashion/constants'
 import frontiterApi from '@/apis/frontiter.api'
+import { cn } from '@udecode/cn'
 
 export default function FashionValidation({ templateId }: { templateId: string }) {
-  const { taskId } = useParams()
+  const { taskId, uid } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
@@ -21,16 +22,18 @@ export default function FashionValidation({ templateId }: { templateId: string }
   const carouselRef = useRef<CarouselRef>(null)
 
   // Answers state
+  const [questions, setQuestions] = useState<FashionQuestion[]>([])
   const [allAnswers, setAllAnswers] = useState<FashionAnswer[]>([])
 
   const onBack = () => {
     window.history.back()
   }
 
-  async function getTaskDetail(taskId: string, templateId: string) {
+  async function getTaskDetail(taskId: string, templateId: string, uid?: string) {
     setPageLoading(true)
     try {
-      const res = await frontiterApi.getTaskDetail(taskId)
+      const res = uid ? await frontiterApi.getFeedTaskDetail(uid) : await frontiterApi.getTaskDetail(taskId)
+
       if (res.data.data_display.template_id !== templateId) {
         throw new Error('Template not match!')
       }
@@ -41,8 +44,15 @@ export default function FashionValidation({ templateId }: { templateId: string }
         .reduce((acc, cur) => acc + cur.reward_value, 0)
       setRewardPoints(totalRewards)
 
-      // Initialize answers array with empty/null
-      setAllAnswers(new Array(FASHION_IMAGES.length).fill(null))
+      const questions = (res.data.questions as unknown[] as FashionQuestion[]) || []
+      if (!questions?.length) {
+        throw new Error('Questions not found!')
+      }
+
+      setQuestions(questions)
+      console.log(questions, 'questions')
+
+      setAllAnswers(questions.map((question) => ({ ...question })) as FashionAnswer[])
     } catch (err) {
       console.error(err)
       message.error((err as Error).message)
@@ -53,16 +63,16 @@ export default function FashionValidation({ templateId }: { templateId: string }
 
   useEffect(() => {
     if (!taskId) return
-    getTaskDetail(taskId!, templateId)
-  }, [taskId, templateId])
+    getTaskDetail(taskId!, templateId, uid)
+  }, [taskId, templateId, uid])
 
   const handleFormSubmit = async (answer: FashionAnswer) => {
     // Save current answer
     const newAnswers = [...allAnswers]
-    newAnswers[currentImageIndex] = answer
+    newAnswers[currentImageIndex] = Object.assign(newAnswers[currentImageIndex] || {}, answer)
     setAllAnswers(newAnswers)
 
-    const isLast = currentImageIndex === FASHION_IMAGES.length - 1
+    const isLast = currentImageIndex === questions.length - 1
 
     if (isLast) {
       // Submit all
@@ -73,7 +83,8 @@ export default function FashionValidation({ templateId }: { templateId: string }
           taskId: taskId!,
           templateId: templateId,
           data: {
-            answers: newAnswers
+            answers: newAnswers,
+            channel: 'web'
           }
         })
         setModalShow(true)
@@ -111,30 +122,49 @@ export default function FashionValidation({ templateId }: { templateId: string }
 
           <div className="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-6 py-12 lg:grid-cols-2">
             {/* Left Column - Image Viewer */}
-            <div className="flex flex-col gap-4">
-              <div className="relative aspect-[1/1] overflow-hidden rounded-2xl bg-[#FAFAFA]">
-                <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="size-full">
-                  {FASHION_IMAGES.map((img, idx) => (
-                    <div key={idx} className="flex aspect-[1/1] w-full items-center justify-center">
-                      <img src={img} alt={`Fashion item ${idx + 1}`} className="size-full object-contain" />
-                    </div>
-                  ))}
-                </Carousel>
+            <div className="flex flex-col gap-4 lg:sticky lg:top-8 lg:self-start">
+              {questions.length > 1 ? (
+                <div className="relative aspect-[1/1] overflow-hidden rounded-2xl bg-[#FAFAFA]">
+                  <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="size-full">
+                    {questions.map((question, idx) => (
+                      <div key={idx} className="flex aspect-[1/1] w-full items-center justify-center">
+                        <img
+                          src={question.image_url}
+                          alt={`Fashion item ${idx + 1}`}
+                          className="size-full object-contain"
+                        />
+                      </div>
+                    ))}
+                  </Carousel>
 
-                {/* Image Counter */}
-                <div className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-[#0000001A] bg-[#875DFF1F] px-3 py-1 text-sm font-bold backdrop-blur-sm">
-                  <span className="text-base font-bold text-[#875DFF]">{currentImageIndex + 1}</span>
-                  <span className="text-sm text-[#404049]">/{FASHION_IMAGES.length}</span>
+                  {/* Image Counter */}
+                  <div className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-[#0000001A] bg-[#875DFF1F] px-3 py-1 text-sm font-bold backdrop-blur-sm">
+                    <span className="text-base font-bold text-[#875DFF]">{currentImageIndex + 1}</span>
+                    <span className="text-sm text-[#404049]">/{questions?.length ?? 1}</span>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div
+                  className={cn(
+                    'overflow-hidden rounded-2xl',
+                    questions.length === 0 ? 'aspect-[1/1] bg-[#252532]' : 'bg-[#FAFAFA]'
+                  )}
+                >
+                  <img
+                    src={questions[0]?.image_url}
+                    alt={`Fashion image`}
+                    className={cn('mx-auto max-w-full object-contain', questions.length === 0 ? 'invisible' : '')}
+                  />
+                </div>
+              )}
             </div>
 
             <FashionValidationForm
               key={currentImageIndex}
               initialData={allAnswers[currentImageIndex] || undefined}
-              imageUrl={FASHION_IMAGES[currentImageIndex]}
+              imageUrl={questions[currentImageIndex]?.image_url}
               onSubmit={handleFormSubmit}
-              isLast={currentImageIndex === FASHION_IMAGES.length - 1}
+              isLast={currentImageIndex === questions.length - 1}
             />
           </div>
         </div>

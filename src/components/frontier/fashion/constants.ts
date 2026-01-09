@@ -1,5 +1,10 @@
-export interface FashionAnswer {
+export interface FashionQuestion {
+  uid: string
   image_url: string
+  source_type: string
+}
+
+export interface FashionAnswer extends FashionQuestion {
   is_valid: 'valid' | 'invalid'
   image_type?: 'flat' | 'model' | 'collage' | 'poster'
   category?: 'top' | 'bottom' | 'full' | 'accessory'
