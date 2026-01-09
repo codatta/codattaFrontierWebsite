@@ -28,14 +28,14 @@ export default function AppContainerDetector({ inApp, notInApp, customUserAgent 
     return userAgent.includes('codatta') || location.hash?.toLowerCase().includes('codatta')
   }, [customUserAgent, location.hash])
 
-  const isFeed = useMemo(() => {
-    return location.search.includes('feed=1')
-  }, [location.search])
+  // const isFeed = useMemo(() => {
+  //   return location.search.includes('feed=1')
+  // }, [location.search])
 
   if (isInApp) {
-    if (typeof inApp === 'function') {
-      return <>{inApp({ isFeed })}</>
-    }
+    // if (typeof inApp === 'function') {
+    //   return <>{inApp({ isFeed })}</>
+    // }
     return <>{inApp}</>
   }
 

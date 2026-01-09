@@ -210,24 +210,26 @@ export default function Router() {
           element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
         />
 
-        <Route
-          path="/frontier/project/FASHION_VALIDATION/:taskId"
-          element={
-            <AppContainerDetector
-              inApp={({ isFeed }) => <FashionValidationApp templateId="FASHION_VALIDATION_APP" isFeed={isFeed} />}
-              notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
-            />
-          }
-        ></Route>
-        <Route
-          path="/frontier/project/feed/FASHION_VALIDATION/:uid"
-          element={
-            <AppContainerDetector
-              inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" isFeed={true} />}
-              notInApp={<FashionValidation templateId="FASHION_VALIDATION" isFeed={true} />}
-            />
-          }
-        />
+        <Route path="/frontier/project/FASHION_VALIDATION/:taskId">
+          <Route
+            index
+            element={
+              <AppContainerDetector
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
+                notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
+              />
+            }
+          />
+          <Route
+            path="feed/:uid"
+            element={
+              <AppContainerDetector
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" isFeed={true} />}
+                notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
+              />
+            }
+          />
+        </Route>
         <Route
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={

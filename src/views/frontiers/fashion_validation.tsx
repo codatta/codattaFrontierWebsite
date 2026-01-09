@@ -12,7 +12,7 @@ import frontiterApi from '@/apis/frontiter.api'
 import { cn } from '@udecode/cn'
 
 export default function FashionValidation({ templateId }: { templateId: string }) {
-  const { taskId } = useParams()
+  const { taskId, uid } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
@@ -29,10 +29,11 @@ export default function FashionValidation({ templateId }: { templateId: string }
     window.history.back()
   }
 
-  async function getTaskDetail(taskId: string, templateId: string) {
+  async function getTaskDetail(taskId: string, templateId: string, uid?: string) {
     setPageLoading(true)
     try {
-      const res = await frontiterApi.getTaskDetail(taskId)
+      const res = uid ? await frontiterApi.getFeedTaskDetail(uid) : await frontiterApi.getTaskDetail(taskId)
+
       if (res.data.data_display.template_id !== templateId) {
         throw new Error('Template not match!')
       }
@@ -62,8 +63,8 @@ export default function FashionValidation({ templateId }: { templateId: string }
 
   useEffect(() => {
     if (!taskId) return
-    getTaskDetail(taskId!, templateId)
-  }, [taskId, templateId])
+    getTaskDetail(taskId!, templateId, uid)
+  }, [taskId, templateId, uid])
 
   const handleFormSubmit = async (answer: FashionAnswer) => {
     // Save current answer

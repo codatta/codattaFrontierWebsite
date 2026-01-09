@@ -86,7 +86,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
 }
 
 const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> = ({ templateId, isFeed }) => {
-  const { taskId } = useParams()
+  const { taskId, uid } = useParams()
   const [questions, setQuestions] = useState<FashionQuestion[]>([])
   const [frontierId, setFrontierId] = useState<string>()
   const totalImages = questions.length
@@ -161,6 +161,10 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       message.error('Task ID is missing.')
       return
     }
+    if (!uid) {
+      message.error('Task uid is missing.')
+      return
+    }
     if (!canContinue) return
 
     if (!isLastImage) {
@@ -190,6 +194,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
     try {
       await frontiterApi.submitTask(taskId, {
         taskId,
+        uid,
         templateId,
         data: { answers: serializedAnswers, channel: 'app' }
       })
@@ -207,7 +212,9 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
     setLoading(true)
     try {
       console.log('template_id', templateId)
-      const res = await frontiterApi.getTaskDetail(taskId)
+      const res = isFeed && uid ? await frontiterApi.getFeedTaskDetail(uid) : await frontiterApi.getTaskDetail(taskId)
+      // const res = await frontiterApi.getTaskDetail(taskId)
+
       if (!templateId?.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
       }
@@ -230,7 +237,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
     } finally {
       setLoading(false)
     }
-  }, [taskId, templateId])
+  }, [taskId, templateId, uid, isFeed])
 
   useEffect(() => {
     fetchTaskDetail()
