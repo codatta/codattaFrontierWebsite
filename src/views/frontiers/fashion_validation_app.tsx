@@ -6,6 +6,7 @@ import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
+import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
@@ -84,7 +85,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
   side: SideIcon
 }
 
-const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) => {
+const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> = ({ templateId, isFeed }) => {
   const { taskId } = useParams()
   const [questions, setQuestions] = useState<FashionQuestion[]>([])
   const [frontierId, setFrontierId] = useState<string>()
@@ -260,11 +261,11 @@ const FashionValidationApp: React.FC<{ templateId: string }> = ({ templateId }) 
           <div className="z-10 flex-none bg-[#F7F8FA]">
             <MobileAppFrontierHeader
               title={<span className="font-bold">Fashion</span>}
-              frontieId={frontierId}
               canSubmit={false}
               onBack={onBack}
               showSubmitButton={false}
             />
+            <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
             {/* Image preview */}
             <div className="px-4">

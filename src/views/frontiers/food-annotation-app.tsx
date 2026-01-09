@@ -12,6 +12,7 @@ import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
+import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
 
 interface FoodAnnotationFormData {
   foodImage: UploadedImage[]
@@ -46,7 +47,7 @@ const cookingMethodOptions = [
   { label: 'Other', value: 'other' }
 ]
 
-const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) => {
+const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = ({ templateId, isFeed }) => {
   const [formData, setFormData] = useState<FoodAnnotationFormData>({
     foodImage: [],
     foodComponents: '',
@@ -65,6 +66,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
+  const [frontierId, setFrontierId] = useState<string>()
   const [showMeasurementToolPhotoDrawer, setShowMeasurementToolPhotoDrawer] = useState(false)
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
   const [showRequirementsModal, setShowRequirementsModal] = useState(true)
@@ -217,6 +219,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
         .reduce((acc, cur) => acc + cur.reward_value, 0)
 
       setRewardPoints(totalRewards)
+      setFrontierId(taskDetail.data.frontier_id)
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to get task detail!')
     } finally {
@@ -246,6 +249,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string }> = ({ templateId }) =>
             onSubmit={handleSubmit}
             showSubmitButton={false}
           />
+          <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
           {/* Form Content */}
           <div className="px-5">
