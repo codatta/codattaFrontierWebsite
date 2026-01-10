@@ -58,3 +58,9 @@ export function isValidGoogleEmail(email: string = ''): boolean {
   const domain = email.split('@')[1]
   return domain === 'gmail.com' || domain === 'google.com'
 }
+
+export function isValidCryptoString(val: string, minLength: number = 20): boolean {
+  if (!val) return false
+  // Check length and allowed characters (alphanumeric, plus : for prefixes, - and _ for safety)
+  return val.length >= minLength && /^[a-zA-Z0-9:\-_]+$/.test(val)
+}

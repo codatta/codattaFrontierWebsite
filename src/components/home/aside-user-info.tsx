@@ -99,7 +99,7 @@ export default function UserInfoSection() {
           ))}
           <ReputationItem
             reputation={reputation}
-            className="bg-[#252532] px-4"
+            className="bg-[#252532] px-4 text-lg"
             onClick={() => navigate('/app/settings/reputation')}
           />
         </ul>
@@ -161,7 +161,7 @@ function ReputationItem({
       <div className="flex items-center gap-3">
         <img src={ImageLevel} className="size-12" alt="" />
         <div>
-          <ReputationRate rate={reputation} size={24}></ReputationRate>
+          <ReputationRate rate={reputation} size={18}></ReputationRate>
           <p>Reputation</p>
         </div>
       </div>

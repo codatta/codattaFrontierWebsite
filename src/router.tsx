@@ -79,6 +79,8 @@ const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
 const AirdropFoodApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
 const AirdropKnob = lazy(() => import('@/views/frontiers/airdrop_knob'))
+const AirdropCexHotWalletDeposit = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_deposit'))
+const AirdropCexHotWalletWithdraw = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_withdraw'))
 
 const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
@@ -93,6 +95,8 @@ const FrontierSocialTwitterFollow = lazy(() => import('@/views/frontiers/social-
 const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social-tasks/twitter-retweet'))
 
 const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
+const FashionValidation = lazy(() => import('@/views/frontiers/fashion_validation'))
+const FashionValidationApp = lazy(() => import('@/views/frontiers/fashion_validation_app'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -205,6 +209,17 @@ export default function Router() {
           path="/frontier/project/PHYSICAL_TPL_QUESTION/:taskId"
           element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
         />
+
+        <Route
+          path="/frontier/project/FASHION_VALIDATION/:taskId"
+          element={
+            <AppContainerDetector
+              inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
+              // notInApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
+              notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
+            />
+          }
+        ></Route>
         <Route
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={
@@ -219,6 +234,14 @@ export default function Router() {
           element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
         />
         <Route path="/frontier/project/AIRDROP_KNOB/:taskId" element={<AirdropKnob templateId="AIRDROP_KNOB" />} />
+        <Route
+          path="/frontier/project/AIRDROP_CEX_HOT_WALLET_DEPOSIT/:taskId"
+          element={<AirdropCexHotWalletDeposit templateId="AIRDROP_CEX_HOT_WALLET_DEPOSIT" />}
+        />
+        <Route
+          path="/frontier/project/AIRDROP_CEX_HOT_WALLET_WITHDRAW/:taskId"
+          element={<AirdropCexHotWalletWithdraw templateId="AIRDROP_CEX_HOT_WALLET_WITHDRAW" />}
+        />
         <Route
           path="/frontier/project/CRYPTO_TPL_WITHDRAW/:taskId"
           element={<CryptoTpl000001 templateId="CRYPTO_TPL_WITHDRAW" />}
