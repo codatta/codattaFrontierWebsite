@@ -12,8 +12,18 @@ const request = axios.create({
 })
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
+  // location.hash is used for local development to mock app container
+  const userAgent = navigator.userAgent.toLowerCase()
+  const isApp = userAgent.includes('codatta') || location.hash?.toLowerCase().includes('codatta')
   const token = cookies.get('auth') || localStorage.getItem('auth')
+
+  // Detect device type based on user agent
+  const isMobileDevice = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)
+
   if (token) config.headers['token'] = `${token}`
+  config.headers['channel'] = isApp ? 'codatta-ios-app' : 'codatta-platform-website'
+  config.headers['device'] = isMobileDevice ? 'mobile' : 'web'
+
   return config
 }
 
