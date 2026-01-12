@@ -107,18 +107,6 @@ export const NETWORKS: NetworkItem[] = [
 
 const EXCHANGES: ExchangeItem[] = [
   {
-    name: 'Kraken',
-    official_website: 'https://www.kraken.com',
-    deposit_history_url: 'https://www.kraken.com/funding',
-    withdrawal_history_url: 'https://www.kraken.com/funding'
-  },
-  {
-    name: 'Bitget',
-    official_website: 'https://www.bitget.com',
-    deposit_history_url: 'https://www.bitget.com/en/spot/deposit',
-    withdrawal_history_url: 'https://www.bitget.com/en/spot/withdraw'
-  },
-  {
     name: 'Binance',
     official_website: 'https://www.binance.com/',
     deposit_history_url: 'https://www.binance.com/en/my/wallet/account/main/deposit/crypto',
@@ -442,18 +430,30 @@ const EXCHANGES: ExchangeItem[] = [
     deposit_history_url: 'https://movement.bitfinex.com/deposit',
     withdrawal_history_url: 'https://movement.bitfinex.com/withdraw'
   },
-  {
-    name: 'Upbit',
-    official_website: 'https://th.upbit.com/',
-    deposit_history_url: 'https://th.upbit.com/balances/THB?tab=deposit',
-    withdrawal_history_url: 'https://th.upbit.com/balances/THB?tab=withdraw'
-  },
+  // {
+  //   name: 'Upbit',
+  //   official_website: 'https://th.upbit.com/',
+  //   deposit_history_url: 'https://th.upbit.com/balances/THB?tab=deposit',
+  //   withdrawal_history_url: 'https://th.upbit.com/balances/THB?tab=withdraw'
+  // },
   {
     name: 'MEXC',
     official_website: 'https://www.mexc.co/',
     deposit_history_url: 'https://www.mexc.co/assets/record',
     withdrawal_history_url: 'https://www.mexc.co/assets/record'
   }
+  // {
+  //   name: 'Kraken',
+  //   official_website: 'https://www.kraken.com',
+  //   deposit_history_url: 'https://www.kraken.com/funding',
+  //   withdrawal_history_url: 'https://www.kraken.com/funding'
+  // },
+  // {
+  //   name: 'Bitget',
+  //   official_website: 'https://www.bitget.com',
+  //   deposit_history_url: 'https://www.bitget.com/en/spot/deposit',
+  //   withdrawal_history_url: 'https://www.bitget.com/en/spot/withdraw'
+  // }
 ]
 
 export const getExplorerUrl = (network: string, tx: string) => {
