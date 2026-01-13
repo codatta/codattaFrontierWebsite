@@ -99,7 +99,7 @@ export default function UserInfoSection() {
           ))}
           <ReputationItem
             reputation={reputation}
-            className="bg-[#252532] px-4 text-lg"
+            className="bg-[#252532] px-4"
             onClick={() => navigate('/app/settings/reputation')}
           />
         </ul>
