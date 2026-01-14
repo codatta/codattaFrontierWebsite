@@ -82,16 +82,17 @@ export default function Component() {
               <div className="h-6 w-px bg-white/10"></div>
               <div className="flex items-center gap-1.5 text-xs text-white/60">
                 Your Reward{' '}
-                {frontierInfo?.rewards.map((item) => {
-                  return (
-                    <div className="flex items-center gap-1" key={item.reward_type}>
-                      {item.reward_type === 'XnYCoin' && <XNYCoinIcon className="size-6" />}
-                      {item.reward_type === 'USDT' && <USDTCoinIcon className="size-6" />}
-                      {item.reward_type === 'POINTS' && <PointsIcon className="size-6" />}
-                      <strong className="text-base text-white">{item.reward_value.toLocaleString()}</strong>
-                    </div>
-                  )
-                })}
+                {frontierInfo?.rewards
+                  .filter((item) => item.reward_type !== 'POINTS')
+                  .map((item) => {
+                    return (
+                      <div className="flex items-center gap-1" key={item.reward_type}>
+                        {item.reward_type === 'XnYCoin' && <XNYCoinIcon className="size-6" />}
+                        {item.reward_type === 'USDT' && <USDTCoinIcon className="size-6" />}
+                        <strong className="text-base text-white">{item.reward_value.toLocaleString()}</strong>
+                      </div>
+                    )
+                  })}
                 <div className="flex items-center gap-1">
                   <PointsIcon className="size-6" />
                   <strong className="text-base text-white">
