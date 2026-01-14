@@ -48,8 +48,30 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
     const [isDraggingShape, setIsDraggingShape] = useState(false)
     const [lastShapePos, setLastShapePos] = useState<Point | null>(null)
     const [selectedId, setSelectedId] = useState<'rect' | 'pointer' | null>(null)
+    const [isCenterDecoupled, setIsCenterDecoupled] = useState(false)
+    const [isHoveringCenter, setIsHoveringCenter] = useState(false)
+    const [isHoveringPointer, setIsHoveringPointer] = useState(false)
 
     const MIN_SIZE = 20
+
+    // Reset decoupled state when rect is cleared
+    useEffect(() => {
+      if (!rect) {
+        setIsCenterDecoupled(false)
+      }
+    }, [rect])
+
+    // Detect if loaded rect has decoupled center
+    useEffect(() => {
+      if (!isCenterDecoupled && rect && rect.center) {
+        const cx = (rect.x1 + rect.x2 + rect.x3 + rect.x4) / 4
+        const cy = (rect.y1 + rect.y2 + rect.y3 + rect.y4) / 4
+        const d2 = Math.pow(rect.center.x - cx, 2) + Math.pow(rect.center.y - cy, 2)
+        if (d2 > 1) {
+          setIsCenterDecoupled(true)
+        }
+      }
+    }, [rect, isCenterDecoupled])
 
     // Calculate dimensions to fit image in container
     useEffect(() => {
@@ -207,9 +229,15 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       }
 
       // Update center
-      newRect.center = {
+      const geometricCenter = {
         x: (newRect.x1 + newRect.x2 + newRect.x3 + newRect.x4) / 4,
         y: (newRect.y1 + newRect.y2 + newRect.y3 + newRect.y4) / 4
+      }
+
+      if (!isCenterDecoupled) {
+        newRect.center = geometricCenter
+      } else {
+        newRect.center = rect.center || geometricCenter
       }
 
       onRectChange(newRect)
@@ -313,9 +341,15 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       }
 
       // Update center
-      newRect.center = {
+      const geometricCenter = {
         x: (newRect.x1 + newRect.x2 + newRect.x3 + newRect.x4) / 4,
         y: (newRect.y1 + newRect.y2 + newRect.y3 + newRect.y4) / 4
+      }
+
+      if (!isCenterDecoupled) {
+        newRect.center = geometricCenter
+      } else {
+        newRect.center = rect.center || geometricCenter
       }
 
       onRectChange(newRect)
@@ -331,6 +365,7 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
         target.name() === 'quad-edge' ||
         target.name() === 'pointer' ||
         target.getParent()?.name() === 'pointer' ||
+        target.name() === 'center-dot' ||
         target instanceof Konva.Circle // Corners/anchors
 
       if (!isShape) {
@@ -349,6 +384,10 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       }
 
       if (target instanceof Konva.Circle || (target instanceof Konva.Line && target.name() === 'quad-edge')) {
+        // Check if it's the center dot
+        if (target.name() === 'center-dot') {
+          return
+        }
         return
       }
 
@@ -433,10 +472,18 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
           newRect.y3 += safeDy
           newRect.x4 += safeDx
           newRect.y4 += safeDy
-          newRect.center = {
+
+          const geometricCenter = {
             x: (newRect.x1 + newRect.x2 + newRect.x3 + newRect.x4) / 4,
             y: (newRect.y1 + newRect.y2 + newRect.y3 + newRect.y4) / 4
           }
+
+          if (!isCenterDecoupled) {
+            newRect.center = geometricCenter
+          } else {
+            newRect.center = rect.center || geometricCenter
+          }
+
           onRectChange(newRect)
           // Accumulate the consumed delta into lastPos, effectively shifting the "anchor"
           // We add safeDx/safeDy to lastShapePos so the next delta is calculated relative to the new position
@@ -545,63 +592,97 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
     return (
       <div className="space-y-3">
         <div className="block space-y-6">
-          <div>
-            <h2 className="flex items-center gap-2 text-sm font-medium">
-              Step 2: Annotate Knob Outline<span className="text-red-400">*</span>
-              {rectModified && (
-                <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
-                  ✓
-                </span>
-              )}
-            </h2>
-            <p className="mt-1 text-xs text-[#BBBBBE]">
-              Click the red rectangle to activate, then adjust position and size to annotate the knob&apos;s outer
-              contour (do not only frame the pointer or include the scale area).
-            </p>
-            {/* Rect Stats */}
-            <div className="mt-3 h-[60px]">
-              {rect ? (
-                !rectModified ? (
-                  <div className="rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 p-4 text-center text-sm text-[#BBBBBE]">
-                    Adjust the red rectangle to match the knob&apos;s outer contour
-                  </div>
-                ) : (
-                  <div className="text-sm text-[#BBBBBE]">
-                    <div className="flex gap-5">
-                      <div>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <div>
+              <h2 className="flex items-center gap-2 text-sm font-medium">
+                Step 2: Annotate Knob Outline<span className="text-red-400">*</span>
+                {rectModified && (
+                  <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
+                    ✓
+                  </span>
+                )}
+              </h2>
+              <p className="mt-1 text-xs text-[#BBBBBE]">
+                Click the red rectangle to activate, then adjust position and size to annotate the knob&apos;s outer
+                contour (do not only frame the pointer or include the scale area).
+              </p>
+              {/* Rect Stats */}
+              <div className="mt-3 h-[60px]">
+                {rect ? (
+                  !rectModified ? (
+                    <div className="rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 p-4 text-center text-sm text-[#BBBBBE]">
+                      Adjust the red rectangle to match the knob&apos;s outer contour
+                    </div>
+                  ) : (
+                    <div className="text-sm text-[#BBBBBE]">
+                      <div className="flex gap-5">
                         <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P1</span>
-                          <span>
-                            {Math.round(rect.x1)}, {Math.round(rect.y1)}
-                          </span>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P1</span>
+                            <span>
+                              {Math.round(rect.x1)}, {Math.round(rect.y1)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P2</span>
+                            <span>
+                              {Math.round(rect.x4)}, {Math.round(rect.y4)}
+                            </span>
+                          </div>
                         </div>
                         <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P2</span>
-                          <span>
-                            {Math.round(rect.x4)}, {Math.round(rect.y4)}
-                          </span>
-                        </div>
-                      </div>
-                      <div>
-                        <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P3</span>
-                          <span>
-                            {Math.round(rect.x2)}, {Math.round(rect.y2)}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P4</span>
-                          <span>
-                            {Math.round(rect.x3)}, {Math.round(rect.y3)}
-                          </span>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P3</span>
+                            <span>
+                              {Math.round(rect.x2)}, {Math.round(rect.y2)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P4</span>
+                            <span>
+                              {Math.round(rect.x3)}, {Math.round(rect.y3)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  )
+                ) : (
+                  <div className="text-xs italic text-gray-600">No shape drawn</div>
+                )}
+              </div>
+            </div>
+            <div>
+              <h2 className="flex items-center gap-2 text-sm font-medium">
+                Optional Step: Annotate Knob Center Position
+                {isCenterDecoupled && (
+                  <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
+                    ✓
+                  </span>
+                )}
+              </h2>
+              <p className="mt-1 text-xs text-[#BBBBBE]">
+                The green dot is the center point of the knob. You can move it independently to align with the center
+                position if needed.
+              </p>
+              {/* Center Stats */}
+              <div className="mt-3 h-[60px]">
+                {rect && rect.center ? (
+                  <div className="flex items-center gap-2 text-sm text-[#BBBBBE]">
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">C</span>
+                    <span>
+                      {Math.round(rect.center.x)}, {Math.round(rect.center.y)}
+                    </span>
+                    {isCenterDecoupled ? (
+                      <span className="text-xs text-yellow-500">(Custom)</span>
+                    ) : (
+                      <span className="text-xs text-gray-500">(Default)</span>
+                    )}
                   </div>
-                )
-              ) : (
-                <div className="text-xs italic text-gray-600">No shape drawn</div>
-              )}
+                ) : (
+                  <div className="text-xs italic text-gray-600">Not active</div>
+                )}
+              </div>
             </div>
           </div>
           <div>
@@ -782,9 +863,35 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                             <Circle
                               x={rect.center.x}
                               y={rect.center.y}
-                              radius={6 / dimensions.scale}
+                              name="center-dot"
+                              radius={(isHoveringCenter ? 10 : 6) / dimensions.scale}
                               fill="#10b981"
-                              listening={false}
+                              stroke="white"
+                              strokeWidth={2 / dimensions.scale}
+                              draggable
+                              onMouseEnter={() => {
+                                setIsHoveringCenter(true)
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'grab'
+                              }}
+                              onMouseLeave={() => {
+                                setIsHoveringCenter(false)
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                              }}
+                              onDragStart={() => {
+                                setIsCenterDecoupled(true)
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'grabbing'
+                              }}
+                              onDragEnd={() => {
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'grab'
+                              }}
+                              onDragMove={(e) => {
+                                const newRect = { ...rect }
+                                newRect.center = {
+                                  x: e.target.x(),
+                                  y: e.target.y()
+                                }
+                                onRectChange(newRect)
+                              }}
                             />
                           )}
 
@@ -812,17 +919,19 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
                                 })
                               }}
                               onMouseEnter={() => {
+                                setIsHoveringPointer(true)
                                 const stage = stageRef.current
-                                if (stage) stage.container().style.cursor = 'pointer'
+                                if (stage) stage.container().style.cursor = 'grab'
                               }}
                               onMouseLeave={() => {
+                                setIsHoveringPointer(false)
                                 const stage = stageRef.current
                                 if (stage) stage.container().style.cursor = 'default'
                               }}
                             >
                               {/* Pointer Style */}
                               <Circle
-                                radius={8 / dimensions.scale}
+                                radius={(isHoveringPointer ? 12 : 8) / dimensions.scale}
                                 fill="#964B00"
                                 stroke="white"
                                 strokeWidth={2 / dimensions.scale}
