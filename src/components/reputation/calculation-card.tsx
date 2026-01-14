@@ -1,47 +1,87 @@
 import { cn } from '@udecode/cn'
+import { ReputationDetail } from '@/apis/reputation.api'
 
 interface CalculationItemProps {
   label: string
-  value: string
-  weight: number
-  color?: string
+  score?: number
+  weight?: string
+  opt?: string
+  showOpt?: boolean
+  className?: string
 }
 
-function CalculationItem({ label, value, weight, color = 'text-[#875DFF]' }: CalculationItemProps) {
+function CalculationItem({ label, weight, score, opt, showOpt = true, className }: CalculationItemProps) {
+  if (!opt || score === undefined || score === null) {
+    return null
+  }
+
   return (
-    <div className="flex h-[72px] min-w-[100px] flex-1 flex-col items-center justify-center rounded-xl bg-[#2B2B36]">
-      <div className="text-xs text-gray-400">{label}</div>
-      <div className="mt-1 text-sm font-semibold text-white">
-        <span className={color}>{value}</span>
-        <span className="text-gray-500">*{weight}</span>
+    <>
+      {showOpt && <span className="text-gray-500">{opt === '-' ? '➖' : '➕'}</span>}
+      <div
+        className={cn(
+          'flex h-[60px] min-w-[108px] flex-1 flex-col items-center justify-center rounded-xl border border-[#FFFFFF1F] bg-[#875DFF1A] text-sm',
+          className
+        )}
+      >
+        <div>{label}</div>
+        <div className="mt-1 font-semibold text-white">
+          {weight && <span className="text-[#875DFF]">{weight}*</span>}
+          <span className="text-white">{score}</span>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
-export default function CalculationCard({ className }: { className?: string }) {
+interface CalculationCardProps {
+  className?: string
+  data?: ReputationDetail
+}
+
+export default function CalculationCard({ className, data }: CalculationCardProps) {
   return (
-    <div className={cn('flex h-[160px] flex-col justify-center rounded-2xl bg-[#1C1C26] px-6 py-4', className)}>
-      <div className="mb-4 flex items-center justify-between">
+    <div className={cn('flex h-[160px] flex-col justify-center rounded-2xl bg-[#252532] px-6 py-4', className)}>
+      <div className="mb-4 flex items-center justify-between gap-3">
         <div className="text-base font-bold text-white">About calculation</div>
-        <div className="text-xs text-gray-400">
+        <div className="text-xs text-[#BBBBBE]">
           This score is updated in real-time based on your activity over the last 180 days.
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <CalculationItem label="Identity" value="15%" weight={30} />
-        <span className="text-gray-500">+</span>
-        <CalculationItem label="Activity" value="10%" weight={30} />
-        <span className="text-gray-500">+</span>
-        <CalculationItem label="Staking" value="20%" weight={30} />
-        <span className="text-gray-500">+</span>
-        <CalculationItem label="Contribution" value="55%" weight={30} />
-        <span className="text-gray-500">-</span>
-        <div className="flex h-[72px] min-w-[100px] flex-1 flex-col items-center justify-center rounded-xl border border-[#5C3A3A] bg-[#3A2E2E]">
-          <div className="text-xs text-[#FFA043]">Malicious</div>
-          <div className="mt-1 text-sm font-semibold text-white">12</div>
-        </div>
+      <div className="flex min-h-[60px] items-center gap-2">
+        <CalculationItem
+          label="Identity"
+          weight={data?.identify?.percent as string}
+          score={data?.identify?.score}
+          opt={data?.identify?.opt}
+          showOpt={false}
+        />
+        <CalculationItem
+          label="Activity"
+          weight={data?.login?.percent as string}
+          score={data?.login?.score}
+          opt={data?.login?.opt}
+        />
+        <CalculationItem
+          label="Staking"
+          weight={data?.staking?.percent as string}
+          score={data?.staking?.score}
+          opt={data?.staking?.opt}
+        />
+        <CalculationItem
+          label="Contribution"
+          weight={data?.contribution?.percent as string}
+          score={data?.contribution?.score}
+          opt={data?.contribution?.opt}
+        />
+        <CalculationItem
+          label="Malicious"
+          weight={data?.malicious_behavior?.percent as string}
+          score={data?.malicious_behavior?.score || 0}
+          opt={data?.malicious_behavior?.opt}
+          className="bg-[#FFA8001A] text-[#FFA800]"
+        />
       </div>
     </div>
   )

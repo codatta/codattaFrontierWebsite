@@ -1,8 +1,10 @@
 import { cn } from '@udecode/cn'
-import ReputationRate from '@/components/common/reputation-rate'
+
+import ReputationIcon from '@/assets/userinfo/reputation-icon.svg?react'
+import background from '@/assets/userinfo/reputation-bg.png'
 
 interface ScoreCardProps {
-  score: number
+  score?: number | null
   className?: string
 }
 
@@ -10,22 +12,21 @@ export default function ScoreCard({ score, className }: ScoreCardProps) {
   return (
     <div
       className={cn(
-        'relative flex h-[142px] items-center overflow-hidden rounded-xl bg-gradient-to-r from-[#875DFF] to-[#6A40FF] px-8 py-6 text-white',
+        'bg-left-center relative flex min-w-[230px] items-center overflow-hidden rounded-xl bg-repeat-x px-8 py-6 text-white',
         className
       )}
+      style={{ backgroundImage: `url(${background})`, backgroundSize: 'auto 100%' }}
     >
-      {/* Background decoration - diamond shape placeholder */}
-      <div className="absolute -left-10 top-1/2 size-40 -translate-y-1/2 rotate-45 bg-white/10 blur-xl"></div>
+      <div className="relative z-10 flex items-center gap-3">
+        <ReputationIcon className="size-[94px]" />
+
+        <div className="font-bold">
+          <div className="text-lg">Your Reputation</div>
+          <div className="text-[64px] leading-[1em]">{score ?? '--'}</div>
+        </div>
+      </div>
 
       {/* Icon placeholder - replace with actual image/icon if available */}
-      <div className="relative z-10 mr-6 flex size-24 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-        <div className="size-16 rotate-45 bg-gradient-to-br from-white to-transparent opacity-80"></div>
-      </div>
-
-      <div className="relative z-10 text-lg font-bold">
-        <div className="">Your Reputation</div>
-        <ReputationRate rate={score} size={64} className="mt-1 font-bold leading-none text-white" />
-      </div>
     </div>
   )
 }
