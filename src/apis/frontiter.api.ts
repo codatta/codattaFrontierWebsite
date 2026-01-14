@@ -110,15 +110,19 @@ export interface TaskStakeInfo extends StakeReputationInfo {
 
 export interface FrontierListItem {
   creator_id: string
+  frontier_id: string
+  title: string
   description: {
     frontier_desc: string
     hide?: boolean
   }
-  frontier_id: string
   logo_url: string
-  reputation_permission: number
   status: string
-  title: string
+  reputation_permission: number
+  difficulty_level: null | number
+  participants: number
+  participants_show: string
+  avatars: string[]
   activities: readonly FrontierActivityInfoItem[]
   // start
   // total_asset_amount: number
@@ -149,6 +153,12 @@ export interface VideoItem {
   video_url: string
 }
 
+export interface FrontierRewardItem {
+  reward_type: string
+  reward_type_name: string
+  reward_value: number
+}
+
 export interface FrontierItemType {
   id?: number
   name: string
@@ -163,6 +173,9 @@ export interface FrontierItemType {
   videos?: Array<VideoItem>
   reputation_permission?: number
   frontier_id?: string
+  adopt_count: number
+  rewards: FrontierRewardItem[]
+  dataset_url: string | null
 }
 
 export interface CMUDataRequirements {
