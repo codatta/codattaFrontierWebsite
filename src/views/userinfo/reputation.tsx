@@ -12,35 +12,35 @@ export default function UserInfoReputation() {
   const userReputation = info?.user_reputation || 0
 
   return (
-    <div className="min-h-screen text-white">
+    <div className="min-h-screen space-y-12 text-white">
       {/* Header */}
-      <div className="mb-8 flex items-end justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Reputation</h1>
-          <p className="mt-2 text-gray-400">
-            Your Reputation is built on identity, activity, stake, and contribution. It identifies and rewards true
-            builders, and is your key to greater ecosystem benefits.
-          </p>
-        </div>
-        <Button
-          className="flex items-center gap-2 border-none bg-[#875DFF] text-white hover:bg-[#764CE0] hover:text-white"
-          shape="round"
-        >
-          <Calculator size={16} />
-          Calculation Rules
-        </Button>
-      </div>
+      <header className="mb-6">
+        <h1 className="flex items-center justify-between text-[32px] font-bold leading-[48px]">
+          Reputation{' '}
+          <Button
+            className="flex items-center gap-1 border-none bg-[#875DFF] px-4 py-2 text-sm text-white hover:bg-[#764CE0] hover:text-white"
+            shape="round"
+          >
+            <Calculator size={14} />
+            Calculation Rules
+          </Button>
+        </h1>
+        <p className="mt-1 text-sm text-[#BBBBBE]">
+          Your Reputation is built on identity, activity, stake, and contribution. It identifies and rewards true
+          builders, and is your key to greater ecosystem benefits.
+        </p>
+      </header>
 
       {/* Top Section */}
-      <div className="mb-10 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <ScoreCard score={userReputation} />
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <ScoreCard score={79.8} />
         <CalculationCard />
       </div>
 
       {/* Categories Section */}
       <div className="mb-6">
         <h2 className="mb-6 text-xl font-bold">How Your Score is Calculated</h2>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           {/* Verified Identity */}
           <CategoryCard
             icon={<ShieldCheck size={24} />}
