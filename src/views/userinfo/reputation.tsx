@@ -33,7 +33,7 @@ export default function UserInfoReputation() {
 
       {/* Top Section */}
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <ScoreCard score={79.8} />
+        <ScoreCard score={userReputation} />
         <CalculationCard />
       </div>
 
