@@ -1,6 +1,7 @@
 import { Button, message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
 import { Calculator } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
@@ -8,14 +9,17 @@ import ScoreCard from '@/components/reputation/score-card'
 import CalculationCard from '@/components/reputation/calculation-card'
 import CategoryCard, { Icon1, Icon2, Icon3, Icon4 } from '@/components/reputation/category-card'
 import MaliciousCard from '@/components/reputation/malicious-card'
+import TokenStakeModal from '@/components/settings/token-stake-modal'
 
 export default function UserInfoReputation() {
   const { info } = useUserStore()
+  const navigate = useNavigate()
   const [detail, setDetail] = useState<ReputationDetail>()
   const [loading, setLoading] = useState(false)
+  const [stakeModalOpen, setStakeModalOpen] = useState(false)
   const userReputation = detail?.reputation ?? info?.user_reputation
 
-  useEffect(() => {
+  const fetchReputationDetail = () => {
     setLoading(true)
     reputationApi
       .getReputationDetail()
@@ -33,6 +37,10 @@ export default function UserInfoReputation() {
       .finally(() => {
         setLoading(false)
       })
+  }
+
+  useEffect(() => {
+    fetchReputationDetail()
   }, [])
 
   return (
@@ -83,7 +91,7 @@ export default function UserInfoReputation() {
                   total: detail?.identify?.total || 1
                 }}
                 buttonText="Connect Accounts"
-                onButtonClick={() => {}}
+                onButtonClick={() => navigate('/app/settings/personal')}
                 description="Verify your social accounts (Email, X, Telegram, Discord)."
               />
 
@@ -102,7 +110,7 @@ export default function UserInfoReputation() {
                   total: detail?.login?.total || 1
                 }}
                 buttonText="Login"
-                onButtonClick={() => {}}
+                onButtonClick={() => navigate('/app')}
                 description="Log in daily to maintain activity (measured over a rolling 180-day period)."
               />
 
@@ -124,7 +132,7 @@ export default function UserInfoReputation() {
                   total: detail?.staking?.total || 1
                 }}
                 buttonText="Stake Now"
-                onButtonClick={() => {}}
+                onButtonClick={() => setStakeModalOpen(true)}
                 description="Stake $XNY to increase your score (Max: 50,000 $XNY)."
               />
 
@@ -142,7 +150,7 @@ export default function UserInfoReputation() {
                   total: (detail?.contribution?.adopt_cnt || 0) + (detail?.contribution?.refuse_cnt || 0) || 1
                 }}
                 buttonText="Contribute Now"
-                onButtonClick={() => {}}
+                onButtonClick={() => navigate('/app')}
                 description="Submit high-quality data to improve your acceptance rate."
               />
             </div>
@@ -155,6 +163,15 @@ export default function UserInfoReputation() {
           />
         </div>
       </Spin>
+
+      {stakeModalOpen && (
+        <TokenStakeModal
+          open={true}
+          onClose={() => setStakeModalOpen(false)}
+          onSuccess={fetchReputationDetail}
+          taskStakeConfig={{ stake_asset_type: 'XnYCoin' }}
+        />
+      )}
     </div>
   )
 }

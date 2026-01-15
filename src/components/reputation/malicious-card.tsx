@@ -56,7 +56,7 @@ export default function MaliciousCard({ score, description, className }: Malicio
         </div>
       </div>
       <div className="rounded-full bg-[#FFFFFF1F] px-3 text-2xl font-semibold leading-[44px] text-white">
-        {score === undefined || score === null ? '--' : <>{score === 0 ? '0' : `-${Math.abs(score).toFixed()}`}</>}
+        {score === undefined || score === null ? '--' : <>{score === 0 ? '0.0' : `-${Math.abs(score).toFixed()}`}</>}
       </div>
     </div>
   )
