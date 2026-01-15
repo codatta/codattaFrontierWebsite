@@ -1,12 +1,12 @@
 import { Button, message, Spin } from 'antd'
-import { Calculator, ShieldCheck, LogIn, FileText, Trophy } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Calculator } from 'lucide-react'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
 import ScoreCard from '@/components/reputation/score-card'
 import CalculationCard from '@/components/reputation/calculation-card'
-import CategoryCard from '@/components/reputation/category-card'
+import CategoryCard, { Icon1, Icon2, Icon3, Icon4 } from '@/components/reputation/category-card'
 import MaliciousCard from '@/components/reputation/malicious-card'
 
 export default function UserInfoReputation() {
@@ -36,7 +36,7 @@ export default function UserInfoReputation() {
   }, [])
 
   return (
-    <div className="relative min-h-[500px]">
+    <div className="relative min-h-[500px] min-w-[1160px]">
       <Spin spinning={loading} size="large" className="max-h-full">
         <div className="space-y-12 text-white">
           {/* Header */}
@@ -44,8 +44,9 @@ export default function UserInfoReputation() {
             <h1 className="flex items-center justify-between text-[32px] font-bold leading-[48px]">
               Reputation{' '}
               <Button
-                className="flex items-center gap-1 border-none bg-[#875DFF] px-4 py-2 text-sm text-white hover:bg-[#764CE0] hover:text-white"
+                className="flex items-center gap-1 border-none bg-[#875DFF] px-4 py-2 text-sm text-white hover:!bg-white hover:!text-[875DFF]"
                 shape="round"
+                onClick={() => window.open('https://docs.codatta.io/en/core-systems/reputation', '_blank')}
               >
                 <Calculator size={14} />
                 Calculation Rules
@@ -69,7 +70,7 @@ export default function UserInfoReputation() {
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Verified Identity */}
               <CategoryCard
-                icon={<ShieldCheck size={24} />}
+                icon={<Icon1 size={48} />}
                 title="Verified Identity"
                 score={detail?.identify?.score}
                 metrics={{
@@ -88,7 +89,7 @@ export default function UserInfoReputation() {
 
               {/* Login Activity */}
               <CategoryCard
-                icon={<LogIn size={24} />}
+                icon={<Icon2 size={48} />}
                 title="Login Activity"
                 score={detail?.login?.score}
                 metrics={{
@@ -107,7 +108,7 @@ export default function UserInfoReputation() {
 
               {/* Staking Commitment */}
               <CategoryCard
-                icon={<FileText size={24} />}
+                icon={<Icon3 size={48} />}
                 title="Staking Commitment"
                 score={detail?.staking?.score}
                 metrics={{
@@ -129,7 +130,7 @@ export default function UserInfoReputation() {
 
               {/* Valuable Contributions */}
               <CategoryCard
-                icon={<Trophy size={24} />}
+                icon={<Icon4 size={48} />}
                 title="Valuable Contributions"
                 score={detail?.contribution?.score}
                 metrics={{
