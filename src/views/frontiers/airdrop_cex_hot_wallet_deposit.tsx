@@ -597,7 +597,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
                 <div className="mt-3 flex flex-col gap-2">
                   <label className={labelClass}>
-                    Exchange Deposit To Address (Receiver) <span className="text-red-500">*</span>
+                    Exchange Deposit Address (Receiver) <span className="text-red-500">*</span>
                   </label>
                   <Input
                     className={inputClass}
