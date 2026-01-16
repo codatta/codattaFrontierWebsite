@@ -60,7 +60,7 @@ export default function UserInfoReputationApp() {
         />
 
         {/* Score Section */}
-        <div className="flex flex-col items-center justify-center pb-8 pt-2">
+        <div className="flex flex-col items-center justify-center pb-8 pt-2" onClick={() => setCalculationOpen(true)}>
           <div className="relative flex items-center text-[64px] font-bold leading-[76px]">
             <span className="text-[#1C1C26]">{userReputation?.toFixed(1) ?? '0.0'}</span>
             <ChevronRight className="ml-2 size-8 text-[#1C1C26]/30" />
