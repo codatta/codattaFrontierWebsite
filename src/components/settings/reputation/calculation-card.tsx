@@ -26,7 +26,7 @@ function CalculationItem({ label, weight, score, opt, showOpt = true, className 
       >
         <div>{label}</div>
         <div className="mt-1 font-semibold text-white">
-          {weight && <span className="text-[#875DFF]">{weight}*</span>}
+          {weight && <span className="text-[#875DFF]">{weight} x </span>}
           <span className="text-white">{score}</span>
         </div>
       </div>

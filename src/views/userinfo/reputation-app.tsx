@@ -1,6 +1,6 @@
 import { message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
-import { ChevronLeft, TrendingUp, Info, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
 import { useUserStore } from '@/stores/user.store'
@@ -10,6 +10,7 @@ import CategoryCardApp from '@/components/settings/reputation/category-card-app'
 import CalculationModalApp from '@/components/settings/reputation/calculation-modal-app'
 import IdentityModalApp from '@/components/settings/reputation/identity-modal-app'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card-app'
+import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 
 export default function UserInfoReputationApp() {
   const { info } = useUserStore()
@@ -48,42 +49,31 @@ export default function UserInfoReputationApp() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] pb-10 text-[#1C1C26]">
+    <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[#666666]">
       <Spin spinning={loading}>
-        {/* Header */}
-        <div className="flex items-center justify-between p-4">
-          <button onClick={() => navigate(-1)} className="p-2">
-            <ChevronLeft className="size-6 text-[#1C1C26]" />
-          </button>
-          <div className="text-lg font-bold">Reputation</div>
-          <button className="p-2">
-            <TrendingUp className="size-6 text-[#1C1C26]" />
-          </button>
-        </div>
+        <MobileAppFrontierHeader
+          title="Reputation"
+          onBack={() => navigate(-1)}
+          showSubmitButton={false}
+          canSubmit={false}
+          transparent
+        />
 
         {/* Score Section */}
-        <div className="flex flex-col items-center justify-center bg-gradient-to-b from-[#E0F9FD] to-transparent pb-8 pt-6">
-          <div className="relative flex items-center">
-            <span className="text-[64px] font-bold leading-none text-[#1C1C26]">
-              {userReputation?.toFixed(1) ?? '0.0'}
-            </span>
+        <div className="flex flex-col items-center justify-center pb-8 pt-6">
+          <div className="relative flex items-center text-[64px] font-bold leading-[72px]">
+            <span className="text-[#1C1C26]">{userReputation?.toFixed(1) ?? '0.0'}</span>
             <ChevronRight className="ml-2 size-8 text-[#1C1C26]/30" />
           </div>
-          <div
-            className="mt-2 flex cursor-pointer items-center gap-1 text-sm text-[#8E8E93]"
-            onClick={() => setCalculationOpen(true)}
-          >
-            Your Reputation <Info className="size-3" />
-          </div>
 
-          <div className="mt-8 px-6 text-center text-xs leading-relaxed text-[#8E8E93]">
+          <div className="mt-1 px-6 text-center text-xs leading-relaxed text-[#8E8E93]">
             Your Reputation is built on identity, activity, stake, and contribution. It identifies and rewards true
             builders, and is your key to greater ecosystem benefits.
           </div>
         </div>
 
         {/* Categories List */}
-        <div className="space-y-4 px-4">
+        <div className="space-y-4 rounded-t-[26px] bg-[#F5F5F5] p-5 pb-8">
           <div className="mb-2 text-sm text-[#8E8E93]">Improve reputation through the following methods:</div>
 
           <CategoryCardApp
@@ -128,12 +118,12 @@ export default function UserInfoReputationApp() {
             score={detail?.staking?.score}
             metrics={{
               label: 'Staked',
-              value: detail?.staking?.value ?? 0,
+              value: detail?.staking?.complete ?? '0.0',
               subValue: detail?.staking?.total ?? 50000,
               unit: '$XNY'
             }}
             progress={{
-              current: detail?.staking?.value ?? 0,
+              current: detail?.staking?.complete ?? 0,
               total: detail?.staking?.total ?? 50000
             }}
             buttonText="Web"

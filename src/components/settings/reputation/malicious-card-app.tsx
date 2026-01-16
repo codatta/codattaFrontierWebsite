@@ -2,11 +2,11 @@ import { Info } from 'lucide-react'
 import { cn } from '@udecode/cn'
 
 export interface MaliciousCardAppProps {
-  score?: number | null
+  score?: number
   className?: string
 }
 
-export default function MaliciousCardApp({ score, className }: MaliciousCardAppProps) {
+export default function MaliciousCardApp({ score = 0, className }: MaliciousCardAppProps) {
   return (
     <div
       className={cn(
@@ -21,7 +21,7 @@ export default function MaliciousCardApp({ score, className }: MaliciousCardAppP
         <span className="font-bold text-[#1C1C26]">Malicious Behavior</span>
         <Info className="size-4 text-[#BBBBBE]" />
       </div>
-      <div className="font-bold text-[#FF4D4F]">{score ? `-${Math.abs(score)}` : '-0.5'}</div>
+      <div className="font-bold text-[#FF4D4F]">{score !== 0 ? `-${Math.abs(score)}` : '0.0'}</div>
     </div>
   )
 }
