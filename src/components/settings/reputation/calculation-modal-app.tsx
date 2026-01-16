@@ -17,12 +17,12 @@ export default function CalculationModalApp({ open, onClose, data }: Calculation
       centered
       width={322}
       classNames={{
-        content: 'p-0 bg-transparent',
-        mask: 'bg-[#3333333B]'
+        content: '!p-0 !bg-transparent',
+        mask: '!bg-[#3333333B]'
       }}
     >
       <>
-        <div className="rounded-[34px] border border-white/60 bg-white/80 p-6 shadow-[0_4px_24px_rgba(0,0,0,0.1)] backdrop-blur-2xl">
+        <div className="rounded-[34px] border border-white/60 bg-white/80 p-6 shadow-[0_4px_24px_rgba(0,0,0,0.1)] backdrop-blur-sm">
           <div className="mb-6 text-center text-[20px] font-bold text-[#1C1C26]">About calculation</div>
 
           <div className="flex flex-col items-center">

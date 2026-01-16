@@ -13,14 +13,16 @@ export interface CategoryCardAppProps {
     unit?: string
     subLabel?: string
   }
-  progress: {
+  progress?: {
     current: number
     total: number
   }
-  buttonText: string
+  buttonText?: string
   onButtonClick?: () => void
   onInfoClick?: () => void
   buttonDisabled?: boolean
+  metricsLayout?: 'default' | 'split'
+  progressVariant?: 'gradient' | 'contrast'
 }
 
 export default function CategoryCardApp({
@@ -32,9 +34,11 @@ export default function CategoryCardApp({
   buttonText,
   onButtonClick,
   onInfoClick,
-  buttonDisabled
+  buttonDisabled,
+  metricsLayout = 'default',
+  progressVariant = 'gradient'
 }: CategoryCardAppProps) {
-  const progressPercent = Math.min((progress.current / progress.total) * 100, 100)
+  const progressPercent = progress ? Math.min((progress.current / progress.total) * 100, 100) : 0
 
   return (
     <div
@@ -65,29 +69,57 @@ export default function CategoryCardApp({
       </div>
 
       <div className="mb-2 flex items-center justify-between text-xs text-[#8E8E93]">
-        <div className="flex gap-1">
-          <span>{metrics.label}</span>
-          {metrics.subLabel && (
-            <span className="ml-2">
-              {metrics.subLabel}:{metrics.subValue}
+        {metricsLayout === 'split' ? (
+          <>
+            <span>
+              {metrics.label}:{metrics.value}
             </span>
-          )}
-        </div>
-        {!metrics.subLabel && (
-          <div>
-            <span>{metrics.value}</span>
-            {metrics.subValue !== undefined && <span>/{metrics.subValue}</span>}
-            {metrics.unit && <span>{metrics.unit}</span>}
-          </div>
+            {metrics.subLabel && (
+              <span>
+                {metrics.subLabel}:{metrics.subValue}
+              </span>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="flex gap-1">
+              <span>
+                {metrics.label}
+                {metrics.subLabel ? `: ${metrics.value}` : ''}
+              </span>
+              {metrics.subLabel && (
+                <span className="ml-2">
+                  {metrics.subLabel}: {metrics.subValue}
+                </span>
+              )}
+            </div>
+            {!metrics.subLabel && (
+              <div>
+                <span>{metrics.value}</span>
+                {metrics.subValue !== undefined && <span>/{metrics.subValue}</span>}
+                {metrics.unit && <span>{metrics.unit}</span>}
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#F2F2F7]">
+      <div
+        className="relative h-2 flex-1 overflow-hidden rounded-full"
+        style={{ backgroundColor: progressVariant === 'contrast' ? 'black' : '#F2F2F7' }}
+      >
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-[linear-gradient(90deg,#40E1EF,#40E1EF1F)]"
-          style={{ width: `${progressPercent}%` }}
+          className={cn('absolute left-0 top-0 h-full', progressVariant !== 'contrast' && 'rounded-full')}
+          style={{
+            width: `${progressPercent}%`,
+            background:
+              progressVariant === 'contrast'
+                ? '#40E1EF'
+                : 'linear-gradient(90deg, #40E1EF 0%, rgba(64, 225, 239, 0.12) 100%)'
+          }}
         />
       </div>
+
       <div className="mt-3 flex items-center justify-end">
         <button
           onClick={onButtonClick}

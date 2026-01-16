@@ -142,10 +142,12 @@ export default function UserInfoReputationApp() {
                 subValue: detail?.contribution?.refuse_cnt ?? 0,
                 subLabel: 'Reject'
               }}
+              metricsLayout="split"
               progress={{
                 current: detail?.contribution?.adopt_cnt ?? 0,
-                total: (detail?.contribution?.adopt_cnt ?? 0) + (detail?.contribution?.refuse_cnt ?? 0) || 100 // Fallback total
+                total: (detail?.contribution?.adopt_cnt ?? 0) + (detail?.contribution?.refuse_cnt ?? 0) || 100
               }}
+              progressVariant="contrast"
               buttonText="Go"
               onButtonClick={() => navigate('/')}
             />
