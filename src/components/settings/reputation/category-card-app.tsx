@@ -59,7 +59,7 @@ export default function CategoryCardApp({
             {onInfoClick && <Info className="size-4 text-[#BBBBBE]" />}
           </span>
         </div>
-        <div className="text-lg font-bold text-[#40E1EF]">
+        <div className="text-2xl font-semibold text-[#40E1EF]">
           {score === undefined || score === null ? '--' : score === 0 ? '0.0' : `+${score.toFixed(1)}`}
         </div>
       </div>
