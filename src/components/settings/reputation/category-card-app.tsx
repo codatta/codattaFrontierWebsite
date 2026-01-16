@@ -37,26 +37,30 @@ export default function CategoryCardApp({
   const progressPercent = Math.min((progress.current / progress.total) * 100, 100)
 
   return (
-    <div className="rounded-3xl bg-white p-4 text-[#1C1C26] shadow-[0_4px_20px_rgba(0,0,0,0.05)]">
+    <div
+      className="rounded-3xl p-4 text-[#1C1C26] shadow-[0_4px_20px_rgba(0,0,0,0.05)]"
+      style={{
+        background:
+          'linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) padding-box, linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.2) 50%, #FFFFFF 100%) border-box',
+        border: '1.5px solid transparent'
+      }}
+    >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {icon}
-          <span className="flex items-center gap-1 font-bold">
+          <span
+            className="flex items-center gap-1 font-bold"
+            onClick={(e) => {
+              e.stopPropagation()
+              onInfoClick?.()
+            }}
+          >
             {title}
-            {onInfoClick && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onInfoClick()
-                }}
-              >
-                <Info className="size-4 text-[#BBBBBE]" />
-              </button>
-            )}
+            {onInfoClick && <Info className="size-4 text-[#BBBBBE]" />}
           </span>
         </div>
-        <div className="text-lg font-bold text-[#58E6F3]">
-          {score === undefined || score === null ? '--' : `+${score}`}
+        <div className="text-lg font-bold text-[#40E1EF]">
+          {score === undefined || score === null ? '--' : score === 0 ? '0.0' : `+${score.toFixed(1)}`}
         </div>
       </div>
 
@@ -78,19 +82,19 @@ export default function CategoryCardApp({
         )}
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#F2F2F7]">
-          <div
-            className="absolute left-0 top-0 h-full rounded-full bg-[linear-gradient(90deg,#58E6F3,#79A5FC)]"
-            style={{ width: `${progressPercent}%` }}
-          />
-        </div>
+      <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-[#F2F2F7]">
+        <div
+          className="absolute left-0 top-0 h-full rounded-full bg-[linear-gradient(90deg,#40E1EF,#40E1EF1F)]"
+          style={{ width: `${progressPercent}%` }}
+        />
+      </div>
+      <div className="mt-3 flex items-center justify-end">
         <button
           onClick={onButtonClick}
           disabled={buttonDisabled}
           className={cn(
-            'h-8 rounded-full px-4 text-xs font-medium transition-colors',
-            buttonDisabled ? 'bg-[#F2F2F7] text-[#BBBBBE]' : 'bg-[#1C1C26] text-white hover:bg-[#2C2C36]'
+            'flex h-9 w-[76px] items-center justify-center rounded-full text-base font-medium shadow-[0px_1px_4px_rgba(0,0,0,0.12),0px_0px_1px_rgba(0,0,0,0.1)] transition-colors',
+            buttonDisabled ? 'bg-white text-[#D9D9D9]' : 'bg-black text-white hover:bg-black/80'
           )}
         >
           {buttonText}

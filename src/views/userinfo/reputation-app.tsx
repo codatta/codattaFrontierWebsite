@@ -49,7 +49,7 @@ export default function UserInfoReputationApp() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[#666666]">
+    <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[13px] leading-[17px] text-[#666666]">
       <Spin spinning={loading}>
         <MobileAppFrontierHeader
           title="Reputation"
@@ -60,97 +60,99 @@ export default function UserInfoReputationApp() {
         />
 
         {/* Score Section */}
-        <div className="flex flex-col items-center justify-center pb-8 pt-6">
-          <div className="relative flex items-center text-[64px] font-bold leading-[72px]">
+        <div className="flex flex-col items-center justify-center pb-8 pt-2">
+          <div className="relative flex items-center text-[64px] font-bold leading-[76px]">
             <span className="text-[#1C1C26]">{userReputation?.toFixed(1) ?? '0.0'}</span>
             <ChevronRight className="ml-2 size-8 text-[#1C1C26]/30" />
           </div>
 
-          <div className="mt-1 px-6 text-center text-xs leading-relaxed text-[#8E8E93]">
+          <div className="mt-1 px-10 text-center">
             Your Reputation is built on identity, activity, stake, and contribution. It identifies and rewards true
             builders, and is your key to greater ecosystem benefits.
           </div>
         </div>
 
         {/* Categories List */}
-        <div className="space-y-4 rounded-t-[26px] bg-[#F5F5F5] p-5 pb-8">
-          <div className="mb-2 text-sm text-[#8E8E93]">Improve reputation through the following methods:</div>
+        <div className="rounded-t-[26px] bg-[#F5F5F5] p-5 pb-8">
+          <div className="mb-4 text-center">Improve reputation through the following methods</div>
 
-          <CategoryCardApp
-            icon={<Icon1App size={40} />}
-            title="Verified Identity"
-            score={detail?.identify?.score}
-            metrics={{
-              label: 'Connected',
-              value: detail?.identify?.complete ?? 0,
-              subValue: detail?.identify?.total ?? 4
-            }}
-            progress={{
-              current: detail?.identify?.complete ?? 0,
-              total: detail?.identify?.total ?? 4
-            }}
-            buttonText="Web"
-            onInfoClick={() => setIdentityOpen(true)}
-            onButtonClick={() => {}}
-            buttonDisabled={true}
-          />
+          <div className="space-y-6">
+            <CategoryCardApp
+              icon={<Icon1App />}
+              title="Verified Identity"
+              score={detail?.identify?.score}
+              metrics={{
+                label: 'Connected',
+                value: detail?.identify?.complete ?? 0,
+                subValue: detail?.identify?.total ?? 4
+              }}
+              progress={{
+                current: detail?.identify?.complete ?? 0,
+                total: detail?.identify?.total ?? 4
+              }}
+              buttonText="Web"
+              onInfoClick={() => setIdentityOpen(true)}
+              onButtonClick={() => {}}
+              buttonDisabled={true}
+            />
 
-          <CategoryCardApp
-            icon={<Icon2App size={40} />}
-            title="Login Activity"
-            score={detail?.login?.score}
-            metrics={{
-              label: 'Active Days',
-              value: detail?.login?.complete ?? 0,
-              subValue: detail?.login?.total ?? 180
-            }}
-            progress={{
-              current: detail?.login?.complete ?? 0,
-              total: detail?.login?.total ?? 180
-            }}
-            buttonText="Go"
-            onButtonClick={() => navigate('/')}
-          />
+            <CategoryCardApp
+              icon={<Icon2App />}
+              title="Login Activity"
+              score={detail?.login?.score}
+              metrics={{
+                label: 'Active Days',
+                value: detail?.login?.complete ?? 0,
+                subValue: detail?.login?.total ?? 180
+              }}
+              progress={{
+                current: detail?.login?.complete ?? 0,
+                total: detail?.login?.total ?? 180
+              }}
+              buttonText="Go"
+              onButtonClick={() => navigate('/')}
+            />
 
-          <CategoryCardApp
-            icon={<Icon3App size={40} />}
-            title="Staking Commitment"
-            score={detail?.staking?.score}
-            metrics={{
-              label: 'Staked',
-              value: detail?.staking?.complete ?? '0.0',
-              subValue: detail?.staking?.total ?? 50000,
-              unit: '$XNY'
-            }}
-            progress={{
-              current: detail?.staking?.complete ?? 0,
-              total: detail?.staking?.total ?? 50000
-            }}
-            buttonText="Web"
-            onButtonClick={() => {}}
-            buttonDisabled={true}
-          />
+            <CategoryCardApp
+              icon={<Icon3App />}
+              title="Staking Commitment"
+              score={detail?.staking?.score}
+              metrics={{
+                label: 'Staked',
+                value: detail?.staking?.complete ?? '0.0',
+                subValue: detail?.staking?.total ?? 50000,
+                unit: '$XNY'
+              }}
+              progress={{
+                current: detail?.staking?.complete ?? 0,
+                total: detail?.staking?.total ?? 50000
+              }}
+              buttonText="Web"
+              onButtonClick={() => {}}
+              buttonDisabled={true}
+            />
 
-          <CategoryCardApp
-            icon={<Icon4App size={40} />}
-            title="Valuable Contributions"
-            score={detail?.contribution?.score}
-            metrics={{
-              label: 'Accept',
-              value: detail?.contribution?.adopt_cnt ?? 0,
-              subValue: detail?.contribution?.refuse_cnt ?? 0,
-              subLabel: 'Reject'
-            }}
-            progress={{
-              current: detail?.contribution?.adopt_cnt ?? 0,
-              total: (detail?.contribution?.adopt_cnt ?? 0) + (detail?.contribution?.refuse_cnt ?? 0) || 100 // Fallback total
-            }}
-            buttonText="Go"
-            onButtonClick={() => navigate('/')}
-          />
+            <CategoryCardApp
+              icon={<Icon4App />}
+              title="Valuable Contributions"
+              score={detail?.contribution?.score}
+              metrics={{
+                label: 'Accept',
+                value: detail?.contribution?.adopt_cnt ?? 0,
+                subValue: detail?.contribution?.refuse_cnt ?? 0,
+                subLabel: 'Reject'
+              }}
+              progress={{
+                current: detail?.contribution?.adopt_cnt ?? 0,
+                total: (detail?.contribution?.adopt_cnt ?? 0) + (detail?.contribution?.refuse_cnt ?? 0) || 100 // Fallback total
+              }}
+              buttonText="Go"
+              onButtonClick={() => navigate('/')}
+            />
 
-          {/* Malicious Behavior */}
-          <MaliciousCardApp score={detail?.malicious_behavior?.score} />
+            {/* Malicious Behavior */}
+            <MaliciousCardApp score={detail?.malicious_behavior?.score} />
+          </div>
         </div>
       </Spin>
 

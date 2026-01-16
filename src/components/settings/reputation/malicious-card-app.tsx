@@ -1,5 +1,7 @@
-import { Info } from 'lucide-react'
 import { cn } from '@udecode/cn'
+import { Info } from 'lucide-react'
+
+import { Icon5App } from './icons-app'
 
 export interface MaliciousCardAppProps {
   score?: number
@@ -10,18 +12,21 @@ export default function MaliciousCardApp({ score = 0, className }: MaliciousCard
   return (
     <div
       className={cn(
-        'flex items-center justify-between rounded-2xl bg-white p-4 text-[#FF4D4F] shadow-[0_4px_20px_rgba(0,0,0,0.05)]',
+        'flex items-center justify-between rounded-3xl p-4 text-[#FF4D4F] shadow-[0_4px_20px_rgba(0,0,0,0.05)]',
         className
       )}
+      style={{
+        background:
+          'linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)) padding-box, linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0.2) 50%, #FFFFFF 100%) border-box',
+        border: '1.5px solid transparent'
+      }}
     >
       <div className="flex items-center gap-3">
-        <div className="flex size-10 items-center justify-center rounded-lg bg-[#FF4D4F]/10">
-          <Info className="size-6 text-[#FF4D4F]" />
-        </div>
+        <Icon5App />
         <span className="font-bold text-[#1C1C26]">Malicious Behavior</span>
         <Info className="size-4 text-[#BBBBBE]" />
       </div>
-      <div className="font-bold text-[#FF4D4F]">{score !== 0 ? `-${Math.abs(score)}` : '0.0'}</div>
+      <div className="font-bold text-[#FF9072]">{score !== 0 ? `-${Math.abs(score)}` : '0.0'}</div>
     </div>
   )
 }
