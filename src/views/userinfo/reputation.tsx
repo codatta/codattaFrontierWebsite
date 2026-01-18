@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
-import ScoreCard from '@/components/reputation/score-card'
-import CalculationCard from '@/components/reputation/calculation-card'
-import CategoryCard, { Icon1, Icon2, Icon3, Icon4 } from '@/components/reputation/category-card'
-import MaliciousCard from '@/components/reputation/malicious-card'
+import ScoreCard from '@/components/settings/reputation/score-card'
+import CalculationCard from '@/components/settings/reputation/calculation-card'
+import CategoryCard, { Icon1, Icon2, Icon3, Icon4 } from '@/components/settings/reputation/category-card'
+import MaliciousCard from '@/components/settings/reputation/malicious-card'
 import TokenStakeModal from '@/components/settings/token-stake-modal'
 
 export default function UserInfoReputation() {
@@ -109,7 +109,8 @@ export default function UserInfoReputation() {
                   current: detail?.login?.complete || 0,
                   total: detail?.login?.total || 1
                 }}
-                buttonText="Login"
+                buttonText="Task Completed"
+                buttonDisabled={true}
                 onButtonClick={() => navigate('/app')}
                 description="Log in daily to maintain activity (measured over a rolling 180-day period)."
               />

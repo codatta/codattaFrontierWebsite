@@ -6,15 +6,19 @@ interface MobileAppFrontierHeaderProps {
   showSubmitButton: boolean
   onBack?: () => void
   onSubmit?: () => void
+  transparent?: boolean
 }
 
 export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderProps) {
-  const { title, canSubmit, showSubmitButton, onBack, onSubmit } = props
-
+  const { title, canSubmit, showSubmitButton, onBack, onSubmit, transparent } = props
   return (
     <div className="text-black">
       <div className="h-[76px]"></div>
-      <div className="fixed top-0 z-10 grid w-full grid-cols-[44px_1fr_44px] bg-gradient-to-b from-[#F8F8F8] via-[#F8F8F8BB] to-[#F8F8F800] p-4 text-[17px]">
+      <div
+        className={`fixed top-0 z-10 grid w-full grid-cols-[44px_1fr_44px] p-4 text-[17px] ${
+          transparent ? '' : 'bg-gradient-to-b from-[#F8F8F8] via-[#F8F8F8BB] to-[#F8F8F800]'
+        }`}
+      >
         <button
           onClick={onBack}
           className="flex size-[44px] items-center justify-center rounded-full bg-[#f9f9f930] shadow-app-btn backdrop-blur-sm"

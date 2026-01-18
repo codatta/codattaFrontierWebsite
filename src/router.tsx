@@ -30,6 +30,7 @@ const AirdropActivityHistory = lazy(() => import('@/views/airdrop-activity/activ
 const UserInfo = lazy(() => import('@/views/userinfo/index'))
 const UserInfoReward = lazy(() => import('@/views/userinfo/reward'))
 const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
+const UserInfoReputationApp = lazy(() => import('@/views/userinfo/reputation-app'))
 const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
 const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
@@ -133,6 +134,9 @@ export default function Router() {
       <RouteTracker />
       <Routes>
         <Route index element={<Navigate to="/app" />} />
+        <Route path="/m">
+          <Route path="settings/reputation" element={<UserInfoReputationApp />} />
+        </Route>
         <Route path="/arena" element={<ArenaLayout />}>
           <Route index element={<ChatbotArenaPage />} />
           <Route path="leaderboard" element={<ChatBotArenaLeaderboardPage />} />
