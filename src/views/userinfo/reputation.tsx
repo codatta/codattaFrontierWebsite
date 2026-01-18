@@ -109,7 +109,8 @@ export default function UserInfoReputation() {
                   current: detail?.login?.complete || 0,
                   total: detail?.login?.total || 1
                 }}
-                buttonText="Login"
+                buttonText="Task Completed"
+                buttonDisabled={true}
                 onButtonClick={() => navigate('/app')}
                 description="Log in daily to maintain activity (measured over a rolling 180-day period)."
               />

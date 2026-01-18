@@ -19,6 +19,7 @@ export interface CategoryCardProps {
   }
   buttonText: string
   onButtonClick?: () => void
+  buttonDisabled?: boolean
   description: string
   className?: string
 }
@@ -31,6 +32,7 @@ export default function CategoryCard({
   progress,
   buttonText,
   onButtonClick,
+  buttonDisabled,
   description,
   className
 }: CategoryCardProps) {
@@ -74,7 +76,8 @@ export default function CategoryCard({
 
       <Button
         block
-        className="mb-3 h-9 rounded-lg border-none bg-white font-medium text-[#1C1C26] hover:!bg-[#1C1C26] hover:!text-white"
+        disabled={buttonDisabled}
+        className="mb-3 h-9 rounded-lg border-none bg-white font-medium text-[#1C1C26] hover:!bg-[#1C1C26] hover:!text-white disabled:bg-white/50 disabled:text-[#1C1C26]/50 disabled:hover:!bg-white/50 disabled:hover:!text-[#1C1C26]/50"
         onClick={onButtonClick}
       >
         {buttonText}
