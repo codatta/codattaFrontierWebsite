@@ -68,8 +68,8 @@ export default function UserInfoReputation() {
 
           {/* Top Section */}
           <div className="flex items-stretch gap-6">
-            <ScoreCard score={userReputation} className="min-w-[316px] flex-1" />
-            <CalculationCard data={detail} />
+            <ScoreCard score={userReputation} className="min-w-[316px]" />
+            <CalculationCard data={detail} className="flex-1" />
           </div>
 
           {/* Categories Section */}

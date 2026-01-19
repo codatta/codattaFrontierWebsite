@@ -20,15 +20,19 @@ function CalculationItem({ label, weight, score, opt, showOpt = true, className 
       {showOpt && <span className="text-gray-500">{opt === '-' ? '➖' : '➕'}</span>}
       <div
         className={cn(
-          'flex h-[60px] min-w-[108px] flex-1 flex-col items-center justify-center rounded-xl border border-[#FFFFFF1F] bg-[#875DFF1A] text-sm',
+          'flex h-[60px] min-w-[108px] flex-1 flex-col items-center justify-center rounded-xl border border-[#FFFFFF1F] bg-[#875DFF1A] px-3 text-sm',
           className
         )}
       >
-        <div>{label}</div>
-        <div className="mt-1 font-semibold text-white">
-          {weight && <span className="text-[#875DFF]">{weight} x </span>}
-          <span className="text-white">{score}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-[#FFFFFF99]">{label}</span>
+          {weight && (
+            <span className="rounded bg-[#875DFF]/20 px-1.5 py-0.5 text-[10px] font-medium leading-none text-[#875DFF]">
+              {weight}
+            </span>
+          )}
         </div>
+        <div className="mt-0.5 text-base font-bold text-white">{score.toFixed(2)}</div>
       </div>
     </>
   )
@@ -53,26 +57,26 @@ export default function CalculationCard({ className, data }: CalculationCardProp
         <CalculationItem
           label="Identity"
           weight={data?.identify?.percent as string}
-          score={data?.identify?.value}
+          score={data?.identify?.score}
           opt={data?.identify?.opt}
           showOpt={false}
         />
         <CalculationItem
           label="Activity"
           weight={data?.login?.percent as string}
-          score={data?.login?.value}
+          score={data?.login?.score}
           opt={data?.login?.opt}
         />
         <CalculationItem
           label="Staking"
           weight={data?.staking?.percent as string}
-          score={data?.staking?.value}
+          score={data?.staking?.score}
           opt={data?.staking?.opt}
         />
         <CalculationItem
           label="Contribution"
           weight={data?.contribution?.percent as string}
-          score={data?.contribution?.value}
+          score={data?.contribution?.score}
           opt={data?.contribution?.opt}
         />
         <CalculationItem
