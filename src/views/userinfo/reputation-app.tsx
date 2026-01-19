@@ -8,19 +8,26 @@ import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
 import { Icon1App, Icon2App, Icon3App, Icon4App } from '@/components/settings/reputation/icons-app'
 import CategoryCardApp from '@/components/settings/reputation/category-card-app'
 import CalculationModalApp from '@/components/settings/reputation/calculation-modal-app'
-import IdentityModalApp from '@/components/settings/reputation/identity-modal-app'
+import InfoModalApp from '@/components/settings/reputation/info-modal-app'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card-app'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
+import { jumpInApp } from '@/utils/bridge'
+import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
 export default function UserInfoReputationApp() {
   const { info } = useUserStore()
   const navigate = useNavigate()
   const [detail, setDetail] = useState<ReputationDetail>()
   const [loading, setLoading] = useState(false)
+  const toast = useAppToast()
 
   // Modal states
   const [calculationOpen, setCalculationOpen] = useState(false)
-  const [identityOpen, setIdentityOpen] = useState(false)
+  const [infoModal, setInfoModal] = useState({
+    open: false,
+    title: '',
+    description: ''
+  })
 
   const userReputation = detail?.reputation ?? info?.user_reputation
 
@@ -48,8 +55,13 @@ export default function UserInfoReputationApp() {
     fetchReputationDetail()
   }, [])
 
+  const openInfoModal = (title: string, description: string) => {
+    setInfoModal({ open: true, title, description })
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[13px] leading-[17px] text-[#666666]">
+      <AppToastContainer />
       <Spin spinning={loading}>
         <MobileAppFrontierHeader
           title="Reputation"
@@ -91,8 +103,12 @@ export default function UserInfoReputationApp() {
                 total: detail?.identify?.total ?? 4
               }}
               buttonText="Web"
-              onInfoClick={() => setIdentityOpen(true)}
-              onButtonClick={() => {}}
+              onInfoClick={() =>
+                openInfoModal('Identity', 'Verify your social accounts (Email, X, Telegram, Discord).')
+              }
+              onButtonClick={() => {
+                toast.show('Connect on web', 2000)
+              }}
               buttonDisabled={true}
             />
 
@@ -109,8 +125,12 @@ export default function UserInfoReputationApp() {
                 current: detail?.login?.complete ?? 0,
                 total: detail?.login?.total ?? 180
               }}
-              buttonText="Go"
-              onButtonClick={() => navigate('/')}
+              buttonText="Done"
+              buttonDisabled={true}
+              onButtonClick={() => toast.show('Daily login recorded', 2000)}
+              onInfoClick={() =>
+                openInfoModal('Login', 'Log in daily to maintain activity (measured over a rolling 180-day period).')
+              }
             />
 
             <CategoryCardApp
@@ -128,8 +148,16 @@ export default function UserInfoReputationApp() {
                 total: detail?.staking?.total ?? 50000
               }}
               buttonText="Web"
-              onButtonClick={() => {}}
               buttonDisabled={true}
+              onButtonClick={() => {
+                toast.show('Stake on web', 2000)
+              }}
+              onInfoClick={() =>
+                openInfoModal(
+                  'Staking',
+                  'Stake $XNY to increase your score (Max: 50,000 $XNY, Rate: 2,500 $XNY/Point).'
+                )
+              }
             />
 
             <CategoryCardApp
@@ -149,11 +177,22 @@ export default function UserInfoReputationApp() {
               }}
               progressVariant="contrast"
               buttonText="Go"
-              onButtonClick={() => navigate('/')}
+              onButtonClick={() => jumpInApp('app', 'home')}
+              onInfoClick={() =>
+                openInfoModal('Contribution', 'Submit high-quality data to improve your acceptance rate.')
+              }
             />
 
             {/* Malicious Behavior */}
-            <MaliciousCardApp score={detail?.malicious_behavior?.score} />
+            <MaliciousCardApp
+              score={detail?.malicious_behavior?.score}
+              onInfoClick={() =>
+                openInfoModal(
+                  'Malicious',
+                  'Trigger: Only applies to confirmed malicious activities (e.g., script attacks, data poisoning). Operational errors are excluded.'
+                )
+              }
+            />
           </div>
         </div>
       </Spin>
@@ -161,8 +200,13 @@ export default function UserInfoReputationApp() {
       {/* About Calculation Modal */}
       <CalculationModalApp open={calculationOpen} onClose={() => setCalculationOpen(false)} data={detail} />
 
-      {/* Identity Modal */}
-      <IdentityModalApp open={identityOpen} onClose={() => setIdentityOpen(false)} />
+      {/* Info Modal */}
+      <InfoModalApp
+        open={infoModal.open}
+        onClose={() => setInfoModal({ ...infoModal, open: false })}
+        title={infoModal.title}
+        description={infoModal.description}
+      />
     </div>
   )
 }

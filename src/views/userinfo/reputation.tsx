@@ -109,9 +109,9 @@ export default function UserInfoReputation() {
                   current: detail?.login?.complete || 0,
                   total: detail?.login?.total || 1
                 }}
-                buttonText="Task Completed"
+                buttonText="Done"
                 buttonDisabled={true}
-                onButtonClick={() => navigate('/app')}
+                onButtonClick={() => message.success('Daily login recorded', 2000)}
                 description="Log in daily to maintain activity (measured over a rolling 180-day period)."
               />
 

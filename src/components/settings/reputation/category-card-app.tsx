@@ -123,9 +123,8 @@ export default function CategoryCardApp({
       <div className="mt-3 flex items-center justify-end">
         <button
           onClick={onButtonClick}
-          disabled={buttonDisabled}
           className={cn(
-            'flex h-9 w-[76px] items-center justify-center rounded-full text-base font-medium shadow-[0px_1px_4px_rgba(0,0,0,0.12),0px_0px_1px_rgba(0,0,0,0.1)] transition-colors',
+            'flex h-9 min-w-[76px] items-center justify-center rounded-full px-3 text-base font-medium shadow-[0px_1px_4px_rgba(0,0,0,0.12),0px_0px_1px_rgba(0,0,0,0.1)] transition-colors',
             buttonDisabled ? 'bg-white text-[#D9D9D9]' : 'bg-black text-white hover:bg-black/80'
           )}
         >
