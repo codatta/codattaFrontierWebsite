@@ -89,6 +89,7 @@ export interface TaskDetail {
   qualification_flag: 0 | 1
 
   reputation: number
+  reward_points: null | number
 
   user_reputation_flag: 0 | 1 | 2
   tags: string[]
