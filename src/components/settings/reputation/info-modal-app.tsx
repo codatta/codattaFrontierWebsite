@@ -1,13 +1,13 @@
 import { Modal } from 'antd'
-import { ReputationDetail } from '@/apis/reputation.api'
 
-interface CalculationModalAppProps {
+interface InfoModalAppProps {
   open: boolean
   onClose: () => void
-  data?: ReputationDetail
+  title: string
+  description?: React.ReactNode
 }
 
-export default function CalculationModalApp({ open, onClose, data }: CalculationModalAppProps) {
+export default function InfoModalApp({ open, onClose, title, description }: InfoModalAppProps) {
   return (
     <Modal
       open={open}
@@ -22,43 +22,19 @@ export default function CalculationModalApp({ open, onClose, data }: Calculation
       }}
     >
       <>
-        <div className="rounded-[34px] border border-white/60 bg-[#F5F5F5]/60 p-6 shadow-[0_4px_24px_rgba(0,0,0,0.1)] backdrop-blur-2xl">
-          <div className="mb-6 text-center text-[20px] font-bold text-[#1C1C26]">About calculation</div>
-
-          <div className="flex flex-col items-center">
-            <CalculationRow label="Identity" weight={data?.identify?.percent} score={data?.identify?.score ?? 0} />
-            <PlusSign />
-            <CalculationRow label="Activity" weight={data?.login?.percent} score={data?.login?.score ?? 0} />
-            <PlusSign />
-            <CalculationRow label="Staking" weight={data?.staking?.percent} score={data?.staking?.score ?? 0} />
-            <PlusSign />
-            <CalculationRow
-              label="Contribution"
-              weight={data?.contribution?.percent}
-              score={data?.contribution?.score ?? 0}
-            />
-            <MinusSign />
-
-            <div className="flex h-[38px] w-full items-center justify-between rounded-[19px] bg-[#F5F5F5] px-5">
-              <span className="font-medium text-[#1C1C26]">Malicious</span>
-              <span className="font-bold text-[#FFA800]">{Math.abs(data?.malicious_behavior?.score ?? 0)}</span>
-            </div>
+        <div className="relative flex min-h-[148px] w-full flex-col items-center justify-center overflow-hidden rounded-[34px] border border-white/60 bg-white/90 p-6 text-center backdrop-blur-2xl">
+          {/* Content */}
+          <div className="relative z-10">
+            <div className="mb-2 text-[32px] font-bold leading-10 text-[#1C1C26]">{title}</div>
+            {description && <div className="text-sm font-medium leading-[18px] text-[#1C1C26]">{description}</div>}
           </div>
         </div>
-        <div className="mt-0 flex items-center justify-center">
+        <div className="-mt-2 flex items-center justify-center">
           <CloseIcon onClick={onClose} />
         </div>
       </>
     </Modal>
   )
-}
-
-function PlusSign() {
-  return <div className="flex h-[26px] items-center justify-center text-lg font-bold text-[#1C1C26]">+</div>
-}
-
-function MinusSign() {
-  return <div className="flex h-[26px] items-center justify-center text-lg font-bold text-[#1C1C26]">-</div>
 }
 
 function CloseIcon({ onClick }: { onClick: () => void }) {
@@ -71,7 +47,7 @@ function CloseIcon({ onClick }: { onClick: () => void }) {
       />
       <g opacity={0.67}>
         <mask
-          id="mask0_45161_61596"
+          id="mask0_45161_61596_info"
           style={{ maskType: 'luminance' }}
           maskUnits="userSpaceOnUse"
           x="-50"
@@ -82,18 +58,18 @@ function CloseIcon({ onClick }: { onClick: () => void }) {
           <rect width="196" height="196" transform="translate(-50 -50)" fill="white" />
           <rect x="26" y="26" width="44" height="44" rx="22" fill="black" />
         </mask>
-        <g mask="url(#mask0_45161_61596)">
+        <g mask="url(#mask0_45161_61596_info)">
           <foreignObject x="-14" y="-12" width="124" height="124">
             <div
               style={{
                 backdropFilter: 'blur(20px)',
-                clipPath: 'url(#bgblur_0_45161_61596_clip_path)',
+                clipPath: 'url(#bgblur_0_45161_61596_clip_path_info)',
                 height: '100%',
                 width: '100%'
               }}
             />
           </foreignObject>
-          <g filter="url(#filter0_f_45161_61596)" data-figma-bg-blur-radius="40">
+          <g filter="url(#filter0_f_45161_61596_info)" data-figma-bg-blur-radius="40">
             <path
               d="M26 50C26 37.8497 35.8497 28 48 28C60.1503 28 70 37.8497 70 50C70 62.1503 60.1503 72 48 72C35.8497 72 26 62.1503 26 50Z"
               fill="black"
@@ -128,7 +104,7 @@ function CloseIcon({ onClick }: { onClick: () => void }) {
       </g>
       <defs>
         <filter
-          id="filter0_f_45161_61596"
+          id="filter0_f_45161_61596_info"
           x="-14"
           y="-12"
           width="124"
@@ -140,32 +116,10 @@ function CloseIcon({ onClick }: { onClick: () => void }) {
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
           <feGaussianBlur stdDeviation="10" result="effect1_foregroundBlur_45161_61596" />
         </filter>
-        <clipPath id="bgblur_0_45161_61596_clip_path" transform="translate(14 12)">
+        <clipPath id="bgblur_0_45161_61596_clip_path_info" transform="translate(14 12)">
           <path d="M26 50C26 37.8497 35.8497 28 48 28C60.1503 28 70 37.8497 70 50C70 62.1503 60.1503 72 48 72C35.8497 72 26 62.1503 26 50Z" />
         </clipPath>
       </defs>
     </svg>
-  )
-}
-
-interface CalculationRowProps {
-  label: string
-  weight?: string | null
-  score: number
-}
-
-function CalculationRow({ label, weight, score }: CalculationRowProps) {
-  return (
-    <div className="flex w-full items-center justify-between rounded-full bg-[#F5F5F5] px-3 py-2">
-      <span className="font-medium text-[#1C1C26]">{label}</span>
-      <div className="flex items-center gap-2">
-        <span className="font-bold text-[#1C1C26]">{score} x </span>
-        {weight && (
-          <span className="flex h-[22px] min-w-[44px] items-center justify-center rounded-full bg-[rgba(64,225,239,0.12)] px-2 text-xs font-bold text-[#40E1EF]">
-            {weight}
-          </span>
-        )}
-      </div>
-    </div>
   )
 }

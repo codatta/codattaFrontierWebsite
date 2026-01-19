@@ -6,9 +6,10 @@ import { Icon5App } from './icons-app'
 export interface MaliciousCardAppProps {
   score?: number
   className?: string
+  onInfoClick?: () => void
 }
 
-export default function MaliciousCardApp({ score = 0, className }: MaliciousCardAppProps) {
+export default function MaliciousCardApp({ score = 0, className, onInfoClick }: MaliciousCardAppProps) {
   return (
     <div
       className={cn(
@@ -24,7 +25,13 @@ export default function MaliciousCardApp({ score = 0, className }: MaliciousCard
       <div className="flex items-center gap-3">
         <Icon5App />
         <span className="font-bold text-[#1C1C26]">Malicious Behavior</span>
-        <Info className="size-4 text-[#BBBBBE]" />
+        <Info
+          className="size-4 text-[#BBBBBE]"
+          onClick={(e) => {
+            e.stopPropagation()
+            onInfoClick?.()
+          }}
+        />
       </div>
       <div className="text-2xl font-semibold text-[#FF9072]">{score !== 0 ? `-${Math.abs(score)}` : '0.0'}</div>
     </div>
