@@ -14,8 +14,7 @@ export interface CategoryCardProps {
   progress: {
     current: number
     total: number
-    colorStart?: string
-    colorEnd?: string
+    type?: 1 | 2
   }
   buttonText: string
   onButtonClick?: () => void
@@ -37,6 +36,7 @@ export default function CategoryCard({
   className
 }: CategoryCardProps) {
   const progressPercent = Math.min((progress.current / progress.total) * 100, 100)
+  const progressType = progress.type ?? 1
 
   return (
     <div
@@ -69,7 +69,12 @@ export default function CategoryCard({
 
       <div className="relative mb-6 h-2 w-full overflow-hidden rounded-full bg-white/10">
         <div
-          className="absolute left-0 top-0 h-full rounded-full bg-[linear-gradient(90deg,#58E6F3,#79A5FC,#D35BFC,#FEBCCC)]"
+          className={cn(
+            'absolute left-0 top-0 h-full',
+            progressType === 1
+              ? 'rounded-full bg-[linear-gradient(90deg,#58E6F3,#79A5FC,#D35BFC,#FEBCCC)]'
+              : 'bg-[#875DFF]'
+          )}
           style={{ width: `${progressPercent}%` }}
         ></div>
       </div>
