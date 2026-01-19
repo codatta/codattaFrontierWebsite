@@ -125,7 +125,7 @@ export default function UserInfoReputation() {
                   value: detail?.staking?.complete?.toLocaleString() ?? '--',
                   subValue:
                     detail?.staking?.total != null
-                      ? `${detail?.staking?.total?.toLocaleString()}${detail?.staking?.unit || ''}`
+                      ? `${detail?.staking?.total?.toLocaleString()} ${detail?.staking?.unit || ''}`
                       : '--'
                 }}
                 progress={{
@@ -134,7 +134,7 @@ export default function UserInfoReputation() {
                 }}
                 buttonText="Stake Now"
                 onButtonClick={() => setStakeModalOpen(true)}
-                description="Stake $XNY to increase your score (Max: 50,000 $XNY)."
+                description="Stake $XNY to increase your score (Max: 50,000 $XNY, Rate: 2,500 $XNY/Point)."
               />
 
               {/* Valuable Contributions */}
@@ -143,10 +143,11 @@ export default function UserInfoReputation() {
                 title="Valuable Contributions"
                 score={detail?.contribution?.score}
                 metrics={{
-                  label: `Accept:${detail?.contribution?.adopt_cnt ?? '--'}`,
-                  value: `Reject:${detail?.contribution?.refuse_cnt ?? '--'}`
+                  label: `Accept: ${detail?.contribution?.adopt_cnt ?? '--'}`,
+                  value: `Reject: ${detail?.contribution?.refuse_cnt ?? '--'}`
                 }}
                 progress={{
+                  type: 2,
                   current: detail?.contribution?.adopt_cnt || 0,
                   total: (detail?.contribution?.adopt_cnt || 0) + (detail?.contribution?.refuse_cnt || 0) || 1
                 }}
