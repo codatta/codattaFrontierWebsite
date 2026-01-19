@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Pagination, Spin, Tooltip } from 'antd'
 import { useSnapshot } from 'valtio'
@@ -43,12 +43,6 @@ const statusColorMap: Record<string, string> = {
 }
 
 const CardItem = ({ item }: { item: TaskDetail }) => {
-  const pointsRewarded = useMemo(() => {
-    return item.reward_info
-      .filter((item) => item.reward_type === 'POINTS')
-      .reduce((acc, cur) => acc + cur.reward_value, 0)
-  }, [item])
-
   return (
     <div
       key={`${item.submission_id}-${item.task_type}`}
@@ -94,9 +88,9 @@ const CardItem = ({ item }: { item: TaskDetail }) => {
           <SubmissionResultLevel result={item.result}></SubmissionResultLevel>
         </div>
       )}
-      {pointsRewarded > 0 && (
+      {item.reward_points > 0 && (
         <div className="text-primary">
-          + <strong>{pointsRewarded}</strong> Points
+          + <strong>{reward_points}</strong> Points
         </div>
       )}
     </div>
