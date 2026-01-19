@@ -26,16 +26,16 @@ export default function CalculationModalApp({ open, onClose, data }: Calculation
           <div className="mb-6 text-center text-[20px] font-bold text-[#1C1C26]">About calculation</div>
 
           <div className="flex flex-col items-center">
-            <CalculationRow label="Identity" weight={data?.identify?.percent} score={data?.identify?.score ?? 0} />
+            <CalculationRow label="Identity" weight={data?.identify?.percent} score={data?.identify?.value ?? 0} />
             <PlusSign />
-            <CalculationRow label="Activity" weight={data?.login?.percent} score={data?.login?.score ?? 0} />
+            <CalculationRow label="Activity" weight={data?.login?.percent} score={data?.login?.value ?? 0} />
             <PlusSign />
-            <CalculationRow label="Staking" weight={data?.staking?.percent} score={data?.staking?.score ?? 0} />
+            <CalculationRow label="Staking" weight={data?.staking?.percent} score={data?.staking?.value ?? 0} />
             <PlusSign />
             <CalculationRow
               label="Contribution"
               weight={data?.contribution?.percent}
-              score={data?.contribution?.score ?? 0}
+              score={data?.contribution?.value ?? 0}
             />
             <MinusSign />
 

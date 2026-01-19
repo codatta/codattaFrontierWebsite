@@ -53,26 +53,26 @@ export default function CalculationCard({ className, data }: CalculationCardProp
         <CalculationItem
           label="Identity"
           weight={data?.identify?.percent as string}
-          score={data?.identify?.score}
+          score={data?.identify?.value}
           opt={data?.identify?.opt}
           showOpt={false}
         />
         <CalculationItem
           label="Activity"
           weight={data?.login?.percent as string}
-          score={data?.login?.score}
+          score={data?.login?.value}
           opt={data?.login?.opt}
         />
         <CalculationItem
           label="Staking"
           weight={data?.staking?.percent as string}
-          score={data?.staking?.score}
+          score={data?.staking?.value}
           opt={data?.staking?.opt}
         />
         <CalculationItem
           label="Contribution"
           weight={data?.contribution?.percent as string}
-          score={data?.contribution?.score}
+          score={data?.contribution?.value}
           opt={data?.contribution?.opt}
         />
         <CalculationItem
