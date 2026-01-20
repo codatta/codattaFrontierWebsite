@@ -78,67 +78,83 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
       <div className="flex items-center gap-4">
         <ActivityIcon />
         <div className="flex-1">
-          <div className="grid grid-cols-4 text-xs">
-            <span>Duration</span>
-            <span>Type</span>
-            <span>Total Reward</span>
-            <span> {activity.reward_mode === 'FIRST_COME_FIRST_SERVE' ? 'Target' : 'Total Qualified Count'}</span>
-          </div>
-          <div className="mt-1 grid grid-cols-4 font-bold">
-            <div className="text-base">
-              {dayjs(activity.start_time).format('YYYY-MM-DD')} to {dayjs(activity.end_time).format('YYYY-MM-DD')}
+          <div className="flex items-center justify-between">
+            <div className="flex flex-1 justify-center">
+              <div className="flex flex-col items-start">
+                <span className="text-xs">Duration</span>
+                <div className="mt-1 text-base font-bold">
+                  {dayjs(activity.start_time).format('YYYY-MM-DD')} to {dayjs(activity.end_time).format('YYYY-MM-DD')}
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              {activity.task_reward_config?.submission && (
-                <Button
-                  type="text"
-                  className={cn(
-                    'w-[100px] rounded-full border border-white',
-                    selectedType == 'submission' && 'bg-gradient-to-b from-[#D6CAFE] to-[#9E81FE]'
+            <div className="flex flex-1 justify-center">
+              <div className="flex flex-col items-start">
+                <span className="text-xs">Type</span>
+                <div className="mt-1 flex items-center gap-2 font-bold">
+                  {activity.task_reward_config?.submission && (
+                    <Button
+                      type="text"
+                      className={cn(
+                        'w-[100px] rounded-full border border-white',
+                        selectedType == 'submission' && 'bg-gradient-to-b from-[#D6CAFE] to-[#9E81FE]'
+                      )}
+                      ghost={true}
+                      onClick={() => handleTypeChange('submission')}
+                    >
+                      Contribute
+                    </Button>
                   )}
-                  ghost={true}
-                  onClick={() => handleTypeChange('submission')}
-                >
-                  Contribute
-                </Button>
-              )}
-              {activity.task_reward_config?.validation && (
-                <Button
-                  type="text"
-                  className={cn(
-                    'w-[100px] rounded-full border border-white',
-                    selectedType == 'validation' && 'bg-gradient-to-b from-[#D6CAFE] to-[#9E81FE]'
+                  {activity.task_reward_config?.validation && (
+                    <Button
+                      type="text"
+                      className={cn(
+                        'w-[100px] rounded-full border border-white',
+                        selectedType == 'validation' && 'bg-gradient-to-b from-[#D6CAFE] to-[#9E81FE]'
+                      )}
+                      ghost={true}
+                      onClick={() => handleTypeChange('validation')}
+                    >
+                      Review
+                    </Button>
                   )}
-                  ghost={true}
-                  onClick={() => handleTypeChange('validation')}
-                >
-                  Review
-                </Button>
-              )}
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
-              {activity.reward_asset_type == 'XnYCoin' ? <XNYCoinIcon className="size-6"></XNYCoinIcon> : null}
-              <div className="text-lg text-[#FCC800]">{formatNumber(activity.total_asset_amount || 0, 2)}</div>
+            <div className="flex flex-1 justify-center">
+              <div className="flex flex-col items-start">
+                <span className="text-xs">Total Reward</span>
+                <div className="mt-1 flex items-center gap-1 font-bold">
+                  {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
+                  {activity.reward_asset_type == 'XnYCoin' ? <XNYCoinIcon className="size-6"></XNYCoinIcon> : null}
+                  <div className="text-lg text-[#FCC800]">{formatNumber(activity.total_asset_amount || 0, 2)}</div>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center text-base font-bold">
-              <Progress
-                reward_mode={activity.reward_mode}
-                reward_count={
-                  activity.submission_record?.submission_count + activity.validation_record?.submission_count
-                }
-                max_reward_count={
-                  (activity.task_reward_config?.submission?.reward_count ?? 0) +
-                  (activity.task_reward_config?.validation?.reward_count ?? 0)
-                }
-              />
+            <div className="flex flex-1 justify-center">
+              <div className="flex flex-col items-start">
+                <span className="text-xs">
+                  {activity.reward_mode === 'FIRST_COME_FIRST_SERVE' ? 'Target' : 'Total Qualified Count'}
+                </span>
+                <div className="mt-1 flex items-center text-base font-bold">
+                  <Progress
+                    reward_mode={activity.reward_mode}
+                    reward_count={
+                      activity.submission_record?.submission_count + activity.validation_record?.submission_count
+                    }
+                    max_reward_count={
+                      (activity.task_reward_config?.submission?.reward_count ?? 0) +
+                      (activity.task_reward_config?.validation?.reward_count ?? 0)
+                    }
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div className="">
         {selectedType === 'submission' && (
-          <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg border border-[#A281FF] bg-[#6E47DD] px-4 py-[10px]">
+          <div className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-[#A281FF] bg-[#6E47DD] px-4 py-[10px]">
             <div className="flex items-center">
               <span className="mr-2 text-xs">Total Rewards</span>
               {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
@@ -168,7 +184,7 @@ function Header({ activity }: { activity: ActivityInfoItemType }) {
           </div>
         )}
         {selectedType === 'validation' && (
-          <div className="mt-3 grid grid-cols-3 gap-1 rounded-lg border border-[#A281FF] bg-[#6E47DD] px-4 py-[10px]">
+          <div className="mt-3 flex items-center justify-between gap-4 rounded-lg border border-[#A281FF] bg-[#6E47DD] px-4 py-[10px]">
             <div className="flex items-center">
               <span className="mr-2 text-xs">Total Rewards</span>
               {activity.reward_asset_type == 'USDT' ? <USDTCoinIcon className="size-6"></USDTCoinIcon> : null}
