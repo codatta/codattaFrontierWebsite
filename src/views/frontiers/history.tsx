@@ -88,11 +88,11 @@ const CardItem = ({ item }: { item: TaskDetail }) => {
           <SubmissionResultLevel result={item.result}></SubmissionResultLevel>
         </div>
       )}
-      {item.reward_points && item.reward_points > 0 && (
+      {item.reward_points && item.reward_points > 0 ? (
         <div className="text-primary">
           + <strong>{item.reward_points}</strong> Points
         </div>
-      )}
+      ) : null}
     </div>
   )
 }
