@@ -62,7 +62,7 @@ const Frontiers = () => {
     <div className="">
       <h2 className="mb-3 text-lg font-bold">Recent Frontiers</h2>
       <Spin spinning={loading}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
           {displayFrontiers.map(({ frontier, activity }) => (
             <div
               key={frontier.title}
@@ -87,7 +87,7 @@ const Frontiers = () => {
                     </div>
                   </div>
                 )}
-                <div className="mt-auto truncate text-xl font-bold lg:text-2xl">{frontier.title}</div>
+                <div className="mt-auto truncate text-base font-bold lg:text-lg">{frontier.title}</div>
                 <div className="flex">
                   <div className="flex items-center">
                     {frontier.avatars.map((item, index) => {
@@ -103,12 +103,10 @@ const Frontiers = () => {
                     <div className="ml-1.5 text-sm">{frontier.participants_show}</div>
                   </div>
                   {frontier.difficulty_level && (
-                    <div className="ml-auto flex items-center rounded-[20px] border border-white/5 bg-white/5 px-2 py-1 backdrop:blur">
+                    <div className="ml-auto flex items-center rounded-[20px] border border-white/5 bg-white/5 px-3 py-2 backdrop:blur">
                       {Array.from({ length: Math.floor(frontier.difficulty_level) }).map((_) => (
                         <img className="mx-px size-[13px]" src={StarImage} alt="star" />
                       ))}
-
-                      <span className="ml-1">{frontier.difficulty_level?.toFixed(1)}</span>
                     </div>
                   )}
                 </div>
