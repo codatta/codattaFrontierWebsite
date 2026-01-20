@@ -30,6 +30,7 @@ const AirdropActivityHistory = lazy(() => import('@/views/airdrop-activity/activ
 const UserInfo = lazy(() => import('@/views/userinfo/index'))
 const UserInfoReward = lazy(() => import('@/views/userinfo/reward'))
 const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
+const UserInfoReputationApp = lazy(() => import('@/views/userinfo/reputation-app'))
 const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
 const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
@@ -95,6 +96,8 @@ const FrontierSocialTwitterFollow = lazy(() => import('@/views/frontiers/social-
 const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social-tasks/twitter-retweet'))
 
 const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
+const FashionValidation = lazy(() => import('@/views/frontiers/fashion_validation'))
+const FashionValidationApp = lazy(() => import('@/views/frontiers/fashion_validation_app'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -131,6 +134,9 @@ export default function Router() {
       <RouteTracker />
       <Routes>
         <Route index element={<Navigate to="/app" />} />
+        <Route path="/m">
+          <Route path="settings/reputation" element={<UserInfoReputationApp />} />
+        </Route>
         <Route path="/arena" element={<ArenaLayout />}>
           <Route index element={<ChatbotArenaPage />} />
           <Route path="leaderboard" element={<ChatBotArenaLeaderboardPage />} />
@@ -207,6 +213,27 @@ export default function Router() {
           path="/frontier/project/PHYSICAL_TPL_QUESTION/:taskId"
           element={<PhysicalQuestion templateId="PHYSICAL_TPL_QUESTION" />}
         />
+
+        <Route path="/frontier/project/FASHION_VALIDATION/:taskId">
+          <Route
+            index
+            element={
+              <AppContainerDetector
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
+                notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
+              />
+            }
+          />
+          <Route
+            path="feed/:uid"
+            element={
+              <AppContainerDetector
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" isFeed={true} />}
+                notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
+              />
+            }
+          />
+        </Route>
         <Route
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={
