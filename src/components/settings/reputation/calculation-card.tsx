@@ -16,7 +16,7 @@ function CalculationItem({ label, weight, score, opt, showOpt = true, className 
   }
 
   return (
-    <>
+    <div className="flex flex-1 items-center gap-2">
       {showOpt && <span className="text-gray-500">{opt === '-' ? '➖' : '➕'}</span>}
       <div
         className={cn(
@@ -34,7 +34,7 @@ function CalculationItem({ label, weight, score, opt, showOpt = true, className 
         </div>
         <div className="mt-0.5 text-base font-bold text-white">{score.toFixed(2)}</div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -45,7 +45,9 @@ interface CalculationCardProps {
 
 export default function CalculationCard({ className, data }: CalculationCardProps) {
   return (
-    <div className={cn('flex h-[160px] flex-col justify-center rounded-2xl bg-[#252532] px-6 py-4', className)}>
+    <div
+      className={cn('flex h-auto min-h-[160px] flex-col justify-center rounded-2xl bg-[#252532] px-6 py-4', className)}
+    >
       <div className="mb-4 flex items-center justify-between gap-3">
         <div className="text-base font-bold text-white">About calculation</div>
         <div className="text-xs text-[#BBBBBE]">
@@ -53,7 +55,7 @@ export default function CalculationCard({ className, data }: CalculationCardProp
         </div>
       </div>
 
-      <div className="flex min-h-[60px] items-center gap-2">
+      <div className="flex min-h-[60px] flex-wrap items-center gap-2">
         <CalculationItem
           label="Identity"
           weight={data?.identify?.percent as string}

@@ -39,9 +39,7 @@ export default function CategoryCard({
   const progressType = progress.type ?? 1
 
   return (
-    <div
-      className={cn('flex min-w-[528px] flex-col rounded-3xl border border-[#875DFF1F] bg-[#252532] p-6', className)}
-    >
+    <div className={cn('flex flex-col rounded-3xl border border-[#875DFF1F] bg-[#252532] p-6', className)}>
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-3">
           {icon}
