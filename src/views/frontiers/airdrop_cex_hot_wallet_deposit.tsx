@@ -189,6 +189,14 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
     const isEmpty = (val: string) => !val || !val.trim()
 
     // 1. Required fields check
+    if (isEmpty(formData.exchange_name)) newErrors.exchange_name = 'Exchange Name is required'
+
+    if (formData.screenshot.length === 0) newErrors.screenshot = 'Exchange UI Screenshot is required'
+
+    if (isEmpty(formData.network)) newErrors.network = 'Network is required'
+
+    if (isEmpty(formData.token)) newErrors.token = 'Token is required'
+
     if (isEmpty(formData.amount)) newErrors.amount = 'Deposit Amount is required'
     else if (isNaN(Number(formData.amount))) newErrors.amount = 'Amount must be a number'
 
