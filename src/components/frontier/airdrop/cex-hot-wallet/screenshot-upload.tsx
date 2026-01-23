@@ -1,5 +1,6 @@
 import React from 'react'
 import UploadImg, { UploadedImage } from '@/components/frontier/airdrop/UploadImg'
+import { Info } from 'lucide-react'
 
 interface ScreenshotUploadProps {
   label: string
@@ -54,7 +55,13 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
 
         {/* Upload Section */}
         <div className="flex flex-col space-y-2">
-          <div className="text-xs font-bold text-[#a78bfa]">Your Screenshot</div>
+          <div className="flex items-center gap-2">
+            <div className="text-xs font-bold text-[#a78bfa]">Your Screenshot</div>
+            <div className="flex items-center gap-1 text-[11px] text-[#facc15]">
+              <Info size={12} />
+              PC Screenshot Only, No Mobile UI Allowed
+            </div>
+          </div>
           <div className="min-h-[200px] flex-1">
             <UploadImg
               value={value}

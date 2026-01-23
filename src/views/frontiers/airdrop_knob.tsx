@@ -6,7 +6,7 @@ import Guideline, { ExpertRedline } from '@/components/frontier/airdrop/knob/gui
 import ImageUploader from '@/components/frontier/airdrop/knob/image-uploader'
 import ScaleInput from '@/components/frontier/airdrop/knob/scale-input'
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop/knob/types'
-import { UploadedImage } from '@/components/frontier/airdrop/UploadImg'
+import { UploadChangeContext, UploadedImage } from '@/components/frontier/airdrop/UploadImg'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import { calculateFileHash } from '@/utils/file-hash'
 import { Button } from '@/components/booster/button'
@@ -34,6 +34,7 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImageSrc, setModalImageSrc] = useState('')
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
+  const [imageLoading, setImageLoading] = useState(false)
 
   // Refs
   const annotationCanvasRef = useRef<AnnotationCanvasRef>(null)
@@ -66,35 +67,64 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
     checkTaskStatus()
   }, [checkTaskStatus])
 
-  // Handle Upload Change
-  const handleUploadChange = (newImages: UploadedImage[]) => {
-    const oldImages = uploadedImages
-    setUploadedImages(newImages)
+  // Helper to reset all state
+  const resetState = () => {
+    setImage(null)
+    setRect(null)
+    setPointer(null)
+    setRectModified(false)
+    setPointerModified(false)
+    setScaleValue('')
+    setScaleValueError('')
+    setUploadedImages([])
+    setImageLoading(false)
+  }
 
-    if (newImages.length === 0) {
-      // Image deleted
-      setImage(null)
-      setRect(null)
-      setPointer(null)
-      setRectModified(false)
-      setPointerModified(false)
-      setScaleValue('')
-      setScaleValueError('')
+  // Handle Upload Change
+  const handleUploadChange = (newImages: UploadedImage[], context?: UploadChangeContext) => {
+    // If UploadImg removed the failed file internally, newImages might be empty.
+    // However, we still want to handle the 'error' context explicitly if present.
+
+    if (context?.type === 'uploading') {
+      setUploadedImages(newImages)
+      setImageLoading(true)
       return
     }
 
+    if (context?.type === 'error') {
+      message.error('Image upload failed, please try again')
+      resetState()
+      return
+    }
+
+    // Standard empty check (e.g. user manually removed image)
+    if (newImages.length === 0) {
+      resetState()
+      return
+    }
+
+    setUploadedImages(newImages)
+
     const newImg = newImages[0]
-    const oldImg = oldImages[0]
+    const oldImg = uploadedImages[0]
 
     // If it's a new image (previously empty) or a URL change (upload finished)
+    // We only proceed if status is 'done' or if it's a blob url (initial preview) but we prefer waiting for 'done' if we want to be strict.
+    // However, existing logic allowed blob preview. The user requirement says "when upload done AND img loaded -> loading false".
+    // So we should keep loading true if it is 'done' but image hasn't loaded yet.
+
     if (!oldImg || newImg.url !== oldImg.url) {
+      setImageLoading(true)
       const img = new Image()
       img.crossOrigin = 'anonymous'
+
       img.onload = () => {
         setImage(img)
 
         // Only reset annotations if it was a fresh upload
-        if (!oldImg) {
+        // We check if we already have a valid rect/pointer to decide if we need to auto-init
+        // But simpler to just check if it's a different image source effectively
+        if (!oldImg || newImg.url !== oldImg.url) {
           const w = img.naturalWidth
           const h = img.naturalHeight
           const cx = w / 2
@@ -119,7 +149,14 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
           setScaleValue('')
           setScaleValueError('')
         }
+        setImageLoading(false)
       }
+
+      img.onerror = () => {
+        message.error('Image upload failed, please try again')
+        resetState()
+      }
+
       img.src = newImg.url
     }
   }
@@ -292,6 +329,7 @@ const AirdropKnob: React.FC<{ templateId?: string }> = ({ templateId: propTempla
               rectModified={rectModified}
               pointerModified={pointerModified}
               exampleImage="https://static.codatta.io/static/images/knob_label_1766728031053.png"
+              loading={imageLoading}
               onRectChange={handleRectChange}
               onPointerChange={handlePointerChange}
               onShowModal={showImageModal}

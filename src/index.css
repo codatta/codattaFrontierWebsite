@@ -26,3 +26,31 @@
   background-color: #4a4a5a !important;
 }
 
+/* Custom styles for centered toast message */
+.custom-message-toast {
+  transform: translateY(-50%) !important;
+}
+
+.custom-message-toast .ant-message-notice-content {
+  background-color: rgba(51, 51, 51, 0.9) !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  font-size: 14px !important;
+  line-height: 20px !important;
+  animation: none !important;
+}
+
+.custom-message-toast .anticon {
+  color: white !important;
+}
+
+/* Disable message animation */
+.custom-message-toast.ant-message-notice {
+  animation: none !important;
+}
+
+.custom-message-toast .ant-message-notice-content {
+  animation: none !important;
+}

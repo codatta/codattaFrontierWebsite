@@ -28,10 +28,10 @@ export default function UserInfoSection() {
     const xyn = info?.user_assets?.find((asset) => asset.asset_type === 'XnYCoin')
     const usdt = info?.user_assets?.find((asset) => asset.asset_type === 'USDT')
     const points = info?.user_assets?.find((asset) => asset.asset_type === 'POINTS')
-    const xynAmount = formatNumber(Number(xyn?.available_amount ?? 0))
+    const xynAmount = formatNumber(Number(xyn?.balance?.amount ?? 0))
     const xnyStakedAmount = formatNumber(Number(xyn?.stake_amount ?? 0))
-    const usdtAmount = formatNumber(Number(usdt?.available_amount ?? 0))
-    const pointsAmount = formatNumber(parseInt(String(points?.available_amount ?? '0')))
+    const usdtAmount = formatNumber(Number(usdt?.balance?.amount ?? 0))
+    const pointsAmount = formatNumber(parseInt(String(points?.balance?.amount ?? '0')))
 
     return [
       {
@@ -99,7 +99,7 @@ export default function UserInfoSection() {
           ))}
           <ReputationItem
             reputation={reputation}
-            className="bg-[#252532] px-4 text-lg"
+            className="bg-[#252532] px-4"
             onClick={() => navigate('/app/settings/reputation')}
           />
         </ul>

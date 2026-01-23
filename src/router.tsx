@@ -30,6 +30,7 @@ const AirdropActivityHistory = lazy(() => import('@/views/airdrop-activity/activ
 const UserInfo = lazy(() => import('@/views/userinfo/index'))
 const UserInfoReward = lazy(() => import('@/views/userinfo/reward'))
 const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
+const UserInfoReputationApp = lazy(() => import('@/views/userinfo/reputation-app'))
 const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
 const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
@@ -97,6 +98,8 @@ const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social
 const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
 const FashionValidation = lazy(() => import('@/views/frontiers/fashion_validation'))
 const FashionValidationApp = lazy(() => import('@/views/frontiers/fashion_validation_app'))
+const FashionGuideToDownload = lazy(() => import('@/views/frontiers/fashion_guide_to_download'))
+const FashionGuideToDownloadApp = lazy(() => import('@/views/frontiers/fashion_guide_to_download_app'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -133,6 +136,9 @@ export default function Router() {
       <RouteTracker />
       <Routes>
         <Route index element={<Navigate to="/app" />} />
+        <Route path="/m">
+          <Route path="settings/reputation" element={<UserInfoReputationApp />} />
+        </Route>
         <Route path="/arena" element={<ArenaLayout />}>
           <Route index element={<ChatbotArenaPage />} />
           <Route path="leaderboard" element={<ChatBotArenaLeaderboardPage />} />
@@ -230,6 +236,15 @@ export default function Router() {
             }
           />
         </Route>
+        <Route
+          path="/frontier/project/FASHION_GUIDE_TO_DOWNLOAD/:taskId"
+          element={
+            <AppContainerDetector
+              inApp={<FashionGuideToDownloadApp templateId="FASHION_GUIDE_TO_DOWNLOAD" />}
+              notInApp={<FashionGuideToDownload />}
+            />
+          }
+        />
         <Route
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={

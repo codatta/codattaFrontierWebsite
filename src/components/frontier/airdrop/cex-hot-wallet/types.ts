@@ -2,16 +2,16 @@ import { UploadedImage } from '@/components/frontier/airdrop/UploadImg'
 
 export interface DepositFormData {
   exchange_name: string
-  deposit_screenshot: UploadedImage[]
-  deposit_network: string
-  deposit_token: string
-  deposit_amount: string
-  deposit_date: string
-  exchange_deposit_address: string
-  deposit_tx_hash: string
+  screenshot: UploadedImage[]
+  network: string
+  token: string
+  amount: string
+  date: string
+  exchange_address: string
+  tx_hash: string
   explorer_screenshot: UploadedImage[]
-  deposit_from_address: string
-  deposit_to_address: string
+  from_address: string
+  to_address: string
 
   // Outgoing transaction section
   has_outgoing_transaction: 'yes' | 'no' | null
@@ -25,12 +25,12 @@ export interface DepositFormData {
 export interface WithdrawFormData {
   exchange_name: string
   exchange_screenshot: UploadedImage[]
-  withdraw_network: string
-  withdraw_coin: string
-  withdraw_amount: string
-  withdraw_network_fee: string
-  withdrawal_address: string
-  withdrawal_tx_hash: string
+  network: string
+  coin: string
+  amount: string
+  network_fee: string
+  address: string
+  tx_hash: string
   transaction_date: string
   explorer_screenshot: UploadedImage[]
   sender_address: string

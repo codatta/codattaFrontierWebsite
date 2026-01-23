@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Button, Modal, message, Spin } from 'antd'
 import { ExclamationCircleFilled } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
 
 import frontiterApi, { TaskStakeInfo } from '@/apis/frontiter.api'
 import { formatNumber } from '@/utils/str'
@@ -14,6 +15,7 @@ interface ToStakeModalProps {
 }
 
 const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onStake }) => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [taskStakeInfo, settaskStakeInfo] = useState<TaskStakeInfo>()
   const percent = useMemo(() => {
@@ -104,7 +106,9 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
         </div>
 
         <div className="p-6 text-base">
-          <h2 className="mb-3 font-bold text-white">Your reputation for this task is still at the starting level.</h2>
+          <h2 className="mb-3 font-bold text-white">
+            Your current reputation hasn’t met the participation gate for this task yet.
+          </h2>
 
           <p className="mb-6 text-sm text-[#A0A0B0]">
             About <span className="font-semibold text-white">{percent}%</span> of the gate is already covered by your
@@ -114,8 +118,8 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
           {/* Progress Card */}
           <div className="mb-6 rounded-2xl bg-[#252532] p-5 text-base">
             <div className="mb-6 flex items-center justify-between">
-              <span className="text-[#BBBBBE]">Reputation Level</span>
-              <span className="text-white">Level {taskStakeInfo?.user_level ?? 0}</span>
+              <span className="text-[#BBBBBE]">Reputation</span>
+              <span className="text-white">{taskStakeInfo?.user_reputation ?? 0}</span>
             </div>
 
             <div className="flex items-center justify-between gap-4">
@@ -132,24 +136,31 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
             </div>
           </div>
 
-          <div className="border-t border-white/10 pt-6">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-6">
-                <span className="text-white">Suggested Stake</span>
-                <div className="text-lg text-[#FFA800]">
-                  <span className="font-bold">{stakeAmount} </span>
-                  {stakeToKen}
-                </div>
-              </div>
-
-              <Button
-                type="primary"
-                onClick={() => onStake(taskStakeInfo!)}
-                className="h-10 rounded-full border-none bg-gradient-to-r from-[#875DFF] to-[#6A45E6] px-8 text-sm"
-              >
-                Stake to unlock
-              </Button>
+          <div className="mb-6 flex items-center justify-between gap-6">
+            <span className="text-white">Suggested Stake</span>
+            <div className="text-lg text-[#FFA800]">
+              <span className="font-bold">{stakeAmount} </span>
+              {stakeToKen}
             </div>
+          </div>
+
+          <div className="flex items-center gap-4 border-t border-white/10 pt-6">
+            <Button
+              className="h-10 flex-1 rounded-full border-none bg-white text-sm font-semibold text-black hover:!bg-gray-200 hover:!text-white"
+              onClick={() => {
+                navigate('/app/settings/reputation')
+                onClose()
+              }}
+            >
+              Improve Reputation
+            </Button>
+            <Button
+              type="primary"
+              onClick={() => onStake(taskStakeInfo!)}
+              className="h-10 flex-1 rounded-full border-none bg-[#875DFF] text-sm font-semibold hover:bg-[#764CE0]"
+            >
+              Stake to unlock
+            </Button>
           </div>
         </div>
       </Spin>

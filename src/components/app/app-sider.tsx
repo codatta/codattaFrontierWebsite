@@ -183,7 +183,7 @@ const baseMenuItems: MenuItem[] = [
   },
   {
     icon: <IconGitbook color="white" />,
-    key: 'https://docs.xny.ai/xny/codatta',
+    key: 'https://docs.codatta.io/en/quick-guide/overview',
     label: (
       <div className="flex items-center justify-between">
         <span>Documentation</span>

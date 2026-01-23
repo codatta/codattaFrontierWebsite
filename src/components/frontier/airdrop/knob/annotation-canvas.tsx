@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 're
 import { Stage, Layer, Image as KonvaImage, Rect as KonvaRect, Circle, Line, Group } from 'react-konva'
 import Konva from 'konva'
 import { Rect, Point } from './types'
+import { Spin } from 'antd'
 
 export interface AnnotationCanvasRef {
   getAnnotatedImage: () => string
@@ -14,6 +15,7 @@ interface AnnotationCanvasProps {
   rectModified: boolean
   pointerModified: boolean
   exampleImage?: string
+  loading?: boolean
   onRectChange: (rect: Rect | null) => void
   onPointerChange: (pointer: Point | null) => void
   onShowModal: (src: string) => void
@@ -21,7 +23,18 @@ interface AnnotationCanvasProps {
 
 const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
   (
-    { image, rect, pointer, rectModified, pointerModified, exampleImage, onRectChange, onPointerChange, onShowModal },
+    {
+      image,
+      rect,
+      pointer,
+      rectModified,
+      pointerModified,
+      exampleImage,
+      loading = false,
+      onRectChange,
+      onPointerChange,
+      onShowModal
+    },
     ref
   ) => {
     const containerRef = useRef<HTMLDivElement>(null)
@@ -35,8 +48,30 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
     const [isDraggingShape, setIsDraggingShape] = useState(false)
     const [lastShapePos, setLastShapePos] = useState<Point | null>(null)
     const [selectedId, setSelectedId] = useState<'rect' | 'pointer' | null>(null)
+    const [isCenterDecoupled, setIsCenterDecoupled] = useState(false)
+    const [isHoveringCenter, setIsHoveringCenter] = useState(false)
+    const [isHoveringPointer, setIsHoveringPointer] = useState(false)
 
     const MIN_SIZE = 20
+
+    // Reset decoupled state when rect is cleared
+    useEffect(() => {
+      if (!rect) {
+        setIsCenterDecoupled(false)
+      }
+    }, [rect])
+
+    // Detect if loaded rect has decoupled center
+    useEffect(() => {
+      if (!isCenterDecoupled && rect && rect.center) {
+        const cx = (rect.x1 + rect.x2 + rect.x3 + rect.x4) / 4
+        const cy = (rect.y1 + rect.y2 + rect.y3 + rect.y4) / 4
+        const d2 = Math.pow(rect.center.x - cx, 2) + Math.pow(rect.center.y - cy, 2)
+        if (d2 > 1) {
+          setIsCenterDecoupled(true)
+        }
+      }
+    }, [rect, isCenterDecoupled])
 
     // Calculate dimensions to fit image in container
     useEffect(() => {
@@ -194,9 +229,15 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       }
 
       // Update center
-      newRect.center = {
+      const geometricCenter = {
         x: (newRect.x1 + newRect.x2 + newRect.x3 + newRect.x4) / 4,
         y: (newRect.y1 + newRect.y2 + newRect.y3 + newRect.y4) / 4
+      }
+
+      if (!isCenterDecoupled) {
+        newRect.center = geometricCenter
+      } else {
+        newRect.center = rect.center || geometricCenter
       }
 
       onRectChange(newRect)
@@ -300,9 +341,15 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       }
 
       // Update center
-      newRect.center = {
+      const geometricCenter = {
         x: (newRect.x1 + newRect.x2 + newRect.x3 + newRect.x4) / 4,
         y: (newRect.y1 + newRect.y2 + newRect.y3 + newRect.y4) / 4
+      }
+
+      if (!isCenterDecoupled) {
+        newRect.center = geometricCenter
+      } else {
+        newRect.center = rect.center || geometricCenter
       }
 
       onRectChange(newRect)
@@ -318,6 +365,7 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
         target.name() === 'quad-edge' ||
         target.name() === 'pointer' ||
         target.getParent()?.name() === 'pointer' ||
+        target.name() === 'center-dot' ||
         target instanceof Konva.Circle // Corners/anchors
 
       if (!isShape) {
@@ -336,6 +384,10 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
       }
 
       if (target instanceof Konva.Circle || (target instanceof Konva.Line && target.name() === 'quad-edge')) {
+        // Check if it's the center dot
+        if (target.name() === 'center-dot') {
+          return
+        }
         return
       }
 
@@ -420,10 +472,18 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
           newRect.y3 += safeDy
           newRect.x4 += safeDx
           newRect.y4 += safeDy
-          newRect.center = {
+
+          const geometricCenter = {
             x: (newRect.x1 + newRect.x2 + newRect.x3 + newRect.x4) / 4,
             y: (newRect.y1 + newRect.y2 + newRect.y3 + newRect.y4) / 4
           }
+
+          if (!isCenterDecoupled) {
+            newRect.center = geometricCenter
+          } else {
+            newRect.center = rect.center || geometricCenter
+          }
+
           onRectChange(newRect)
           // Accumulate the consumed delta into lastPos, effectively shifting the "anchor"
           // We add safeDx/safeDy to lastShapePos so the next delta is calculated relative to the new position
@@ -532,63 +592,97 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
     return (
       <div className="space-y-3">
         <div className="block space-y-6">
-          <div>
-            <h2 className="flex items-center gap-2 text-sm font-medium">
-              Step 2: Annotate Knob Outline<span className="text-red-400">*</span>
-              {rectModified && (
-                <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
-                  ✓
-                </span>
-              )}
-            </h2>
-            <p className="mt-1 text-xs text-[#BBBBBE]">
-              Click the red rectangle to activate, then adjust position and size to annotate the knob&apos;s outer
-              contour (do not only frame the pointer or include the scale area).
-            </p>
-            {/* Rect Stats */}
-            <div className="mt-3 h-[60px]">
-              {rect ? (
-                !rectModified ? (
-                  <div className="rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 p-4 text-center text-sm text-[#BBBBBE]">
-                    Adjust the red rectangle to match the knob&apos;s outer contour
-                  </div>
-                ) : (
-                  <div className="text-sm text-[#BBBBBE]">
-                    <div className="flex gap-5">
-                      <div>
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <div>
+              <h2 className="flex items-center gap-2 text-sm font-medium">
+                Step 2: Annotate Knob Outline<span className="text-red-400">*</span>
+                {rectModified && (
+                  <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
+                    ✓
+                  </span>
+                )}
+              </h2>
+              <p className="mt-1 text-xs text-[#BBBBBE]">
+                Click the red rectangle to activate, then adjust position and size to annotate the knob&apos;s outer
+                contour (do not only frame the pointer or include the scale area).
+              </p>
+              {/* Rect Stats */}
+              <div className="mt-3 h-[60px]">
+                {rect ? (
+                  !rectModified ? (
+                    <div className="rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 p-4 text-center text-sm text-[#BBBBBE]">
+                      Adjust the red rectangle to match the knob&apos;s outer contour
+                    </div>
+                  ) : (
+                    <div className="text-sm text-[#BBBBBE]">
+                      <div className="flex gap-5">
                         <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P1</span>
-                          <span>
-                            {Math.round(rect.x1)}, {Math.round(rect.y1)}
-                          </span>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P1</span>
+                            <span>
+                              {Math.round(rect.x1)}, {Math.round(rect.y1)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P2</span>
+                            <span>
+                              {Math.round(rect.x4)}, {Math.round(rect.y4)}
+                            </span>
+                          </div>
                         </div>
                         <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P2</span>
-                          <span>
-                            {Math.round(rect.x4)}, {Math.round(rect.y4)}
-                          </span>
-                        </div>
-                      </div>
-                      <div>
-                        <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P3</span>
-                          <span>
-                            {Math.round(rect.x2)}, {Math.round(rect.y2)}
-                          </span>
-                        </div>
-                        <div>
-                          <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P4</span>
-                          <span>
-                            {Math.round(rect.x3)}, {Math.round(rect.y3)}
-                          </span>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P3</span>
+                            <span>
+                              {Math.round(rect.x2)}, {Math.round(rect.y2)}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="mr-2 rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">P4</span>
+                            <span>
+                              {Math.round(rect.x3)}, {Math.round(rect.y3)}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
+                  )
+                ) : (
+                  <div className="text-xs italic text-gray-600">No shape drawn</div>
+                )}
+              </div>
+            </div>
+            <div>
+              <h2 className="flex items-center gap-2 text-sm font-medium">
+                Optional Step: Annotate Knob Center Position
+                {isCenterDecoupled && (
+                  <span className="flex size-5 items-center justify-center rounded-full bg-green-500 text-[10px] text-white">
+                    ✓
+                  </span>
+                )}
+              </h2>
+              <p className="mt-1 text-xs text-[#BBBBBE]">
+                The green dot is the center point of the knob. You can move it independently to align with the center
+                position if needed.
+              </p>
+              {/* Center Stats */}
+              <div className="mt-3 h-[60px]">
+                {rect && rect.center ? (
+                  <div className="flex items-center gap-2 text-sm text-[#BBBBBE]">
+                    <span className="rounded bg-white/10 px-1.5 py-0.5 font-semibold text-white">C</span>
+                    <span>
+                      {Math.round(rect.center.x)}, {Math.round(rect.center.y)}
+                    </span>
+                    {isCenterDecoupled ? (
+                      <span className="text-xs text-yellow-500">(Custom)</span>
+                    ) : (
+                      <span className="text-xs text-gray-500">(Default)</span>
+                    )}
                   </div>
-                )
-              ) : (
-                <div className="text-xs italic text-gray-600">No shape drawn</div>
-              )}
+                ) : (
+                  <div className="text-xs italic text-gray-600">Not active</div>
+                )}
+              </div>
             </div>
           </div>
           <div>
@@ -628,202 +722,233 @@ const AnnotationCanvas = forwardRef<AnnotationCanvasRef, AnnotationCanvasProps>(
           <div className="space-y-2">
             <div className="text-xs font-bold text-[#a78bfa]">Your Annotation</div>
             <div>
-              {image ? (
-                <div>
-                  <div
-                    ref={containerRef}
-                    className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black"
-                  >
-                    <Stage
-                      ref={stageRef}
-                      width={dimensions.width}
-                      height={dimensions.height}
-                      onMouseDown={handleStageMouseDown}
-                      onMouseMove={handleStageMouseMove}
-                      onMouseUp={handleStageMouseUp}
-                      onMouseLeave={handleStageMouseUp}
+              <Spin spinning={loading}>
+                {image ? (
+                  <div>
+                    <div
+                      ref={containerRef}
+                      className="relative flex h-[400px] w-full items-center justify-center overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-black"
                     >
-                      <Layer scaleX={dimensions.scale} scaleY={dimensions.scale}>
-                        <KonvaImage image={image} />
+                      <Stage
+                        ref={stageRef}
+                        width={dimensions.width}
+                        height={dimensions.height}
+                        onMouseDown={handleStageMouseDown}
+                        onMouseMove={handleStageMouseMove}
+                        onMouseUp={handleStageMouseUp}
+                        onMouseLeave={handleStageMouseUp}
+                      >
+                        <Layer scaleX={dimensions.scale} scaleY={dimensions.scale}>
+                          <KonvaImage image={image} />
 
-                        {/* Temporary Drawing Rect */}
-                        {isDrawing && drawStart && drawCurrent && (
-                          <KonvaRect
-                            x={Math.min(drawStart.x, drawCurrent.x)}
-                            y={Math.min(drawStart.y, drawCurrent.y)}
-                            width={Math.abs(drawCurrent.x - drawStart.x)}
-                            height={Math.abs(drawCurrent.y - drawStart.y)}
-                            stroke="red"
-                            strokeWidth={2 / dimensions.scale}
-                          />
-                        )}
+                          {/* Temporary Drawing Rect */}
+                          {isDrawing && drawStart && drawCurrent && (
+                            <KonvaRect
+                              x={Math.min(drawStart.x, drawCurrent.x)}
+                              y={Math.min(drawStart.y, drawCurrent.y)}
+                              width={Math.abs(drawCurrent.x - drawStart.x)}
+                              height={Math.abs(drawCurrent.y - drawStart.y)}
+                              stroke="red"
+                              strokeWidth={2 / dimensions.scale}
+                            />
+                          )}
 
-                        {/* Edited Quadrilateral */}
-                        {rect &&
-                          image &&
-                          (() => {
-                            const coords = getCoords()
-                            if (!coords) return null
-                            const { x1, y1, x2, y2, x3, y3, x4, y4 } = coords
+                          {/* Edited Quadrilateral */}
+                          {rect &&
+                            image &&
+                            (() => {
+                              const coords = getCoords()
+                              if (!coords) return null
+                              const { x1, y1, x2, y2, x3, y3, x4, y4 } = coords
 
-                            const corners = [
-                              { x: x1, y: y1, i: 1 },
-                              { x: x2, y: y2, i: 2 },
-                              { x: x3, y: y3, i: 3 },
-                              { x: x4, y: y4, i: 4 }
-                            ]
+                              const corners = [
+                                { x: x1, y: y1, i: 1 },
+                                { x: x2, y: y2, i: 2 },
+                                { x: x3, y: y3, i: 3 },
+                                { x: x4, y: y4, i: 4 }
+                              ]
 
-                            // Edges: 1-2, 2-3, 3-4, 4-1
-                            const edges = [
-                              { p1: corners[0], p2: corners[1], i: 0 },
-                              { p1: corners[1], p2: corners[2], i: 1 },
-                              { p1: corners[2], p2: corners[3], i: 2 },
-                              { p1: corners[3], p2: corners[0], i: 3 }
-                            ]
+                              // Edges: 1-2, 2-3, 3-4, 4-1
+                              const edges = [
+                                { p1: corners[0], p2: corners[1], i: 0 },
+                                { p1: corners[1], p2: corners[2], i: 1 },
+                                { p1: corners[2], p2: corners[3], i: 2 },
+                                { p1: corners[3], p2: corners[0], i: 3 }
+                              ]
 
-                            return (
-                              <>
-                                {/* The Polygon Shape */}
-                                <Line
-                                  ref={rectRef}
-                                  points={[x1, y1, x2, y2, x3, y3, x4, y4]}
-                                  closed
-                                  stroke={selectedId === 'rect' ? '#10b981' : 'red'}
-                                  strokeWidth={2 / dimensions.scale}
-                                  fill="transparent"
-                                  name="quad-edge"
-                                  onClick={() => setSelectedId('rect')}
-                                  onTap={() => setSelectedId('rect')}
-                                  onMouseEnter={() => {
-                                    if (stageRef.current) stageRef.current.container().style.cursor = 'move'
-                                  }}
-                                  onMouseLeave={() => {
-                                    if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                  }}
-                                />
-
-                                {/* Corners - Always visible */}
-                                {corners.map((c) => (
-                                  <Circle
-                                    key={`corner-${c.i}`}
-                                    x={c.x}
-                                    y={c.y}
-                                    radius={6 / dimensions.scale}
-                                    fill={selectedId === 'rect' ? 'white' : 'red'}
+                              return (
+                                <>
+                                  {/* The Polygon Shape */}
+                                  <Line
+                                    ref={rectRef}
+                                    points={[x1, y1, x2, y2, x3, y3, x4, y4]}
+                                    closed
                                     stroke={selectedId === 'rect' ? '#10b981' : 'red'}
-                                    strokeWidth={selectedId === 'rect' ? 2 / dimensions.scale : 0}
-                                    draggable
-                                    onDragStart={() => setSelectedId('rect')}
+                                    strokeWidth={2 / dimensions.scale}
+                                    fill="transparent"
+                                    name="quad-edge"
                                     onClick={() => setSelectedId('rect')}
                                     onTap={() => setSelectedId('rect')}
-                                    onDragMove={(e) => handleCornerDrag(c.i, e)}
                                     onMouseEnter={() => {
-                                      if (stageRef.current) {
-                                        stageRef.current.container().style.cursor = getCursorForCorner(c.i)
-                                      }
+                                      if (stageRef.current) stageRef.current.container().style.cursor = 'move'
                                     }}
                                     onMouseLeave={() => {
                                       if (stageRef.current) stageRef.current.container().style.cursor = 'default'
                                     }}
                                   />
-                                ))}
 
-                                {/* Edge Anchors - Only show when selected */}
-                                {selectedId === 'rect' && (
-                                  <>
-                                    {edges.map((e) => {
-                                      const mid = getMidpoint(e.p1, e.p2)
-                                      return (
-                                        <Circle
-                                          key={`edge-${e.i}`}
-                                          x={mid.x}
-                                          y={mid.y}
-                                          radius={4 / dimensions.scale}
-                                          fill="white"
-                                          stroke="#10b981"
-                                          strokeWidth={2 / dimensions.scale}
-                                          draggable
-                                          onDragStart={() => setSelectedId('rect')}
-                                          onDragMove={(evt) => handleEdgeDrag(e.i, evt)}
-                                          onMouseEnter={() => {
-                                            if (stageRef.current) {
-                                              stageRef.current.container().style.cursor = getCursorForEdge(e.i)
-                                            }
-                                          }}
-                                          onMouseLeave={() => {
-                                            if (stageRef.current) stageRef.current.container().style.cursor = 'default'
-                                          }}
-                                        />
-                                      )
-                                    })}
-                                  </>
-                                )}
-                              </>
-                            )
-                          })()}
+                                  {/* Corners - Always visible */}
+                                  {corners.map((c) => (
+                                    <Circle
+                                      key={`corner-${c.i}`}
+                                      x={c.x}
+                                      y={c.y}
+                                      radius={6 / dimensions.scale}
+                                      fill={selectedId === 'rect' ? 'white' : 'red'}
+                                      stroke={selectedId === 'rect' ? '#10b981' : 'red'}
+                                      strokeWidth={selectedId === 'rect' ? 2 / dimensions.scale : 0}
+                                      draggable
+                                      onDragStart={() => setSelectedId('rect')}
+                                      onClick={() => setSelectedId('rect')}
+                                      onTap={() => setSelectedId('rect')}
+                                      onDragMove={(e) => handleCornerDrag(c.i, e)}
+                                      onMouseEnter={() => {
+                                        if (stageRef.current) {
+                                          stageRef.current.container().style.cursor = getCursorForCorner(c.i)
+                                        }
+                                      }}
+                                      onMouseLeave={() => {
+                                        if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                                      }}
+                                    />
+                                  ))}
 
-                        {/* Center Point - Always show if rect exists */}
-                        {rect && rect.center && (
-                          <Circle
-                            x={rect.center.x}
-                            y={rect.center.y}
-                            radius={6 / dimensions.scale}
-                            fill="#10b981"
-                            listening={false}
-                          />
-                        )}
+                                  {/* Edge Anchors - Only show when selected */}
+                                  {selectedId === 'rect' && (
+                                    <>
+                                      {edges.map((e) => {
+                                        const mid = getMidpoint(e.p1, e.p2)
+                                        return (
+                                          <Circle
+                                            key={`edge-${e.i}`}
+                                            x={mid.x}
+                                            y={mid.y}
+                                            radius={4 / dimensions.scale}
+                                            fill="white"
+                                            stroke="#10b981"
+                                            strokeWidth={2 / dimensions.scale}
+                                            draggable
+                                            onDragStart={() => setSelectedId('rect')}
+                                            onDragMove={(evt) => handleEdgeDrag(e.i, evt)}
+                                            onMouseEnter={() => {
+                                              if (stageRef.current) {
+                                                stageRef.current.container().style.cursor = getCursorForEdge(e.i)
+                                              }
+                                            }}
+                                            onMouseLeave={() => {
+                                              if (stageRef.current)
+                                                stageRef.current.container().style.cursor = 'default'
+                                            }}
+                                          />
+                                        )
+                                      })}
+                                    </>
+                                  )}
+                                </>
+                              )
+                            })()}
 
-                        {/* Pointer */}
-                        {pointer && (
-                          <Group
-                            ref={pointerRef}
-                            name="pointer"
-                            x={pointer.x}
-                            y={pointer.y}
-                            draggable
-                            onClick={() => setSelectedId('pointer')}
-                            onTap={() => setSelectedId('pointer')}
-                            onDragStart={() => setSelectedId('pointer')}
-                            onDragMove={(e) => {
-                              onPointerChange({
-                                x: e.target.x(),
-                                y: e.target.y()
-                              })
-                            }}
-                            onDragEnd={(e) => {
-                              onPointerChange({
-                                x: e.target.x(),
-                                y: e.target.y()
-                              })
-                            }}
-                            onMouseEnter={() => {
-                              const stage = stageRef.current
-                              if (stage) stage.container().style.cursor = 'pointer'
-                            }}
-                            onMouseLeave={() => {
-                              const stage = stageRef.current
-                              if (stage) stage.container().style.cursor = 'default'
-                            }}
-                          >
-                            {/* Pointer Style */}
+                          {/* Center Point - Always show if rect exists */}
+                          {rect && rect.center && (
                             <Circle
-                              radius={8 / dimensions.scale}
-                              fill="#964B00"
+                              x={rect.center.x}
+                              y={rect.center.y}
+                              name="center-dot"
+                              radius={(isHoveringCenter ? 10 : 6) / dimensions.scale}
+                              fill="#10b981"
                               stroke="white"
                               strokeWidth={2 / dimensions.scale}
+                              draggable
+                              onMouseEnter={() => {
+                                setIsHoveringCenter(true)
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'grab'
+                              }}
+                              onMouseLeave={() => {
+                                setIsHoveringCenter(false)
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'default'
+                              }}
+                              onDragStart={() => {
+                                setIsCenterDecoupled(true)
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'grabbing'
+                              }}
+                              onDragEnd={() => {
+                                if (stageRef.current) stageRef.current.container().style.cursor = 'grab'
+                              }}
+                              onDragMove={(e) => {
+                                const newRect = { ...rect }
+                                newRect.center = {
+                                  x: e.target.x(),
+                                  y: e.target.y()
+                                }
+                                onRectChange(newRect)
+                              }}
                             />
-                          </Group>
-                        )}
-                      </Layer>
-                    </Stage>
+                          )}
+
+                          {/* Pointer */}
+                          {pointer && (
+                            <Group
+                              ref={pointerRef}
+                              name="pointer"
+                              x={pointer.x}
+                              y={pointer.y}
+                              draggable
+                              onClick={() => setSelectedId('pointer')}
+                              onTap={() => setSelectedId('pointer')}
+                              onDragStart={() => setSelectedId('pointer')}
+                              onDragMove={(e) => {
+                                onPointerChange({
+                                  x: e.target.x(),
+                                  y: e.target.y()
+                                })
+                              }}
+                              onDragEnd={(e) => {
+                                onPointerChange({
+                                  x: e.target.x(),
+                                  y: e.target.y()
+                                })
+                              }}
+                              onMouseEnter={() => {
+                                setIsHoveringPointer(true)
+                                const stage = stageRef.current
+                                if (stage) stage.container().style.cursor = 'grab'
+                              }}
+                              onMouseLeave={() => {
+                                setIsHoveringPointer(false)
+                                const stage = stageRef.current
+                                if (stage) stage.container().style.cursor = 'default'
+                              }}
+                            >
+                              {/* Pointer Style */}
+                              <Circle
+                                radius={(isHoveringPointer ? 12 : 8) / dimensions.scale}
+                                fill="#964B00"
+                                stroke="white"
+                                strokeWidth={2 / dimensions.scale}
+                              />
+                            </Group>
+                          )}
+                        </Layer>
+                      </Stage>
+                    </div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 text-[#888]">
-                  <div className="mb-4 text-5xl">📷</div>
-                  <div>Please upload an image first</div>
-                </div>
-              )}
+                ) : (
+                  <div className="flex h-[400px] w-full flex-col items-center justify-center rounded-lg border border-dashed border-[#FFFFFF1F] bg-white/5 text-[#888]">
+                    <div className="mb-4 text-5xl">📷</div>
+                    <div>Please upload an image first</div>
+                  </div>
+                )}
+              </Spin>
             </div>
           </div>
           <div className="space-y-2">

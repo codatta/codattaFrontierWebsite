@@ -2,10 +2,10 @@ import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
 import { Button } from '@/components/booster/button'
 import {
-  EXCHANGE_URLS,
-  EXPLORER_URLS,
-  NETWORK_COIN_OPTIONS,
-  WITHDRAWAL_HISTORY_URLS
+  getExchanges,
+  getExplorerUrl,
+  NETWORKS,
+  ExchangeItem
 } from '@/components/frontier/airdrop/cex-hot-wallet/constants'
 import { WithdrawGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
@@ -32,12 +32,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   const [formData, setFormData] = useState<WithdrawFormData>({
     exchange_name: '',
     exchange_screenshot: [],
-    withdraw_network: '',
-    withdraw_coin: '',
-    withdraw_amount: '',
-    withdraw_network_fee: '',
-    withdrawal_address: '',
-    withdrawal_tx_hash: '',
+    network: '',
+    coin: '',
+    amount: '',
+    network_fee: '',
+    address: '',
+    tx_hash: '',
     transaction_date: '',
     explorer_screenshot: [],
     sender_address: '',
@@ -55,10 +55,10 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   const [modalImageSrc, setModalImageSrc] = useState('')
 
   // Derived State
-  const [exchangeUrl, setExchangeUrl] = useState('')
-  const [withdrawHistoryUrl, setWithdrawHistoryUrl] = useState('')
   const [explorerUrl, setExplorerUrl] = useState('')
   const [coinOptions, setCoinOptions] = useState<string[]>([])
+  const [exchanges, setExchanges] = useState<ExchangeItem[]>([])
+  const [exchange, setExchange] = useState<ExchangeItem | null>(null)
 
   const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) return
@@ -68,7 +68,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       const totalRewards = taskDetail.data.reward_info
         .filter((item) => item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS')
         .reduce((acc, cur) => acc + cur.reward_value, 0)
+      const exchangeGroup = Number(
+        (taskDetail.data.data_requirements as unknown as { exchange_group: number }).exchange_group ?? 1
+      )
+      console.log('exchangeGroup', exchangeGroup, 'exchanges', getExchanges(exchangeGroup, 10))
       setRewardPoints(totalRewards)
+      setExchanges(getExchanges(exchangeGroup, 10))
     } catch (error: unknown) {
       console.error(error)
     } finally {
@@ -82,28 +87,35 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
   useEffect(() => {
     if (formData.exchange_name) {
-      setExchangeUrl(EXCHANGE_URLS[formData.exchange_name] || '')
-      setWithdrawHistoryUrl(WITHDRAWAL_HISTORY_URLS[formData.exchange_name] || '')
+      const exchange = exchanges.find((item) => item.name === formData.exchange_name)
+      setExchange(exchange || null)
     }
-  }, [formData.exchange_name])
+  }, [formData.exchange_name, exchanges])
 
   useEffect(() => {
-    if (formData.withdraw_network) {
-      setCoinOptions(NETWORK_COIN_OPTIONS[formData.withdraw_network] || [])
+    if (formData.network) {
+      const network = NETWORKS.find((n) => n.name === formData.network)
+      setCoinOptions(network?.coin_options || [])
     }
-  }, [formData.withdraw_network])
+  }, [formData.network])
 
   useEffect(() => {
-    if (formData.withdraw_network && formData.withdrawal_tx_hash) {
-      const url = EXPLORER_URLS[formData.withdraw_network]?.replace('{tx}', formData.withdrawal_tx_hash)
+    if (formData.network && formData.tx_hash) {
+      const url = getExplorerUrl(formData.network, formData.tx_hash)
       setExplorerUrl(url || '')
     } else {
       setExplorerUrl('')
     }
-  }, [formData.withdraw_network, formData.withdrawal_tx_hash])
+  }, [formData.network, formData.tx_hash])
 
   const handleChange = <K extends keyof WithdrawFormData>(field: K, value: WithdrawFormData[K]) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => {
+      const newData = { ...prev, [field]: value }
+      if (field === 'network') {
+        newData.coin = ''
+      }
+      return newData
+    })
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }))
     }
@@ -124,34 +136,34 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
     // 1. Required fields check
     if (!formData.exchange_name) newErrors.exchange_name = 'Exchange Name is required'
     if (formData.exchange_screenshot.length === 0) newErrors.exchange_screenshot = 'Exchange UI Screenshot is required'
-    if (!formData.withdraw_network) newErrors.withdraw_network = 'Network is required'
-    if (!formData.withdraw_coin) newErrors.withdraw_coin = 'Coin is required'
+    if (!formData.network) newErrors.network = 'Network is required'
+    if (!formData.coin) newErrors.coin = 'Coin is required'
 
-    if (isEmpty(formData.withdraw_amount)) {
-      newErrors.withdraw_amount = 'Withdraw Amount is required'
-    } else if (isNaN(Number(formData.withdraw_amount))) {
+    if (isEmpty(formData.amount)) {
+      newErrors.amount = 'Withdraw Amount is required'
+    } else if (isNaN(Number(formData.amount))) {
       // 2. Amount must be a number
-      newErrors.withdraw_amount = 'Amount must be a number'
+      newErrors.amount = 'Amount must be a number'
     }
 
-    if (isEmpty(formData.withdraw_network_fee)) {
-      newErrors.withdraw_network_fee = 'Network Fee is required'
-    } else if (isNaN(Number(formData.withdraw_network_fee))) {
+    if (isEmpty(formData.network_fee)) {
+      newErrors.network_fee = 'Network Fee is required'
+    } else if (isNaN(Number(formData.network_fee))) {
       // 2. Network fee must be a number
-      newErrors.withdraw_network_fee = 'Network Fee must be a number'
+      newErrors.network_fee = 'Network Fee must be a number'
     }
 
     // 3. Address and Hash format check
-    if (isEmpty(formData.withdrawal_address)) {
-      newErrors.withdrawal_address = 'Withdrawal Address is required'
-    } else if (!isValidCryptoString(formData.withdrawal_address, 20)) {
-      newErrors.withdrawal_address = 'Invalid address format (min 20 characters, alphanumeric only)'
+    if (isEmpty(formData.address)) {
+      newErrors.address = 'Withdrawal Address is required'
+    } else if (!isValidCryptoString(formData.address, 20)) {
+      newErrors.address = 'Invalid address format (min 20 characters, alphanumeric only)'
     }
 
-    if (isEmpty(formData.withdrawal_tx_hash)) {
-      newErrors.withdrawal_tx_hash = 'Transaction Hash is required'
-    } else if (!isValidCryptoString(formData.withdrawal_tx_hash, 30)) {
-      newErrors.withdrawal_tx_hash = 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+    if (isEmpty(formData.tx_hash)) {
+      newErrors.tx_hash = 'Transaction Hash is required'
+    } else if (!isValidCryptoString(formData.tx_hash, 30)) {
+      newErrors.tx_hash = 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
     }
 
     if (!formData.transaction_date) newErrors.transaction_date = 'Transaction Date is required'
@@ -221,16 +233,17 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
     setSubmitting(true)
     try {
       const payload = {
+        type: 'withdrawal',
         exchange_name: formData.exchange_name,
         exchange_ui_screenshot_file: formData.exchange_screenshot[0]?.fileName,
         exchange_ui_screenshot_hash: formData.exchange_screenshot[0]?.hash,
         exchange_ui_screenshot_url: formData.exchange_screenshot[0]?.url,
-        network: formData.withdraw_network,
-        coin: formData.withdraw_coin,
-        withdraw_amount: formData.withdraw_amount.trim(),
-        network_fee: formData.withdraw_network_fee.trim(),
-        withdrawal_address: formData.withdrawal_address.trim(),
-        withdrawal_tx_hash: formData.withdrawal_tx_hash.trim(),
+        network: formData.network,
+        coin: formData.coin,
+        amount: formData.amount.trim(),
+        network_fee: formData.network_fee.trim(),
+        address: formData.address.trim(),
+        tx_hash: formData.tx_hash.trim(),
         transaction_date: formData.transaction_date,
         explorer_screenshot_file: formData.explorer_screenshot[0]?.fileName,
         explorer_screenshot_hash: formData.explorer_screenshot[0]?.hash,
@@ -319,9 +332,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     onChange={(value) => handleChange('exchange_name', value)}
                     status={errors.exchange_name ? 'error' : ''}
                   >
-                    {Object.keys(EXCHANGE_URLS).map((ex) => (
-                      <Option key={ex} value={ex}>
-                        {ex}
+                    {exchanges.map((exchange) => (
+                      <Option key={exchange.name} value={exchange.name}>
+                        {exchange.name}
                       </Option>
                     ))}
                   </Select>
@@ -339,16 +352,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <div>
                     <label className={`mb-1 block ${labelClass}`}>Official website</label>
                     <a
-                      href={exchangeUrl || '#'}
+                      href={exchange?.official_website || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchangeUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
+                        !exchange?.official_website
+                          ? 'pointer-events-none opacity-70'
+                          : 'hover:bg-sky-400/20 hover:text-sky-100'
                       }`}
                     >
-                      {exchangeUrl ? (
+                      {exchange?.official_website ? (
                         <>
-                          <ExternalLink size={14} /> {exchangeUrl.replace('https://', '')}
+                          <ExternalLink size={14} /> {exchange?.official_website.replace('https://', '')}
                         </>
                       ) : (
                         '(Select an exchange to view)'
@@ -358,18 +373,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <div>
                     <label className={`mb-1 block ${labelClass}`}>Withdrawal history URL</label>
                     <a
-                      href={withdrawHistoryUrl || '#'}
+                      href={exchange?.withdrawal_history_url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !withdrawHistoryUrl
+                        !exchange?.withdrawal_history_url
                           ? 'pointer-events-none opacity-70'
                           : 'hover:bg-sky-400/20 hover:text-sky-100'
                       }`}
                     >
-                      {withdrawHistoryUrl ? (
+                      {exchange?.withdrawal_history_url ? (
                         <>
-                          <ExternalLink size={14} /> {withdrawHistoryUrl.replace('https://', '')}
+                          <ExternalLink size={14} /> {exchange?.withdrawal_history_url.replace('https://', '')}
                         </>
                       ) : (
                         '(Navigate manually on the exchange website)'
@@ -417,17 +432,17 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                       className={selectClass}
                       popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                       placeholder="Select network"
-                      value={formData.withdraw_network || undefined}
-                      onChange={(value) => handleChange('withdraw_network', value)}
-                      status={errors.withdraw_network ? 'error' : ''}
+                      value={formData.network || undefined}
+                      onChange={(value) => handleChange('network', value)}
+                      status={errors.network ? 'error' : ''}
                     >
-                      {Object.keys(NETWORK_COIN_OPTIONS).map((net) => (
-                        <Option key={net} value={net}>
-                          {net}
+                      {NETWORKS.map((network) => (
+                        <Option key={network.name} value={network.name}>
+                          {network.name}
                         </Option>
                       ))}
                     </Select>
-                    {errors.withdraw_network && <p className="text-xs text-red-500">{errors.withdraw_network}</p>}
+                    {errors.network && <p className="text-xs text-red-500">{errors.network}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -438,10 +453,10 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                       className={selectClass}
                       popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
                       placeholder="Select coin"
-                      value={formData.withdraw_coin || undefined}
-                      onChange={(value) => handleChange('withdraw_coin', value)}
-                      disabled={!formData.withdraw_network}
-                      status={errors.withdraw_coin ? 'error' : ''}
+                      value={formData.coin || undefined}
+                      onChange={(value) => handleChange('coin', value)}
+                      disabled={!formData.network}
+                      status={errors.coin ? 'error' : ''}
                     >
                       {coinOptions.map((t) => (
                         <Option key={t} value={t}>
@@ -449,7 +464,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                         </Option>
                       ))}
                     </Select>
-                    {errors.withdraw_coin && <p className="text-xs text-red-500">{errors.withdraw_coin}</p>}
+                    {errors.coin && <p className="text-xs text-red-500">{errors.coin}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -459,11 +474,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     <Input
                       className={inputClass}
                       placeholder="Exact withdrawal amount from the record"
-                      value={formData.withdraw_amount}
-                      onChange={(e) => handleChange('withdraw_amount', e.target.value)}
-                      status={errors.withdraw_amount ? 'error' : ''}
+                      value={formData.amount}
+                      onChange={(e) => handleChange('amount', e.target.value)}
+                      status={errors.amount ? 'error' : ''}
                     />
-                    {errors.withdraw_amount && <p className="text-xs text-red-500">{errors.withdraw_amount}</p>}
+                    {errors.amount && <p className="text-xs text-red-500">{errors.amount}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -473,13 +488,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     <Input
                       className={inputClass}
                       placeholder="Network fee / withdrawal fee"
-                      value={formData.withdraw_network_fee}
-                      onChange={(e) => handleChange('withdraw_network_fee', e.target.value)}
-                      status={errors.withdraw_network_fee ? 'error' : ''}
+                      value={formData.network_fee}
+                      onChange={(e) => handleChange('network_fee', e.target.value)}
+                      status={errors.network_fee ? 'error' : ''}
                     />
-                    {errors.withdraw_network_fee && (
-                      <p className="text-xs text-red-500">{errors.withdraw_network_fee}</p>
-                    )}
+                    {errors.network_fee && <p className="text-xs text-red-500">{errors.network_fee}</p>}
                   </div>
                 </div>
 
@@ -490,11 +503,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Input
                     className={inputClass}
                     placeholder="Your wallet address that received the withdrawal"
-                    value={formData.withdrawal_address}
-                    onChange={(e) => handleChange('withdrawal_address', e.target.value)}
-                    status={errors.withdrawal_address ? 'error' : ''}
+                    value={formData.address}
+                    onChange={(e) => handleChange('address', e.target.value)}
+                    status={errors.address ? 'error' : ''}
                   />
-                  {errors.withdrawal_address && <p className="text-xs text-red-500">{errors.withdrawal_address}</p>}
+                  {errors.address && <p className="text-xs text-red-500">{errors.address}</p>}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -504,11 +517,11 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Input
                     className={inputClass}
                     placeholder="Transaction hash from the exchange"
-                    value={formData.withdrawal_tx_hash}
-                    onChange={(e) => handleChange('withdrawal_tx_hash', e.target.value)}
-                    status={errors.withdrawal_tx_hash ? 'error' : ''}
+                    value={formData.tx_hash}
+                    onChange={(e) => handleChange('tx_hash', e.target.value)}
+                    status={errors.tx_hash ? 'error' : ''}
                   />
-                  {errors.withdrawal_tx_hash && <p className="text-xs text-red-500">{errors.withdrawal_tx_hash}</p>}
+                  {errors.tx_hash && <p className="text-xs text-red-500">{errors.tx_hash}</p>}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
