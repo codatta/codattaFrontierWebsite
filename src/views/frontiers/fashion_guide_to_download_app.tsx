@@ -483,13 +483,14 @@ function InfoIcon() {
         <g mask="url(#mask0_45746_88057)">
           <foreignObject x="-11.4546" y="-11.0925" width="101.909" height="101.91">
             <div
-              xmlns="http://www.w3.org/1999/xhtml"
-              style={{
-                backdropFilter: 'blur(16.36px)',
-                clipPath: 'url(#bgblur_0_45746_88057_clip_path)',
-                height: '100%',
-                width: '100%'
-              }}
+              style={
+                {
+                  backdropFilter: 'blur(16.36px)',
+                  clipPath: 'url(#bgblur_0_45746_88057_clip_path)',
+                  height: '100%',
+                  width: '100%'
+                } as React.CSSProperties
+              }
             ></div>
           </foreignObject>
           <g filter="url(#filter0_f_45746_88057)" data-figma-bg-blur-radius="32.7273">
@@ -515,7 +516,7 @@ function InfoIcon() {
       <path
         d="M21.2727 38C21.2727 28.0589 29.3316 20 39.2727 20C49.2138 20 57.2727 28.0589 57.2727 38C57.2727 47.9411 49.2738 56 39.2727 56C29.3316 56 21.2727 47.9411 21.2727 38Z"
         fill="#F7F7F7"
-        style={{ mixBlendMode: 'plus-darker' }}
+        style={{ mixBlendMode: 'plus-darker' as unknown } as React.CSSProperties}
       />
       <rect x="21.2727" y="20" width="36" height="36" rx="18" fill="url(#paint0_radial_45746_88057)" />
       <path
