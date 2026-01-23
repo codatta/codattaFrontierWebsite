@@ -35,6 +35,7 @@ const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
 const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
 const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
 const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
+const UserInfoDataProfileDetail = lazy(() => import('@/views/userinfo/data-profile-detail'))
 const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
 const UserInfoDataAssetsLockupDetails = lazy(() => import('@/views/userinfo/data-assets-lockup-details'))
 const UserInfoDataAssetsStaking = lazy(() => import('@/views/userinfo/data-assets-staking'))
@@ -347,6 +348,8 @@ export default function Router() {
           path="/frontier/project/VIVOLIGHT_VALIDATION/:taskId"
           element={<VivolightValidation templateId="VIVOLIGHT_VALIDATION" />}
         ></Route>
+
+        <Route path="/app/settings/data-profile/detail" element={<UserInfoDataProfileDetail />} />
 
         <Route path="datasets">
           <Route path="food-science" element={<FoodScienceDataSet />} />
