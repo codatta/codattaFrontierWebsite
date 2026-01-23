@@ -208,9 +208,7 @@ export interface SubmissionReward {
 
 export interface SubmissionStatics {
   total_submissions: number
-  total_rewards: SubmissionReward[]
   on_chained: number
-  claimable_rewards: SubmissionReward[]
 }
 
 export interface SubmissionRecord {

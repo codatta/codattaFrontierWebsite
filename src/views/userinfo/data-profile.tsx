@@ -12,9 +12,7 @@ export default function DataProfile() {
   // Mock data - replace with API calls
   const [stats, setStats] = useState<SubmissionStatics>({
     total_submissions: 0,
-    on_chained: 0,
-    total_rewards: [],
-    claimable_rewards: []
+    on_chained: 0
   })
 
   const [submissions, setSubmissions] = useState<DataProfileListItem[]>([])
@@ -31,7 +29,12 @@ export default function DataProfile() {
   const getSubmissionStatics = async () => {
     try {
       const res = await frontiterApi.getSubmissionStatics()
-      setStats(res.data)
+      setStats((value) => {
+        return {
+          ...value,
+          total_submissions: res.data.total_submissions
+        }
+      })
     } catch (err) {
       message.error(err.message)
     }
