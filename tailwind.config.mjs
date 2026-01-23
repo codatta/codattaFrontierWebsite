@@ -12,7 +12,8 @@ module.exports = {
         'dot-expand': 'dot-expand 1.5s infinite ease-out',
         'fade-in': 'fade-in 0.2s ease-out',
         'scale-in': 'scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-        'slide-up': 'slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+        'slide-up': 'slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        'spin-slow': 'spin 3s linear infinite'
       },
       keyframes: {
         'dot-expand': {

@@ -44,7 +44,7 @@ export default function UserInfoReputation() {
   }, [])
 
   return (
-    <div className="relative min-h-[500px] min-w-[1160px]">
+    <div className="relative min-h-[500px]">
       <Spin spinning={loading} size="large" className="max-h-full">
         <div className="space-y-12 text-white">
           {/* Header */}
@@ -67,15 +67,15 @@ export default function UserInfoReputation() {
           </header>
 
           {/* Top Section */}
-          <div className="flex items-stretch gap-6">
-            <ScoreCard score={userReputation} className="min-w-[316px]" />
+          <div className="flex flex-col items-stretch gap-6 xl:flex-row">
+            <ScoreCard score={userReputation} className="xl:min-w-[316px]" />
             <CalculationCard data={detail} className="flex-1" />
           </div>
 
           {/* Categories Section */}
           <div className="mb-6">
             <h2 className="mb-4 text-lg font-bold">How Your Score is Calculated</h2>
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
               {/* Verified Identity */}
               <CategoryCard
                 icon={<Icon1 size={48} />}

@@ -99,6 +99,8 @@ const FrontierSocialTwitterRetweet = lazy(() => import('@/views/frontiers/social
 const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
 const FashionValidation = lazy(() => import('@/views/frontiers/fashion_validation'))
 const FashionValidationApp = lazy(() => import('@/views/frontiers/fashion_validation_app'))
+const FashionGuideToDownload = lazy(() => import('@/views/frontiers/fashion_guide_to_download'))
+const FashionGuideToDownloadApp = lazy(() => import('@/views/frontiers/fashion_guide_to_download_app'))
 
 // cmu video labeling
 const CMUVideoLabelingForm = lazy(() => import('@/views/cmu-video-labeling/labeling-form'))
@@ -235,6 +237,15 @@ export default function Router() {
             }
           />
         </Route>
+        <Route
+          path="/frontier/project/FASHION_GUIDE_TO_DOWNLOAD/:taskId"
+          element={
+            <AppContainerDetector
+              inApp={<FashionGuideToDownloadApp templateId="FASHION_GUIDE_TO_DOWNLOAD" />}
+              notInApp={<FashionGuideToDownload />}
+            />
+          }
+        />
         <Route
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={
