@@ -1,4 +1,6 @@
 import { ChevronLeft, ArrowUp } from 'lucide-react'
+import { cn } from '@udecode/cn'
+import { ReactNode } from 'react'
 
 interface MobileAppFrontierHeaderProps {
   title: string | React.ReactNode
@@ -7,10 +9,40 @@ interface MobileAppFrontierHeaderProps {
   onBack?: () => void
   onSubmit?: () => void
   transparent?: boolean
+  rightIcon?: ReactNode
+  onRightIconClick?: () => void
+  rightIconBackground?: boolean
 }
 
 export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderProps) {
-  const { title, canSubmit, showSubmitButton, onBack, onSubmit, transparent } = props
+  const {
+    title,
+    canSubmit,
+    showSubmitButton,
+    onBack,
+    onSubmit,
+    transparent,
+    rightIcon,
+    onRightIconClick,
+    rightIconBackground
+  } = props
+
+  const handleBack =
+    onBack ||
+    (() => {
+      const userAgent = navigator.userAgent.toLowerCase()
+      const isInApp = userAgent.includes('codatta')
+      if (isInApp && typeof window !== 'undefined') {
+        const nativeBridge = (
+          window as typeof window & { native?: { call: (method: string, ...args: unknown[]) => void } }
+        ).native
+        if (nativeBridge?.call) nativeBridge.call('goBack')
+        else window.history.back()
+      } else {
+        window.history.back()
+      }
+    })
+
   return (
     <div className="text-black">
       <div className="h-[76px]"></div>
@@ -20,13 +52,13 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
         }`}
       >
         <button
-          onClick={onBack}
+          onClick={handleBack}
           className="flex size-[44px] items-center justify-center rounded-full bg-[#f9f9f930] shadow-app-btn backdrop-blur-sm"
         >
           <ChevronLeft size={24}></ChevronLeft>
         </button>
         <div className="flex items-center justify-center">{title}</div>
-        {showSubmitButton && (
+        {showSubmitButton ? (
           <button
             className="flex size-[44px] items-center justify-center rounded-full bg-[#40E1EF]/90 text-white shadow-app-btn backdrop-blur-sm transition-all disabled:bg-black/5 disabled:text-[#bbb]"
             disabled={!canSubmit}
@@ -34,6 +66,18 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
           >
             <ArrowUp size={24}></ArrowUp>
           </button>
+        ) : rightIcon ? (
+          <button
+            onClick={onRightIconClick}
+            className={cn(
+              'flex size-[44px] items-center justify-center',
+              rightIconBackground && 'rounded-full bg-[#f9f9f930] shadow-app-btn backdrop-blur-sm'
+            )}
+          >
+            {rightIcon}
+          </button>
+        ) : (
+          <div className="w-[44px]" />
         )}
       </div>
     </div>
