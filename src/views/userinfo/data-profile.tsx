@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { message, Pagination, Spin } from 'antd'
 import dayjs from 'dayjs'
+import { InfoCircleOutlined } from '@ant-design/icons'
 
 // Icons
 import TotalSubmissionIcon from '@/assets/userinfo/total-submission.svg'
@@ -67,10 +68,16 @@ export default function DataProfile() {
   return (
     <div className="flex flex-1 flex-col">
       <h3 className="mb-6 text-[32px] font-bold leading-[48px]">Data Profile</h3>
-
       {/* Stats Cards */}
       <StatsCards stats={stats} />
 
+      <div className="mb-3">
+        <h2 className="inline text-lg font-bold">My Submissions</h2>
+        <span className="ml-2 text-xs text-[#777]">
+          <InfoCircleOutlined /> Data Profile currently shows Booster Fingerprint campaign data only.More sources will
+          be added soon.
+        </span>
+      </div>
       {/* Data Table */}
       <DataTable
         submissions={submissions}

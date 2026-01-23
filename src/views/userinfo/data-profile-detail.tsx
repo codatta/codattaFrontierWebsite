@@ -79,12 +79,18 @@ function shortenMiddle(value: string, start = 18, end = 8) {
   return `${value.slice(0, start)}...${value.slice(-end)}`
 }
 
-function getTxExplorerUrl(chainName?: string, tx?: string) {
+function getTxExplorerUrl(chainId?: string, tx?: string) {
   if (!tx) return undefined
-  const c = (chainName || '').toLowerCase()
-  if (c.includes('base')) return `https://basescan.org/tx/0x${tx}`
-  if (c.includes('bsc')) return `https://bscscan.com/tx/0x${tx}`
-  if (c.includes('kite')) return `https://testnet.kitescan.ai/tx/0x${tx}`
+  const normalizedTx = tx.startsWith('0x') ? tx : `0x${tx}`
+
+  const raw = String(chainId || '').toLowerCase()
+  // supports: "56", "8453", "2368", or formats like "eip155:56"
+  const matches = raw.match(/\d+/g)
+  const id = matches?.length ? Number(matches[matches.length - 1]) : NaN
+
+  if (id === 8453) return `https://basescan.org/tx/${normalizedTx}`
+  if (id === 56) return `https://bscscan.com/tx/${normalizedTx}`
+  if (id === 2368) return `https://testnet.kitescan.ai/tx/${normalizedTx}`
   return undefined
 }
 
@@ -360,7 +366,7 @@ function AnchorDetailsDrawer(props: { open: boolean; onClose: () => void; submis
   const anchorTime = submission.chain_time ? dayjs(submission.chain_time).format('YYYY-MM-DD HH:mm') : '-'
   const tx = submission.tx_hash || ''
   const txShort = tx ? shortenMiddle(tx, 18, 8) : '-'
-  const txUrl = getTxExplorerUrl(submission.chain_name, tx)
+  const txUrl = getTxExplorerUrl(submission.chain_id, tx)
 
   const dataSubmissionText = useMemo(() => toPrettyJsonText(submission?.data_submission), [submission])
 
