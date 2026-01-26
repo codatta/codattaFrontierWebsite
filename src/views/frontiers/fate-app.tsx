@@ -444,13 +444,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader
-            title="Your Life Journey"
-            canSubmit={allFieldsFilled}
-            onBack={onBack}
-            onSubmit={handleSubmit}
-            showSubmitButton={false}
-          />
+          <MobileAppFrontierHeader title="Your Life Journey" onBack={onBack} />
 
           {/* Form Content */}
           <div className="px-5">

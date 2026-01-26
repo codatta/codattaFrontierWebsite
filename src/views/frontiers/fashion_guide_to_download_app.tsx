@@ -91,21 +91,7 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen overflow-x-hidden bg-[#F5F5F5]">
-          <FrontierHeader
-            title="Collect Fashion Data"
-            canSubmit={false}
-            showSubmitButton={false}
-            rightIcon={
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M13.1901 14.0736C13.2303 13.953 13.4582 13.4959 14.6841 12.6753C16.6602 11.3506 17.5444 9.45805 17.1777 7.34461C16.8059 5.2094 15.0657 3.45615 12.9456 3.0827C11.3965 2.80805 9.8274 3.22489 8.63503 4.223C7.43094 5.23283 6.74121 6.71484 6.74121 8.29071C6.74121 8.98402 7.3039 9.54671 7.99722 9.54671C8.69053 9.54671 9.25322 8.98402 9.25322 8.29071C9.25322 7.46007 9.61658 6.67836 10.2496 6.14748C10.8793 5.61996 11.6829 5.40392 12.5085 5.55464C13.5904 5.74556 14.5132 6.67827 14.7041 7.7735C14.7761 8.18715 14.9956 9.44304 13.2858 10.5868C11.9008 11.5163 11.1137 12.3687 10.8106 13.273C10.5895 13.9312 10.9444 14.6428 11.6025 14.8639C11.7348 14.9091 11.8688 14.9293 12.0011 14.9293C12.5236 14.9293 13.0126 14.5977 13.1901 14.0736ZM13.7077 19.3253C13.7077 18.4009 12.9591 17.6507 12.033 17.6507H12.0163C11.0919 17.6507 10.3498 18.4009 10.3498 19.3253C10.3498 20.2497 11.1086 21 12.033 21C12.9575 21 13.7077 20.2497 13.7077 19.3253Z"
-                  fill="#40E1EF"
-                />
-              </svg>
-            }
-            onRightIconClick={() => setShowInfoModal(true)}
-            rightIconBackground={true}
-          />
+          <FrontierHeader title="Collect Fashion Data" onHelp={() => setShowInfoModal(true)} />
 
           <div className="space-y-12 px-5 py-8">
             <StepCard

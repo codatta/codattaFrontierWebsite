@@ -242,13 +242,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader
-            title="Food Data Annotation"
-            canSubmit={allFieldsFilled}
-            onBack={onBack}
-            onSubmit={handleSubmit}
-            showSubmitButton={false}
-          />
+          <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} />
           <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
           {/* Form Content */}
