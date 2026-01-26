@@ -7,7 +7,7 @@ import { cn } from '@udecode/cn'
 import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
 import FrontierHeader from '@/components/mobile-app/frontier-header'
-import InfoModal from '@/components/mobile-app/info-modal'
+import HelpDrawer from '@/components/mobile-app/help-drawer'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import Upload from '@/components/frontier/airdrop/UploadImg'
@@ -294,7 +294,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
           </div>
         </BottomDrawer>
 
-        <InfoModal
+        <HelpDrawer
           open={showInfoModal}
           onClose={() => setShowInfoModal(false)}
           title="📋 Guidelines"

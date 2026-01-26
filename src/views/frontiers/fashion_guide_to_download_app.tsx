@@ -5,7 +5,7 @@ import { Spin, message } from 'antd'
 import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
 import FrontierHeader from '@/components/mobile-app/frontier-header'
-import InfoModal from '@/components/mobile-app/info-modal'
+import HelpDrawer from '@/components/mobile-app/help-drawer'
 
 interface StepCardProps {
   stepNumber: number
@@ -165,16 +165,22 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
           </div>
         </div>
 
-        <InfoModal
+        <HelpDrawer
           open={showInfoModal}
           onClose={() => setShowInfoModal(false)}
-          title={
-            <div className="flex items-center gap-2">
-              <span>Fashion</span>
-              <InfoIcon />
-            </div>
-          }
-          content="Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data."
+          title="More About Frontier"
+          cards={[
+            {
+              preset: 'about',
+              title: 'Fashion',
+              content: [
+                {
+                  type: 'p',
+                  text: 'Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
+                }
+              ]
+            }
+          ]}
         />
       </Spin>
     </AuthChecker>
@@ -438,105 +444,6 @@ function Step2Img() {
         <clipPath id="clip2_45757_90640">
           <rect width="200" height="179.145" fill="white" transform="translate(97 -26.9082)" />
         </clipPath>
-      </defs>
-    </svg>
-  )
-}
-
-function InfoIcon() {
-  return (
-    <svg width="36" height="36" viewBox="21.2727 20 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect
-        width="36"
-        height="36"
-        transform="translate(21.2727 20)"
-        fill="white"
-        style={{ mixBlendMode: 'multiply' }}
-      />
-      <g opacity="0.67">
-        <mask
-          id="mask0_45746_88057"
-          style={{ maskType: 'luminance' } as React.CSSProperties}
-          maskUnits="userSpaceOnUse"
-          x="-41"
-          y="-43"
-          width="161"
-          height="162"
-        >
-          <rect width="160.818" height="160.818" transform="translate(-40.9092 -42.1816)" fill="white" />
-          <rect x="21.2727" y="20" width="36.6364" height="36.6364" rx="18.3182" fill="black" />
-        </mask>
-        <g mask="url(#mask0_45746_88057)">
-          <foreignObject x="-11.4546" y="-11.0925" width="101.909" height="101.91">
-            <div
-              style={
-                {
-                  backdropFilter: 'blur(16.36px)',
-                  clipPath: 'url(#bgblur_0_45746_88057_clip_path)',
-                  height: '100%',
-                  width: '100%'
-                } as React.CSSProperties
-              }
-            ></div>
-          </foreignObject>
-          <g filter="url(#filter0_f_45746_88057)" data-figma-bg-blur-radius="32.7273">
-            <path
-              d="M21.2727 39.862C21.2727 29.7954 29.4333 21.6348 39.5 21.6348C49.5666 21.6348 57.7273 29.7954 57.7273 39.862C57.7273 49.9287 49.5666 58.0893 39.5 58.0893C29.4333 58.0893 21.2727 49.9287 21.2727 39.862Z"
-              fill="black"
-              fillOpacity="0.04"
-              style={{ mixBlendMode: 'hard-light' }}
-            />
-          </g>
-        </g>
-      </g>
-      <path
-        d="M21.2727 38C21.2727 28.0589 29.3316 20 39.2727 20C49.2138 20 57.2727 28.0589 57.2727 38C57.2727 47.9411 49.2138 56 39.2727 56C29.3316 56 21.2727 47.9411 21.2727 38Z"
-        fill="#333333"
-        style={{ mixBlendMode: 'color-dodge' }}
-      />
-      <path
-        d="M21.2727 38C21.2727 28.0589 29.3316 20 39.2727 20C49.2138 20 57.2727 28.0589 57.2727 38C57.2727 47.9411 49.2138 56 39.2727 56C29.3316 56 21.2727 47.9411 21.2727 38Z"
-        fill="white"
-        fillOpacity="0.5"
-      />
-      <path
-        d="M21.2727 38C21.2727 28.0589 29.3316 20 39.2727 20C49.2138 20 57.2727 28.0589 57.2727 38C57.2727 47.9411 49.2738 56 39.2727 56C29.3316 56 21.2727 47.9411 21.2727 38Z"
-        fill="#F7F7F7"
-        style={{ mixBlendMode: 'plus-darker' as unknown } as React.CSSProperties}
-      />
-      <rect x="21.2727" y="20" width="36" height="36" rx="18" fill="url(#paint0_radial_45746_88057)" />
-      <path
-        d="M44.508 31.9318L43.3963 32.7653C42.908 33.1317 42.2241 33.0827 41.7922 32.6516L40.1408 31.0001C39.6615 30.5208 38.8843 30.5208 38.4058 31.0001L36.7544 32.6516C36.3225 33.0835 35.6387 33.1317 35.1503 32.7653L34.0387 31.9318C33.4997 31.5277 32.73 31.9122 32.73 32.5862V43.4185C32.73 44.0925 33.4997 44.477 34.0387 44.0729L35.1503 43.2394C35.6387 42.8729 36.3225 42.922 36.7544 43.3531L38.4058 45.0046C38.8852 45.4839 39.6623 45.4839 40.1408 45.0046L41.7922 43.3531C42.2241 42.9212 42.908 42.8729 43.3963 43.2394L44.508 44.0729C45.047 44.477 45.8167 44.0925 45.8167 43.4185V32.5862C45.8167 31.9122 45.047 31.5269 44.508 31.9318ZM40.0909 40.2513H36.0011C35.6624 40.2513 35.3876 39.9765 35.3876 39.6379C35.3876 39.2992 35.6624 39.0244 36.0011 39.0244H40.0909C40.4295 39.0244 40.7044 39.2992 40.7044 39.6379C40.7044 39.9765 40.4295 40.2513 40.0909 40.2513ZM42.5448 36.9795H36.0011C35.6624 36.9795 35.3876 36.7046 35.3876 36.366C35.3876 36.0274 35.6624 35.7525 36.0011 35.7525H42.5448C42.8834 35.7525 43.1583 36.0274 43.1583 36.366C43.1583 36.7046 42.8834 36.9795 42.5448 36.9795Z"
-        fill="black"
-      />
-      <defs>
-        <filter
-          id="filter0_f_45746_88057"
-          x="-11.4546"
-          y="-11.0925"
-          width="101.909"
-          height="101.91"
-          filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
-        >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
-          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-          <feGaussianBlur stdDeviation="8.18182" result="effect1_foregroundBlur_45746_88057" />
-        </filter>
-        <clipPath id="bgblur_0_45746_88057_clip_path" transform="translate(11.4546 11.0925)">
-          <path d="M21.2727 39.862C21.2727 29.7954 29.4333 21.6348 39.5 21.6348C49.5666 21.6348 57.7273 29.7954 57.7273 39.862C57.7273 49.9287 49.5666 58.0893 39.5 58.0893C29.4333 58.0893 21.2727 49.9287 21.2727 39.862Z" />
-        </clipPath>
-        <radialGradient
-          id="paint0_radial_45746_88057"
-          cx="0"
-          cy="0"
-          r="1"
-          gradientUnits="userSpaceOnUse"
-          gradientTransform="translate(21.2727 56) scale(44.2345 46.9963)"
-        >
-          <stop stop-color="#40E1EF" stop-opacity="0.2" />
-          <stop offset="1" stop-color="#40E1EF" stop-opacity="0" />
-        </radialGradient>
       </defs>
     </svg>
   )
