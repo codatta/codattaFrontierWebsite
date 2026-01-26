@@ -4,14 +4,16 @@ import { ReactNode } from 'react'
 
 interface MobileAppFrontierHeaderProps {
   title: string | React.ReactNode
+  transparent?: boolean
+  submitDisabled?: boolean
+
   onBack?: () => void
   onSubmit?: () => void
-  submitDisabled?: boolean
-  transparent?: boolean
-  rightIcon?: ReactNode
-  onRightIconClick?: () => void
-  rightIconBackground?: boolean
   onHelp?: () => void
+
+  rightIcon?: ReactNode
+  rightIconBackground?: boolean
+  onRightIconClick?: () => void
 }
 
 export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderProps) {
