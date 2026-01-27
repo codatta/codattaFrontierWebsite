@@ -266,12 +266,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       <Spin spinning={loading}>
         <div className="flex h-screen flex-col gap-8 bg-[#F5F5F5]">
           <div className="z-10 flex-none bg-[#F7F8FA]">
-            <MobileAppFrontierHeader
-              title={<span className="font-bold">Fashion</span>}
-              canSubmit={false}
-              onBack={onBack}
-              showSubmitButton={false}
-            />
+            <MobileAppFrontierHeader title={<span className="font-bold">Fashion</span>} onBack={onBack} />
             <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
             {/* Image preview */}

@@ -88,6 +88,7 @@ const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
 const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto_and_stock_info_collection'))
 const RealWorldPhotoCollection = lazy(() => import('@/views/frontiers/real_world_photo_collection'))
+const RealWorldPhotoCollectionApp = lazy(() => import('@/views/frontiers/real_world_photo_collection_app'))
 const FrontierSocialDiscordBind = lazy(() => import('@/views/frontiers/social-tasks/discord-bind'))
 const FrontierSocialTelegramBind = lazy(() => import('@/views/frontiers/social-tasks/telegram-bind'))
 const FrontierSocialTwitterBind = lazy(() => import('@/views/frontiers/social-tasks/twitter-bind'))
@@ -323,7 +324,12 @@ export default function Router() {
         ></Route>
         <Route
           path="/frontier/project/REAL_WORLD_PHOTO_COLLECTION/:taskId"
-          element={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+          element={
+            <AppContainerDetector
+              inApp={<RealWorldPhotoCollectionApp templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+              notInApp={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+            />
+          }
         ></Route>
         <Route path="/frontier/project/X_BIND/:taskId" element={<FrontierSocialTwitterBind templateId="X_BIND" />} />
         <Route

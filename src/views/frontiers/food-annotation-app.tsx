@@ -242,13 +242,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader
-            title="Food Data Annotation"
-            canSubmit={allFieldsFilled}
-            onBack={onBack}
-            onSubmit={handleSubmit}
-            showSubmitButton={false}
-          />
+          <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} />
           <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
           {/* Form Content */}
@@ -463,8 +457,14 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
               </div>
             </div>
 
-            <button className="block w-full rounded-full bg-black py-3 text-white" onClick={handleSubmit}>
-              Submit
+            <button
+              onClick={handleSubmit}
+              disabled={!allFieldsFilled || loading}
+              className={`mt-4 h-[56px] w-full rounded-full text-base font-semibold transition-all ${
+                allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
+              }`}
+            >
+              {loading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
 
