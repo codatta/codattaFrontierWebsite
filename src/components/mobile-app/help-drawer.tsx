@@ -125,7 +125,7 @@ export default function HelpDrawer({
         return (
           <div key={blockIndex}>
             {block.title && <h4 className="mt-4 text-base font-semibold text-black">{block.title}</h4>}
-            <ul className="space-y-2">
+            <ul className="m-2 space-y-2">
               {block.items.map((item, idx) => (
                 <li key={idx} className="flex items-start pl-1 text-[15px] leading-[18px] text-[#999999]">
                   <span className="mr-2 mt-[7px] size-1 shrink-0 rounded-full bg-[#999999]"></span>

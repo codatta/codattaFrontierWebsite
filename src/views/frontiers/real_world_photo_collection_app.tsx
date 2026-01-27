@@ -297,38 +297,42 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
         <HelpDrawer
           open={showInfoModal}
           onClose={() => setShowInfoModal(false)}
-          title="📋 Guidelines"
-          content={
-            <div className="space-y-4 text-sm leading-relaxed text-gray-600">
-              <section>
-                <h3 className="mb-1 font-bold text-black">📋 Task Description</h3>
-                <p>
-                  We are building a real-world photo collection for AI training and computer vision research. Your goal
-                  is to help us collect real-life photos from 8 core themes. Each photo must be your original work, and
-                  approved submissions will receive rewards.
-                </p>
-              </section>
-              <section>
-                <h3 className="mb-1 font-bold text-black">📝 Audit Standards (Must Read)</h3>
-                <ul className="list-disc space-y-1 pl-4">
-                  <li>
-                    <strong>Uniqueness:</strong> Photos must be your original work. Uploading downloaded or others'
-                    photos is strictly prohibited.
-                  </li>
-                  <li>
-                    <strong>Accuracy:</strong> Theme category and subject description must exactly match the photo
-                    content.
-                  </li>
-                  <li>
-                    <strong>Quality:</strong> Photos must be clear and recognizable. Recommended resolution ≥ 1920×1080.
-                  </li>
-                  <li>
-                    <strong>Safety:</strong> No faces, personal identification, or privacy information.
-                  </li>
-                </ul>
-              </section>
-            </div>
-          }
+          title="More About Frontier"
+          cards={[
+            {
+              preset: 'about',
+              title: 'Real-world Photo',
+              content: [
+                {
+                  type: 'p',
+                  text: 'This task asks you to submit authentic, diverse, high-resolution photographs from your daily life - meals, workspaces, public scenes, tools, etc. - with basic descriptions and metadata.'
+                }
+              ]
+            },
+            {
+              preset: 'guidelines',
+              content: [
+                {
+                  type: 'h3',
+                  text: 'Task Description'
+                },
+                {
+                  type: 'p',
+                  text: 'We are building a real-world photo collection for AI training and computer vision research. Your goal is to help us collect real-life photos from 8 core themes. Each photo must be your original work, and approved submissions will receive rewards.'
+                },
+                {
+                  type: 'list',
+                  title: 'Audit Standards (Must Read)',
+                  items: [
+                    "Uniqueness: Photos must be your original work. Uploading downloaded or others' photos is strictly prohibited.",
+                    'Accuracy: Theme category and subject description must exactly match the photo content.',
+                    'Quality: Photos must be clear and recognizable, without severe blur or exposure issues. Recommended resolution >= 1920x1080, format JPG or PNG.',
+                    'Safety: Photos must not contain faces, personal identification information, privacy information, or any illegal content.'
+                  ]
+                }
+              ]
+            }
+          ]}
         />
 
         <SuccessModal
