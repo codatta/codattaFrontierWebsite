@@ -254,10 +254,21 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                   allUploadedImages={uploadedImages}
                   onChange={handleUploadChange}
                   maxCount={1}
-                  itemClassName="h-[140px] w-[140px] rounded-[24px]"
+                  itemClassName="h-[107px] w-[107px] rounded-[20px]"
                   description={
-                    <div className="flex size-[140px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
-                      <Camera className="size-8 text-[#999999]" />
+                    <div className="flex size-[107px] items-center justify-center rounded-[20px] bg-[#F5F5F5]">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M9.89587 8.54102C8.45762 8.54102 7.29171 9.70693 7.29171 11.1452C7.29171 12.5834 8.45762 13.7493 9.89587 13.7493C11.3341 13.7493 12.5 12.5834 12.5 11.1452C12.5 9.70693 11.3341 8.54102 9.89587 8.54102Z"
+                          fill="#999999"
+                        />
+                        <path
+                          fill-rule="evenodd"
+                          clip-rule="evenodd"
+                          d="M7.39587 1.66602C7.11969 1.66602 6.8672 1.82206 6.74369 2.06909L5.69522 4.16602H2.81254C1.71948 4.16602 0.833374 5.05212 0.833374 6.14518V16.1452C0.833374 17.2382 1.71948 18.1243 2.81254 18.1243H16.9792C18.0723 18.1243 18.9584 17.2382 18.9584 16.1452V6.14518C18.9584 5.05212 18.0723 4.16602 16.9792 4.16602H14.0965L13.0481 2.06909C12.9245 1.82206 12.6721 1.66602 12.3959 1.66602H7.39587ZM5.83337 11.1452C5.83337 8.90152 7.65221 7.08268 9.89587 7.08268C12.1395 7.08268 13.9584 8.90152 13.9584 11.1452C13.9584 13.3888 12.1395 15.2077 9.89587 15.2077C7.65221 15.2077 5.83337 13.3888 5.83337 11.1452Z"
+                          fill="#999999"
+                        />
+                      </svg>
                     </div>
                   }
                 />
@@ -279,30 +290,33 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
             {/* Image Annotation */}
             <div className="space-y-2">
               <label className="text-base font-medium text-[#999999]">Image Annotation</label>
-              <div className="rounded-[28px] bg-white p-4">
+              <div className="rounded-[26px] bg-white p-4">
                 {image && !imageLoading ? (
                   <button
                     onClick={() => setShowAnnotationModal(true)}
-                    className="flex h-[200px] w-full items-center justify-center rounded-[24px] bg-[#F5F5F5] transition-colors hover:bg-[#E5E5E5]"
+                    className="flex h-[107px] w-full items-center justify-center rounded-[20px] bg-[#F5F5F5] transition-colors"
                   >
-                    <div className="flex flex-col items-center gap-2 text-[#999999]">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#999999]">
-                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-                        <path d="M21 15L16 10L5 21" stroke="currentColor" strokeWidth="2" />
+                    <div className="flex items-center gap-1 text-[#999999]">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M17.9166 4.58398V3.75065C17.9166 2.69148 17.3091 2.08398 16.25 2.08398H15.4166C14.4308 2.08398 13.8433 2.61565 13.7658 3.54232H6.23495C6.15745 2.61565 5.56994 2.08398 4.58411 2.08398H3.75077C2.69161 2.08398 2.08411 2.69148 2.08411 3.75065V4.58398C2.08411 5.56982 2.61577 6.15731 3.54244 6.23481V13.7657C2.61577 13.8432 2.08411 14.4306 2.08411 15.4165V16.2498C2.08411 17.309 2.69161 17.9165 3.75077 17.9165H4.58411C5.56994 17.9165 6.15745 17.3848 6.23495 16.4581H13.7658C13.8433 17.3848 14.4308 17.9165 15.4166 17.9165H16.25C17.3091 17.9165 17.9166 17.309 17.9166 16.2498V15.4165C17.9166 14.4306 17.385 13.8432 16.4583 13.7657V6.23481C17.385 6.15731 17.9166 5.56982 17.9166 4.58398ZM13.7658 15.209H6.23495C6.16329 14.3515 5.64994 13.8382 4.79244 13.7665V6.23565C5.64994 6.16398 6.16329 5.65066 6.23495 4.79316H13.7658C13.8374 5.65066 14.3508 6.16398 15.2083 6.23565V13.7665C14.3508 13.8382 13.8374 14.3515 13.7658 15.209Z"
+                          fill="#999999"
+                        />
                       </svg>
+
                       <span className="text-sm">
-                        {rectModified && pointerModified ? 'Edit annotation' : 'Start labeling'}
+                        {rectModified || pointerModified ? 'Edit annotation' : 'Start labeling'}
                       </span>
                     </div>
                   </button>
                 ) : (
-                  <div className="flex h-[200px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
-                    <div className="flex flex-col items-center gap-2 text-[#999999]">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#999999]">
-                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
-                        <path d="M21 15L16 10L5 21" stroke="currentColor" strokeWidth="2" />
+                  <div className="flex h-[107px] items-center justify-center rounded-[20px] bg-[#F5F5F5]">
+                    <div className="flex items-center gap-1 text-[#999999]">
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M17.9166 4.58398V3.75065C17.9166 2.69148 17.3091 2.08398 16.25 2.08398H15.4166C14.4308 2.08398 13.8433 2.61565 13.7658 3.54232H6.23495C6.15745 2.61565 5.56994 2.08398 4.58411 2.08398H3.75077C2.69161 2.08398 2.08411 2.69148 2.08411 3.75065V4.58398C2.08411 5.56982 2.61577 6.15731 3.54244 6.23481V13.7657C2.61577 13.8432 2.08411 14.4306 2.08411 15.4165V16.2498C2.08411 17.309 2.69161 17.9165 3.75077 17.9165H4.58411C5.56994 17.9165 6.15745 17.3848 6.23495 16.4581H13.7658C13.8433 17.3848 14.4308 17.9165 15.4166 17.9165H16.25C17.3091 17.9165 17.9166 17.309 17.9166 16.2498V15.4165C17.9166 14.4306 17.385 13.8432 16.4583 13.7657V6.23481C17.385 6.15731 17.9166 5.56982 17.9166 4.58398ZM13.7658 15.209H6.23495C6.16329 14.3515 5.64994 13.8382 4.79244 13.7665V6.23565C5.64994 6.16398 6.16329 5.65066 6.23495 4.79316H13.7658C13.8374 5.65066 14.3508 6.16398 15.2083 6.23565V13.7665C14.3508 13.8382 13.8374 14.3515 13.7658 15.209Z"
+                          fill="#999999"
+                        />
                       </svg>
                       <span className="text-sm">Upload image first</span>
                     </div>
