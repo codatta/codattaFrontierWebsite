@@ -10,9 +10,15 @@ import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import Upload from '@/components/mobile-app/image-upload'
-import AnnotationCanvas, { AnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas'
+import BottomDrawer from '@/components/mobile-app/bottom-drawer'
+import KnobAnnotationCanvas, {
+  KnobAnnotationCanvasRef
+} from '@/components/frontier/airdrop/knob/knob-annotation-canvas'
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop/knob/types'
 import { calculateFileHash } from '@/utils/file-hash'
+
+import imageExample from '@/assets/frontier/knob/raw_app.png'
+import labelExample from '@/assets/frontier/knob/label_app.png'
 
 interface UploadedImage {
   url: string
@@ -27,6 +33,8 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
   const [showInfoModal, setShowInfoModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showExampleModal, setShowExampleModal] = useState(false)
+  const [exampleType, setExampleType] = useState<'original' | 'annotated'>('original')
+  const [showAnnotationModal, setShowAnnotationModal] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
 
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
@@ -37,7 +45,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
   const [pointerModified, setPointerModified] = useState(false)
   const [scaleValue, setScaleValue] = useState('')
 
-  const annotationCanvasRef = useRef<AnnotationCanvasRef>(null)
+  const annotationCanvasRef = useRef<KnobAnnotationCanvasRef>(null)
 
   const fetchTaskDetail = useCallback(async () => {
     if (!taskId) return
@@ -255,7 +263,13 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                 />
                 <p className="mt-4 text-[12px] leading-[18px]">
                   Upload a clear front-facing photo of an appliance knob{' '}
-                  <span className="cursor-pointer text-[#00D1FF]" onClick={() => setShowExampleModal(true)}>
+                  <span
+                    className="cursor-pointer text-[#00D1FF]"
+                    onClick={() => {
+                      setExampleType('original')
+                      setShowExampleModal(true)
+                    }}
+                  >
                     example
                   </span>
                 </p>
@@ -267,21 +281,21 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
               <label className="text-base font-medium text-[#999999]">Image Annotation</label>
               <div className="rounded-[28px] bg-white p-4">
                 {image && !imageLoading ? (
-                  <div className="space-y-4">
-                    <AnnotationCanvas
-                      ref={annotationCanvasRef}
-                      image={image}
-                      rect={rect}
-                      pointer={pointer}
-                      rectModified={rectModified}
-                      pointerModified={pointerModified}
-                      exampleImage="https://static.codatta.io/static/images/knob_label_1766728031053.png"
-                      loading={imageLoading}
-                      onRectChange={handleRectChange}
-                      onPointerChange={handlePointerChange}
-                      onShowModal={() => {}}
-                    />
-                  </div>
+                  <button
+                    onClick={() => setShowAnnotationModal(true)}
+                    className="flex h-[200px] w-full items-center justify-center rounded-[24px] bg-[#F5F5F5] transition-colors hover:bg-[#E5E5E5]"
+                  >
+                    <div className="flex flex-col items-center gap-2 text-[#999999]">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-[#999999]">
+                        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+                        <path d="M21 15L16 10L5 21" stroke="currentColor" strokeWidth="2" />
+                      </svg>
+                      <span className="text-sm">
+                        {rectModified && pointerModified ? 'Edit annotation' : 'Start labeling'}
+                      </span>
+                    </div>
+                  </button>
                 ) : (
                   <div className="flex h-[200px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
                     <div className="flex flex-col items-center gap-2 text-[#999999]">
@@ -290,14 +304,20 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                         <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
                         <path d="M21 15L16 10L5 21" stroke="currentColor" strokeWidth="2" />
                       </svg>
-                      <span className="text-sm">Start labeling</span>
+                      <span className="text-sm">Upload image first</span>
                     </div>
                   </div>
                 )}
                 <p className="mt-4 text-[12px] leading-[18px]">
-                  Move the blue rectangle to the knob position, the red dot to the center of the knob, and the orange
+                  Move the cyan rectangle to the knob position, the red dot to the center of the knob, and the orange
                   dot to the pointer position{' '}
-                  <span className="cursor-pointer text-[#00D1FF]" onClick={() => setShowExampleModal(true)}>
+                  <span
+                    className="cursor-pointer text-[#00D1FF]"
+                    onClick={() => {
+                      setExampleType('annotated')
+                      setShowExampleModal(true)
+                    }}
+                  >
                     example
                   </span>
                 </p>
@@ -375,31 +395,46 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
           ]}
         />
 
-        {/* Example Modal - Simple drawer with image */}
-        {showExampleModal && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-            onClick={() => setShowExampleModal(false)}
-          >
-            <div
-              className="relative max-h-[90vh] max-w-[90vw] rounded-2xl bg-white p-6"
-              onClick={(e) => e.stopPropagation()}
-            >
+        {/* Example Drawer */}
+        <BottomDrawer open={showExampleModal} onClose={() => setShowExampleModal(false)}>
+          <div className="pb-6">
+            {/* Header */}
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-black">Example</h3>
               <button
                 onClick={() => setShowExampleModal(false)}
-                className="absolute right-4 top-4 flex size-8 items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300"
+                className="flex size-8 items-center justify-center text-2xl text-gray-600"
               >
                 ×
               </button>
-              <h3 className="mb-4 text-center text-lg font-semibold text-black">Example</h3>
-              <p className="mb-4 text-center text-sm text-gray-600">Please refer to the following examples:</p>
+            </div>
+
+            {/* Description */}
+            <p className="mb-4 text-sm text-gray-600">Please refer to the following examples:</p>
+
+            {/* Example Image */}
+            <div className="overflow-hidden rounded-2xl bg-[#C4C4C4]">
               <img
-                src="https://static.codatta.io/static/images/knob_label_1766728031053.png"
-                alt="Knob annotation example"
-                className="max-h-[70vh] w-full rounded-lg object-contain"
+                src={exampleType === 'original' ? imageExample : labelExample}
+                alt={exampleType === 'original' ? 'Original knob photo example' : 'Annotated knob photo example'}
+                className="w-full object-contain"
               />
             </div>
           </div>
+        </BottomDrawer>
+
+        {/* Annotation Modal */}
+        {showAnnotationModal && image && (
+          <KnobAnnotationCanvas
+            ref={annotationCanvasRef}
+            image={image}
+            rect={rect}
+            pointer={pointer}
+            onRectChange={handleRectChange}
+            onPointerChange={handlePointerChange}
+            onClose={() => setShowAnnotationModal(false)}
+            onConfirm={() => setShowAnnotationModal(false)}
+          />
         )}
 
         <SuccessModal
