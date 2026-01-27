@@ -1,6 +1,9 @@
 import { useState, ReactNode } from 'react'
 import { Camera, X } from 'lucide-react'
 import { cn } from '@udecode/cn'
+import { message } from 'antd'
+import commonApi from '@/api-v1/common.api'
+import { calculateFileHash } from '@/utils/file-hash'
 
 interface UploadedImage {
   url: string
@@ -21,7 +24,7 @@ interface ImageUploadProps {
 
 export default function ImageUpload({
   value = [],
-  allUploadedImages: _allUploadedImages = [],
+  allUploadedImages = [],
   onChange,
   maxCount = 1,
   label,
@@ -31,6 +34,7 @@ export default function ImageUpload({
   disabled = false
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false)
+  const [previewUrl, setPreviewUrl] = useState<string>('')
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -38,45 +42,64 @@ export default function ImageUpload({
 
     const file = files[0]
 
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file')
+    // Validate file type
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg']
+    if (!allowedTypes.includes(file.type.toLowerCase())) {
+      message.error('Image must be in PNG, JPEG, or JPG format.')
       return
     }
 
+    // Validate file size
     if (file.size > 10 * 1024 * 1024) {
-      alert('Image size should not exceed 10MB')
+      message.error('Image size must be less than 10MB')
       return
     }
 
+    // Create preview URL immediately
+    const blobUrl = URL.createObjectURL(file)
+    setPreviewUrl(blobUrl)
     setUploading(true)
 
     try {
-      const reader = new FileReader()
-      reader.onload = async (event) => {
-        const imageUrl = event.target?.result as string
+      // Calculate file hash
+      const hash = await calculateFileHash(file)
 
-        const arrayBuffer = await file.arrayBuffer()
-        const hashBuffer = await crypto.subtle.digest('SHA-256', arrayBuffer)
-        const hashArray = Array.from(new Uint8Array(hashBuffer))
-        const hash = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
-
-        const newImage: UploadedImage = { url: imageUrl, hash }
-
-        if (maxCount === 1) {
-          onChange([newImage])
-        } else {
-          onChange([...value, newImage].slice(0, maxCount))
-        }
+      // Check for duplicates
+      const existingHashes = new Set(allUploadedImages.map((img) => img.hash))
+      if (existingHashes.has(hash)) {
+        message.error('This image has already been uploaded.')
         setUploading(false)
+        setPreviewUrl('')
+        URL.revokeObjectURL(blobUrl)
+        return
       }
-      reader.onerror = () => {
-        alert('Failed to read file')
-        setUploading(false)
+
+      // Upload to CDN
+      const res = await commonApi.uploadFile(file)
+      if (!res || !res.file_path) {
+        throw new Error('Failed to upload image')
       }
-      reader.readAsDataURL(file)
+
+      const newImage: UploadedImage = {
+        url: res.file_path, // Use CDN URL
+        hash
+      }
+
+      if (maxCount === 1) {
+        onChange([newImage])
+      } else {
+        onChange([...value, newImage].slice(0, maxCount))
+      }
+
+      // Clean up blob URL
+      URL.revokeObjectURL(blobUrl)
+      setPreviewUrl('')
+      setUploading(false)
     } catch (error) {
       console.error('Upload error:', error)
-      alert('Failed to upload image')
+      message.error(error instanceof Error ? error.message : 'Failed to upload image')
+      URL.revokeObjectURL(blobUrl)
+      setPreviewUrl('')
       setUploading(false)
     }
 
@@ -115,7 +138,7 @@ export default function ImageUpload({
         {canUploadMore && !disabled && (
           <label
             className={cn(
-              'relative cursor-pointer transition-colors',
+              'relative cursor-pointer overflow-hidden transition-colors',
               itemClassName || 'flex size-[107px] items-center rounded-[20px] bg-[#F5F5F5] hover:bg-[#EBEBEB]'
             )}
           >
@@ -126,11 +149,15 @@ export default function ImageUpload({
               disabled={uploading || disabled}
               className="hidden"
             />
-            {uploading ? (
-              <div className="flex flex-col items-center gap-2">
-                <div className="size-6 animate-spin rounded-full border-2 border-[#999999] border-t-transparent" />
-                <span className="text-xs text-[#999999]">Uploading...</span>
-              </div>
+            {uploading && previewUrl ? (
+              <>
+                {/* Background image */}
+                <img src={previewUrl} alt="Uploading preview" className="absolute inset-0 size-full object-cover" />
+                {/* Loading overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                  <div className="size-8 animate-spin rounded-full border-4 border-white border-t-transparent" />
+                </div>
+              </>
             ) : description ? (
               description
             ) : (

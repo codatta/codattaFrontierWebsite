@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Spin, message } from 'antd'
-import { Camera } from 'lucide-react'
+import { Spin, App } from 'antd'
 
 import frontiterApi from '@/apis/frontiter.api'
 import commonApi from '@/api-v1/common.api'
@@ -11,9 +10,7 @@ import HelpDrawer from '@/components/mobile-app/help-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import Upload from '@/components/mobile-app/image-upload'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
-import KnobAnnotationCanvas, {
-  KnobAnnotationCanvasRef
-} from '@/components/frontier/airdrop/knob/knob-annotation-canvas'
+import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas-app'
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop/knob/types'
 import { calculateFileHash } from '@/utils/file-hash'
 
@@ -27,6 +24,7 @@ interface UploadedImage {
 
 export default function AirdropKnobApp({ templateId }: { templateId?: string }) {
   const { taskId } = useParams()
+  const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -44,6 +42,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
   const [rectModified, setRectModified] = useState(false)
   const [pointerModified, setPointerModified] = useState(false)
   const [scaleValue, setScaleValue] = useState('')
+  const [annotatedImagePreview, setAnnotatedImagePreview] = useState<string | null>(null)
 
   const annotationCanvasRef = useRef<KnobAnnotationCanvasRef>(null)
 
@@ -81,6 +80,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
     setRectModified(false)
     setPointerModified(false)
     setScaleValue('')
+    setAnnotatedImagePreview(null)
     setImageLoading(false)
   }
 
@@ -182,6 +182,11 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
       return
     }
 
+    if (!uploadedImages || uploadedImages.length === 0 || !uploadedImages[0]?.url || !uploadedImages[0]?.hash) {
+      message.error('Please upload an image first')
+      return
+    }
+
     setSubmitting(true)
     try {
       const annotatedImageBase64 = annotationCanvasRef.current?.getAnnotatedImage()
@@ -263,8 +268,8 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                           fill="#999999"
                         />
                         <path
-                          fill-rule="evenodd"
-                          clip-rule="evenodd"
+                          fillRule="evenodd"
+                          clipRule="evenodd"
                           d="M7.39587 1.66602C7.11969 1.66602 6.8672 1.82206 6.74369 2.06909L5.69522 4.16602H2.81254C1.71948 4.16602 0.833374 5.05212 0.833374 6.14518V16.1452C0.833374 17.2382 1.71948 18.1243 2.81254 18.1243H16.9792C18.0723 18.1243 18.9584 17.2382 18.9584 16.1452V6.14518C18.9584 5.05212 18.0723 4.16602 16.9792 4.16602H14.0965L13.0481 2.06909C12.9245 1.82206 12.6721 1.66602 12.3959 1.66602H7.39587ZM5.83337 11.1452C5.83337 8.90152 7.65221 7.08268 9.89587 7.08268C12.1395 7.08268 13.9584 8.90152 13.9584 11.1452C13.9584 13.3888 12.1395 15.2077 9.89587 15.2077C7.65221 15.2077 5.83337 13.3888 5.83337 11.1452Z"
                           fill="#999999"
                         />
@@ -291,50 +296,82 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
             <div className="space-y-2">
               <label className="text-base font-medium text-[#999999]">Image Annotation</label>
               <div className="rounded-[26px] bg-white p-4">
-                {image && !imageLoading ? (
-                  <button
-                    onClick={() => setShowAnnotationModal(true)}
-                    className="flex h-[107px] w-full items-center justify-center rounded-[20px] bg-[#F5F5F5] transition-colors"
-                  >
-                    <div className="flex items-center gap-1 text-[#999999]">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M17.9166 4.58398V3.75065C17.9166 2.69148 17.3091 2.08398 16.25 2.08398H15.4166C14.4308 2.08398 13.8433 2.61565 13.7658 3.54232H6.23495C6.15745 2.61565 5.56994 2.08398 4.58411 2.08398H3.75077C2.69161 2.08398 2.08411 2.69148 2.08411 3.75065V4.58398C2.08411 5.56982 2.61577 6.15731 3.54244 6.23481V13.7657C2.61577 13.8432 2.08411 14.4306 2.08411 15.4165V16.2498C2.08411 17.309 2.69161 17.9165 3.75077 17.9165H4.58411C5.56994 17.9165 6.15745 17.3848 6.23495 16.4581H13.7658C13.8433 17.3848 14.4308 17.9165 15.4166 17.9165H16.25C17.3091 17.9165 17.9166 17.309 17.9166 16.2498V15.4165C17.9166 14.4306 17.385 13.8432 16.4583 13.7657V6.23481C17.385 6.15731 17.9166 5.56982 17.9166 4.58398ZM13.7658 15.209H6.23495C6.16329 14.3515 5.64994 13.8382 4.79244 13.7665V6.23565C5.64994 6.16398 6.16329 5.65066 6.23495 4.79316H13.7658C13.8374 5.65066 14.3508 6.16398 15.2083 6.23565V13.7665C14.3508 13.8382 13.8374 14.3515 13.7658 15.209Z"
-                          fill="#999999"
-                        />
-                      </svg>
-
-                      <span className="text-sm">
-                        {rectModified || pointerModified ? 'Edit annotation' : 'Start labeling'}
+                {annotatedImagePreview ? (
+                  <>
+                    <div className="relative inline-block">
+                      <button
+                        onClick={() => {
+                          setShowAnnotationModal(true)
+                        }}
+                        className="block size-[107px] overflow-hidden rounded-[20px]"
+                      >
+                        <img src={annotatedImagePreview} alt="Annotated preview" className="size-full object-cover" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          setAnnotatedImagePreview(null)
+                          setRect(null)
+                          setPointer(null)
+                          setRectModified(false)
+                          setPointerModified(false)
+                        }}
+                        className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-[#999999] text-lg text-white"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <p className="mt-4 text-[12px] leading-[18px] text-[#999999]">
+                      Move the cyan rectangle to the knob position, the red dot to the center of the knob, and the
+                      orange dot to the pointer position{' '}
+                      <span
+                        className="cursor-pointer text-[#00D1FF]"
+                        onClick={() => {
+                          setExampleType('annotated')
+                          setShowExampleModal(true)
+                        }}
+                      >
+                        example
                       </span>
-                    </div>
-                  </button>
+                    </p>
+                  </>
                 ) : (
-                  <div className="flex h-[107px] items-center justify-center rounded-[20px] bg-[#F5F5F5]">
-                    <div className="flex items-center gap-1 text-[#999999]">
-                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M17.9166 4.58398V3.75065C17.9166 2.69148 17.3091 2.08398 16.25 2.08398H15.4166C14.4308 2.08398 13.8433 2.61565 13.7658 3.54232H6.23495C6.15745 2.61565 5.56994 2.08398 4.58411 2.08398H3.75077C2.69161 2.08398 2.08411 2.69148 2.08411 3.75065V4.58398C2.08411 5.56982 2.61577 6.15731 3.54244 6.23481V13.7657C2.61577 13.8432 2.08411 14.4306 2.08411 15.4165V16.2498C2.08411 17.309 2.69161 17.9165 3.75077 17.9165H4.58411C5.56994 17.9165 6.15745 17.3848 6.23495 16.4581H13.7658C13.8433 17.3848 14.4308 17.9165 15.4166 17.9165H16.25C17.3091 17.9165 17.9166 17.309 17.9166 16.2498V15.4165C17.9166 14.4306 17.385 13.8432 16.4583 13.7657V6.23481C17.385 6.15731 17.9166 5.56982 17.9166 4.58398ZM13.7658 15.209H6.23495C6.16329 14.3515 5.64994 13.8382 4.79244 13.7665V6.23565C5.64994 6.16398 6.16329 5.65066 6.23495 4.79316H13.7658C13.8374 5.65066 14.3508 6.16398 15.2083 6.23565V13.7665C14.3508 13.8382 13.8374 14.3515 13.7658 15.209Z"
-                          fill="#999999"
-                        />
-                      </svg>
-                      <span className="text-sm">Upload image first</span>
-                    </div>
-                  </div>
+                  <>
+                    <button
+                      onClick={() => {
+                        if (!image || imageLoading) {
+                          message.warning('Please upload an image first')
+                          return
+                        }
+                        setShowAnnotationModal(true)
+                      }}
+                      className="flex h-[107px] w-full items-center justify-center rounded-[20px] bg-[#F5F5F5] transition-colors"
+                    >
+                      <div className="flex items-center gap-1 text-[#999999]">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            d="M17.9166 4.58398V3.75065C17.9166 2.69148 17.3091 2.08398 16.25 2.08398H15.4166C14.4308 2.08398 13.8433 2.61565 13.7658 3.54232H6.23495C6.15745 2.61565 5.56994 2.08398 4.58411 2.08398H3.75077C2.69161 2.08398 2.08411 2.69148 2.08411 3.75065V4.58398C2.08411 5.56982 2.61577 6.15731 3.54244 6.23481V13.7657C2.61577 13.8432 2.08411 14.4306 2.08411 15.4165V16.2498C2.08411 17.309 2.69161 17.9165 3.75077 17.9165H4.58411C5.56994 17.9165 6.15745 17.3848 6.23495 16.4581H13.7658C13.8433 17.3848 14.4308 17.9165 15.4166 17.9165H16.25C17.3091 17.9165 17.9166 17.309 17.9166 16.2498V15.4165C17.9166 14.4306 17.385 13.8432 16.4583 13.7657V6.23481C17.385 6.15731 17.9166 5.56982 17.9166 4.58398ZM13.7658 15.209H6.23495C6.16329 14.3515 5.64994 13.8382 4.79244 13.7665V6.23565C5.64994 6.16398 6.16329 5.65066 6.23495 4.79316H13.7658C13.8374 5.65066 14.3508 6.16398 15.2083 6.23565V13.7665C14.3508 13.8382 13.8374 14.3515 13.7658 15.209Z"
+                            fill="#999999"
+                          />
+                        </svg>
+
+                        <span className="text-sm">Start labeling</span>
+                      </div>
+                    </button>
+                    <p className="mt-4 text-[12px] leading-[18px] text-[#999999]">
+                      Move the cyan rectangle to the knob position, the red dot to the center of the knob, and the
+                      orange dot to the pointer position{' '}
+                      <span
+                        className="cursor-pointer text-[#00D1FF]"
+                        onClick={() => {
+                          setExampleType('annotated')
+                          setShowExampleModal(true)
+                        }}
+                      >
+                        example
+                      </span>
+                    </p>
+                  </>
                 )}
-                <p className="mt-4 text-[12px] leading-[18px]">
-                  Move the cyan rectangle to the knob position, the red dot to the center of the knob, and the orange
-                  dot to the pointer position{' '}
-                  <span
-                    className="cursor-pointer text-[#00D1FF]"
-                    onClick={() => {
-                      setExampleType('annotated')
-                      setShowExampleModal(true)
-                    }}
-                  >
-                    example
-                  </span>
-                </p>
               </div>
             </div>
 
@@ -437,18 +474,28 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
           </div>
         </BottomDrawer>
 
-        {/* Annotation Modal */}
-        {showAnnotationModal && image && (
-          <KnobAnnotationCanvas
-            ref={annotationCanvasRef}
-            image={image}
-            rect={rect}
-            pointer={pointer}
-            onRectChange={handleRectChange}
-            onPointerChange={handlePointerChange}
-            onClose={() => setShowAnnotationModal(false)}
-            onConfirm={() => setShowAnnotationModal(false)}
-          />
+        {/* Annotation Modal - Keep mounted to preserve ref */}
+        {image && (
+          <div className={showAnnotationModal ? '' : 'hidden'}>
+            <KnobAnnotationCanvas
+              ref={annotationCanvasRef}
+              image={image}
+              rect={rect}
+              pointer={pointer}
+              onRectChange={handleRectChange}
+              onPointerChange={handlePointerChange}
+              onConfirm={() => {
+                console.log('Confirm clicked - rect:', rect, 'pointer:', pointer)
+                const annotatedImage = annotationCanvasRef.current?.getAnnotatedImage()
+                console.log('Generated annotated image:', annotatedImage ? 'Success' : 'Failed')
+                if (annotatedImage) {
+                  setAnnotatedImagePreview(annotatedImage)
+                  console.log('Preview set successfully')
+                }
+                setShowAnnotationModal(false)
+              }}
+            />
+          </div>
         )}
 
         <SuccessModal
