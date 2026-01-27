@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { Spin, message, Checkbox } from 'antd'
+import { Spin, message } from 'antd'
 import { ChevronDown, Camera } from 'lucide-react'
 import { cn } from '@udecode/cn'
 
@@ -10,7 +10,8 @@ import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
-import Upload from '@/components/frontier/airdrop/UploadImg'
+import Checkbox from '@/components/mobile-app/checkbox'
+import Upload from '@/components/mobile-app/image-upload'
 
 interface PhotoCollectionFormData {
   themeCategory: string
@@ -112,19 +113,20 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
       newErrors.cameraDevice = 'Camera/Device is required'
     }
     if (!formData.confirmAccuracy) {
-      newErrors.confirmAccuracy = 'Required'
+      newErrors.confirmAccuracy = 'Please confirm the accuracy statement'
     }
     if (!formData.confirmOriginal) {
-      newErrors.confirmOriginal = 'Required'
+      newErrors.confirmOriginal = 'Please confirm the original work statement'
     }
 
     setErrors(newErrors)
+
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      message.error('Please fill in all required fields.')
+      message.error('Please fill in all required fields correctly.')
       return
     }
 
@@ -158,13 +160,13 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
   return (
     <AuthChecker>
       <Spin spinning={loading}>
-        <div className="min-h-screen bg-[#F5F5F5] pb-10">
+        <div className="min-h-screen bg-[#F5F5F5] pb-10 text-xs text-[#999999]">
           <FrontierHeader title="Real-World Photo" onHelp={() => setShowInfoModal(true)} />
 
           <div className="space-y-6 px-5 pt-4">
             {/* Theme Category */}
             <div className="space-y-2">
-              <label className="text-[15px] font-medium text-[#A0A0A0]">Theme Category</label>
+              <label className="text-base font-medium">Theme Category</label>
               <div
                 onClick={() => setShowThemeDrawer(true)}
                 className={cn(
@@ -172,7 +174,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
                   errors.themeCategory && 'border border-red-500'
                 )}
               >
-                <span className={cn('text-[15px]', formData.themeCategory ? 'text-black' : 'text-[#CBCBCB]')}>
+                <span className={cn('text-base', formData.themeCategory ? 'text-black' : 'text-[#CBCBCB]')}>
                   {selectedThemeLabel}
                 </span>
                 <ChevronDown className="size-5 text-[#CBCBCB]" />
@@ -181,25 +183,21 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
 
             {/* Upload Original Photo */}
             <div className="space-y-2">
-              <label className="text-[15px] font-medium text-[#A0A0A0]">Upload Original Photo</label>
+              <label className="text-base font-medium">Upload Original Photo</label>
               <div className={cn('rounded-[28px] bg-white p-4', errors.images && 'border border-red-500')}>
-                <div className="flex justify-center">
-                  <Upload
-                    value={formData.images}
-                    allUploadedImages={[...formData.images]}
-                    onChange={(images) => updateFormData('images', images)}
-                    maxCount={1}
-                    itemClassName="h-[140px] w-[140px] rounded-[24px]"
-                    description={
-                      <div className="flex flex-col items-center justify-center">
-                        <div className="flex size-[100px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
-                          <Camera className="size-8 text-[#A0A0A0]" />
-                        </div>
-                      </div>
-                    }
-                  />
-                </div>
-                <p className="mt-4 text-[12px] leading-[18px] text-[#A0A0A0]">
+                <Upload
+                  value={formData.images}
+                  allUploadedImages={formData.images}
+                  onChange={(images) => updateFormData('images', images)}
+                  maxCount={1}
+                  itemClassName="h-[140px] w-[140px] rounded-[24px]"
+                  description={
+                    <div className="flex size-[140px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
+                      <Camera className="size-8 text-[#999999]" />
+                    </div>
+                  }
+                />
+                <p className="mt-4 text-[12px] leading-[18px]">
                   Upload a photo of an original photo(Supports JPG, PNG. Recommended resolution 1920x1080)
                 </p>
               </div>
@@ -207,13 +205,13 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
 
             {/* Subject Description */}
             <div className="space-y-2">
-              <label className="text-[15px] font-medium text-[#A0A0A0]">Subject Description</label>
+              <label className="text-base font-medium">Subject Description</label>
               <textarea
                 value={formData.subjectDescription}
                 onChange={(e) => updateFormData('subjectDescription', e.target.value)}
                 placeholder="Enter subject description"
                 className={cn(
-                  'h-[120px] w-full rounded-[28px] bg-white px-6 py-4 text-[15px] outline-none transition-all placeholder:text-[#CBCBCB]',
+                  'h-[140px] w-full rounded-[26px] bg-white px-6 py-4 text-base text-black outline-none transition-all placeholder:text-[#3C3C434D]',
                   errors.subjectDescription && 'border border-red-500'
                 )}
               />
@@ -221,14 +219,14 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
 
             {/* Camera/Device */}
             <div className="space-y-2">
-              <label className="text-[15px] font-medium text-[#A0A0A0]">Camera/Device</label>
+              <label className="text-base font-medium">Camera/Device</label>
               <input
                 type="text"
                 value={formData.cameraDevice}
                 onChange={(e) => updateFormData('cameraDevice', e.target.value)}
                 placeholder="Enter camera/device"
                 className={cn(
-                  'h-[56px] w-full rounded-[28px] bg-white px-6 text-[15px] outline-none transition-all placeholder:text-[#CBCBCB]',
+                  'h-[52px] w-full rounded-[26px] bg-white px-6 text-base text-black outline-none transition-all placeholder:text-[#3C3C434D]',
                   errors.cameraDevice && 'border border-red-500'
                 )}
               />
@@ -239,10 +237,10 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
               <div className="flex items-start gap-3">
                 <Checkbox
                   checked={formData.confirmAccuracy}
-                  onChange={(e) => updateFormData('confirmAccuracy', e.target.checked)}
+                  onChange={(checked) => updateFormData('confirmAccuracy', checked)}
                   className="mt-1"
                 />
-                <span className="text-[13px] leading-[18px] text-[#A0A0A0]">
+                <span className="text-[13px] leading-[18px]">
                   I confirm: The photo matches the selected theme category, and the description is objective and
                   accurate.
                 </span>
@@ -250,10 +248,10 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
               <div className="flex items-start gap-3">
                 <Checkbox
                   checked={formData.confirmOriginal}
-                  onChange={(e) => updateFormData('confirmOriginal', e.target.checked)}
+                  onChange={(checked) => updateFormData('confirmOriginal', checked)}
                   className="mt-1"
                 />
-                <span className="text-[13px] leading-[18px] text-[#A0A0A0]">
+                <span className="text-[13px] leading-[18px]">
                   I confirm: This photo is my original work, contains no faces or privacy information, and I agree to
                   grant the copyright to the platform for commercial purposes.
                 </span>
@@ -265,8 +263,8 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
               onClick={handleSubmit}
               disabled={!allFieldsFilled || loading}
               className={cn(
-                'mt-4 h-[56px] w-full rounded-full text-[17px] font-bold transition-all',
-                allFieldsFilled ? 'shadow-lg bg-black text-white' : 'bg-[#A0A0A0] text-white opacity-50'
+                'mt-4 h-[56px] w-full rounded-full text-base font-semibold transition-all',
+                allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
               )}
             >
               {loading ? 'Submitting...' : 'Submit'}
