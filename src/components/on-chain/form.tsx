@@ -32,29 +32,13 @@ interface FormState {
   quality: IFormData['quality']
 }
 
-function isInApp() {
-  const userAgent = navigator.userAgent.toLowerCase()
-  return userAgent.includes('codatta')
-}
-
-function defaultBack() {
-  if (isInApp()) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(window as any).native?.call?.('goBack')
-  } else {
-    window.history.back()
-  }
-}
-
 export default function Form(props: FormProps) {
   const {
     defaultSubmissionId = '',
     defaultWalletAddress = '',
     defaultQuality = '',
     defaultSubmissionJsonString = '',
-    onSubmit,
-    title = 'Verify',
-    onBack
+    onSubmit
   } = props
 
   const [isLoading, setIsLoading] = useState(false)

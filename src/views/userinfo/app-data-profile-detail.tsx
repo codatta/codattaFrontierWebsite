@@ -380,7 +380,6 @@ export default function AppDataProfileDetail() {
   const [showSubmissionData, setShowSubmissionData] = useState(false)
   const [showAnchorDetails, setShowAnchorDetails] = useState(false)
   const [showUserInfo, setShowUserInfo] = useState(false)
-  const [showRequirementsModal, setShowRequirementsModal] = useState(true)
   const [showAnchorInfo, setShowAnchorInfo] = useState(false)
 
   useEffect(() => {

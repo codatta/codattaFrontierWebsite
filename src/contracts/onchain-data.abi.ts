@@ -1,4 +1,4 @@
-import { Abi, Chain, defineChain } from 'viem'
+import { Abi, Chain } from 'viem'
 import { base } from 'viem/chains'
 
 const MAINNET = base
