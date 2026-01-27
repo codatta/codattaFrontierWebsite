@@ -724,8 +724,14 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
                 {errors.otherNotableEvents && <p className="px-4 text-xs text-red-400">{errors.otherNotableEvents}</p>}
               </div>
             </div>
-            <button className="block w-full rounded-full bg-black py-3 text-white" onClick={handleSubmit}>
-              Submit
+            <button
+              onClick={handleSubmit}
+              disabled={!allFieldsFilled || loading}
+              className={`h-[56px] w-full rounded-full text-base font-semibold transition-all ${
+                allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
+              }`}
+            >
+              {loading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
 
