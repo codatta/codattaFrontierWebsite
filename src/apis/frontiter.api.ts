@@ -208,9 +208,7 @@ export interface SubmissionReward {
 
 export interface SubmissionStatics {
   total_submissions: number
-  total_rewards: SubmissionReward[]
   on_chained: number
-  claimable_rewards: SubmissionReward[]
 }
 
 export interface SubmissionRecord {
@@ -238,6 +236,25 @@ export interface GenerateFingerprintParams {
   address: string
   quality: 'S' | 'A' | 'B' | 'C' | 'D'
   submit_data: unknown
+}
+
+export interface DataProfileListItem {
+  submission_id: string
+  submission_time: string
+  data_submission: string
+  result: number
+  rating_name: RankingGrade
+  status: string
+  user_id: string
+  frontier_id: string
+  frontier_name: string
+  task_id: string
+  task_name: string
+  chain_id: string
+  chain_name: string
+  fingerprint: string
+  tx_hash: string
+  chain_time: string
 }
 
 class frontier {
@@ -391,6 +408,15 @@ class frontier {
         code: ''
       }>
     >('/v2/user/sm/task/bind', params)
+    return res.data
+  }
+
+  async getDataProfileList(page: number, page_size: number) {
+    const res = await this.request.post<PaginationResponse<DataProfileListItem[]>>(
+      '/v2/submission/user/data/profile/list',
+      { page_num: page, page_size: page_size }
+    )
+
     return res.data
   }
 }
