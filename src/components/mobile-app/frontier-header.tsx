@@ -5,7 +5,8 @@ import { ReactNode } from 'react'
 interface MobileAppFrontierHeaderProps {
   title: string | React.ReactNode
   transparent?: boolean
-  submitDisabled?: boolean
+  canSubmit?: boolean
+  showSubmitButton?: boolean
 
   onBack?: () => void
   onSubmit?: () => void
@@ -21,7 +22,8 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
     title,
     onBack,
     onSubmit,
-    submitDisabled,
+    canSubmit = true,
+    showSubmitButton,
     transparent,
     rightIcon,
     onRightIconClick,
@@ -73,10 +75,10 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
           <ChevronLeft size={24}></ChevronLeft>
         </button>
         <div className="flex items-center justify-center gap-1">{title}</div>
-        {onSubmit ? (
+        {onSubmit && showSubmitButton !== false ? (
           <button
             className="flex size-[44px] items-center justify-center rounded-full bg-[#40E1EF]/90 text-white shadow-app-btn backdrop-blur-sm transition-all disabled:bg-black/5 disabled:text-[#bbb]"
-            disabled={submitDisabled}
+            disabled={!canSubmit}
             onClick={onSubmit}
           >
             <ArrowUp size={24}></ArrowUp>
