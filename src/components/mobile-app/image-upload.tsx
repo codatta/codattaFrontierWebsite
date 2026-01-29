@@ -121,7 +121,7 @@ export default function ImageUpload({
         {value.map((image, index) => (
           <div key={index} className="relative">
             <div className={cn('overflow-hidden', itemClassName || 'size-[120px] rounded-[20px]')}>
-              <img src={image.url} alt={`Upload ${index + 1}`} className="size-full object-cover" />
+              <img src={image.url} alt={`Upload ${index + 1}`} className="size-full object-contain" />
             </div>
             {!disabled && (
               <button
@@ -152,7 +152,7 @@ export default function ImageUpload({
             {uploading && previewUrl ? (
               <>
                 {/* Background image */}
-                <img src={previewUrl} alt="Uploading preview" className="absolute inset-0 size-full object-cover" />
+                <img src={previewUrl} alt="Uploading preview" className="absolute inset-0 size-full object-contain" />
                 {/* Loading overlay */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                   <div className="size-8 animate-spin rounded-full border-4 border-white border-t-transparent" />

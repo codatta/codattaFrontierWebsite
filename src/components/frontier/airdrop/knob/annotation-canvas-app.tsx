@@ -1,24 +1,28 @@
-import { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react'
-import { Stage, Layer, Image as KonvaImage, Circle, Line, Rect as KonvaRect } from 'react-konva'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { Stage, Layer, Image as KonvaImage, Line, Rect as KonvaRect, Circle } from 'react-konva'
 import Konva from 'konva'
-import { Check } from 'lucide-react'
+import { useAppToast } from '@/hooks/use-app-toast'
 import { Rect, Point } from './types'
 
 export interface KnobAnnotationCanvasRef {
   getAnnotatedImage: () => string
+  resetStepStates: () => void
 }
 
 interface KnobAnnotationCanvasProps {
   image: HTMLImageElement
   rect: Rect | null
   pointer: Point | null
+  rectModified: boolean
+  pointerModified: boolean
   onRectChange: (rect: Rect | null) => void
   onPointerChange: (pointer: Point | null) => void
   onConfirm: () => void
 }
 
 const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationCanvasProps>(
-  ({ image, rect, pointer, onRectChange, onPointerChange, onConfirm }, ref) => {
+  ({ image, rect, pointer, rectModified, pointerModified, onRectChange, onPointerChange, onConfirm }, ref) => {
+    const toast = useAppToast()
     const containerRef = useRef<HTMLDivElement>(null)
     const stageRef = useRef<Konva.Stage>(null)
     const isCenterManuallyAdjustedRef = useRef(false)
@@ -26,30 +30,93 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
     const [isDraggingRect, setIsDraggingRect] = useState(false)
     const [isDraggingCorner, setIsDraggingCorner] = useState<number | null>(null)
     const [lastPos, setLastPos] = useState<Point | null>(null)
+    const [rectAdjusted, setRectAdjusted] = useState(false)
+    const [pointerAdjusted, setPointerAdjusted] = useState(false)
+    const [centerAdjusted, setCenterAdjusted] = useState(false)
+    const lastRectChangeTimeRef = useRef<number>(0)
+    const lastPointerChangeTimeRef = useRef<number>(0)
 
     const MIN_SIZE = 40
+
+    // Reset internal state when rect/pointer are reset from parent
+    useEffect(() => {
+      // If rect exists but center hasn't been manually adjusted, reset the flag
+      // This handles the case when parent resets state (e.g., after deleting annotated image)
+      if (rect && rect.center) {
+        const geometricCenter = {
+          x: (rect.x1 + rect.x2 + rect.x3 + rect.x4) / 4,
+          y: (rect.y1 + rect.y2 + rect.y3 + rect.y4) / 4
+        }
+        // If center is at geometric center (within 1px tolerance), reset the flag
+        const isAtGeometricCenter =
+          Math.abs(rect.center.x - geometricCenter.x) < 1 && Math.abs(rect.center.y - geometricCenter.y) < 1
+
+        if (isAtGeometricCenter) {
+          isCenterManuallyAdjustedRef.current = false
+          setCenterAdjusted(false)
+        }
+      } else if (!rect) {
+        // Reset flag when rect is cleared
+        isCenterManuallyAdjustedRef.current = false
+        setRectAdjusted(false)
+        setPointerAdjusted(false)
+        setCenterAdjusted(false)
+      }
+    }, [rect])
+
+    // Detect when user has finished adjusting rect (1 second of no changes)
+    useEffect(() => {
+      if (!rect || rectAdjusted) return
+
+      const checkTimer = setInterval(() => {
+        const now = Date.now()
+        if (lastRectChangeTimeRef.current > 0 && now - lastRectChangeTimeRef.current > 1000) {
+          setRectAdjusted(true)
+        }
+      }, 500)
+
+      return () => clearInterval(checkTimer)
+    }, [rect, rectAdjusted])
+
+    // Detect when user has finished adjusting pointer (1 second of no changes)
+    useEffect(() => {
+      if (!pointer || pointerAdjusted) return
+
+      const checkTimer = setInterval(() => {
+        const now = Date.now()
+        if (lastPointerChangeTimeRef.current > 0 && now - lastPointerChangeTimeRef.current > 1000) {
+          setPointerAdjusted(true)
+        }
+      }, 500)
+
+      return () => clearInterval(checkTimer)
+    }, [pointer, pointerAdjusted])
 
     useEffect(() => {
       const updateDimensions = () => {
         if (!containerRef.current || !image) return
 
-        // Square area with width equal to screen width
-        const squareSize = window.innerWidth
+        const screenWidth = window.innerWidth
+        const screenHeight = window.innerHeight
+
+        // Reserve space for header (100px) and guide section below canvas (estimated 180px)
+        const reservedHeight = 100 + 180
+        const availableHeight = screenHeight - reservedHeight
+
         const imgRatio = image.naturalWidth / image.naturalHeight
 
         let drawWidth, drawHeight, scale
 
-        // Contain fit: image fits within the square
-        if (imgRatio > 1) {
-          // Landscape: width fills the square
-          drawWidth = squareSize
-          drawHeight = squareSize / imgRatio
-          scale = squareSize / image.naturalWidth
-        } else {
-          // Portrait or square: height fills the square
-          drawHeight = squareSize
-          drawWidth = squareSize * imgRatio
-          scale = squareSize / image.naturalHeight
+        // Try to fill width first
+        drawWidth = screenWidth
+        drawHeight = screenWidth / imgRatio
+        scale = screenWidth / image.naturalWidth
+
+        // If height exceeds available space, scale down to fit height
+        if (drawHeight > availableHeight) {
+          drawHeight = availableHeight
+          drawWidth = availableHeight * imgRatio
+          scale = availableHeight / image.naturalHeight
         }
 
         setDimensions({ width: drawWidth, height: drawHeight, scale })
@@ -143,6 +210,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                   }
           }
           onRectChange(newRect)
+          lastRectChangeTimeRef.current = Date.now()
           setLastPos({ x: lastPos.x + safeDx, y: lastPos.y + safeDy })
         }
         return
@@ -216,6 +284,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
       }
 
       onRectChange(newRect)
+      lastRectChangeTimeRef.current = Date.now()
     }
 
     const handleCenterDrag = (e: Konva.KonvaEventObject<DragEvent>) => {
@@ -227,11 +296,13 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
         center: { x: pos.x, y: pos.y }
       }
       onRectChange(newRect)
+      setCenterAdjusted(true)
     }
 
     const handlePointerDrag = (e: Konva.KonvaEventObject<DragEvent>) => {
       const pos = e.target.position()
       onPointerChange({ x: pos.x, y: pos.y })
+      lastPointerChangeTimeRef.current = Date.now()
     }
 
     useImperativeHandle(ref, () => ({
@@ -302,8 +373,28 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
         ctx.shadowOffsetY = 0
 
         return canvas.toDataURL('image/jpeg', 0.9)
+      },
+      resetStepStates: () => {
+        setRectAdjusted(false)
+        setPointerAdjusted(false)
+        setCenterAdjusted(false)
+        isCenterManuallyAdjustedRef.current = false
+        lastRectChangeTimeRef.current = 0
+        lastPointerChangeTimeRef.current = 0
       }
     }))
+
+    const handleConfirm = () => {
+      if (!rectModified) {
+        toast.show('Please complete Step 1', 2000)
+        return
+      }
+      if (!pointerModified) {
+        toast.show('Please complete Step 2', 2000)
+        return
+      }
+      onConfirm()
+    }
 
     return (
       <div className="fixed inset-0 z-50 flex flex-col bg-black">
@@ -311,16 +402,12 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
         <div className="flex h-[100px] items-center justify-between px-5 pt-12">
           <div className="size-11"></div>
           <h1 className="text-lg font-semibold text-white">Image Annotation</h1>
-          <ConfirmIcon onClick={onConfirm} />
+          <ConfirmIcon onClick={handleConfirm} />
         </div>
 
-        {/* Canvas Area - Square container */}
-        <div className="flex flex-1 items-center justify-center">
-          <div
-            ref={containerRef}
-            className="flex items-center justify-center overflow-hidden bg-black"
-            style={{ width: '100vw', height: '100vw' }}
-          >
+        {/* Canvas Area */}
+        <div className="flex flex-1 items-center justify-center overflow-hidden">
+          <div ref={containerRef} className="flex items-center justify-center bg-black">
             <Stage
               ref={stageRef}
               width={dimensions.width}
@@ -409,6 +496,142 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                 )}
               </Layer>
             </Stage>
+          </div>
+        </div>
+
+        {/* Guide Section - Below canvas */}
+        <div className="px-5 pb-10 pt-4">
+          <div className="space-y-3">
+            {/* Step 1: Adjust cyan rectangle to mark knob outline */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className={`text-sm font-medium ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>1.</span>
+              <span className={`text-sm ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>
+                Adjust the cyan rectangle
+              </span>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="shrink-0"
+              >
+                <rect x="1" y="1" width="10" height="10" stroke="#40E1EF" strokeWidth="1.5" fill="none" />
+              </svg>
+              <span className={`text-sm ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>to mark knob outline</span>
+              {rectAdjusted && (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="shrink-0"
+                >
+                  <path
+                    d="M13 4.5L6 11.5L3 8.5"
+                    stroke="#40E1EF"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </div>
+
+            {/* Step 2: Move orange dot to pointer */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`text-sm font-medium ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
+              >
+                2.
+              </span>
+              <span
+                className={`text-sm ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
+              >
+                Move the orange dot
+              </span>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="shrink-0"
+              >
+                <circle cx="6" cy="6" r="4" fill="#FFA800" />
+              </svg>
+              <span
+                className={`text-sm ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
+              >
+                to pointer position
+              </span>
+              {pointerAdjusted && (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="shrink-0"
+                >
+                  <path
+                    d="M13 4.5L6 11.5L3 8.5"
+                    stroke="#40E1EF"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </div>
+
+            {/* Step 3: Move red dot to knob center (Optional) */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`text-sm font-medium ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
+              >
+                3.
+              </span>
+              <span
+                className={`text-sm ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
+              >
+                Move the red dot
+              </span>
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="shrink-0"
+              >
+                <circle cx="6" cy="6" r="4" fill="#FF3600" />
+              </svg>
+              <span
+                className={`text-sm ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
+              >
+                to knob center <span className="text-xs">(optional)</span>
+              </span>
+              {centerAdjusted && (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="shrink-0"
+                >
+                  <path
+                    d="M13 4.5L6 11.5L3 8.5"
+                    stroke="#40E1EF"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </div>
           </div>
         </div>
       </div>

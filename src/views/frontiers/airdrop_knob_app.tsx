@@ -13,6 +13,7 @@ import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas-app'
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop/knob/types'
 import { calculateFileHash } from '@/utils/file-hash'
+import { AppToastContainer } from '@/hooks/use-app-toast'
 
 import imageExample from '@/assets/frontier/knob/raw_app.png'
 import labelExample from '@/assets/frontier/knob/label_app.png'
@@ -67,7 +68,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
     } finally {
       setLoading(false)
     }
-  }, [taskId, templateId])
+  }, [message, taskId, templateId])
 
   useEffect(() => {
     fetchTaskDetail()
@@ -245,7 +246,8 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
 
   return (
     <AuthChecker>
-      <Spin spinning={loading}>
+      <AppToastContainer />
+      <Spin spinning={loading || submitting}>
         <div className="min-h-screen bg-[#F5F5F5] pb-10 text-xs text-[#999999]">
           <FrontierHeader title="Appliance Knob" onHelp={() => setShowInfoModal(true)} />
 
@@ -305,15 +307,39 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                         }}
                         className="block size-[107px] overflow-hidden rounded-[20px]"
                       >
-                        <img src={annotatedImagePreview} alt="Annotated preview" className="size-full object-cover" />
+                        <img src={annotatedImagePreview} alt="Annotated preview" className="size-full object-contain" />
                       </button>
                       <button
                         onClick={() => {
                           setAnnotatedImagePreview(null)
-                          setRect(null)
-                          setPointer(null)
                           setRectModified(false)
                           setPointerModified(false)
+
+                          // Reset rect and pointer to default positions when deleting annotation
+                          if (image) {
+                            const w = image.naturalWidth
+                            const h = image.naturalHeight
+                            const cx = w / 2
+                            const cy = h / 2
+                            const size = Math.min(w, h) * 0.4
+                            const hs = size / 2
+
+                            setRect({
+                              x1: cx - hs,
+                              y1: cy - hs,
+                              x2: cx + hs,
+                              y2: cy - hs,
+                              x3: cx + hs,
+                              y3: cy + hs,
+                              x4: cx - hs,
+                              y4: cy + hs,
+                              center: { x: cx, y: cy }
+                            })
+                            setPointer({ x: cx, y: cy })
+                          }
+
+                          // Reset step states in annotation canvas
+                          annotationCanvasRef.current?.resetStepStates()
                         }}
                         className="absolute -right-2 -top-2 flex size-6 items-center justify-center rounded-full bg-[#999999] text-lg text-white"
                       >
@@ -482,6 +508,8 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
               image={image}
               rect={rect}
               pointer={pointer}
+              rectModified={rectModified}
+              pointerModified={pointerModified}
               onRectChange={handleRectChange}
               onPointerChange={handlePointerChange}
               onConfirm={() => {
