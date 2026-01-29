@@ -10,6 +10,7 @@ import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
+import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
 import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
@@ -561,87 +562,42 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
         </>
       )}
 
-      {/* Help Modal - More About Frontier */}
-      {showHelpModal && (
-        <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 z-50 bg-black/20" onClick={() => setShowHelpModal(false)} />
-
-          {/* Modal */}
-          <div className="fixed left-1/2 top-1/2 z-50 flex max-h-[85vh] w-[90%] max-w-[400px] -translate-x-1/2 -translate-y-1/2 flex-col rounded-[32px] bg-white shadow-app-btn">
-            {/* Header */}
-            <div className="relative flex items-center justify-center border-b border-black/5 px-6 py-4">
-              <h2 className="text-[20px] font-semibold text-black">More About Frontier</h2>
-              <button
-                onClick={() => setShowHelpModal(false)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-black"
-              >
-                <X size={24} />
-              </button>
-            </div>
-
-            {/* Content - Scrollable */}
-            <div className="flex-1 overflow-y-auto px-6 py-5">
-              {/* Food Science Section */}
-              <div className="mb-6 rounded-2xl bg-[#F5F5F5] p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-[17px] font-semibold text-black">Food Science</h3>
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-black">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M8 2C8.27614 2 8.5 2.22386 8.5 2.5V7.5H13.5C13.7761 7.5 14 7.72386 14 8C14 8.27614 13.7761 8.5 13.5 8.5H8.5V13.5C8.5 13.7761 8.27614 14 8 14C7.72386 14 7.5 13.7761 7.5 13.5V8.5H2.5C2.22386 8.5 2 8.27614 2 8C2 7.72386 2.22386 7.5 2.5 7.5H7.5V2.5C7.5 2.22386 7.72386 2 8 2Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <p className="text-[15px] leading-normal text-[#666]">
-                  Studying Food Science and labeling and annotating food data is essential for improving food safety,
-                  enhancing nutritional understanding, and enabling better food-related decision-making through
-                  data-driven insights.
-                </p>
-              </div>
-
-              {/* Guidelines Section */}
-              <div className="rounded-2xl bg-[#F5F5F5] p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-[17px] font-semibold text-black">Guidelines</h3>
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-black">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M4.5 8C4.5 7.72386 4.72386 7.5 5 7.5H11C11.2761 7.5 11.5 7.72386 11.5 8C11.5 8.27614 11.2761 8.5 11 8.5H5C4.72386 8.5 4.5 8.27614 4.5 8Z"
-                        fill="white"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="mb-3">
-                  <h4 className="mb-2 text-[15px] font-semibold text-black">Requirements (Must Read)</h4>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2 text-[15px] leading-normal text-[#666]">
-                      <span className="mt-[6px] size-1 shrink-0 rounded-full bg-[#666]" />
-                      <span>Please ensure all photos are clear and well-lit.</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-[15px] leading-normal text-[#666]">
-                      <span className="mt-[6px] size-1 shrink-0 rounded-full bg-[#666]" />
-                      <span>Food photos should contain only a single food item, unobstructed.</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-[15px] leading-normal text-[#666]">
-                      <span className="mt-[6px] size-1 shrink-0 rounded-full bg-[#666]" />
-                      <span>Weight and size measurements should be as accurate as possible.</span>
-                    </li>
-                    <li className="flex items-start gap-2 text-[15px] leading-normal text-[#666]">
-                      <span className="mt-[6px] size-1 shrink-0 rounded-full bg-[#666]" />
-                      <span>All fields are required.</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
+      <HelpDrawer
+        open={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        title="More About Frontier"
+        cards={[
+          {
+            preset: 'about',
+            title: 'Food Science',
+            content: [
+              {
+                type: 'p',
+                text: 'Studying Food Science and labeling and annotating food data is essential for improving food safety, enhancing nutritional understanding, and enabling better food-related decision-making through data-driven insights.'
+              }
+            ]
+          },
+          {
+            preset: 'guidelines',
+            title: 'Guidelines',
+            content: [
+              {
+                type: 'h3',
+                text: 'Requirements (Must Read)'
+              },
+              {
+                type: 'list',
+                items: [
+                  'Please ensure all photos are clear and well-lit.',
+                  'Food photos should contain only a single food item, unobstructed.',
+                  'Weight and size measurements should be as accurate as possible.',
+                  'All fields are required.'
+                ]
+              }
+            ]
+          }
+        ]}
+      />
     </AuthChecker>
   )
 }
