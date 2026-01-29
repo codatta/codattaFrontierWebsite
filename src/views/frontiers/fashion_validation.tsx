@@ -73,6 +73,7 @@ export default function FashionValidation({ templateId }: { templateId: string }
     setAllAnswers(newAnswers)
 
     const isLast = currentImageIndex === questions.length - 1
+    const uids = newAnswers.reduce((acc, cur) => acc.concat(cur.uid), [] as string[]).join(',')
 
     if (isLast) {
       // Submit all
@@ -82,6 +83,7 @@ export default function FashionValidation({ templateId }: { templateId: string }
         await frontiterApi.submitTask(taskId!, {
           taskId: taskId!,
           templateId: templateId,
+          uid: uids,
           data: {
             answers: newAnswers,
             channel: 'web'

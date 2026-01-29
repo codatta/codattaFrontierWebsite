@@ -161,10 +161,10 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       message.error('Task ID is missing.')
       return
     }
-    if (!uid) {
-      message.error('Task uid is missing.')
-      return
-    }
+    // if (!uid) {
+    //   message.error('Task uid is missing.')
+    //   return
+    // }
     if (!canContinue) return
 
     if (!isLastImage) {
@@ -187,14 +187,17 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       is_valid: item!.is_valid as 'valid' | 'invalid',
       image_type: item?.image_type,
       category: item?.category,
-      viewpoint: item?.viewpoint
+      viewpoint: item?.viewpoint,
+      uid: questions[index]?.uid
     }))
+
+    const uids = serializedAnswers.reduce((acc, cur) => acc.concat(cur.uid), [] as string[]).join(',')
 
     setLoading(true)
     try {
       await frontiterApi.submitTask(taskId, {
         taskId,
-        uid,
+        uid: uids,
         templateId,
         data: { answers: serializedAnswers, channel: 'app' }
       })
@@ -230,7 +233,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       console.log('frontieId', res.data.frontier_id)
       setFrontierId(res.data.frontier_id)
       setQuestions(fetchedQuestions)
-      setAnswers(fetchedQuestions.map((q) => ({ image_url: q.image_url })))
+      setAnswers(fetchedQuestions.map((q) => ({ image_url: q.image_url, uid: q.uid })))
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to load task detail.'
       message.error(errMsg)

@@ -10,6 +10,7 @@ import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
+import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
 import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
@@ -70,6 +71,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
   const [showMeasurementToolPhotoDrawer, setShowMeasurementToolPhotoDrawer] = useState(false)
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
   const [showRequirementsModal, setShowRequirementsModal] = useState(true)
+  const [showHelpModal, setShowHelpModal] = useState(false)
   const allFieldsFilled = useMemo(() => {
     // Basic fields validation
     const basicFieldsValid =
@@ -242,7 +244,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} />
+          <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} onHelp={() => setShowHelpModal(true)} />
           <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
           {/* Form Content */}
@@ -559,6 +561,43 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
           </div>
         </>
       )}
+
+      <HelpDrawer
+        open={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        title="More About Frontier"
+        cards={[
+          {
+            preset: 'about',
+            title: 'Food Science',
+            content: [
+              {
+                type: 'p',
+                text: 'Studying Food Science and labeling and annotating food data is essential for improving food safety, enhancing nutritional understanding, and enabling better food-related decision-making through data-driven insights.'
+              }
+            ]
+          },
+          {
+            preset: 'guidelines',
+            title: 'Guidelines',
+            content: [
+              {
+                type: 'h3',
+                text: 'Requirements (Must Read)'
+              },
+              {
+                type: 'list',
+                items: [
+                  'Please ensure all photos are clear and well-lit.',
+                  'Food photos should contain only a single food item, unobstructed.',
+                  'Weight and size measurements should be as accurate as possible.',
+                  'All fields are required.'
+                ]
+              }
+            ]
+          }
+        ]}
+      />
     </AuthChecker>
   )
 }
