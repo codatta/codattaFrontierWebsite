@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
 import Router from '@/router'
-import { ConfigProvider } from 'antd'
+import { ConfigProvider, App } from 'antd'
 import { CodattaConnectContextProvider } from 'codatta-connect'
 import '@/lab/telegram.sdk.js'
 
@@ -62,8 +62,10 @@ if (isInCodattaApp) {
 const root = createRoot(container)
 root.render(
   <ConfigProvider theme={AntdTheme}>
-    <CodattaConnectContextProvider chains={[BSC_CHAIN]}>
-      <Router></Router>
-    </CodattaConnectContextProvider>
+    <App message={{ top: 200, duration: 2.5, maxCount: 3 }}>
+      <CodattaConnectContextProvider chains={[BSC_CHAIN]}>
+        <Router></Router>
+      </CodattaConnectContextProvider>
+    </App>
   </ConfigProvider>
 )
