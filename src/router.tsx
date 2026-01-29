@@ -229,7 +229,7 @@ export default function Router() {
             index
             element={
               <AppContainerDetector
-                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION" />}
                 notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
               />
             }
@@ -238,7 +238,7 @@ export default function Router() {
             path="feed/:uid"
             element={
               <AppContainerDetector
-                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" isFeed={true} />}
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION" isFeed={true} />}
                 notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
               />
             }
@@ -257,7 +257,7 @@ export default function Router() {
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={
             <AppContainerDetector
-              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
+              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" />}
               notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
             />
           }
@@ -270,7 +270,7 @@ export default function Router() {
           path="/frontier/project/AIRDROP_KNOB/:taskId"
           element={
             <AppContainerDetector
-              inApp={<AirdropKnobApp templateId="AIRDROP_KNOB_APP" />}
+              inApp={<AirdropKnobApp templateId="AIRDROP_KNOB" />}
               notInApp={<AirdropKnob templateId="AIRDROP_KNOB" />}
             />
           }
