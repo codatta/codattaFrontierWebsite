@@ -81,10 +81,7 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
   }, [fetchTaskDetail])
 
   const goDownload = () => {
-    window.open(
-      'https://chromewebstore.google.com/detail/codatta-clip/doklnekkemmhclakfekoccilofpdcncb?hl=zh-CN&utm_source=ext_sidebar',
-      '_blank'
-    )
+    window.open('https://chromewebstore.google.com/detail/doklnekkemmhclakfekoccilofpdcncb', '_blank')
   }
 
   return (
