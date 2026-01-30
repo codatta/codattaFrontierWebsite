@@ -1,4 +1,4 @@
-import { AlertCircle, ChevronDown, InfoIcon, Loader2 } from 'lucide-react'
+import { AlertCircle, ChevronDown, Loader2 } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
 
 export interface IFormData {
