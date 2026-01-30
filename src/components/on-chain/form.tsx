@@ -194,14 +194,11 @@ export default function Form(props: FormProps) {
         <div className="mb-7">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-[13px] font-semibold text-[#999]">Submission ID</div>
-            <div className="flex items-center gap-1 text-[#C7C7C7]">
-              <InfoIcon className="size-4" />
-            </div>
           </div>
 
           <div
             className={[
-              'rounded-3xl bg-[#F5F5F5] p-4',
+              'rounded-full bg-[#F5F5F5] p-4',
               errors.submissionId ? 'ring-1 ring-[#FF3B30]' : 'ring-1 ring-transparent'
             ].join(' ')}
           >
@@ -225,14 +222,11 @@ export default function Form(props: FormProps) {
         <div className="mb-7">
           <div className="mb-2 flex items-center justify-between">
             <div className="text-[13px] font-semibold text-[#999]">Quality Info</div>
-            <div className="flex items-center gap-1 text-[#C7C7C7]">
-              <InfoIcon className="size-4" />
-            </div>
           </div>
 
           <div
             className={[
-              'relative rounded-3xl bg-[#F5F5F5] px-4 py-4',
+              'relative rounded-full bg-[#F5F5F5] px-4 py-4',
               errors.quality ? 'ring-1 ring-[#FF3B30]' : 'ring-1 ring-transparent'
             ].join(' ')}
           >
@@ -264,14 +258,11 @@ export default function Form(props: FormProps) {
         {/* Wallet address */}
         <div className="mb-10">
           <div className="mb-2 flex items-center justify-between">
-            <div className="text-[13px] font-semibold text-[#999]">WALLET address</div>
-            <div className="flex items-center gap-1 text-[#C7C7C7]">
-              <InfoIcon className="size-4" />
-            </div>
+            <div className="text-[13px] font-semibold text-[#999]">Wallet Address</div>
           </div>
           <div
             className={[
-              'rounded-3xl bg-[#F5F5F5] p-4',
+              'rounded-full bg-[#F5F5F5] p-4',
               errors.walletAddress ? 'ring-1 ring-[#FF3B30]' : 'ring-1 ring-transparent'
             ].join(' ')}
           >
