@@ -19,7 +19,7 @@ function RequirementsModal(props: { onClose: () => void }) {
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 z-50 bg-black/20" />
+      <div className="fixed inset-0 z-50 bg-black/20" onClick={onClose} />
 
       {/* Modal */}
       <div className="fixed left-1/2 top-1/2 z-50 w-[90%] max-w-[340px] -translate-x-1/2 -translate-y-1/2 rounded-[32px] bg-white/60 px-4 pb-4 pt-5 shadow-glass backdrop-blur-md">
