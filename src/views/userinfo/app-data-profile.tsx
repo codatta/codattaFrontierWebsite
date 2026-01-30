@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { message } from 'antd'
 import dayjs from 'dayjs'
 import { InfoCircleOutlined } from '@ant-design/icons'
@@ -64,10 +64,13 @@ export default function AppDataProfile() {
 
   const [loading, setLoading] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [showRequirementsModal, setShowRequirementsModal] = useState(false)
   const pageSize = 12
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+  const fetchingMoreRef = useRef(false)
 
   const navigate = useNavigate()
 
@@ -98,12 +101,28 @@ export default function AppDataProfile() {
     setLoading(true)
     try {
       const res = await frontiterApi.getDataProfileList(page, pageSize)
+      // Reset hasMore on a fresh load
+      if (page <= 1) setHasMore(true)
+
       setSubmissions((prev) => {
-        if (page <= 1) return res.data
+        if (page <= 1) {
+          // If first page returns less than pageSize, there's no more.
+          if (!res.data?.length || res.data.length < pageSize) setHasMore(false)
+          return res.data
+        }
+
         const merged = [...prev]
+        const beforeLen = merged.length
         for (const item of res.data) {
           if (!merged.find((x) => x.submission_id === item.submission_id)) merged.push(item)
         }
+        const afterLen = merged.length
+
+        // Stop if API returns empty, duplicates only, or a short page.
+        if (!res.data?.length || afterLen === beforeLen || res.data.length < pageSize) {
+          setHasMore(false)
+        }
+
         return merged
       })
       setTotal(res.total_count)
@@ -126,7 +145,42 @@ export default function AppDataProfile() {
     getSubmissionRecords(page)
   }, [page])
 
-  const canLoadMore = useMemo(() => submissions.length < total, [submissions.length, total])
+  const canLoadMore = useMemo(() => hasMore && submissions.length < total, [hasMore, submissions.length, total])
+
+  // reset "inflight" latch after request finished
+  useEffect(() => {
+    if (!loading) fetchingMoreRef.current = false
+  }, [loading])
+
+  // infinite scroll: observe a sentinel at the bottom
+  useEffect(() => {
+    const el = loadMoreRef.current
+    if (!el) return
+    if (!canLoadMore) return
+    if (loading) return
+    if (hasLoaded && submissions.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (!entry?.isIntersecting) return
+        if (loading) return
+        if (!canLoadMore) return
+        if (fetchingMoreRef.current) return
+        fetchingMoreRef.current = true
+        setPage((p) => p + 1)
+      },
+      {
+        root: null,
+        // start loading a bit before reaching bottom
+        rootMargin: '200px 0px',
+        threshold: 0
+      }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [canLoadMore, hasLoaded, loading, submissions.length])
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] text-black">
@@ -157,23 +211,18 @@ export default function AppDataProfile() {
           </div>
         ) : null}
 
-        {canLoadMore ? (
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={() => setPage((p) => p + 1)}
-              className="h-11 w-full rounded-full bg-white text-[15px] font-semibold text-black shadow-[0_6px_16px_rgba(0,0,0,0.06)]"
-            >
-              Load more
-            </button>
-          </div>
-        ) : null}
+        {/* sentinel for infinite scroll */}
+        {canLoadMore && !(hasLoaded && submissions.length === 0) ? <div ref={loadMoreRef} className="h-8" /> : null}
 
         {loading ? (
           <div className="my-6 flex items-center justify-center gap-2 text-black/40">
             <Loader2 className="size-4 animate-spin"></Loader2>
             <div className="text-[13px]">Loading...</div>
           </div>
+        ) : null}
+
+        {hasLoaded && !loading && submissions.length > 0 && !canLoadMore ? (
+          <div className="my-6 text-center text-[13px] text-black/30">No more data</div>
         ) : null}
       </div>
 
