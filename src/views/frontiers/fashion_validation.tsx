@@ -15,7 +15,7 @@ export default function FashionValidation({ templateId }: { templateId: string }
   const { taskId, uid } = useParams()
   const [pageLoading, setPageLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
-  const [rewardPoints, setRewardPoints] = useState(0)
+  const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
 
   // Carousel state
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -37,12 +37,6 @@ export default function FashionValidation({ templateId }: { templateId: string }
       if (res.data.data_display.template_id !== templateId) {
         throw new Error('Template not match!')
       }
-
-      // Calculate rewards
-      const totalRewards = res.data.reward_info
-        .filter((item) => item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS')
-        .reduce((acc, cur) => acc + cur.reward_value, 0)
-      setRewardPoints(totalRewards)
 
       const questions = (res.data.questions as unknown[] as FashionQuestion[]) || []
       if (!questions?.length) {
@@ -80,7 +74,7 @@ export default function FashionValidation({ templateId }: { templateId: string }
       try {
         setPageLoading(true)
 
-        await frontiterApi.submitTask(taskId!, {
+        const submitRes = await frontiterApi.submitTask(taskId!, {
           taskId: taskId!,
           templateId: templateId,
           uid: uids,
@@ -89,6 +83,20 @@ export default function FashionValidation({ templateId }: { templateId: string }
             channel: 'web'
           }
         })
+
+        // Extract reward points from submit response
+        if (submitRes?.data?.reward_info && Array.isArray(submitRes.data.reward_info)) {
+          const totalRewards = submitRes.data.reward_info
+            .filter(
+              (item: { reward_mode: string; reward_type: string }) =>
+                item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+            )
+            .reduce((acc: number, cur: { reward_value: number }) => acc + cur.reward_value, 0)
+          setRewardPoints(totalRewards > 0 ? totalRewards : undefined)
+        } else {
+          setRewardPoints(undefined)
+        }
+
         setModalShow(true)
       } catch (error) {
         message.error((error as Error).message || 'Failed to submit!')
