@@ -385,7 +385,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                     </button>
                     <p className="mt-4 text-[12px] leading-[18px] text-[#999999]">
                       Move the cyan rectangle to the knob position, the red dot to the center of the knob, and the
-                      orange dot to the pointer position{' '}
+                      yellow dot to the pointer position{' '}
                       <span
                         className="cursor-pointer text-[#00D1FF]"
                         onClick={() => {
