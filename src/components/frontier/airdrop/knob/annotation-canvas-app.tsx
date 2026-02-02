@@ -386,11 +386,11 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
 
     const handleConfirm = () => {
       if (!rectModified) {
-        toast.show('Please complete Step 1', 2000)
+        toast.show('Please drag the cyan corners to cover the knob', 2000)
         return
       }
       if (!pointerModified) {
-        toast.show('Please complete Step 2', 2000)
+        toast.show('Please drag the yellow dot to the pointer tip', 2000)
         return
       }
       onConfirm()
@@ -500,131 +500,180 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
         </div>
 
         {/* Guide Section - Below canvas */}
-        <div className="px-5 pb-10 pt-4 text-xs">
+        <div className="hidden px-5 pb-10 pt-4 text-sm">
           <div className="space-y-3">
-            {/* Step 1: Adjust cyan rectangle to mark knob outline */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Step 1: Drag cyan rectangle corners to cover knob */}
+            <div className="flex items-start gap-2">
               <span className={`font-medium ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>1.</span>
-              <span className={`${rectAdjusted ? 'text-white/50' : 'text-white'}`}>Adjust the cyan rectangle</span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0"
-              >
-                <rect x="1" y="1" width="10" height="10" stroke="#40E1EF" strokeWidth="1.5" fill="none" />
-              </svg>
-              <span className={`${rectAdjusted ? 'text-white/50' : 'text-white'}`}>to mark knob outline</span>
-              {rectAdjusted && (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="shrink-0"
-                >
-                  <path
-                    d="M13 4.5L6 11.5L3 8.5"
-                    stroke="#40E1EF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
+              <div className="flex flex-1 flex-wrap items-center gap-2">
+                {!rectAdjusted ? (
+                  <>
+                    <span className="text-white">Drag</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0"
+                    >
+                      <rect x="1" y="1" width="10" height="10" stroke="#40E1EF" strokeWidth="1.5" fill="none" />
+                    </svg>
+                    <span className="text-white">cyan corners to cover knob</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white/50">Drag</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0 opacity-50"
+                    >
+                      <rect x="1" y="1" width="10" height="10" stroke="#40E1EF" strokeWidth="1.5" fill="none" />
+                    </svg>
+                    <span className="text-white/50">cyan corners to cover knob</span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0"
+                    >
+                      <path
+                        d="M13 4.5L6 11.5L3 8.5"
+                        stroke="#40E1EF"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </>
+                )}
+              </div>
             </div>
 
-            {/* Step 2: Move orange dot to pointer */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Step 2: Drag yellow dot to pointer tip */}
+            <div className="flex items-start gap-2">
               <span
                 className={`font-medium ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
               >
                 2.
               </span>
-              <span className={`${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}>
-                Move the yellow dot
-              </span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0"
-              >
-                <circle cx="6" cy="6" r="4" fill="#FFFF00" />
-              </svg>
-              <span className={`${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}>
-                to pointer position
-              </span>
-              {pointerAdjusted && (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="shrink-0"
-                >
-                  <path
-                    d="M13 4.5L6 11.5L3 8.5"
-                    stroke="#40E1EF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
+              <div className="flex flex-1 flex-wrap items-center gap-2">
+                {!pointerAdjusted ? (
+                  <>
+                    <span className={rectAdjusted ? 'text-white' : 'text-white/40'}>Drag</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`shrink-0 ${!rectAdjusted ? 'opacity-40' : ''}`}
+                    >
+                      <circle cx="6" cy="6" r="4" fill="#FFFF00" />
+                    </svg>
+                    <span className={rectAdjusted ? 'text-white' : 'text-white/40'}>yellow dot to pointer tip</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white/50">Drag</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0 opacity-50"
+                    >
+                      <circle cx="6" cy="6" r="4" fill="#FFFF00" />
+                    </svg>
+                    <span className="text-white/50">yellow dot to pointer tip</span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0"
+                    >
+                      <path
+                        d="M13 4.5L6 11.5L3 8.5"
+                        stroke="#40E1EF"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </>
+                )}
+              </div>
             </div>
 
-            {/* Step 3: Move red dot to knob center (Optional) */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Step 3: Drag red dot to knob center (Optional) */}
+            <div className="flex items-start gap-2">
               <span
                 className={`font-medium ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
               >
                 3.
               </span>
-              <span
-                className={`${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
-              >
-                Move the red dot
-              </span>
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0"
-              >
-                <circle cx="6" cy="6" r="4" fill="#FF0000" />
-              </svg>
-              <span
-                className={`${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
-              >
-                to knob center <span className="text-xs">(optional)</span>
-              </span>
-              {centerAdjusted && (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="shrink-0"
-                >
-                  <path
-                    d="M13 4.5L6 11.5L3 8.5"
-                    stroke="#40E1EF"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
+              <div className="flex flex-1 flex-wrap items-center gap-2">
+                {!centerAdjusted ? (
+                  <>
+                    <span className={pointerAdjusted ? 'text-white' : 'text-white/40'}>Drag</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className={`shrink-0 ${!pointerAdjusted ? 'opacity-40' : ''}`}
+                    >
+                      <circle cx="6" cy="6" r="4" fill="#FF0000" />
+                    </svg>
+                    <span className={pointerAdjusted ? 'text-white' : 'text-white/40'}>
+                      red dot to knob center <span className="text-xs">(optional)</span>
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-white/50">Drag</span>
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 12 12"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0 opacity-50"
+                    >
+                      <circle cx="6" cy="6" r="4" fill="#FF0000" />
+                    </svg>
+                    <span className="text-white/50">
+                      red dot to knob center <span className="text-xs">(optional)</span>
+                    </span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="shrink-0"
+                    >
+                      <path
+                        d="M13 4.5L6 11.5L3 8.5"
+                        stroke="#40E1EF"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
