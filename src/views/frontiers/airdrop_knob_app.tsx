@@ -122,7 +122,9 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
           y4: cy + hs,
           center: { x: cx, y: cy }
         })
-        setPointer({ x: cx, y: cy })
+        // Offset pointer from center to make it clearly visible
+        const offset = hs * 0.3
+        setPointer({ x: cx + offset, y: cy - offset })
         setRectModified(false)
         setPointerModified(false)
         setScaleValue('')
@@ -335,7 +337,9 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
                               y4: cy + hs,
                               center: { x: cx, y: cy }
                             })
-                            setPointer({ x: cx, y: cy })
+                            // Offset pointer from center to make it clearly visible
+                            const offset = hs * 0.3
+                            setPointer({ x: cx + offset, y: cy - offset })
                           }
 
                           // Reset step states in annotation canvas
