@@ -385,14 +385,14 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
     }))
 
     const handleConfirm = () => {
-      if (!rectModified) {
-        toast.show('Please drag the cyan corners to cover the knob', 2000)
-        return
-      }
-      if (!pointerModified) {
-        toast.show('Please drag the yellow dot to the pointer tip', 2000)
-        return
-      }
+      // if (!rectModified) {
+      //   toast.show('Please drag the cyan corners to cover the knob', 2000)
+      //   return
+      // }
+      // if (!pointerModified) {
+      //   toast.show('Please drag the yellow dot to the pointer tip', 2000)
+      //   return
+      // }
       onConfirm()
     }
 
