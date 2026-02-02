@@ -66,7 +66,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
   const { taskId } = useParams()
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
-  const [rewardPoints, setRewardPoints] = useState(0)
+  const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
   const [frontierId, setFrontierId] = useState<string>()
   const [showMeasurementToolPhotoDrawer, setShowMeasurementToolPhotoDrawer] = useState(false)
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
@@ -187,11 +187,24 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
 
     setLoading(true)
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const submitRes = await frontiterApi.submitTask(taskId!, {
         data: formData,
         templateId: templateId,
         taskId: taskId
       })
+
+      // Extract reward points from submit response
+      if (submitRes?.data?.reward_info && Array.isArray(submitRes.data.reward_info)) {
+        const totalRewards = submitRes.data.reward_info
+          .filter(
+            (item: { reward_mode: string; reward_type: string }) =>
+              item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+          )
+          .reduce((acc: number, cur: { reward_value: number }) => acc + cur.reward_value, 0)
+        setRewardPoints(totalRewards > 0 ? totalRewards : undefined)
+      } else {
+        setRewardPoints(undefined)
+      }
 
       clearFormData()
       setModalShow(true)
@@ -216,11 +229,6 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
         message.error('Template not match!')
         return
       }
-      const totalRewards = taskDetail.data.reward_info
-        .filter((item) => item.reward_mode === 'REGULAR')
-        .reduce((acc, cur) => acc + cur.reward_value, 0)
-
-      setRewardPoints(totalRewards)
       setFrontierId(taskDetail.data.frontier_id)
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to get task detail!')

@@ -93,7 +93,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
 
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
-  // const [rewardPoints, setRewardPoints] = useState(0)
+  const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [answers, setAnswers] = useState<FashionAnswerDraft[]>([])
@@ -195,12 +195,26 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
 
     setLoading(true)
     try {
-      await frontiterApi.submitTask(taskId, {
+      const submitRes = await frontiterApi.submitTask(taskId, {
         taskId,
         uid: uids,
         templateId,
         data: { answers: serializedAnswers, channel: 'app' }
       })
+
+      // Extract reward points from submit response
+      if (submitRes?.data?.reward_info && Array.isArray(submitRes.data.reward_info)) {
+        const totalRewards = submitRes.data.reward_info
+          .filter(
+            (item: { reward_mode: string; reward_type: string }) =>
+              item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+          )
+          .reduce((acc: number, cur: { reward_value: number }) => acc + cur.reward_value, 0)
+        setRewardPoints(totalRewards > 0 ? totalRewards : undefined)
+      } else {
+        setRewardPoints(undefined)
+      }
+
       setModalShow(true)
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to submit!'
@@ -390,9 +404,9 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
           <SuccessModal
             open={modalShow}
             onClose={onBack}
+            points={rewardPoints}
             title="Successful"
             message="To receive your reward, please verify the task on the Binance Wallet campaign page."
-            // points={rewardPoints}
             buttonText="Got it"
           />
         </div>

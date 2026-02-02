@@ -44,7 +44,7 @@ const RealWorldPhotoCollection: React.FC<{ templateId: string }> = ({ templateId
   const { taskId } = useParams()
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
-  const [rewardPoints, setRewardPoints] = useState(0)
+  const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
 
   const allFieldsFilled = useMemo(() => {
     return (
@@ -111,7 +111,7 @@ const RealWorldPhotoCollection: React.FC<{ templateId: string }> = ({ templateId
 
     setLoading(true)
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const submitRes = await frontiterApi.submitTask(taskId!, {
         data: {
           themeCategory: formData.themeCategory,
           images: formData.images,
@@ -123,6 +123,19 @@ const RealWorldPhotoCollection: React.FC<{ templateId: string }> = ({ templateId
         templateId: templateId,
         taskId: taskId
       })
+
+      // Extract reward points from submit response
+      if (submitRes?.data?.reward_info && Array.isArray(submitRes.data.reward_info)) {
+        const totalRewards = submitRes.data.reward_info
+          .filter(
+            (item: { reward_mode: string; reward_type: string }) =>
+              item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+          )
+          .reduce((acc: number, cur: { reward_value: number }) => acc + cur.reward_value, 0)
+        setRewardPoints(totalRewards > 0 ? totalRewards : undefined)
+      } else {
+        setRewardPoints(undefined)
+      }
 
       clearFormData()
 
