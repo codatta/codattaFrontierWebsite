@@ -500,14 +500,12 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
         </div>
 
         {/* Guide Section - Below canvas */}
-        <div className="px-5 pb-10 pt-4">
+        <div className="px-5 pb-10 pt-4 text-xs">
           <div className="space-y-3">
             {/* Step 1: Adjust cyan rectangle to mark knob outline */}
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`text-sm font-medium ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>1.</span>
-              <span className={`text-sm ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>
-                Adjust the cyan rectangle
-              </span>
+              <span className={`font-medium ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>1.</span>
+              <span className={`${rectAdjusted ? 'text-white/50' : 'text-white'}`}>Adjust the cyan rectangle</span>
               <svg
                 width="12"
                 height="12"
@@ -518,7 +516,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
               >
                 <rect x="1" y="1" width="10" height="10" stroke="#40E1EF" strokeWidth="1.5" fill="none" />
               </svg>
-              <span className={`text-sm ${rectAdjusted ? 'text-white/50' : 'text-white'}`}>to mark knob outline</span>
+              <span className={`${rectAdjusted ? 'text-white/50' : 'text-white'}`}>to mark knob outline</span>
               {rectAdjusted && (
                 <svg
                   width="16"
@@ -542,14 +540,12 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
             {/* Step 2: Move orange dot to pointer */}
             <div className="flex flex-wrap items-center gap-2">
               <span
-                className={`text-sm font-medium ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
+                className={`font-medium ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
               >
                 2.
               </span>
-              <span
-                className={`text-sm ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
-              >
-                Move the orange dot
+              <span className={`${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}>
+                Move the yellow dot
               </span>
               <svg
                 width="12"
@@ -561,9 +557,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
               >
                 <circle cx="6" cy="6" r="4" fill="#FFA800" />
               </svg>
-              <span
-                className={`text-sm ${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}
-              >
+              <span className={`${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}>
                 to pointer position
               </span>
               {pointerAdjusted && (
@@ -589,12 +583,12 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
             {/* Step 3: Move red dot to knob center (Optional) */}
             <div className="flex flex-wrap items-center gap-2">
               <span
-                className={`text-sm font-medium ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
+                className={`font-medium ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
               >
                 3.
               </span>
               <span
-                className={`text-sm ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
+                className={`${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
               >
                 Move the red dot
               </span>
@@ -609,7 +603,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                 <circle cx="6" cy="6" r="4" fill="#FF3600" />
               </svg>
               <span
-                className={`text-sm ${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
+                className={`${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
               >
                 to knob center <span className="text-xs">(optional)</span>
               </span>
