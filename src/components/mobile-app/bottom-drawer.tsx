@@ -67,7 +67,7 @@ export default function BottomDrawer({ open, onClose, children, className }: Bot
         )}
       >
         {/* Content */}
-        <div className="max-h-[calc(90vh-80px)] overflow-y-auto px-5 py-4">{children}</div>
+        <div className="max-h-[calc(90vh-80px)] overflow-y-auto px-5 pb-4">{children}</div>
       </div>
     </>
   )

@@ -65,7 +65,7 @@ const Frontiers = () => {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
           {displayFrontiers.map(({ frontier, activity }) => (
             <div
-              key={frontier.title}
+              key={frontier.frontier_id}
               className="group relative aspect-[446/298] cursor-pointer overflow-hidden rounded-2xl"
               onClick={() => handleFrontierClick(frontier.frontier_id)}
             >
@@ -75,11 +75,11 @@ const Frontiers = () => {
                 className="size-full object-cover transition-all group-hover:scale-[1.2]"
               />
               <div
-                className="absolute top-0 flex size-full flex-col justify-end gap-2 p-[20px]"
+                className="absolute top-0 flex size-full flex-col justify-end gap-1.5 p-4"
                 style={{ background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 44.79%, #000000 100%)' }}
               >
                 {activity && (
-                  <div className="flex items-center gap-1 self-start rounded-3xl bg-white/5 p-1.5">
+                  <div className="flex items-center gap-1 self-start rounded-3xl bg-black/20 p-1.5 backdrop-blur-sm">
                     {activity.reward_asset_type === 'USDT' && <USDTCoinIcon className="size-6" />}
                     {activity.reward_asset_type === 'XnYCoin' && <XNYCoinIcon className="size-6" />}
                     <div className="text-base font-bold text-[#FCC800]">
@@ -103,9 +103,9 @@ const Frontiers = () => {
                     <div className="ml-1.5 text-sm">{frontier.participants_show}</div>
                   </div>
                   {frontier.difficulty_level && (
-                    <div className="ml-auto flex items-center rounded-[20px] border border-white/5 bg-white/5 px-3 py-2 backdrop:blur">
+                    <div className="ml-auto flex items-center">
                       {Array.from({ length: Math.floor(frontier.difficulty_level) }).map((_) => (
-                        <img className="mx-px size-[13px]" src={StarImage} alt="star" />
+                        <img className="mx-px size-[17px]" src={StarImage} alt="star" />
                       ))}
                     </div>
                   )}
