@@ -349,7 +349,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
 
           // Draw center dot with shadow
           if (rect.center) {
-            ctx.fillStyle = '#FF3600'
+            ctx.fillStyle = '#FF0000'
             ctx.beginPath()
             ctx.arc(rect.center.x, rect.center.y, 10 * scaleFactor, 0, Math.PI * 2)
             ctx.fill()
@@ -361,7 +361,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
           ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
           ctx.shadowBlur = 4 * scaleFactor
           ctx.shadowOffsetY = 2 * scaleFactor
-          ctx.fillStyle = '#FFA800'
+          ctx.fillStyle = '#FFFF00'
           ctx.beginPath()
           ctx.arc(pointer.x, pointer.y, 10 * scaleFactor, 0, Math.PI * 2)
           ctx.fill()
@@ -462,7 +462,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                         x={rect.center.x}
                         y={rect.center.y}
                         radius={6 / dimensions.scale}
-                        fill="#FF3600"
+                        fill="#FF0000"
                         draggable
                         name="center-dot"
                         onDragStart={() => {
@@ -484,7 +484,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                     x={pointer.x}
                     y={pointer.y}
                     radius={6 / dimensions.scale}
-                    fill="#FFA800"
+                    fill="#FFFF00"
                     draggable
                     name="pointer-dot"
                     onDragMove={handlePointerDrag}
@@ -555,7 +555,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                 xmlns="http://www.w3.org/2000/svg"
                 className="shrink-0"
               >
-                <circle cx="6" cy="6" r="4" fill="#FFA800" />
+                <circle cx="6" cy="6" r="4" fill="#FFFF00" />
               </svg>
               <span className={`${pointerAdjusted ? 'text-white/50' : rectAdjusted ? 'text-white' : 'text-white/40'}`}>
                 to pointer position
@@ -600,7 +600,7 @@ const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationC
                 xmlns="http://www.w3.org/2000/svg"
                 className="shrink-0"
               >
-                <circle cx="6" cy="6" r="4" fill="#FF3600" />
+                <circle cx="6" cy="6" r="4" fill="#FF0000" />
               </svg>
               <span
                 className={`${centerAdjusted ? 'text-white/50' : pointerAdjusted ? 'text-white' : 'text-white/40'}`}
