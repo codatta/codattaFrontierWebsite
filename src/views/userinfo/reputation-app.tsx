@@ -63,13 +63,7 @@ export default function UserInfoReputationApp() {
     <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[13px] leading-[17px] text-[#666666]">
       <AppToastContainer />
       <Spin spinning={loading}>
-        <MobileAppFrontierHeader
-          title="Reputation"
-          onBack={() => navigate(-1)}
-          showSubmitButton={false}
-          canSubmit={false}
-          transparent
-        />
+        <MobileAppFrontierHeader title="Reputation" onBack={() => navigate(-1)} transparent />
 
         {/* Score Section */}
         <div className="flex flex-col items-center justify-center pb-8 pt-2" onClick={() => setCalculationOpen(true)}>

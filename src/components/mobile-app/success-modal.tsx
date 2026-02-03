@@ -86,7 +86,7 @@ export default function SuccessModal({
           <h2 className="mb-2 text-center text-2xl font-bold">{title}</h2>
 
           {/* Points (if provided) */}
-          {points !== undefined && (
+          {points !== undefined && points > 0 && (
             <div className="mb-3 text-center">
               <span className="text-2xl font-bold text-[#40E1EF]">+{points}</span>
               <span className="ml-1 text-lg text-gray-600">Points</span>

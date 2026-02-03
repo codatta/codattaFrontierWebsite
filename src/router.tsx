@@ -86,6 +86,7 @@ const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_
 const AirdropFood = lazy(() => import('@/views/frontiers/airdrop_food'))
 const AirdropFoodApp = lazy(() => import('@/views/frontiers/food-annotation-app'))
 const AirdropKnob = lazy(() => import('@/views/frontiers/airdrop_knob'))
+const AirdropKnobApp = lazy(() => import('@/views/frontiers/airdrop_knob_app'))
 const AirdropCexHotWalletDeposit = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_deposit'))
 const AirdropCexHotWalletWithdraw = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_withdraw'))
 
@@ -93,6 +94,7 @@ const Verification = lazy(() => import('@/views/frontiers/verification'))
 const PhysicalQuestion = lazy(() => import('@/views/frontiers/physical_question'))
 const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto_and_stock_info_collection'))
 const RealWorldPhotoCollection = lazy(() => import('@/views/frontiers/real_world_photo_collection'))
+const RealWorldPhotoCollectionApp = lazy(() => import('@/views/frontiers/real_world_photo_collection_app'))
 const FrontierSocialDiscordBind = lazy(() => import('@/views/frontiers/social-tasks/discord-bind'))
 const FrontierSocialTelegramBind = lazy(() => import('@/views/frontiers/social-tasks/telegram-bind'))
 const FrontierSocialTwitterBind = lazy(() => import('@/views/frontiers/social-tasks/twitter-bind'))
@@ -227,7 +229,7 @@ export default function Router() {
             index
             element={
               <AppContainerDetector
-                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" />}
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION" />}
                 notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
               />
             }
@@ -236,7 +238,7 @@ export default function Router() {
             path="feed/:uid"
             element={
               <AppContainerDetector
-                inApp={<FashionValidationApp templateId="FASHION_VALIDATION_APP" isFeed={true} />}
+                inApp={<FashionValidationApp templateId="FASHION_VALIDATION" isFeed={true} />}
                 notInApp={<FashionValidation templateId="FASHION_VALIDATION" />}
               />
             }
@@ -255,7 +257,7 @@ export default function Router() {
           path="/frontier/project/AIRDROP_FOOD/:taskId"
           element={
             <AppContainerDetector
-              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
+              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" />}
               notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
             />
           }
@@ -264,7 +266,15 @@ export default function Router() {
           path="/frontier/project/AIRDROP_FOOD_APP/:taskId"
           element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
         />
-        <Route path="/frontier/project/AIRDROP_KNOB/:taskId" element={<AirdropKnob templateId="AIRDROP_KNOB" />} />
+        <Route
+          path="/frontier/project/AIRDROP_KNOB/:taskId"
+          element={
+            <AppContainerDetector
+              inApp={<AirdropKnobApp templateId="AIRDROP_KNOB" />}
+              notInApp={<AirdropKnob templateId="AIRDROP_KNOB" />}
+            />
+          }
+        />
         <Route
           path="/frontier/project/AIRDROP_CEX_HOT_WALLET_DEPOSIT/:taskId"
           element={<AirdropCexHotWalletDeposit templateId="AIRDROP_CEX_HOT_WALLET_DEPOSIT" />}
@@ -328,7 +338,12 @@ export default function Router() {
         ></Route>
         <Route
           path="/frontier/project/REAL_WORLD_PHOTO_COLLECTION/:taskId"
-          element={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+          element={
+            <AppContainerDetector
+              inApp={<RealWorldPhotoCollectionApp templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+              notInApp={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+            />
+          }
         ></Route>
         <Route path="/frontier/project/X_BIND/:taskId" element={<FrontierSocialTwitterBind templateId="X_BIND" />} />
         <Route

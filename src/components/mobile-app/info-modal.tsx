@@ -6,7 +6,7 @@ interface InfoModalProps {
   open: boolean
   onClose: () => void
   title?: string | React.ReactNode
-  content: string
+  content: string | React.ReactNode
   className?: string
 }
 
@@ -74,7 +74,7 @@ export default function InfoModal({ open, onClose, title = 'Fashion', content, c
           </div>
 
           {/* Content */}
-          <p className="text-sm leading-relaxed text-[#6B7280]">{content}</p>
+          <div className="text-sm leading-relaxed text-[#6B7280]">{content}</div>
         </div>
       </div>
     </>

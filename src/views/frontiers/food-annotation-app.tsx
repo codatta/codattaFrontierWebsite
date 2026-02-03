@@ -10,6 +10,7 @@ import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
+import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
 import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
@@ -65,11 +66,12 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
   const { taskId } = useParams()
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
-  const [rewardPoints, setRewardPoints] = useState(0)
+  const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
   const [frontierId, setFrontierId] = useState<string>()
   const [showMeasurementToolPhotoDrawer, setShowMeasurementToolPhotoDrawer] = useState(false)
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
   const [showRequirementsModal, setShowRequirementsModal] = useState(true)
+  const [showHelpModal, setShowHelpModal] = useState(false)
   const allFieldsFilled = useMemo(() => {
     // Basic fields validation
     const basicFieldsValid =
@@ -185,11 +187,24 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
 
     setLoading(true)
     try {
-      await frontiterApi.submitTask(taskId!, {
+      const submitRes = await frontiterApi.submitTask(taskId!, {
         data: formData,
         templateId: templateId,
         taskId: taskId
       })
+
+      // Extract reward points from submit response
+      if (submitRes?.data?.reward_info && Array.isArray(submitRes.data.reward_info)) {
+        const totalRewards = submitRes.data.reward_info
+          .filter(
+            (item: { reward_mode: string; reward_type: string }) =>
+              item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS'
+          )
+          .reduce((acc: number, cur: { reward_value: number }) => acc + cur.reward_value, 0)
+        setRewardPoints(totalRewards > 0 ? totalRewards : undefined)
+      } else {
+        setRewardPoints(undefined)
+      }
 
       clearFormData()
       setModalShow(true)
@@ -214,11 +229,6 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
         message.error('Template not match!')
         return
       }
-      const totalRewards = taskDetail.data.reward_info
-        .filter((item) => item.reward_mode === 'REGULAR')
-        .reduce((acc, cur) => acc + cur.reward_value, 0)
-
-      setRewardPoints(totalRewards)
       setFrontierId(taskDetail.data.frontier_id)
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to get task detail!')
@@ -242,13 +252,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader
-            title="Food Data Annotation"
-            canSubmit={allFieldsFilled}
-            onBack={onBack}
-            onSubmit={handleSubmit}
-            showSubmitButton={false}
-          />
+          <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} onHelp={() => setShowHelpModal(true)} />
           <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
 
           {/* Form Content */}
@@ -463,8 +467,14 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
               </div>
             </div>
 
-            <button className="block w-full rounded-full bg-black py-3 text-white" onClick={handleSubmit}>
-              Submit
+            <button
+              onClick={handleSubmit}
+              disabled={!allFieldsFilled || loading}
+              className={`mt-4 h-[56px] w-full rounded-full text-base font-semibold transition-all ${
+                allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
+              }`}
+            >
+              {loading ? 'Submitting...' : 'Submit'}
             </button>
           </div>
 
@@ -559,6 +569,43 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
           </div>
         </>
       )}
+
+      <HelpDrawer
+        open={showHelpModal}
+        onClose={() => setShowHelpModal(false)}
+        title="More About Frontier"
+        cards={[
+          {
+            preset: 'about',
+            title: 'Food Science',
+            content: [
+              {
+                type: 'p',
+                text: 'Studying Food Science and labeling and annotating food data is essential for improving food safety, enhancing nutritional understanding, and enabling better food-related decision-making through data-driven insights.'
+              }
+            ]
+          },
+          {
+            preset: 'guidelines',
+            title: 'Guidelines',
+            content: [
+              {
+                type: 'h3',
+                text: 'Requirements (Must Read)'
+              },
+              {
+                type: 'list',
+                items: [
+                  'Please ensure all photos are clear and well-lit.',
+                  'Food photos should contain only a single food item, unobstructed.',
+                  'Weight and size measurements should be as accurate as possible.',
+                  'All fields are required.'
+                ]
+              }
+            ]
+          }
+        ]}
+      />
     </AuthChecker>
   )
 }
