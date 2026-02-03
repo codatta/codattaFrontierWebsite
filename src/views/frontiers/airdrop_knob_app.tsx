@@ -485,7 +485,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
 
         {/* Example Drawer */}
         <BottomDrawer open={showExampleModal} onClose={() => setShowExampleModal(false)}>
-          <div className="pb-6">
+          <div className="pb-6 pt-4">
             {/* Header */}
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-black">Example</h3>
