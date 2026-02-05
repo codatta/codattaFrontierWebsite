@@ -90,12 +90,11 @@ export default function FashionGuideToDownload() {
                   <span className="text-base font-bold text-white">Start</span>
                 </div>
                 <p className="mt-3 text-xs text-[#9CA3AF]">Open Codatta Clip, select Fashion tab and hit Start</p>
-              </div>
-
-              {/* Gradient Card with Mockup */}
-              <div className="relative flex aspect-[684/468] w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#FF9A9E] via-[#FECFEF] to-[#A18CD1] p-10">
-                {/* Foreground image will be added here */}
-                <img src={pluginStartImage} alt="Plugin Start" className="max-h-full max-w-full object-cover" />
+                {/* Gradient Card with Mockup */}
+                <div className="relative mt-4 flex aspect-[684/468] w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#FF9A9E] via-[#FECFEF] to-[#A18CD1] p-10">
+                  {/* Foreground image will be added here */}
+                  <img src={pluginStartImage} alt="Plugin Start" className="max-h-full max-w-full object-cover" />
+                </div>
               </div>
 
               {/* Step 3: Reward */}
@@ -109,17 +108,17 @@ export default function FashionGuideToDownload() {
                 <p className="mt-3 text-xs text-[#9CA3AF]">
                   Stop collecting—manually or at the daily limit. Rewards auto-distributed.
                 </p>
-              </div>
 
-              {/* Gradient Card with Mockup */}
-              <div className="relative flex aspect-[684/468] w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#FF9A9E] via-[#FECFEF] to-[#A18CD1] p-10">
-                {/* Foreground image will be added here */}
-                <img src={pluginStopImage} alt="Plugin Stop" className="max-h-full max-w-full object-cover" />
+                {/* Gradient Card with Mockup */}
+                <div className="relative mt-4 flex aspect-[684/468] w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-[#FF9A9E] via-[#FECFEF] to-[#A18CD1] p-10">
+                  {/* Foreground image will be added here */}
+                  <img src={pluginStopImage} alt="Plugin Stop" className="max-h-full max-w-full object-cover" />
+                </div>
               </div>
             </div>
 
             {/* Sync Banner */}
-            <div className="mt-12 rounded-2xl border border-[#875DFF]/30 bg-[#252532] p-4">
+            <div className="mt-12 rounded-2xl border border-[#875DFF] bg-[#252532] p-4">
               <div className="flex items-start gap-4">
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[#875DFF]">
                   <RefreshCw className="size-5 text-white" />
