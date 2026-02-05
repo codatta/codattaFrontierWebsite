@@ -18,7 +18,7 @@ import { isValidCryptoString } from '@/utils/str'
 import { ConfigProvider, DatePicker, Input, message, Modal, Select, Spin, theme } from 'antd'
 import locale from 'antd/es/date-picker/locale/en_US'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 
@@ -45,6 +45,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof WithdrawFormData, string>>>({})
+
+  // Field validation state
+  const validationTimers = useRef<Record<string, NodeJS.Timeout>>({})
+  const validationAbortControllers = useRef<Record<string, AbortController>>({})
+  const validationResults = useRef<Record<string, { result: number; msg: string }>>({})
+  const [validatingFields, setValidatingFields] = useState<Set<string>>(new Set())
 
   // UI State
   const [loading, setLoading] = useState(false)
@@ -108,6 +114,55 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
     }
   }, [formData.network, formData.tx_hash])
 
+  const validateField = useCallback(
+    async (field: 'tx_hash' | 'sender_address', value: string) => {
+      if (!taskId || !value.trim()) return
+
+      // Abort previous validation for this field
+      if (validationAbortControllers.current[field]) {
+        validationAbortControllers.current[field].abort()
+      }
+
+      const abortController = new AbortController()
+      validationAbortControllers.current[field] = abortController
+
+      setValidatingFields((prev) => new Set(prev).add(field))
+
+      try {
+        const result = await frontiterApi.checkTaskField(taskId, field, value.trim())
+
+        // Check if this validation was aborted
+        if (abortController.signal.aborted) return
+
+        // Store validation result
+        validationResults.current[field] = {
+          result: result.data.result,
+          msg: result.data.msg
+        }
+
+        if (result.data.result !== 1 && result.data.msg) {
+          if (result.data.result === 2) {
+            message.error(result.data.msg)
+          } else if (result.data.result === 3) {
+            message.warning(result.data.msg)
+          }
+        }
+      } catch (error) {
+        if (abortController.signal.aborted) return
+        console.error(`Field validation error for ${field}:`, error)
+      } finally {
+        if (!abortController.signal.aborted) {
+          setValidatingFields((prev) => {
+            const newSet = new Set(prev)
+            newSet.delete(field)
+            return newSet
+          })
+        }
+      }
+    },
+    [taskId]
+  )
+
   const handleChange = <K extends keyof WithdrawFormData>(field: K, value: WithdrawFormData[K]) => {
     setFormData((prev) => {
       const newData = { ...prev, [field]: value }
@@ -120,6 +175,76 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       setErrors((prev) => ({ ...prev, [field]: undefined }))
     }
   }
+
+  // Watch tx_hash field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.tx_hash.trim()
+
+    // Clear validation result when field changes
+    delete validationResults.current.tx_hash
+
+    // Clear existing timer
+    if (validationTimers.current.tx_hash) {
+      clearTimeout(validationTimers.current.tx_hash)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.tx_hash) {
+      validationAbortControllers.current.tx_hash.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('tx_hash')
+        return newSet
+      })
+    }
+
+    // Only validate if value is valid format
+    if (trimmedValue && isValidCryptoString(trimmedValue, 30)) {
+      validationTimers.current.tx_hash = setTimeout(() => {
+        validateField('tx_hash', trimmedValue)
+      }, 1000)
+    }
+  }, [formData.tx_hash, validateField])
+
+  // Watch sender_address field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.sender_address.trim()
+
+    // Clear validation result when field changes
+    delete validationResults.current.sender_address
+
+    // Clear existing timer
+    if (validationTimers.current.sender_address) {
+      clearTimeout(validationTimers.current.sender_address)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.sender_address) {
+      validationAbortControllers.current.sender_address.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('sender_address')
+        return newSet
+      })
+    }
+
+    // Only validate if value is valid format
+    if (trimmedValue && isValidCryptoString(trimmedValue, 20)) {
+      validationTimers.current.sender_address = setTimeout(() => {
+        validateField('sender_address', trimmedValue)
+      }, 1000)
+    }
+  }, [formData.sender_address, validateField])
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    const timers = validationTimers.current
+    const controllers = validationAbortControllers.current
+    return () => {
+      Object.values(timers).forEach(clearTimeout)
+      Object.values(controllers).forEach((controller) => controller.abort())
+    }
+  }, [])
 
   const showImageModal = (src: string) => {
     setModalImageSrc(src)
@@ -164,6 +289,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       newErrors.tx_hash = 'Transaction Hash is required'
     } else if (!isValidCryptoString(formData.tx_hash, 30)) {
       newErrors.tx_hash = 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+    } else if (validationResults.current.tx_hash?.result !== 1 && validationResults.current.tx_hash?.msg) {
+      // Show error for both result=2 (fail) and result=3 (partial pass)
+      newErrors.tx_hash = validationResults.current.tx_hash.msg
     }
 
     if (!formData.transaction_date) newErrors.transaction_date = 'Transaction Date is required'
@@ -186,6 +314,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       newErrors.sender_address = 'Sender Address is required'
     } else if (!isValidCryptoString(formData.sender_address, 20)) {
       newErrors.sender_address = 'Invalid address format (min 20 characters, alphanumeric only)'
+    } else if (
+      validationResults.current.sender_address?.result !== 1 &&
+      validationResults.current.sender_address?.msg
+    ) {
+      // Show error for both result=2 (fail) and result=3 (partial pass)
+      newErrors.sender_address = validationResults.current.sender_address.msg
     }
 
     if (isEmpty(formData.receiver_address)) {
@@ -225,6 +359,17 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }
 
   const handleSubmit = async () => {
+    // Check if validation is in progress
+    if (validatingFields.size > 0) {
+      const fieldNames = Array.from(validatingFields).map((f) => {
+        if (f === 'tx_hash') return 'Transaction Hash'
+        if (f === 'sender_address') return 'Sender Address'
+        return f
+      })
+      message.warning(`Please wait for validation to complete: ${fieldNames.join(', ')}`)
+      return
+    }
+
     if (!validateForm()) {
       message.error('Please complete all required fields correctly.')
       return
