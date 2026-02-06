@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react'
 
 interface StepContainerProps {
-  title: string
+  title: string | ReactNode
   step?: number
   description?: ReactNode
   children: ReactNode

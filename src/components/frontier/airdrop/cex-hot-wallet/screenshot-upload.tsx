@@ -23,7 +23,7 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
   hint
 }) => {
   return (
-    <div className="mb-6 flex flex-col gap-2.5">
+    <div className="mb-6 flex flex-col gap-2">
       {/* Label above the box */}
       <div className="text-sm font-semibold text-white/90">
         {label || 'Blockchain Explorer Screenshot'} {required && <span className="text-white/60">*</span>}
@@ -38,7 +38,7 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
             onChange={onChange}
             maxCount={1}
             className="size-full"
-            itemClassName="h-full w-full !max-w-none !min-w-0 !aspect-auto !rounded-lg border-[#FFFFFF1F] hover:border-white transition-all !p-0"
+            itemClassName="h-full w-full !max-w-none !min-w-0 !aspect-auto !rounded-lg border-[#FFFFFF1F] hover:border-primary transition-all !p-0"
             description={
               <div className="flex flex-col items-center gap-0.5 text-center text-sm leading-relaxed text-[#606067]">
                 <span>Click to upload screenshot or drag and drop.</span>
@@ -55,7 +55,7 @@ export const ScreenshotUpload: React.FC<ScreenshotUploadProps> = ({
         {/* Example Image Section */}
         <div className="relative h-[180px] w-[260px] shrink-0">
           <div
-            className="group relative size-full cursor-pointer overflow-hidden rounded-lg border border-[FFFFFF1F] bg-[#0C0C14] transition-all hover:border-white"
+            className="group relative size-full cursor-pointer overflow-hidden rounded-lg border border-[#FFFFFF1F] bg-[#0C0C14] transition-all hover:border-primary"
             onClick={() => onShowModal(exampleImage)}
           >
             <img

@@ -48,7 +48,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   // Field validation state
   const validationTimers = useRef<Record<string, NodeJS.Timeout>>({})
   const validationAbortControllers = useRef<Record<string, AbortController>>({})
-  const validationResults = useRef<Record<string, { result: number; msg: string }>>({})
+  const [validationResults, setValidationResults] = useState<Record<string, { result: number; msg: string }>>({})
   const [validatingFields, setValidatingFields] = useState<Set<string>>(new Set())
 
   // UI State
@@ -134,18 +134,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
         if (abortController.signal.aborted) return
 
         // Store validation result
-        validationResults.current[field] = {
-          result: result.data.result,
-          msg: result.data.msg
-        }
-
-        if (result.data.result !== 1 && result.data.msg) {
-          if (result.data.result === 2) {
-            message.error(result.data.msg)
-          } else if (result.data.result === 3) {
-            message.warning(result.data.msg)
+        setValidationResults((prev) => ({
+          ...prev,
+          [field]: {
+            result: result.data.result,
+            msg: result.data.msg
           }
-        }
+        }))
       } catch (error) {
         if (abortController.signal.aborted) return
         console.error(`Field validation error for ${field}:`, error)
@@ -179,8 +174,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   useEffect(() => {
     const trimmedValue = formData.tx_hash.trim()
 
-    // Clear validation result when field changes
-    delete validationResults.current.tx_hash
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.tx_hash
+      return next
+    })
+    setErrors((prev) => (prev.tx_hash ? { ...prev, tx_hash: undefined } : prev))
 
     // Clear existing timer
     if (validationTimers.current.tx_hash) {
@@ -197,10 +197,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       })
     }
 
-    // Only validate if value is valid format
-    if (trimmedValue && isValidCryptoString(trimmedValue, 30)) {
+    if (trimmedValue) {
       validationTimers.current.tx_hash = setTimeout(() => {
-        validateField('tx_hash', trimmedValue)
+        if (isValidCryptoString(trimmedValue, 30)) {
+          // Format valid, call check API
+          validateField('tx_hash', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            tx_hash: 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+          }))
+        }
       }, 1000)
     }
   }, [formData.tx_hash, validateField])
@@ -209,8 +217,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   useEffect(() => {
     const trimmedValue = formData.sender_address.trim()
 
-    // Clear validation result when field changes
-    delete validationResults.current.sender_address
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.sender_address
+      return next
+    })
+    setErrors((prev) => (prev.sender_address ? { ...prev, sender_address: undefined } : prev))
 
     // Clear existing timer
     if (validationTimers.current.sender_address) {
@@ -227,10 +240,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       })
     }
 
-    // Only validate if value is valid format
-    if (trimmedValue && isValidCryptoString(trimmedValue, 20)) {
+    if (trimmedValue) {
       validationTimers.current.sender_address = setTimeout(() => {
-        validateField('sender_address', trimmedValue)
+        if (isValidCryptoString(trimmedValue, 20)) {
+          // Format valid, call check API
+          validateField('sender_address', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            sender_address: 'Invalid address format (min 20 characters, alphanumeric only)'
+          }))
+        }
       }, 1000)
     }
   }, [formData.sender_address, validateField])
@@ -288,23 +309,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       newErrors.tx_hash = 'Transaction Hash is required'
     } else if (!isValidCryptoString(formData.tx_hash, 30)) {
       newErrors.tx_hash = 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
-    } else if (validationResults.current.tx_hash?.result !== 1 && validationResults.current.tx_hash?.msg) {
-      // Show error for both result=2 (fail) and result=3 (partial pass)
-      newErrors.tx_hash = validationResults.current.tx_hash.msg
+    } else if (validationResults.tx_hash?.result === 2 && validationResults.tx_hash?.msg) {
+      // Only block submission for result=2 (fail)
+      newErrors.tx_hash = validationResults.tx_hash.msg
     }
 
     if (!formData.transaction_date) newErrors.transaction_date = 'Transaction Date is required'
-
-    // Date validation
-    if (formData.transaction_date) {
-      const date = new Date(formData.transaction_date)
-      const now = new Date()
-      const diffTime = Math.abs(now.getTime() - date.getTime())
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      if (diffDays > 30) {
-        newErrors.transaction_date = 'Date must be within last 30 days'
-      }
-    }
 
     if (formData.explorer_screenshot.length === 0)
       newErrors.explorer_screenshot = 'Blockchain Explorer Screenshot is required'
@@ -313,12 +323,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       newErrors.sender_address = 'Sender Address is required'
     } else if (!isValidCryptoString(formData.sender_address, 20)) {
       newErrors.sender_address = 'Invalid address format (min 20 characters, alphanumeric only)'
-    } else if (
-      validationResults.current.sender_address?.result !== 1 &&
-      validationResults.current.sender_address?.msg
-    ) {
-      // Show error for both result=2 (fail) and result=3 (partial pass)
-      newErrors.sender_address = validationResults.current.sender_address.msg
+    } else if (validationResults.sender_address?.result === 2 && validationResults.sender_address?.msg) {
+      // Only block submission for result=2 (fail)
+      newErrors.sender_address = validationResults.sender_address.msg
     }
 
     if (isEmpty(formData.receiver_address)) {
@@ -412,10 +419,10 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }
 
   const inputClass =
-    '!w-full !rounded-lg !border-none !bg-white/5 !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
+    '!w-full !rounded-lg !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
 
   const selectClass =
-    'w-full [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-none [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center'
+    'w-full [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:block [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center '
 
   const labelClass = 'text-sm font-medium text-white'
 
@@ -460,7 +467,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
             <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
               {/* Step 1 */}
               <StepContainer title="Confirm Exchange">
-                <div className="flex flex-col gap-2">
+                <div className="space-y-2">
                   <label className={labelClass}>
                     Exchange Name <span className="text-red-500">*</span>
                   </label>
@@ -486,7 +493,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               <StepContainer title="Navigate to Withdrawal History Page">
                 <div className="space-y-3">
                   <div>
-                    <label className={`mb-1 block ${labelClass}`}>Official website</label>
+                    <label className={`mb-2 block ${labelClass}`}>Official website</label>
                     {exchange?.official_website ? (
                       <a
                         href={exchange.official_website}
@@ -503,7 +510,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     )}
                   </div>
                   <div>
-                    <label className={`mb-1 block ${labelClass}`}>Withdrawal history URL</label>
+                    <label className={`mb-2 block ${labelClass}`}>Withdrawal history URL</label>
                     {exchange?.withdrawal_history_url ? (
                       <a
                         href={exchange.withdrawal_history_url}
@@ -629,9 +636,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     placeholder="Transaction hash from the exchange"
                     value={formData.tx_hash}
                     onChange={(e) => handleChange('tx_hash', e.target.value)}
-                    status={errors.tx_hash ? 'error' : ''}
+                    status={errors.tx_hash || validationResults.tx_hash?.result === 2 ? 'error' : ''}
                   />
                   {errors.tx_hash && <p className="text-xs text-red-500">{errors.tx_hash}</p>}
+                  {!errors.tx_hash && validationResults.tx_hash?.msg && (
+                    <p
+                      className={`text-xs ${
+                        validationResults.tx_hash.result === 2 ? 'text-red-500' : 'text-yellow-500'
+                      }`}
+                    >
+                      {validationResults.tx_hash.msg}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -659,19 +675,19 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
               {/* Step 4 */}
               <StepContainer title="Find Transaction on Blockchain Explorer">
-                <div className="mb-4">
+                <div className="mb-4 flex flex-col gap-2">
                   <label className={labelClass}>Open the withdrawal transaction on the block explorer</label>
                   {explorerUrl ? (
                     <a
                       href={explorerUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-2 flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
                     >
                       <ExternalLink size={14} /> {explorerUrl.replace('https://', '')}
                     </a>
                   ) : (
-                    <div className="mt-2 h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                    <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
                       Fill Network and Transaction Hash in Step 3 to view
                     </div>
                   )}
@@ -695,9 +711,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     placeholder="This is the hot wallet address controlled by the exchange"
                     value={formData.sender_address}
                     onChange={(e) => handleChange('sender_address', e.target.value)}
-                    status={errors.sender_address ? 'error' : ''}
+                    status={errors.sender_address || validationResults.sender_address?.result === 2 ? 'error' : ''}
                   />
                   {errors.sender_address && <p className="text-xs text-red-500">{errors.sender_address}</p>}
+                  {!errors.sender_address && validationResults.sender_address?.msg && (
+                    <p
+                      className={`text-xs ${
+                        validationResults.sender_address.result === 2 ? 'text-red-500' : 'text-yellow-500'
+                      }`}
+                    >
+                      {validationResults.sender_address.msg}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
