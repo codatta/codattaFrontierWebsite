@@ -822,8 +822,13 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     className={`${inputClass} !flex !w-full`}
                     value={formData.date ? dayjs(formData.date) : null}
                     onChange={(_, dateString) => handleChange('date', dateString as string)}
-                    maxDate={dayjs()}
-                    minDate={dayjs().subtract(30, 'day')}
+                    disabledDate={(current) => {
+                      return (
+                        current &&
+                        (current > dayjs().endOf('day') || current < dayjs().subtract(30, 'day').startOf('day'))
+                      )
+                    }}
+                    placeholder="Select Date (within last 30 days)"
                     popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
                     status={errors.date ? 'error' : ''}
                   />

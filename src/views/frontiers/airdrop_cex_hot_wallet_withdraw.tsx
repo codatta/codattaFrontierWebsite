@@ -10,7 +10,6 @@ import {
 import { WithdrawGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
 import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step-container'
-import { SupportedNetworksTip } from '@/components/frontier/airdrop/cex-hot-wallet/supported-networks-tip'
 import { WithdrawFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
@@ -418,7 +417,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   const selectClass =
     'w-full [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-none [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center'
 
-  const labelClass = 'text-xs font-medium text-[#d0d0d0]'
+  const labelClass = 'text-sm font-medium text-white'
 
   return (
     <AuthChecker>
@@ -460,11 +459,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
             <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
               {/* Step 1 */}
-              <StepContainer step={1} title="Confirm Exchange">
-                <div className="mb-3 text-[13px] text-white">
-                  Select the exchange where you have withdrawal records. Ensure withdrawals are enabled for required
-                  networks and tokens.
-                </div>
+              <StepContainer title="Confirm Exchange">
                 <div className="flex flex-col gap-2">
                   <label className={labelClass}>
                     Exchange Name <span className="text-red-500">*</span>
@@ -472,7 +467,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   <Select
                     className={selectClass}
                     popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
-                    placeholder="Select exchange"
+                    placeholder="Select the exchange where you have withdrawal records. Ensure withdrawals are enabled for required networks and tokens."
                     value={formData.exchange_name || undefined}
                     onChange={(value) => handleChange('exchange_name', value)}
                     status={errors.exchange_name ? 'error' : ''}
@@ -488,83 +483,53 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </StepContainer>
 
               {/* Step 2 */}
-              <StepContainer
-                step={2}
-                title="Navigate to Withdrawal History Page"
-                description="Navigate to the withdrawal history page on your exchange."
-              >
+              <StepContainer title="Navigate to Withdrawal History Page">
                 <div className="space-y-3">
                   <div>
                     <label className={`mb-1 block ${labelClass}`}>Official website</label>
-                    <a
-                      href={exchange?.official_website || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchange?.official_website
-                          ? 'pointer-events-none opacity-70'
-                          : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {exchange?.official_website ? (
-                        <>
-                          <ExternalLink size={14} /> {exchange?.official_website.replace('https://', '')}
-                        </>
-                      ) : (
-                        '(Select an exchange to view)'
-                      )}
-                    </a>
+                    {exchange?.official_website ? (
+                      <a
+                        href={exchange.official_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      >
+                        <ExternalLink size={14} /> {exchange.official_website.replace('https://', '')}
+                      </a>
+                    ) : (
+                      <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                        Select an exchange to view
+                      </div>
+                    )}
                   </div>
                   <div>
                     <label className={`mb-1 block ${labelClass}`}>Withdrawal history URL</label>
-                    <a
-                      href={exchange?.withdrawal_history_url || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchange?.withdrawal_history_url
-                          ? 'pointer-events-none opacity-70'
-                          : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {exchange?.withdrawal_history_url ? (
-                        <>
-                          <ExternalLink size={14} /> {exchange?.withdrawal_history_url.replace('https://', '')}
-                        </>
-                      ) : (
-                        '(Navigate manually on the exchange website)'
-                      )}
-                    </a>
+                    {exchange?.withdrawal_history_url ? (
+                      <a
+                        href={exchange.withdrawal_history_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      >
+                        <ExternalLink size={14} /> {exchange.withdrawal_history_url.replace('https://', '')}
+                      </a>
+                    ) : (
+                      <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                        Select an exchange to view
+                      </div>
+                    )}
                   </div>
                 </div>
               </StepContainer>
 
               {/* Step 3 */}
-              <StepContainer
-                step={3}
-                title="Select Your Withdrawal Record"
-                warning={
-                  <div>
-                    <div className="font-bold">Requirements:</div>
-                    <ul className="mb-2 list-none pl-4 text-xs">
-                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                        Within last 30 days
-                      </li>
-                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                        Supported Network/Token
-                      </li>
-                    </ul>
-                    <SupportedNetworksTip />
-                  </div>
-                }
-              >
+              <StepContainer title="Withdrawal Record">
                 <ScreenshotUpload
-                  label="Exchange UI Screenshot"
+                  label="Exchange Withdrawal Screenshot"
                   exampleImage="https://static.codatta.io/static/images/withdraw_1_1767511761924.png"
                   value={formData.exchange_screenshot}
                   onChange={(v) => handleChange('exchange_screenshot', v)}
                   onShowModal={showImageModal}
-                  hint="Full-page screenshot including: URL, exchange logo, withdrawal address, token, amount, date/time, and TxHash."
                   error={errors.exchange_screenshot}
                 />
 
@@ -678,8 +643,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     className={`${inputClass} !flex !w-full`}
                     value={formData.transaction_date ? dayjs(formData.transaction_date) : null}
                     onChange={(_, dateString) => handleChange('transaction_date', dateString as string)}
-                    maxDate={dayjs()}
-                    minDate={dayjs().subtract(30, 'day')}
+                    disabledDate={(current) => {
+                      return (
+                        current &&
+                        (current > dayjs().endOf('day') || current < dayjs().subtract(30, 'day').startOf('day'))
+                      )
+                    }}
+                    placeholder="Select Date (within last 30 days)"
                     popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
                     status={errors.transaction_date ? 'error' : ''}
                   />
@@ -688,28 +658,23 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </StepContainer>
 
               {/* Step 4 */}
-              <StepContainer
-                step={4}
-                title="Find Transaction on Blockchain Explorer"
-                description="Open the withdrawal transaction on the block explorer to verify details."
-              >
+              <StepContainer title="Find Transaction on Blockchain Explorer">
                 <div className="mb-4">
-                  <a
-                    href={explorerUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !explorerUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                    }`}
-                  >
-                    {explorerUrl ? (
-                      <>
-                        <ExternalLink size={14} /> {explorerUrl}
-                      </>
-                    ) : (
-                      '(Fill Network and Transaction Hash in Step 3 to view)'
-                    )}
-                  </a>
+                  <label className={labelClass}>Open the withdrawal transaction on the block explorer</label>
+                  {explorerUrl ? (
+                    <a
+                      href={explorerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                    >
+                      <ExternalLink size={14} /> {explorerUrl.replace('https://', '')}
+                    </a>
+                  ) : (
+                    <div className="mt-2 h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                      Fill Network and Transaction Hash in Step 3 to view
+                    </div>
+                  )}
                 </div>
 
                 <ScreenshotUpload
@@ -718,7 +683,6 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   value={formData.explorer_screenshot}
                   onChange={(v) => handleChange('explorer_screenshot', v)}
                   onShowModal={showImageModal}
-                  hint="Full-page screenshot including: URL, TxHash, From address, and To address."
                   error={errors.explorer_screenshot}
                 />
 
@@ -728,15 +692,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   </label>
                   <Input
                     className={inputClass}
-                    placeholder="Hot wallet address that sent the funds"
+                    placeholder="This is the hot wallet address controlled by the exchange"
                     value={formData.sender_address}
                     onChange={(e) => handleChange('sender_address', e.target.value)}
                     status={errors.sender_address ? 'error' : ''}
                   />
                   {errors.sender_address && <p className="text-xs text-red-500">{errors.sender_address}</p>}
-                  <div className="text-[11px] text-[#888]">
-                    This is the hot wallet address controlled by the exchange
-                  </div>
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
