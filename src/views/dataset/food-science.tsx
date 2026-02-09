@@ -2,6 +2,7 @@ import { Search, UtensilsCrossed, ChefHat, Camera, Target, ChevronLeft } from 'l
 import { Pie, PieChart } from 'recharts'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/app/bridge'
 
 // Chart data - ordered to match UI clockwise from top
 const chartData = [
@@ -93,10 +94,8 @@ export default function FoodScience() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/MM-Food-100K'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'food-science')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('food-science')
     } else {
       window.open(url, '_blank')
     }

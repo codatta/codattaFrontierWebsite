@@ -72,7 +72,7 @@ export const ExpertRedline = () => {
         ))}
       </ul>
       <p className="mt-4 font-semibold text-[#BBBBBE]">
-        📋 Please also note that if any malicious activity is detected, all submitted data from the account will be
+        Please also note that if any malicious activity is detected, all submitted data from the account will be
         invalidated, and the account will be blacklisted, preventing any new data submissions for 14 days.
       </p>
     </div>

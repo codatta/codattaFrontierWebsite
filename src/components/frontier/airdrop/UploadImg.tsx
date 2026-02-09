@@ -33,6 +33,7 @@ interface UploadProps {
   itemClassName?: string
   onChange: (value: UploadedImage[], context?: UploadChangeContext) => void
   maxCount?: number
+  hideDefaultIcon?: boolean
 }
 
 const Upload: React.FC<UploadProps> = ({
@@ -44,7 +45,8 @@ const Upload: React.FC<UploadProps> = ({
   supportPdf = false,
   maxCount = 5,
   className,
-  itemClassName
+  itemClassName,
+  hideDefaultIcon = false
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -198,7 +200,7 @@ const Upload: React.FC<UploadProps> = ({
       )}
     >
       <div>
-        <Plus className="mx-auto mb-2 block size-6" />
+        {!hideDefaultIcon && <Plus className="mx-auto mb-2 block size-6" />}
         <div className="text-xs">{description || 'Upload'}</div>
       </div>
     </div>

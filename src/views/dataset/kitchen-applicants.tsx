@@ -1,6 +1,7 @@
 import { Eye, Box, Gauge, Sparkles, ChevronLeft } from 'lucide-react'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/app/bridge'
 
 export default function KitchenApplicants() {
   const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
@@ -30,10 +31,8 @@ export default function KitchenApplicants() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Appliance-Knobs'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'kitchen-applicants')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('kitchen-applicants')
     } else {
       window.open(url, '_blank')
     }

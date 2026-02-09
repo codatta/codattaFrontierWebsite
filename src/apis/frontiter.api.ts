@@ -257,6 +257,12 @@ export interface DataProfileListItem {
   chain_time: string
 }
 
+export interface TaskCheckResult {
+  task_id: string
+  result: 1 | 2 | 3 // 1: passed, 2: not passed, 3: partial passed
+  msg: string
+}
+
 class frontier {
   constructor(private request: AxiosInstance) {}
 
@@ -417,6 +423,15 @@ class frontier {
       { page_num: page, page_size: page_size }
     )
 
+    return res.data
+  }
+
+  async checkTaskField(task_id: string, field: string, content: string): Promise<Response<TaskCheckResult>> {
+    const res = await this.request.post<Response<TaskCheckResult>>('/v2/frontier/task/check', {
+      task_id,
+      name: `data.${field}`,
+      content
+    })
     return res.data
   }
 }
