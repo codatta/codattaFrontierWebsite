@@ -74,15 +74,6 @@ export default function AppDataProfile() {
 
   const navigate = useNavigate()
 
-  const onBack = () => {
-    if (isInApp()) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(window as any).native?.call?.('goBack')
-    } else {
-      navigate(-1)
-    }
-  }
-
   const getSubmissionStatics = async () => {
     try {
       const res = await frontiterApi.getSubmissionStatics()
@@ -184,7 +175,7 @@ export default function AppDataProfile() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] text-black">
-      <MobileAppFrontierHeader title="Data Profile" canSubmit={false} showSubmitButton={false} onBack={onBack} />
+      <MobileAppFrontierHeader title="Data Profile" canSubmit={false} showSubmitButton={false} />
 
       <div className="px-5 pb-10">
         <StatsCards stats={stats} />

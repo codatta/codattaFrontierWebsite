@@ -14,6 +14,7 @@ import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
 import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
+import bridge from '@/components/app/bridge'
 
 interface FoodAnnotationFormData {
   foodImage: UploadedImage[]
@@ -237,12 +238,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     }
   }, [taskId, templateId])
 
-  const onBack = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isInApp = userAgent.includes('codatta')
-    if (isInApp) window.native.call('goBack')
-    else window.history.back()
-  }
+  const onBack = () => bridge.goBack()
 
   useEffect(() => {
     checkTaskStatus()

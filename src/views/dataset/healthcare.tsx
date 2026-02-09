@@ -2,6 +2,7 @@ import { Microscope, Brain, ChevronLeft } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/app/bridge'
 
 // Chart data
 const chartData = [
@@ -75,10 +76,8 @@ export default function Healthcare() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Refined-TCGA-PRAD-Prostate-Cancer-Pathology-Dataset'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'healthcare')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('healthcare')
     } else {
       window.open(url, '_blank')
     }

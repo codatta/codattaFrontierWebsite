@@ -126,6 +126,9 @@ const ModelListPage = lazy(() => import('@/views/arena/model-list'))
 const ChatBotArenaLeaderboardPage = lazy(() => import('@/views/arena/leaderboard'))
 const ArenaOnChainList = lazy(() => import('@/views/arena/onchain-record'))
 
+// dev
+const BridgeTest = lazy(() => import('@/views/dev/bridge-test'))
+
 // not found
 const NotFoundPage = lazy(() => import('@/views/not-found'))
 
@@ -396,6 +399,7 @@ export default function Router() {
         </Route>
         <Route path="/frontier/project/FATE_APP/:taskId" element={<FateApp templateId="FATE_APP" />}></Route>
         <Route path="/app/submission/:submission_id/detail" element={<SubmissionDetail />}></Route>
+        <Route path="/dev/bridge-test" element={<BridgeTest />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <GlobalModalHost />

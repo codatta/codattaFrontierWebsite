@@ -26,6 +26,7 @@ import {
   SideIcon,
   CheckIcon
 } from '@/components/frontier/fashion/icons'
+import bridge from '@/components/app/bridge'
 
 type FashionAnswerDraft = Partial<FashionAnswer> & { image_url: string }
 
@@ -260,19 +261,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
     fetchTaskDetail()
   }, [fetchTaskDetail])
 
-  const onBack = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isInApp = userAgent.includes('codatta')
-    if (isInApp && typeof window !== 'undefined') {
-      const nativeBridge = (
-        window as typeof window & { native?: { call: (method: string, ...args: unknown[]) => void } }
-      ).native
-      if (nativeBridge?.call) nativeBridge.call('goBack')
-      else window.history.back()
-    } else {
-      window.history.back()
-    }
-  }
+  const onBack = () => bridge.goBack()
 
   const showTypeQuestion = currentAnswer?.is_valid === 'valid'
   const showCategoryQuestion = showTypeQuestion && !!currentAnswer?.image_type

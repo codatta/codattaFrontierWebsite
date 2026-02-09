@@ -1,6 +1,7 @@
 import { ChevronLeft, ArrowUp } from 'lucide-react'
 import { cn } from '@udecode/cn'
 import { ReactNode } from 'react'
+import bridge from '@/components/app/bridge'
 
 interface MobileAppFrontierHeaderProps {
   title: string | React.ReactNode
@@ -30,23 +31,7 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
     rightIconBackground,
     onHelp
   } = props
-
-  const handleBack =
-    onBack ||
-    (() => {
-      const userAgent = navigator.userAgent.toLowerCase()
-      const isInApp = userAgent.includes('codatta')
-      if (isInApp && typeof window !== 'undefined') {
-        const nativeBridge = (
-          window as typeof window & { native?: { call: (method: string, ...args: unknown[]) => void } }
-        ).native
-        if (nativeBridge?.call) nativeBridge.call('goBack')
-        else window.history.back()
-      } else {
-        window.history.back()
-      }
-    })
-
+  const handleBack = onBack || bridge.goBack
   const finalRightIcon = onHelp ? (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
