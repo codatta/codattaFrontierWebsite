@@ -45,54 +45,73 @@ const statusColorMap: Record<string, string> = {
 const CardItem = ({ item }: { item: TaskDetail }) => {
   return (
     <div
-      key={`${item.submission_id}-${item.task_type}`}
-      className="relative flex w-full cursor-pointer items-center gap-4 rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
+      key={`${item.submission_id}-${item.task_type} `}
+      className="w-full cursor-pointer rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
     >
-      <div className="absolute left-5 top-[-12px] flex items-center gap-2">
-        {item.tags?.map((tag: string) => (
-          <React.Fragment key={tag}>
-            {tag === 'airdrop' && (
-              <Tooltip title="Airdrop">
-                <AirdropTagIcon className="size-6" />
-              </Tooltip>
+      <div className="relative flex items-center gap-4">
+        <div className="absolute left-5 top-[-12px] flex items-center gap-2">
+          {item.tags?.map((tag: string) => (
+            <React.Fragment key={tag}>
+              {tag === 'airdrop' && (
+                <Tooltip title="Airdrop">
+                  <AirdropTagIcon className="size-6" />
+                </Tooltip>
+              )}
+              {tag === 'activity' && (
+                <Tooltip title="Activity">
+                  <ActivityTagIcon className="size-6" />
+                </Tooltip>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+        <div className="flex-1">
+          <div className="mb-3 flex items-center break-all font-semibold md:mb-5">
+            {item.name}
+            {item.task_type_name && (
+              <span className="ml-3 flex h-7 items-center rounded-full bg-[#875DFF33] px-2 text-sm font-normal text-[#875DFF]">
+                {item.task_type_name}
+              </span>
             )}
-            {tag === 'activity' && (
-              <Tooltip title="Activity">
-                <ActivityTagIcon className="size-6" />
-              </Tooltip>
-            )}
-          </React.Fragment>
-        ))}
-      </div>
-      <div className="flex-1">
-        <div className="mb-3 flex items-center break-all font-semibold md:mb-5">
-          {item.name}
-          {item.task_type_name && (
-            <span className="ml-3 flex h-7 items-center rounded-full bg-[#875DFF33] px-2 text-sm font-normal text-[#875DFF]">
-              {item.task_type_name}
+          </div>
+          <div className="text-white/45">{dayjs(item.create_time * 1000).format('DD MMM YYYY h:mm a')}</div>
+        </div>
+        <div className="flex items-center">
+          <div className="ml-auto flex items-center gap-2 py-2 text-sm">
+            <div style={{ backgroundColor: statusColorMap[item.status] }} className={cn('size-1 rounded-full')}></div>
+            <span style={{ color: statusColorMap[item.status] }} className={cn('text-sm')}>
+              {item.status}
             </span>
-          )}
+          </div>
         </div>
-        <div className="text-white/45">{dayjs(item.create_time * 1000).format('DD MMM YYYY h:mm a')}</div>
+        {item.result && (
+          <div className="ml-auto shrink-0">
+            <SubmissionResultLevel result={item.result}></SubmissionResultLevel>
+          </div>
+        )}
+        {item.reward_points && item.reward_points > 0 ? (
+          <div className="text-primary">
+            + <strong>{item.reward_points}</strong> Points
+          </div>
+        ) : null}
       </div>
-      <div className="flex items-center">
-        <div className="ml-auto flex items-center gap-2 py-2 text-sm">
-          <div style={{ backgroundColor: statusColorMap[item.status] }} className={cn('size-1 rounded-full')}></div>
-          <span style={{ color: statusColorMap[item.status] }} className={cn('text-sm')}>
-            {item.status}
-          </span>
-        </div>
-      </div>
-      {item.result && (
-        <div className="ml-auto shrink-0">
-          <SubmissionResultLevel result={item.result}></SubmissionResultLevel>
-        </div>
-      )}
-      {item.reward_points && item.reward_points > 0 ? (
-        <div className="text-primary">
-          + <strong>{item.reward_points}</strong> Points
-        </div>
-      ) : null}
+      {item.audit_reason &&
+        (item.status === 'REFUSED' ? (
+          <div className="mt-5 flex h-6 items-center gap-1 rounded-md bg-[#D92B2B14] px-2 text-sm text-[#D92B2B]">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M6.66667 0.00260544C2.98477 0.00260544 0 2.9874 0 6.66927C0 10.3512 2.98477 13.3359 6.66667 13.3359C10.3485 13.3359 13.3333 10.3512 13.3333 6.66927C13.3333 2.9874 10.3485 0.00260544 6.66667 0.00260544ZM6.66667 1.33594C9.6122 1.33594 12 3.72374 12 6.66927C12 9.61479 9.6122 12.0026 6.66667 12.0026C3.72115 12.0026 1.33333 9.61479 1.33333 6.66927C1.33333 3.72374 3.72115 1.33594 6.66667 1.33594ZM6 10.0026H7.33333V8.66927H6V10.0026ZM6 7.33594H7.33333V3.33594H6V7.33594Z"
+                fill="#D92B2B"
+              />
+            </svg>
+
+            {item.audit_reason}
+          </div>
+        ) : (
+          <div className="mt-5 flex h-6 items-center gap-1 rounded-md bg-[#FFA80014] px-2 text-sm text-[#FFA800]">
+            {item.audit_reason}
+          </div>
+        ))}
     </div>
   )
 }
