@@ -2,7 +2,7 @@ import { Search, UtensilsCrossed, ChefHat, Camera, Target, ChevronLeft } from 'l
 import { Pie, PieChart } from 'recharts'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 // Chart data - ordered to match UI clockwise from top
 const chartData = [

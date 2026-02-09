@@ -10,7 +10,7 @@ import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import MobileDatePicker from '@/components/mobile-app/date-picker'
 import ScrollTimePicker from '@/components/mobile-app/scroll-time-picker'
 import LocationPicker from '@/components/mobile-app/location-picker'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 interface ChildInfo {
   id: string

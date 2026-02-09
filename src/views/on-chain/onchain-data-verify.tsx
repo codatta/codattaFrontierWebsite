@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import Form, { IFormData } from '@/components/on-chain/form'
 import DataVerify from '@/components/on-chain/data-verify'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 const Page: React.FC = () => {
   const [verifyData, setVerifyData] = useState<IFormData>()
