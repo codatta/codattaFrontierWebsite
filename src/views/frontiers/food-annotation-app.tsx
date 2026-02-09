@@ -14,7 +14,7 @@ import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
 import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 interface FoodAnnotationFormData {
   foodImage: UploadedImage[]
