@@ -73,12 +73,14 @@ function sendMessage(
   timeout = DEFAULT_TIMEOUT
 ): Promise<NativeResponse> {
   return new Promise((resolve, reject) => {
+    const id = generateId()
+    const msg: BridgeMessage = { id, action, payload }
+    _onSendHook?.(msg)
+
     if (!isBridgeAvailable()) {
       reject(new Error('[Bridge] webkit bridge is not available'))
       return
     }
-
-    const id = generateId()
 
     const timer = setTimeout(() => {
       pendingRequests.delete(id)
@@ -87,8 +89,6 @@ function sendMessage(
 
     pendingRequests.set(id, { resolve, reject, timer })
 
-    const msg: BridgeMessage = { id, action, payload }
-    _onSendHook?.(msg)
     window.webkit!.messageHandlers.bridge.postMessage(msg)
   })
 }
