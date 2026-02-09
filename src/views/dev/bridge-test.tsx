@@ -91,20 +91,7 @@ function BridgeTestHost() {
   const [mockEnabled, setMockEnabled] = useState(false)
   const [simDelay, setSimDelay] = useState(500)
   const [simSuccess, setSimSuccess] = useState(true)
-  const [logs, setLogs] = useState<LogEntry[]>([])
   const iframeRef = useRef<HTMLIFrameElement>(null)
-
-  const addHostLog = useCallback((direction: LogEntry['direction'], content: string) => {
-    setLogs((prev) => {
-      const entry: LogEntry = {
-        id: ++logId,
-        time: new Date().toLocaleTimeString('en-US', { hour12: false }),
-        direction,
-        content
-      }
-      return [...prev, entry].slice(-20)
-    })
-  }, [])
 
   // Listen for bridge calls from the iframe (webview)
   useEffect(() => {
@@ -117,7 +104,6 @@ function BridgeTestHost() {
       if (msg.type === 'bridge-call') {
         // The iframe's bridge.postMessage was called - we are the "native app"
         const bridgeMsg = msg.data
-        addHostLog('receive', `Received from webview:\n${JSON.stringify(bridgeMsg, null, 2)}`)
 
         // Simulate native processing and respond after delay
         setTimeout(() => {
@@ -126,8 +112,6 @@ function BridgeTestHost() {
             result: simSuccess ? { success: true } : { success: false, errorMsg: 'Simulated error from native' },
             error: !simSuccess
           }
-          addHostLog('send', `Responding to webview:\n${JSON.stringify(response, null, 2)}`)
-
           // Send response back to iframe via handleNativeResponse
           iframeRef.current?.contentWindow?.postMessage(
             { channel: MOCK_CHANNEL, type: 'native-response', data: response },
@@ -139,7 +123,7 @@ function BridgeTestHost() {
 
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [mockEnabled, simDelay, simSuccess, addHostLog])
+  }, [mockEnabled, simDelay, simSuccess])
 
   const iframeSrc = `/dev/bridge-test?mode=webview`
 
@@ -160,7 +144,6 @@ function BridgeTestHost() {
                 checked={mockEnabled}
                 onChange={(e) => {
                   setMockEnabled(e.target.checked)
-                  setLogs([])
                 }}
               />
               Enable Mock Mode (this page = native app, iframe = webview)
@@ -185,28 +168,6 @@ function BridgeTestHost() {
           </div>
         </Section>
 
-        {/* Log panel */}
-        <Section title={mockEnabled ? 'Mock App Log' : 'Native App Log'}>
-          <div style={logBoxStyle}>
-            {logs.length === 0 && (
-              <div style={{ color: '#64748b' }}>
-                {mockEnabled
-                  ? 'Waiting for bridge calls from the webview iframe below...'
-                  : 'Waiting for bridge calls...'}
-              </div>
-            )}
-            {logs.map((log) => (
-              <div key={log.id} style={{ marginBottom: 2 }}>
-                <span style={{ color: '#64748b' }}>{log.time}</span>{' '}
-                <span style={{ color: directionColors[log.direction], fontWeight: 600 }}>
-                  [{directionLabels[log.direction]}]
-                </span>{' '}
-                <span style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{log.content}</span>
-              </div>
-            ))}
-          </div>
-        </Section>
-
         {mockEnabled ? (
           <Section title="Webview (iframe)">
             <iframe
@@ -223,7 +184,7 @@ function BridgeTestHost() {
             />
           </Section>
         ) : (
-          <BridgeTestPanel onLog={addHostLog} />
+          <BridgeTestPanel />
         )}
       </div>
     </div>
