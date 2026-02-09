@@ -9,11 +9,6 @@ import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import { Loader2, X } from 'lucide-react'
 import EmptyImg from '@/assets/dataprofile/data-profile-empty.png'
 
-function isInApp() {
-  const userAgent = navigator.userAgent.toLowerCase()
-  return userAgent.includes('codatta')
-}
-
 function RequirementsModal(props: { onClose: () => void }) {
   const { onClose } = props
   return (
