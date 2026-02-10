@@ -26,7 +26,7 @@ import {
   SideIcon,
   CheckIcon
 } from '@/components/frontier/fashion/icons'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 type FashionAnswerDraft = Partial<FashionAnswer> & { image_url: string }
 
