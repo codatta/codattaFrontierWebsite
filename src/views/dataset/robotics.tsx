@@ -1,7 +1,7 @@
 import { TrendingUp, Frame, Gauge, Hand, ChevronLeft } from 'lucide-react'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 export default function Robotics() {
   const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
