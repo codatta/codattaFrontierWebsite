@@ -474,14 +474,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
             </button>
           </div>
 
-          <SuccessModal
-            open={modalShow}
-            onClose={onBack}
-            title="Successful"
-            message="Other rewards will issue automatically after answer verification."
-            points={rewardPoints}
-            buttonText="Got it"
-          />
+          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
         </div>
       </Spin>
 

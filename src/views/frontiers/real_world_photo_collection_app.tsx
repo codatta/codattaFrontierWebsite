@@ -340,13 +340,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
           ]}
         />
 
-        <SuccessModal
-          open={showSuccessModal}
-          onClose={() => window.history.back()}
-          points={rewardPoints}
-          title="Submitted!"
-          message="Your photo collection has been submitted for review."
-        />
+        <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
       </Spin>
     </AuthChecker>
   )

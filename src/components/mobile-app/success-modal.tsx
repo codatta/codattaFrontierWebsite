@@ -15,10 +15,10 @@ interface SuccessModalProps {
 export default function SuccessModal({
   open,
   onClose,
-  title = 'Success!',
+  title = 'Successful',
   message = 'Your submission has been received successfully.',
   points,
-  buttonText = 'OK',
+  buttonText = 'Got it',
   className
 }: SuccessModalProps) {
   const [isVisible, setIsVisible] = useState(false)
@@ -62,7 +62,7 @@ export default function SuccessModal({
       {/* Backdrop with fade animation */}
       <div
         className={cn(
-          'fixed inset-0 z-50 bg-[#999]/30 transition-all transition-opacity duration-300 ease-out',
+          'fixed inset-0 z-50 bg-[#999]/30 transition-all duration-300 ease-out',
           isAnimating ? 'opacity-100 backdrop-blur-sm' : 'opacity-0 backdrop-blur-none'
         )}
         onClick={onClose}
@@ -82,19 +82,22 @@ export default function SuccessModal({
             <img className="mt-[-60px] w-[150px]" src={CoinStarImage}></img>
           </div>
 
-          {/* Title */}
-          <h2 className="mb-2 text-center text-2xl font-bold">{title}</h2>
-
-          {/* Points (if provided) */}
-          {points !== undefined && points > 0 && (
-            <div className="mb-3 text-center">
-              <span className="text-2xl font-bold text-[#40E1EF]">+{points}</span>
-              <span className="ml-1 text-lg text-gray-600">Points</span>
-            </div>
+          {/* Content */}
+          {points !== undefined && points > 0 ? (
+            <>
+              <h2 className="mb-2 text-center text-base font-semibold">
+                <span className="text-[42px] font-bold leading-[42px] text-[#40E1EF]">+{points}</span>Points
+              </h2>
+              <p className="mb-6 text-center text-sm text-gray-600">
+                Other rewards will issue automatically after answer verification.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="mb-2 text-center text-2xl font-bold">{title}</h2>
+              <p className="mb-6 text-center text-sm text-gray-600">{message}</p>
+            </>
           )}
-
-          {/* Message */}
-          <p className="mb-6 text-center text-sm text-gray-600">{message}</p>
 
           {/* Button */}
           <button onClick={onClose} className="w-full rounded-full bg-black py-3 text-white">
