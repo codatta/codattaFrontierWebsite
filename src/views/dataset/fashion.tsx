@@ -1,6 +1,7 @@
 import { Shirt, Palette, Sparkles, Tag, ChevronLeft } from 'lucide-react'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/mobile-app/bridge'
 
 export default function Fashion() {
   const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
@@ -30,10 +31,8 @@ export default function Fashion() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Fashion-1K'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'fashion')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('fashion')
     } else {
       window.open(url, '_blank')
     }

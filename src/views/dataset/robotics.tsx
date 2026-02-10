@@ -1,6 +1,7 @@
 import { TrendingUp, Frame, Gauge, Hand, ChevronLeft } from 'lucide-react'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/mobile-app/bridge'
 
 export default function Robotics() {
   const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
@@ -30,10 +31,8 @@ export default function Robotics() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/RoboManip-Traj-Demo'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'robotics')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('robotics')
     } else {
       window.open(url, '_blank')
     }

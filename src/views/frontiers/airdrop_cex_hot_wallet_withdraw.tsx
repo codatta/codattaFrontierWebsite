@@ -10,7 +10,6 @@ import {
 import { WithdrawGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
 import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step-container'
-import { SupportedNetworksTip } from '@/components/frontier/airdrop/cex-hot-wallet/supported-networks-tip'
 import { WithdrawFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
@@ -18,7 +17,7 @@ import { isValidCryptoString } from '@/utils/str'
 import { ConfigProvider, DatePicker, Input, message, Modal, Select, Spin, theme } from 'antd'
 import locale from 'antd/es/date-picker/locale/en_US'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 
@@ -45,6 +44,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof WithdrawFormData, string>>>({})
+
+  // Field validation state
+  const validationTimers = useRef<Record<string, NodeJS.Timeout>>({})
+  const validationAbortControllers = useRef<Record<string, AbortController>>({})
+  const [validationResults, setValidationResults] = useState<Record<string, { result: number; msg: string }>>({})
+  const [validatingFields, setValidatingFields] = useState<Set<string>>(new Set())
 
   // UI State
   const [loading, setLoading] = useState(false)
@@ -108,6 +113,50 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
     }
   }, [formData.network, formData.tx_hash])
 
+  const validateField = useCallback(
+    async (field: 'tx_hash' | 'sender_address', value: string) => {
+      if (!taskId || !value.trim()) return
+
+      // Abort previous validation for this field
+      if (validationAbortControllers.current[field]) {
+        validationAbortControllers.current[field].abort()
+      }
+
+      const abortController = new AbortController()
+      validationAbortControllers.current[field] = abortController
+
+      setValidatingFields((prev) => new Set(prev).add(field))
+
+      try {
+        const result = await frontiterApi.checkTaskField(taskId, field, value.trim())
+
+        // Check if this validation was aborted
+        if (abortController.signal.aborted) return
+
+        // Store validation result
+        setValidationResults((prev) => ({
+          ...prev,
+          [field]: {
+            result: result.data.result,
+            msg: result.data.msg
+          }
+        }))
+      } catch (error) {
+        if (abortController.signal.aborted) return
+        console.error(`Field validation error for ${field}:`, error)
+      } finally {
+        if (!abortController.signal.aborted) {
+          setValidatingFields((prev) => {
+            const newSet = new Set(prev)
+            newSet.delete(field)
+            return newSet
+          })
+        }
+      }
+    },
+    [taskId]
+  )
+
   const handleChange = <K extends keyof WithdrawFormData>(field: K, value: WithdrawFormData[K]) => {
     setFormData((prev) => {
       const newData = { ...prev, [field]: value }
@@ -120,6 +169,102 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       setErrors((prev) => ({ ...prev, [field]: undefined }))
     }
   }
+
+  // Watch tx_hash field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.tx_hash.trim()
+
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.tx_hash
+      return next
+    })
+    setErrors((prev) => (prev.tx_hash ? { ...prev, tx_hash: undefined } : prev))
+
+    // Clear existing timer
+    if (validationTimers.current.tx_hash) {
+      clearTimeout(validationTimers.current.tx_hash)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.tx_hash) {
+      validationAbortControllers.current.tx_hash.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('tx_hash')
+        return newSet
+      })
+    }
+
+    if (trimmedValue) {
+      validationTimers.current.tx_hash = setTimeout(() => {
+        if (isValidCryptoString(trimmedValue, 30)) {
+          // Format valid, call check API
+          validateField('tx_hash', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            tx_hash: 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+          }))
+        }
+      }, 1000)
+    }
+  }, [formData.tx_hash, validateField])
+
+  // Watch sender_address field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.sender_address.trim()
+
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.sender_address
+      return next
+    })
+    setErrors((prev) => (prev.sender_address ? { ...prev, sender_address: undefined } : prev))
+
+    // Clear existing timer
+    if (validationTimers.current.sender_address) {
+      clearTimeout(validationTimers.current.sender_address)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.sender_address) {
+      validationAbortControllers.current.sender_address.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('sender_address')
+        return newSet
+      })
+    }
+
+    if (trimmedValue) {
+      validationTimers.current.sender_address = setTimeout(() => {
+        if (isValidCryptoString(trimmedValue, 20)) {
+          // Format valid, call check API
+          validateField('sender_address', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            sender_address: 'Invalid address format (min 20 characters, alphanumeric only)'
+          }))
+        }
+      }, 1000)
+    }
+  }, [formData.sender_address, validateField])
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    const timers = validationTimers.current
+    const controllers = validationAbortControllers.current
+    return () => {
+      Object.values(timers).forEach(clearTimeout)
+      Object.values(controllers).forEach((controller) => controller.abort())
+    }
+  }, [])
 
   const showImageModal = (src: string) => {
     setModalImageSrc(src)
@@ -164,20 +309,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       newErrors.tx_hash = 'Transaction Hash is required'
     } else if (!isValidCryptoString(formData.tx_hash, 30)) {
       newErrors.tx_hash = 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+    } else if (validationResults.tx_hash?.result === 2 && validationResults.tx_hash?.msg) {
+      // Only block submission for result=2 (fail)
+      newErrors.tx_hash = validationResults.tx_hash.msg
     }
 
     if (!formData.transaction_date) newErrors.transaction_date = 'Transaction Date is required'
-
-    // Date validation
-    if (formData.transaction_date) {
-      const date = new Date(formData.transaction_date)
-      const now = new Date()
-      const diffTime = Math.abs(now.getTime() - date.getTime())
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      if (diffDays > 30) {
-        newErrors.transaction_date = 'Date must be within last 30 days'
-      }
-    }
 
     if (formData.explorer_screenshot.length === 0)
       newErrors.explorer_screenshot = 'Blockchain Explorer Screenshot is required'
@@ -186,6 +323,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       newErrors.sender_address = 'Sender Address is required'
     } else if (!isValidCryptoString(formData.sender_address, 20)) {
       newErrors.sender_address = 'Invalid address format (min 20 characters, alphanumeric only)'
+    } else if (validationResults.sender_address?.result === 2 && validationResults.sender_address?.msg) {
+      // Only block submission for result=2 (fail)
+      newErrors.sender_address = validationResults.sender_address.msg
     }
 
     if (isEmpty(formData.receiver_address)) {
@@ -225,6 +365,17 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }
 
   const handleSubmit = async () => {
+    // Check if validation is in progress
+    if (validatingFields.size > 0) {
+      const fieldNames = Array.from(validatingFields).map((f) => {
+        if (f === 'tx_hash') return 'Transaction Hash'
+        if (f === 'sender_address') return 'Sender Address'
+        return f
+      })
+      message.warning(`Please wait for validation to complete: ${fieldNames.join(', ')}`)
+      return
+    }
+
     if (!validateForm()) {
       message.error('Please complete all required fields correctly.')
       return
@@ -268,12 +419,12 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   }
 
   const inputClass =
-    '!w-full !rounded-lg !border-none !bg-white/5 !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
+    '!w-full !rounded-lg !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
 
   const selectClass =
-    'w-full [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-none [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center'
+    'w-full [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:block [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center '
 
-  const labelClass = 'text-xs font-medium text-[#d0d0d0]'
+  const labelClass = 'text-sm font-medium text-white'
 
   return (
     <AuthChecker>
@@ -315,19 +466,15 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
 
             <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
               {/* Step 1 */}
-              <StepContainer step={1} title="Confirm Exchange">
-                <div className="mb-3 text-[13px] text-white">
-                  Select the exchange where you have withdrawal records. Ensure withdrawals are enabled for required
-                  networks and tokens.
-                </div>
-                <div className="flex flex-col gap-2">
+              <StepContainer title="Confirm Exchange">
+                <div className="space-y-2">
                   <label className={labelClass}>
                     Exchange Name <span className="text-red-500">*</span>
                   </label>
                   <Select
                     className={selectClass}
                     popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
-                    placeholder="Select exchange"
+                    placeholder="Select the exchange where you have withdrawal records. Ensure withdrawals are enabled for required networks and tokens."
                     value={formData.exchange_name || undefined}
                     onChange={(value) => handleChange('exchange_name', value)}
                     status={errors.exchange_name ? 'error' : ''}
@@ -343,83 +490,53 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </StepContainer>
 
               {/* Step 2 */}
-              <StepContainer
-                step={2}
-                title="Navigate to Withdrawal History Page"
-                description="Navigate to the withdrawal history page on your exchange."
-              >
+              <StepContainer title="Navigate to Withdrawal History Page">
                 <div className="space-y-3">
                   <div>
-                    <label className={`mb-1 block ${labelClass}`}>Official website</label>
-                    <a
-                      href={exchange?.official_website || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchange?.official_website
-                          ? 'pointer-events-none opacity-70'
-                          : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {exchange?.official_website ? (
-                        <>
-                          <ExternalLink size={14} /> {exchange?.official_website.replace('https://', '')}
-                        </>
-                      ) : (
-                        '(Select an exchange to view)'
-                      )}
-                    </a>
+                    <label className={`mb-2 block ${labelClass}`}>Official website</label>
+                    {exchange?.official_website ? (
+                      <a
+                        href={exchange.official_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      >
+                        <ExternalLink size={14} /> {exchange.official_website.replace('https://', '')}
+                      </a>
+                    ) : (
+                      <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                        Select an exchange to view
+                      </div>
+                    )}
                   </div>
                   <div>
-                    <label className={`mb-1 block ${labelClass}`}>Withdrawal history URL</label>
-                    <a
-                      href={exchange?.withdrawal_history_url || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchange?.withdrawal_history_url
-                          ? 'pointer-events-none opacity-70'
-                          : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {exchange?.withdrawal_history_url ? (
-                        <>
-                          <ExternalLink size={14} /> {exchange?.withdrawal_history_url.replace('https://', '')}
-                        </>
-                      ) : (
-                        '(Navigate manually on the exchange website)'
-                      )}
-                    </a>
+                    <label className={`mb-2 block ${labelClass}`}>Withdrawal history URL</label>
+                    {exchange?.withdrawal_history_url ? (
+                      <a
+                        href={exchange.withdrawal_history_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      >
+                        <ExternalLink size={14} /> {exchange.withdrawal_history_url.replace('https://', '')}
+                      </a>
+                    ) : (
+                      <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                        Select an exchange to view
+                      </div>
+                    )}
                   </div>
                 </div>
               </StepContainer>
 
               {/* Step 3 */}
-              <StepContainer
-                step={3}
-                title="Select Your Withdrawal Record"
-                warning={
-                  <div>
-                    <div className="font-bold">Requirements:</div>
-                    <ul className="mb-2 list-none pl-4 text-xs">
-                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                        Within last 30 days
-                      </li>
-                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                        Supported Network/Token
-                      </li>
-                    </ul>
-                    <SupportedNetworksTip />
-                  </div>
-                }
-              >
+              <StepContainer title="Withdrawal Record">
                 <ScreenshotUpload
-                  label="Exchange UI Screenshot"
+                  label="Exchange Withdrawal Screenshot"
                   exampleImage="https://static.codatta.io/static/images/withdraw_1_1767511761924.png"
                   value={formData.exchange_screenshot}
                   onChange={(v) => handleChange('exchange_screenshot', v)}
                   onShowModal={showImageModal}
-                  hint="Full-page screenshot including: URL, exchange logo, withdrawal address, token, amount, date/time, and TxHash."
                   error={errors.exchange_screenshot}
                 />
 
@@ -519,9 +636,18 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     placeholder="Transaction hash from the exchange"
                     value={formData.tx_hash}
                     onChange={(e) => handleChange('tx_hash', e.target.value)}
-                    status={errors.tx_hash ? 'error' : ''}
+                    status={errors.tx_hash || validationResults.tx_hash?.result === 2 ? 'error' : ''}
                   />
                   {errors.tx_hash && <p className="text-xs text-red-500">{errors.tx_hash}</p>}
+                  {!errors.tx_hash && validationResults.tx_hash?.msg && (
+                    <p
+                      className={`text-xs ${
+                        validationResults.tx_hash.result === 2 ? 'text-red-500' : 'text-yellow-500'
+                      }`}
+                    >
+                      {validationResults.tx_hash.msg}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -533,8 +659,13 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     className={`${inputClass} !flex !w-full`}
                     value={formData.transaction_date ? dayjs(formData.transaction_date) : null}
                     onChange={(_, dateString) => handleChange('transaction_date', dateString as string)}
-                    maxDate={dayjs()}
-                    minDate={dayjs().subtract(30, 'day')}
+                    disabledDate={(current) => {
+                      return (
+                        current &&
+                        (current > dayjs().endOf('day') || current < dayjs().subtract(30, 'day').startOf('day'))
+                      )
+                    }}
+                    placeholder="Select Date (within last 30 days)"
                     popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
                     status={errors.transaction_date ? 'error' : ''}
                   />
@@ -543,28 +674,23 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
               </StepContainer>
 
               {/* Step 4 */}
-              <StepContainer
-                step={4}
-                title="Find Transaction on Blockchain Explorer"
-                description="Open the withdrawal transaction on the block explorer to verify details."
-              >
-                <div className="mb-4">
-                  <a
-                    href={explorerUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !explorerUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                    }`}
-                  >
-                    {explorerUrl ? (
-                      <>
-                        <ExternalLink size={14} /> {explorerUrl}
-                      </>
-                    ) : (
-                      '(Fill Network and Transaction Hash in Step 3 to view)'
-                    )}
-                  </a>
+              <StepContainer title="Find Transaction on Blockchain Explorer">
+                <div className="mb-4 flex flex-col gap-2">
+                  <label className={labelClass}>Open the withdrawal transaction on the block explorer</label>
+                  {explorerUrl ? (
+                    <a
+                      href={explorerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                    >
+                      <ExternalLink size={14} /> {explorerUrl.replace('https://', '')}
+                    </a>
+                  ) : (
+                    <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                      Fill Network and Transaction Hash in Step 3 to view
+                    </div>
+                  )}
                 </div>
 
                 <ScreenshotUpload
@@ -573,7 +699,6 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   value={formData.explorer_screenshot}
                   onChange={(v) => handleChange('explorer_screenshot', v)}
                   onShowModal={showImageModal}
-                  hint="Full-page screenshot including: URL, TxHash, From address, and To address."
                   error={errors.explorer_screenshot}
                 />
 
@@ -583,15 +708,21 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                   </label>
                   <Input
                     className={inputClass}
-                    placeholder="Hot wallet address that sent the funds"
+                    placeholder="This is the hot wallet address controlled by the exchange"
                     value={formData.sender_address}
                     onChange={(e) => handleChange('sender_address', e.target.value)}
-                    status={errors.sender_address ? 'error' : ''}
+                    status={errors.sender_address || validationResults.sender_address?.result === 2 ? 'error' : ''}
                   />
                   {errors.sender_address && <p className="text-xs text-red-500">{errors.sender_address}</p>}
-                  <div className="text-[11px] text-[#888]">
-                    This is the hot wallet address controlled by the exchange
-                  </div>
+                  {!errors.sender_address && validationResults.sender_address?.msg && (
+                    <p
+                      className={`text-xs ${
+                        validationResults.sender_address.result === 2 ? 'text-red-500' : 'text-yellow-500'
+                      }`}
+                    >
+                      {validationResults.sender_address.msg}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">

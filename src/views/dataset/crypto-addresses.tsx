@@ -2,6 +2,7 @@ import { TestTube, Briefcase, ChevronLeft } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/mobile-app/bridge'
 
 // Chart data for Distribution by Chain
 const chainData = [
@@ -130,10 +131,8 @@ export default function CryptoAddresses() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Crypto-Address-Annotation-10K'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'crypto-addresses')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('crypto-addresses')
     } else {
       window.open(url, '_blank')
     }

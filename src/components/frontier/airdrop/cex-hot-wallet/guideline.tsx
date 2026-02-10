@@ -19,15 +19,10 @@ export const DepositGuideline = () => (
 
     <div className="mt-4">
       <h3 className="mb-2 font-semibold text-white">Requirements (Must Read)</h3>
-      <ul className="list-none space-y-1">
-        <li className="relative pl-6">
-          <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
-          Use PC desktop browser only
-        </li>
-        <li className="relative pl-6">
-          <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
-          Mobile apps/browsers not supported
-        </li>
+      <ul className="list-inside list-disc space-y-1 pl-2">
+        <li className="relative">Use PC desktop browser only</li>
+        <li className="relative">Mobile apps/browsers not supported</li>
+        <li className="relative">Deposit records in the last 30 days</li>
       </ul>
     </div>
   </div>
@@ -55,15 +50,10 @@ export const WithdrawGuideline = () => (
 
     <div className="mt-4">
       <h3 className="mb-2 font-semibold text-white">Requirements (Must Read)</h3>
-      <ul className="list-none space-y-1">
-        <li className="relative pl-6">
-          <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
-          Use PC desktop browser only
-        </li>
-        <li className="relative pl-6">
-          <span className="absolute left-0 font-bold text-[#10b981]">✓</span>
-          Mobile apps/browsers not supported
-        </li>
+      <ul className="list-inside list-disc space-y-1 pl-2">
+        <li className="relative">Use PC desktop browser only</li>
+        <li className="relative">Mobile apps/browsers not supported</li>
+        <li className="relative">Withdrawal records in the last 30 days</li>
       </ul>
     </div>
   </div>

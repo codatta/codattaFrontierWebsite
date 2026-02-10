@@ -9,11 +9,6 @@ import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import { Loader2, X } from 'lucide-react'
 import EmptyImg from '@/assets/dataprofile/data-profile-empty.png'
 
-function isInApp() {
-  const userAgent = navigator.userAgent.toLowerCase()
-  return userAgent.includes('codatta')
-}
-
 function RequirementsModal(props: { onClose: () => void }) {
   const { onClose } = props
   return (
@@ -73,15 +68,6 @@ export default function AppDataProfile() {
   const fetchingMoreRef = useRef(false)
 
   const navigate = useNavigate()
-
-  const onBack = () => {
-    if (isInApp()) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(window as any).native?.call?.('goBack')
-    } else {
-      navigate(-1)
-    }
-  }
 
   const getSubmissionStatics = async () => {
     try {
@@ -184,7 +170,7 @@ export default function AppDataProfile() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] text-black">
-      <MobileAppFrontierHeader title="Data Profile" canSubmit={false} showSubmitButton={false} onBack={onBack} />
+      <MobileAppFrontierHeader title="Data Profile" canSubmit={false} showSubmitButton={false} />
 
       <div className="px-5 pb-10">
         <StatsCards stats={stats} />

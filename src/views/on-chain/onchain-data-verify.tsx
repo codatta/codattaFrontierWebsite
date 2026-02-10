@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft } from 'lucide-react'
 import Form, { IFormData } from '@/components/on-chain/form'
 import DataVerify from '@/components/on-chain/data-verify'
+import bridge from '@/components/mobile-app/bridge'
 
 const Page: React.FC = () => {
   const [verifyData, setVerifyData] = useState<IFormData>()
@@ -26,13 +27,7 @@ const Page: React.FC = () => {
       handleBackToForm()
       return
     }
-    const userAgent = navigator.userAgent.toLowerCase()
-    if (userAgent.includes('codatta')) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(window as any).native?.call?.('goBack')
-    } else {
-      window.history.back()
-    }
+    bridge.goBack()
   }
 
   return (

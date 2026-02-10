@@ -1,6 +1,7 @@
 import { Shield, Languages, Target, ChevronLeft } from 'lucide-react'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
+import bridge from '@/components/mobile-app/bridge'
 
 export default function LLMFailureCases() {
   const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)
@@ -26,10 +27,8 @@ export default function LLMFailureCases() {
 
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/LLM-Failure-Cases'
-    const isInApp = navigator.userAgent.match(/codatta/i)
-    if (isInApp) {
-      // TODO:
-      // window.native.call('downloadDataset', 'llm-failure-cases')
+    if (bridge.isInApp()) {
+      bridge.downloadDataset('llm-failure-cases')
     } else {
       window.open(url, '_blank')
     }

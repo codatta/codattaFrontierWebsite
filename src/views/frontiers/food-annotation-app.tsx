@@ -13,7 +13,8 @@ import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
-import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
+// import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
+import bridge from '@/components/app/bridge'
 
 interface FoodAnnotationFormData {
   foodImage: UploadedImage[]
@@ -237,12 +238,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     }
   }, [taskId, templateId])
 
-  const onBack = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isInApp = userAgent.includes('codatta')
-    if (isInApp) window.native.call('goBack')
-    else window.history.back()
-  }
+  const onBack = () => bridge.goBack()
 
   useEffect(() => {
     checkTaskStatus()
@@ -253,7 +249,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
           <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} onHelp={() => setShowHelpModal(true)} />
-          <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
+          {/* <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} /> */}
 
           {/* Form Content */}
           <div className="px-5">

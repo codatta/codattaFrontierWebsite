@@ -10,6 +10,7 @@ import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import MobileDatePicker from '@/components/mobile-app/date-picker'
 import ScrollTimePicker from '@/components/mobile-app/scroll-time-picker'
 import LocationPicker from '@/components/mobile-app/location-picker'
+import bridge from '@/components/mobile-app/bridge'
 
 interface ChildInfo {
   id: string
@@ -430,10 +431,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
   }, [taskId, templateId])
 
   const onBack = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isInApp = userAgent.includes('codatta')
-    if (isInApp) window.native.call('goBack')
-    else window.history.back()
+    bridge.goBack()
   }
 
   useEffect(() => {
@@ -444,7 +442,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader title="Your Life Journey" onBack={onBack} />
+          <MobileAppFrontierHeader title="Your Life Journey" />
 
           {/* Form Content */}
           <div className="px-5">

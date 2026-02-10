@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import dayjs from 'dayjs'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { ExternalLink, MoreVertical, X } from 'lucide-react'
@@ -11,11 +11,6 @@ import { userStoreActions, useUserStore } from '@/stores/user.store'
 import defaultAvatar from '@/assets/home/default-avatar.png'
 import LogoLightSvg from '@/assets/common/logo-light.svg?react'
 import { DataProfileListItem } from '@/apis/frontiter.api'
-
-function isInApp() {
-  const userAgent = navigator.userAgent.toLowerCase()
-  return userAgent.includes('codatta')
-}
 
 function shortenMiddle(value: string, start = 18, end = 8) {
   if (!value) return '-'
@@ -372,7 +367,6 @@ function AnchorInfoModal(props: { onClose: () => void }) {
 
 export default function AppDataProfileDetail() {
   const location = useLocation()
-  const navigate = useNavigate()
   const { info, username } = useUserStore()
 
   const submission = (location.state as { submission: DataProfileListItem } | undefined)?.submission
@@ -386,19 +380,10 @@ export default function AppDataProfileDetail() {
     userStoreActions.getUserInfo()
   }, [])
 
-  const onBack = () => {
-    if (isInApp()) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(window as any).native?.call?.('goBack')
-    } else {
-      navigate(-1)
-    }
-  }
-
   if (!submission) {
     return (
       <div className="min-h-screen bg-[#F5F5F5] text-black">
-        <MobileAppFrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} onBack={onBack} />
+        <MobileAppFrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} />
         <div className="px-5 pt-6 text-[15px] text-black/60">No submission found.</div>
       </div>
     )
@@ -411,7 +396,7 @@ export default function AppDataProfileDetail() {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      <MobileAppFrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} onBack={onBack} />
+      <MobileAppFrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} />
 
       <div className="px-5 pb-10">
         <div className="h-2" />

@@ -11,7 +11,6 @@ import {
 import { DepositGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
 import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step-container'
-import { SupportedNetworksTip } from '@/components/frontier/airdrop/cex-hot-wallet/supported-networks-tip'
 import { DepositFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
@@ -22,7 +21,7 @@ import { ConfigProvider, DatePicker, Input, message, Modal, Radio, Select, Spin,
 import type { RadioChangeEvent } from 'antd'
 import locale from 'antd/es/date-picker/locale/en_US'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import dayjs from 'dayjs'
 
@@ -54,6 +53,12 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof DepositFormData, string>>>({})
+
+  // Field validation state
+  const validationTimers = useRef<Record<string, NodeJS.Timeout>>({})
+  const validationAbortControllers = useRef<Record<string, AbortController>>({})
+  const [validationResults, setValidationResults] = useState<Record<string, { result: number; msg: string }>>({})
+  const [validatingFields, setValidatingFields] = useState<Set<string>>(new Set())
 
   // UI State
   const [loading, setLoading] = useState(false)
@@ -140,6 +145,189 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
     }
   }, [formData.network, formData.outgoing_transaction_hash])
 
+  const validateField = useCallback(
+    async (field: 'tx_hash' | 'outgoing_transaction_hash' | 'outgoing_tx_to_address', value: string) => {
+      if (!taskId || !value.trim()) return
+
+      // Abort previous validation for this field
+      if (validationAbortControllers.current[field]) {
+        validationAbortControllers.current[field].abort()
+      }
+
+      const abortController = new AbortController()
+      validationAbortControllers.current[field] = abortController
+
+      setValidatingFields((prev) => new Set(prev).add(field))
+
+      try {
+        const result = await frontiterApi.checkTaskField(taskId, field, value.trim())
+
+        // Check if this validation was aborted
+        if (abortController.signal.aborted) return
+
+        // Store validation result
+        setValidationResults((prev) => ({
+          ...prev,
+          [field]: {
+            result: result.data.result,
+            msg: result.data.msg
+          }
+        }))
+      } catch (error) {
+        if (abortController.signal.aborted) return
+        console.error(`Field validation error for ${field}:`, error)
+      } finally {
+        if (!abortController.signal.aborted) {
+          setValidatingFields((prev) => {
+            const newSet = new Set(prev)
+            newSet.delete(field)
+            return newSet
+          })
+        }
+      }
+    },
+    [taskId]
+  )
+
+  // Watch tx_hash field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.tx_hash.trim()
+
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.tx_hash
+      return next
+    })
+    setErrors((prev) => (prev.tx_hash ? { ...prev, tx_hash: undefined } : prev))
+
+    // Clear existing timer
+    if (validationTimers.current.tx_hash) {
+      clearTimeout(validationTimers.current.tx_hash)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.tx_hash) {
+      validationAbortControllers.current.tx_hash.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('tx_hash')
+        return newSet
+      })
+    }
+
+    if (trimmedValue) {
+      validationTimers.current.tx_hash = setTimeout(() => {
+        if (isValidCryptoString(trimmedValue, 30)) {
+          // Format valid, call check API
+          validateField('tx_hash', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            tx_hash: 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+          }))
+        }
+      }, 1000)
+    }
+  }, [formData.tx_hash, validateField])
+
+  // Watch outgoing_transaction_hash field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.outgoing_transaction_hash.trim()
+
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.outgoing_transaction_hash
+      return next
+    })
+    setErrors((prev) => (prev.outgoing_transaction_hash ? { ...prev, outgoing_transaction_hash: undefined } : prev))
+
+    // Clear existing timer
+    if (validationTimers.current.outgoing_transaction_hash) {
+      clearTimeout(validationTimers.current.outgoing_transaction_hash)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.outgoing_transaction_hash) {
+      validationAbortControllers.current.outgoing_transaction_hash.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('outgoing_transaction_hash')
+        return newSet
+      })
+    }
+
+    if (trimmedValue) {
+      validationTimers.current.outgoing_transaction_hash = setTimeout(() => {
+        if (isValidCryptoString(trimmedValue, 30)) {
+          // Format valid, call check API
+          validateField('outgoing_transaction_hash', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            outgoing_transaction_hash: 'Invalid transaction hash format (min 30 characters, alphanumeric only)'
+          }))
+        }
+      }, 1000)
+    }
+  }, [formData.outgoing_transaction_hash, validateField])
+
+  // Watch outgoing_tx_to_address field changes and validate
+  useEffect(() => {
+    const trimmedValue = formData.outgoing_tx_to_address.trim()
+
+    // Clear validation result and format error when field changes
+    setValidationResults((prev) => {
+      const next = { ...prev }
+      delete next.outgoing_tx_to_address
+      return next
+    })
+    setErrors((prev) => (prev.outgoing_tx_to_address ? { ...prev, outgoing_tx_to_address: undefined } : prev))
+
+    // Clear existing timer
+    if (validationTimers.current.outgoing_tx_to_address) {
+      clearTimeout(validationTimers.current.outgoing_tx_to_address)
+    }
+
+    // Abort ongoing validation
+    if (validationAbortControllers.current.outgoing_tx_to_address) {
+      validationAbortControllers.current.outgoing_tx_to_address.abort()
+      setValidatingFields((prev) => {
+        const newSet = new Set(prev)
+        newSet.delete('outgoing_tx_to_address')
+        return newSet
+      })
+    }
+
+    if (trimmedValue) {
+      validationTimers.current.outgoing_tx_to_address = setTimeout(() => {
+        if (isValidCryptoString(trimmedValue, 20)) {
+          // Format valid, call check API
+          validateField('outgoing_tx_to_address', trimmedValue)
+        } else {
+          // Format invalid, show error
+          setErrors((prev) => ({
+            ...prev,
+            outgoing_tx_to_address: 'Invalid address format (min 20 characters, alphanumeric only)'
+          }))
+        }
+      }, 1000)
+    }
+  }, [formData.outgoing_tx_to_address, validateField])
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    const timers = validationTimers.current
+    const controllers = validationAbortControllers.current
+    return () => {
+      Object.values(timers).forEach(clearTimeout)
+      Object.values(controllers).forEach((controller) => controller.abort())
+    }
+  }, [])
+
   // Handlers
   const handleChange = <K extends keyof DepositFormData>(field: K, value: DepositFormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -202,17 +390,6 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
     if (!formData.date) newErrors.date = 'Deposit Date is required'
 
-    // Date validation
-    if (formData.date) {
-      const date = new Date(formData.date)
-      const now = new Date()
-      const diffTime = Math.abs(now.getTime() - date.getTime())
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-      if (diffDays > 30) {
-        newErrors.date = 'Date must be within last 30 days'
-      }
-    }
-
     // Address and Hash validation
     if (isEmpty(formData.exchange_address)) {
       newErrors.exchange_address = 'Exchange Deposit Address is required'
@@ -224,6 +401,9 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
       newErrors.tx_hash = 'Deposit TxHash is required'
     } else if (!isValidCryptoString(formData.tx_hash, 30)) {
       newErrors.tx_hash = 'Invalid transaction hash format (min 30 characters)'
+    } else if (validationResults.tx_hash?.result === 2 && validationResults.tx_hash?.msg) {
+      // Only block submission for result=2 (fail)
+      newErrors.tx_hash = validationResults.tx_hash.msg
     }
 
     if (formData.explorer_screenshot.length === 0)
@@ -263,6 +443,12 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
         newErrors.outgoing_transaction_hash = 'Transaction Hash is required'
       } else if (!isValidCryptoString(formData.outgoing_transaction_hash, 30)) {
         newErrors.outgoing_transaction_hash = 'Invalid transaction hash format (min 30 characters)'
+      } else if (
+        validationResults.outgoing_transaction_hash?.result === 2 &&
+        validationResults.outgoing_transaction_hash?.msg
+      ) {
+        // Only block submission for result=2 (fail)
+        newErrors.outgoing_transaction_hash = validationResults.outgoing_transaction_hash.msg
       }
 
       if (formData.outgoing_tx_screenshot.length === 0)
@@ -278,6 +464,12 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
         newErrors.outgoing_tx_to_address = 'To Address is required'
       } else if (!isValidCryptoString(formData.outgoing_tx_to_address, 20)) {
         newErrors.outgoing_tx_to_address = 'Invalid address format (min 20 characters)'
+      } else if (
+        validationResults.outgoing_tx_to_address?.result === 2 &&
+        validationResults.outgoing_tx_to_address?.msg
+      ) {
+        // Only block submission for result=2 (fail)
+        newErrors.outgoing_tx_to_address = validationResults.outgoing_tx_to_address.msg
       }
 
       // Check addresses equality for outgoing
@@ -328,6 +520,18 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
   }
 
   const handleSubmit = async () => {
+    // Check if validation is in progress
+    if (validatingFields.size > 0) {
+      const fieldNames = Array.from(validatingFields).map((f) => {
+        if (f === 'tx_hash') return 'Deposit TxHash'
+        if (f === 'outgoing_transaction_hash') return 'Outgoing Transaction Hash'
+        if (f === 'outgoing_tx_to_address') return 'Outgoing To Address'
+        return f
+      })
+      message.warning(`Please wait for validation to complete: ${fieldNames.join(', ')}`)
+      return
+    }
+
     if (!validateForm()) {
       message.error('Please complete all required fields correctly.')
       return
@@ -383,14 +587,13 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
     }
   }
 
-  // Common Input Styles
   const inputClass =
-    '!w-full !rounded-lg !border-none !bg-white/5 !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
+    '!w-full !rounded-lg !px-4 !py-3 !text-white !transition-colors placeholder:!text-gray-500 hover:!bg-white/10 focus:!border-blue-500 focus:!outline-none !text-xs'
 
   const selectClass =
-    'w-full [&_.ant-select-selector]:!bg-white/5 [&_.ant-select-selector]:!border-none [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center'
+    'w-full [&_.ant-select-selector]:!text-white [&_.ant-select-selector]:!rounded-lg [&_.ant-select-selector]:block [&_.ant-select-selector]:!h-[42px] [&_.ant-select-selector]:!flex [&_.ant-select-selector]:!items-center '
 
-  const labelClass = 'text-xs font-medium text-[#d0d0d0]'
+  const labelClass = 'text-sm font-medium text-white'
 
   return (
     <AuthChecker>
@@ -433,19 +636,15 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
 
             <div className="mx-auto mt-12 max-w-[1320px] space-y-[30px] px-6">
               {/* Step 1 */}
-              <StepContainer
-                step={1}
-                title="Confirm Exchange"
-                description="Select the exchange where you have deposit records. Ensure deposits are enabled for required networks and tokens."
-              >
-                <div className="flex flex-col gap-2">
+              <StepContainer title="Confirm Exchange">
+                <div className="space-y-2">
                   <label className={labelClass}>
                     Exchange Name <span className="text-red-500">*</span>
                   </label>
                   <Select
                     className={selectClass}
                     popupClassName="[&_.ant-select-dropdown]:!bg-[#1f1f1f] [&_.ant-select-item]:!text-white"
-                    placeholder="Select exchange"
+                    placeholder="Select the exchange where you have deposit records. Ensure deposits are enabled for required networks and tokens."
                     value={formData.exchange_name || undefined}
                     onChange={(value) => handleChange('exchange_name', value)}
                     status={errors.exchange_name ? 'error' : ''}
@@ -461,90 +660,57 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
               </StepContainer>
 
               {/* Step 2 */}
-              <StepContainer step={2} title="Navigate to Deposit History Page">
-                <div className="mb-3 text-[13px] text-white">
-                  Navigate to the deposit history page on your exchange.
-                </div>
+              <StepContainer title="Navigate to Deposit History Page">
                 <div className="space-y-3">
                   <div>
-                    <label className={`mb-1 block ${labelClass}`}>Official website</label>
-                    <a
-                      href={exchange?.official_website || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchange?.official_website
-                          ? 'pointer-events-none opacity-70'
-                          : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {exchange?.official_website ? (
-                        <>
-                          <ExternalLink size={14} /> {exchange?.official_website.replace('https://', '')}
-                        </>
-                      ) : (
-                        '(Select an exchange to view)'
-                      )}
-                    </a>
+                    <label className={`mb-2 block ${labelClass}`}>Official website</label>
+                    {exchange?.official_website ? (
+                      <a
+                        href={exchange.official_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      >
+                        <ExternalLink size={14} /> {exchange.official_website.replace('https://', '')}
+                      </a>
+                    ) : (
+                      <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                        Select an exchange to view
+                      </div>
+                    )}
                   </div>
                   <div>
-                    <label className={`mb-1 block ${labelClass}`}>Deposit history URL</label>
-                    <a
-                      href={exchange?.deposit_history_url || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !exchange?.deposit_history_url
-                          ? 'pointer-events-none opacity-70'
-                          : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {exchange?.deposit_history_url ? (
-                        <>
-                          <ExternalLink size={14} /> {exchange?.deposit_history_url.replace('https://', '')}
-                        </>
-                      ) : (
-                        '(Select an exchange to view)'
-                      )}
-                    </a>
-                  </div>
-                  <div className="text-[11px] text-[#888]">
-                    Note: Links are auto-generated for reference only. If invalid, navigate manually on the exchange
-                    website.
+                    <label className={`mb-2 block ${labelClass}`}>Deposit history URL</label>
+                    {exchange?.deposit_history_url ? (
+                      <a
+                        href={exchange.deposit_history_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                      >
+                        <ExternalLink size={14} /> {exchange.deposit_history_url.replace('https://', '')}
+                      </a>
+                    ) : (
+                      <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                        Select an exchange to view
+                      </div>
+                    )}
                   </div>
                 </div>
               </StepContainer>
 
               {/* Step 3 */}
-              <StepContainer
-                step={3}
-                title="Select Your Deposit Record"
-                warning={
-                  <div>
-                    <div className="font-bold">Requirements:</div>
-                    <ul className="mb-2 list-none pl-4 text-xs">
-                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                        Within last 30 days
-                      </li>
-                      <li className="relative pl-0 before:absolute before:-left-3 before:content-['•']">
-                        Supported Network/Token
-                      </li>
-                    </ul>
-                    <SupportedNetworksTip />
-                  </div>
-                }
-              >
+              <StepContainer title="Deposit Record">
                 <ScreenshotUpload
                   label="Exchange UI Screenshot"
                   exampleImage="https://static.codatta.io/static/images/deposit_1_1767511761924.png"
                   value={formData.screenshot}
                   onChange={(v) => handleChange('screenshot', v)}
                   onShowModal={showImageModal}
-                  hint="Full-page screenshot including: URL, exchange logo, deposit address, token, amount, and TxHash."
                   error={errors.screenshot}
                 />
 
-                <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2">
                   <div className="flex flex-col gap-2">
                     <label className={labelClass}>
                       Network <span className="text-red-500">*</span>
@@ -626,9 +792,18 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     placeholder="Transaction hash from exchange UI"
                     value={formData.tx_hash}
                     onChange={(e) => handleChange('tx_hash', e.target.value)}
-                    status={errors.tx_hash ? 'error' : ''}
+                    status={errors.tx_hash || validationResults.tx_hash?.result === 2 ? 'error' : ''}
                   />
                   {errors.tx_hash && <p className="text-xs text-red-500">{errors.tx_hash}</p>}
+                  {!errors.tx_hash && validationResults.tx_hash?.msg && (
+                    <p
+                      className={`text-xs ${
+                        validationResults.tx_hash.result === 2 ? 'text-red-500' : 'text-yellow-500'
+                      }`}
+                    >
+                      {validationResults.tx_hash.msg}
+                    </p>
+                  )}
                 </div>
 
                 <div className="mt-3 flex flex-col gap-2">
@@ -640,38 +815,38 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     className={`${inputClass} !flex !w-full`}
                     value={formData.date ? dayjs(formData.date) : null}
                     onChange={(_, dateString) => handleChange('date', dateString as string)}
-                    maxDate={dayjs()}
-                    minDate={dayjs().subtract(30, 'day')}
+                    disabledDate={(current) => {
+                      return (
+                        current &&
+                        (current > dayjs().endOf('day') || current < dayjs().subtract(30, 'day').startOf('day'))
+                      )
+                    }}
+                    placeholder="Select Date (within last 30 days)"
                     popupClassName="[&_.ant-picker-panel]:!bg-[#1f1f1f] [&_.ant-picker-header]:!text-white [&_.ant-picker-content_th]:!text-white [&_.ant-picker-cell]:!text-gray-400 [&_.ant-picker-cell-in-view]:!text-white"
                     status={errors.date ? 'error' : ''}
                   />
                   {errors.date && <p className="text-xs text-red-500">{errors.date}</p>}
-                  <div className="text-[11px] text-[#888]">Select deposit date (within last 30 days)</div>
                 </div>
               </StepContainer>
 
               {/* Step 4 */}
-              <StepContainer step={4} title="Find Transaction on Blockchain Explorer">
-                <div className="mb-4">
-                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                    Open deposit transaction on block explorer
-                  </label>
-                  <a
-                    href={explorerUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !explorerUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                    }`}
-                  >
-                    {explorerUrl ? (
-                      <>
-                        <ExternalLink size={14} /> {explorerUrl}
-                      </>
-                    ) : (
-                      '(Fill Network and Deposit TxHash in Step 3 to view)'
-                    )}
-                  </a>
+              <StepContainer title="Find Transaction on Blockchain Explorer">
+                <div className="mb-4 flex flex-col gap-2">
+                  <label className={labelClass}>Open the deposit transaction on the block explorer</label>
+                  {explorerUrl ? (
+                    <a
+                      href={explorerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                    >
+                      <ExternalLink size={14} /> {explorerUrl.replace('https://', '')}
+                    </a>
+                  ) : (
+                    <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                      Fill Network and Deposit TxHash in Step 3 to view
+                    </div>
+                  )}
                 </div>
 
                 <ScreenshotUpload
@@ -680,7 +855,6 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                   value={formData.explorer_screenshot}
                   onChange={(v) => handleChange('explorer_screenshot', v)}
                   onShowModal={showImageModal}
-                  hint="Full-page screenshot including: URL, TxHash, From address, and To address."
                   error={errors.explorer_screenshot}
                 />
 
@@ -713,61 +887,64 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                 </div>
               </StepContainer>
 
-              {/* Step 5 */}
+              {/* Outgoing Transaction */}
               <StepContainer
-                step={5}
-                title="Check if Deposit Address Has Outgoing Transactions"
-                warning={
-                  <div className="text-[#facc15]">
-                    <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
+                title={
+                  <div className="flex items-center text-white">
+                    Outgoing Transaction
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="ml-2 mr-1"
+                    >
+                      <path
+                        d="M7.16667 14.3333C3.21467 14.3333 0 11.1187 0 7.16667C0 3.21467 3.21467 0 7.16667 0C11.1187 0 14.3333 3.21467 14.3333 7.16667C14.3333 11.1187 11.1187 14.3333 7.16667 14.3333ZM7.16667 1C3.766 1 1 3.766 1 7.16667C1 10.5673 3.766 13.3333 7.16667 13.3333C10.5673 13.3333 13.3333 10.5673 13.3333 7.16667C13.3333 3.766 10.5673 1 7.16667 1ZM7.66667 10.1667V7.1193C7.66667 6.8433 7.44267 6.6193 7.16667 6.6193C6.89067 6.6193 6.66667 6.8433 6.66667 7.1193V10.1667C6.66667 10.4427 6.89067 10.6667 7.16667 10.6667C7.44267 10.6667 7.66667 10.4427 7.66667 10.1667ZM7.84668 4.83333C7.84668 4.46533 7.54868 4.16667 7.18001 4.16667H7.17334C6.80534 4.16667 6.50993 4.46533 6.50993 4.83333C6.50993 5.20133 6.81201 5.5 7.18001 5.5C7.54801 5.5 7.84668 5.20133 7.84668 4.83333Z"
+                        fill="#BBBBBE"
+                      />
+                    </svg>
+                    <span className="text-xs font-normal text-[#BBBBBE]">
+                      Outgoing transactions receive higher rewards. Please verify carefully.
+                    </span>
                   </div>
                 }
               >
+                <div className="mb-4 flex flex-col gap-2">
+                  <label className={labelClass}>Open outgoing transaction on block explorer</label>
+                  {toAddressUrl ? (
+                    <a
+                      href={toAddressUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                    >
+                      <ExternalLink size={14} /> {toAddressUrl.replace('https://', '')}
+                    </a>
+                  ) : (
+                    <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                      Fill Network and Transaction Hash to view
+                    </div>
+                  )}
+                </div>
+
                 <div className="mb-4">
-                  <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                    Open To address on block explorer
-                  </label>
-                  <a
-                    href={toAddressUrl || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                      !toAddressUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                    }`}
-                  >
-                    {toAddressUrl ? (
-                      <>
-                        <ExternalLink size={14} /> {toAddressUrl}
-                      </>
-                    ) : (
-                      '(Fill Network and To address in Step 4 to view)'
-                    )}
-                  </a>
-                  <div className="mt-1 text-[11px] text-[#888]">
-                    Auto-generated from Step 4. Check for outgoing transactions to identify the hot wallet.
-                  </div>
-                </div>
-
-                <div className="mb-4 rounded-md border-l-4 border-yellow-500 bg-yellow-500/10 px-3 py-2.5 text-xs text-gray-200">
-                  <strong>Note:</strong> Outgoing transactions receive higher rewards. Please verify carefully.
-                </div>
-
-                <div className="mb-4 flex items-center gap-5">
-                  <span className="text-xs text-white">Any outgoing transaction with amount &gt; 0?</span>
+                  <label className={`mb-2 block ${labelClass}`}>Any outgoing transaction with amount &gt; 0?</label>
                   <Radio.Group
                     value={formData.has_outgoing_transaction}
                     onChange={(e: RadioChangeEvent) => handleChange('has_outgoing_transaction', e.target.value)}
                     className="flex gap-5"
                   >
-                    <Radio value="yes" className="!text-xs !font-medium !text-[#d0d0d0]">
+                    <Radio value="yes" className="!text-sm !font-medium !text-white">
                       Yes
                     </Radio>
-                    <Radio value="no" className="!text-xs !font-medium !text-[#d0d0d0]">
+                    <Radio value="no" className="!text-sm !font-medium !text-white">
                       No
                     </Radio>
                   </Radio.Group>
                   {errors.has_outgoing_transaction && (
-                    <p className="text-xs text-red-500">{errors.has_outgoing_transaction}</p>
+                    <p className="mt-1 text-xs text-red-500">{errors.has_outgoing_transaction}</p>
                   )}
                 </div>
 
@@ -779,9 +956,9 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       value={formData.outgoing_transaction_screenshot}
                       onChange={(v) => handleChange('outgoing_transaction_screenshot', v)}
                       onShowModal={showImageModal}
-                      hint="Full-page screenshot including: URL, TxHash, From/To addresses, and amount."
                       error={errors.outgoing_transaction_screenshot}
                     />
+
                     <div className="mt-3 flex flex-col gap-2">
                       <label className={labelClass}>
                         Transaction Hash <span className="text-red-500">*</span>
@@ -791,84 +968,102 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                         placeholder="Outgoing transaction hash"
                         value={formData.outgoing_transaction_hash}
                         onChange={(e) => handleChange('outgoing_transaction_hash', e.target.value)}
-                        status={errors.outgoing_transaction_hash ? 'error' : ''}
+                        status={
+                          errors.outgoing_transaction_hash || validationResults.outgoing_transaction_hash?.result === 2
+                            ? 'error'
+                            : ''
+                        }
                       />
                       {errors.outgoing_transaction_hash && (
                         <p className="text-xs text-red-500">{errors.outgoing_transaction_hash}</p>
+                      )}
+                      {!errors.outgoing_transaction_hash && validationResults.outgoing_transaction_hash?.msg && (
+                        <p
+                          className={`text-xs ${
+                            validationResults.outgoing_transaction_hash.result === 2
+                              ? 'text-red-500'
+                              : 'text-yellow-500'
+                          }`}
+                        >
+                          {validationResults.outgoing_transaction_hash.msg}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="my-4 flex flex-col gap-2">
+                      <label className={labelClass}>Open outgoing transaction on block explorer</label>
+                      {outgoingTxUrl ? (
+                        <a
+                          href={outgoingTxUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex h-12 items-center gap-2 rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 leading-[46px] text-white"
+                        >
+                          <ExternalLink size={14} /> {outgoingTxUrl.replace('https://', '')}
+                        </a>
+                      ) : (
+                        <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
+                          Fill Network and Transaction Hash to view
+                        </div>
+                      )}
+                    </div>
+
+                    <ScreenshotUpload
+                      label="Transaction Screenshot"
+                      exampleImage="https://static.codatta.io/static/images/deposit_4_1767511761924.png"
+                      value={formData.outgoing_tx_screenshot}
+                      onChange={(v) => handleChange('outgoing_tx_screenshot', v)}
+                      onShowModal={showImageModal}
+                      error={errors.outgoing_tx_screenshot}
+                    />
+
+                    <div className="mt-3 flex flex-col gap-2">
+                      <label className={labelClass}>
+                        Exchange Deposit Address(From) <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        className={inputClass}
+                        placeholder="Exchange deposit address"
+                        value={formData.outgoing_tx_from_address}
+                        onChange={(e) => handleChange('outgoing_tx_from_address', e.target.value)}
+                        status={errors.outgoing_tx_from_address ? 'error' : ''}
+                      />
+                      {errors.outgoing_tx_from_address && (
+                        <p className="text-xs text-red-500">{errors.outgoing_tx_from_address}</p>
+                      )}
+                    </div>
+
+                    <div className="mt-3 flex flex-col gap-2">
+                      <label className={labelClass}>
+                        Exchange Hot Wallet(To) <span className="text-red-500">*</span>
+                      </label>
+                      <Input
+                        className={inputClass}
+                        placeholder="Exchange hot wallet address"
+                        value={formData.outgoing_tx_to_address}
+                        onChange={(e) => handleChange('outgoing_tx_to_address', e.target.value)}
+                        status={
+                          errors.outgoing_tx_to_address || validationResults.outgoing_tx_to_address?.result === 2
+                            ? 'error'
+                            : ''
+                        }
+                      />
+                      {errors.outgoing_tx_to_address && (
+                        <p className="text-xs text-red-500">{errors.outgoing_tx_to_address}</p>
+                      )}
+                      {!errors.outgoing_tx_to_address && validationResults.outgoing_tx_to_address?.msg && (
+                        <p
+                          className={`text-xs ${
+                            validationResults.outgoing_tx_to_address.result === 2 ? 'text-red-500' : 'text-yellow-500'
+                          }`}
+                        >
+                          {validationResults.outgoing_tx_to_address.msg}
+                        </p>
                       )}
                     </div>
                   </div>
                 )}
               </StepContainer>
-
-              {/* Step 6 */}
-              {formData.has_outgoing_transaction === 'yes' && (
-                <StepContainer step={6} title="Submit Outgoing Transaction Details">
-                  <div className="mb-4">
-                    <label className="mb-1 block text-[13px] font-semibold text-[#d0d0d0]">
-                      Open outgoing transaction on block explorer
-                    </label>
-                    <a
-                      href={outgoingTxUrl || '#'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`flex items-center gap-2 rounded-lg border border-sky-400/40 bg-sky-400/10 px-3 py-1.5 text-[13px] font-semibold text-sky-300 transition-all ${
-                        !outgoingTxUrl ? 'pointer-events-none opacity-70' : 'hover:bg-sky-400/20 hover:text-sky-100'
-                      }`}
-                    >
-                      {outgoingTxUrl ? (
-                        <>
-                          <ExternalLink size={14} /> {outgoingTxUrl}
-                        </>
-                      ) : (
-                        '(Fill Network and Transaction Hash in Step 5 to view)'
-                      )}
-                    </a>
-                  </div>
-
-                  <ScreenshotUpload
-                    label="Transaction Screenshot"
-                    exampleImage="https://static.codatta.io/static/images/deposit_4_1767511761924.png"
-                    value={formData.outgoing_tx_screenshot}
-                    onChange={(v) => handleChange('outgoing_tx_screenshot', v)}
-                    onShowModal={showImageModal}
-                    hint="Full-page screenshot including: URL, TxHash, From address, and To address."
-                    error={errors.outgoing_tx_screenshot}
-                  />
-
-                  <div className="mt-3 flex flex-col gap-2">
-                    <label className={labelClass}>
-                      From (Exchange Deposit Address) <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      className={inputClass}
-                      placeholder="Exchange deposit address"
-                      value={formData.outgoing_tx_from_address}
-                      onChange={(e) => handleChange('outgoing_tx_from_address', e.target.value)}
-                      status={errors.outgoing_tx_from_address ? 'error' : ''}
-                    />
-                    {errors.outgoing_tx_from_address && (
-                      <p className="text-xs text-red-500">{errors.outgoing_tx_from_address}</p>
-                    )}
-                  </div>
-
-                  <div className="mt-3 flex flex-col gap-2">
-                    <label className={labelClass}>
-                      To (Exchange Hot Wallet) <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      className={inputClass}
-                      placeholder="Exchange hot wallet address"
-                      value={formData.outgoing_tx_to_address}
-                      onChange={(e) => handleChange('outgoing_tx_to_address', e.target.value)}
-                      status={errors.outgoing_tx_to_address ? 'error' : ''}
-                    />
-                    {errors.outgoing_tx_to_address && (
-                      <p className="text-xs text-red-500">{errors.outgoing_tx_to_address}</p>
-                    )}
-                  </div>
-                </StepContainer>
-              )}
 
               <div className="mt-12 bg-[#D92B2B0A]">
                 <div className="mx-auto max-w-[1320px] px-6">
