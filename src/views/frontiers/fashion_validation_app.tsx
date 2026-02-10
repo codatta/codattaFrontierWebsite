@@ -271,7 +271,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   return (
     <AuthChecker>
       <Spin spinning={loading}>
-        <div className="flex h-screen flex-col gap-8 bg-[#F5F5F5]">
+        <div className="min-h-screen bg-[#F5F5F5]">
           <div className="z-10 flex-none bg-[#F7F8FA]">
             <MobileAppFrontierHeader
               title={<span className="font-bold">Fashion</span>}
@@ -319,7 +319,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 pb-8">
+          <div className="mt-8 px-4 pb-8">
             <div className="space-y-8">
               <QuestionSection title="Is this image valid?">
                 <div className="grid grid-cols-2 gap-3">
