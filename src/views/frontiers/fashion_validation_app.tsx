@@ -89,7 +89,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
 const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> = ({ templateId, isFeed }) => {
   const { taskId, uid } = useParams()
   const [questions, setQuestions] = useState<FashionQuestion[]>([])
-  const [frontierId, setFrontierId] = useState<string>()
+  // const [frontierId, setFrontierId] = useState<string>()
   const totalImages = questions.length
 
   const [loading, setLoading] = useState(false)
@@ -182,8 +182,6 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       return
     }
 
-    // TODO
-
     const serializedAnswers = answers.map((item, index) => ({
       image_url: item?.image_url || questions[index]?.image_url,
       is_valid: item!.is_valid as 'valid' | 'invalid',
@@ -247,7 +245,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       }
 
       console.log('frontieId', res.data.frontier_id)
-      setFrontierId(res.data.frontier_id)
+      // setFrontierId(res.data.frontier_id)
       setQuestions(fetchedQuestions)
       setAnswers(fetchedQuestions.map((q) => ({ image_url: q.image_url, uid: q.uid })))
     } catch (error) {

@@ -247,37 +247,70 @@ export default function Router() {
             }
           />
         </Route>
-        <Route
-          path="/frontier/project/FASHION_GUIDE_TO_DOWNLOAD/:taskId"
-          element={
-            <AppContainerDetector
-              inApp={<FashionGuideToDownloadApp templateId="FASHION_GUIDE_TO_DOWNLOAD" />}
-              notInApp={<FashionGuideToDownload />}
-            />
-          }
-        />
-        <Route
-          path="/frontier/project/AIRDROP_FOOD/:taskId"
-          element={
-            <AppContainerDetector
-              inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" />}
-              notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
-            />
-          }
-        />
-        <Route
-          path="/frontier/project/AIRDROP_FOOD_APP/:taskId"
-          element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />}
-        />
-        <Route
-          path="/frontier/project/AIRDROP_KNOB/:taskId"
-          element={
-            <AppContainerDetector
-              inApp={<AirdropKnobApp templateId="AIRDROP_KNOB" />}
-              notInApp={<AirdropKnob templateId="AIRDROP_KNOB" />}
-            />
-          }
-        />
+        <Route path="/frontier/project/FASHION_GUIDE_TO_DOWNLOAD/:taskId">
+          <Route
+            index
+            element={
+              <AppContainerDetector
+                inApp={<FashionGuideToDownloadApp templateId="FASHION_GUIDE_TO_DOWNLOAD" />}
+                notInApp={<FashionGuideToDownload />}
+              />
+            }
+          />
+          <Route
+            path="feed/:uid"
+            element={
+              <AppContainerDetector
+                inApp={<FashionGuideToDownloadApp templateId="FASHION_GUIDE_TO_DOWNLOAD" isFeed={true} />}
+                notInApp={<FashionGuideToDownload />}
+              />
+            }
+          />
+        </Route>
+        <Route path="/frontier/project/AIRDROP_FOOD/:taskId">
+          <Route
+            index
+            element={
+              <AppContainerDetector
+                inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" />}
+                notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
+              />
+            }
+          />
+          <Route
+            path="feed/:uid"
+            element={
+              <AppContainerDetector
+                inApp={<AirdropFoodApp templateId="AIRDROP_FOOD" isFeed={true} />}
+                notInApp={<AirdropFood templateId="AIRDROP_FOOD" />}
+              />
+            }
+          />
+        </Route>
+        <Route path="/frontier/project/AIRDROP_FOOD_APP/:taskId">
+          <Route index element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />} />
+          <Route path="feed/:uid" element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" isFeed={true} />} />
+        </Route>
+        <Route path="/frontier/project/AIRDROP_KNOB/:taskId">
+          <Route
+            index
+            element={
+              <AppContainerDetector
+                inApp={<AirdropKnobApp templateId="AIRDROP_KNOB" />}
+                notInApp={<AirdropKnob templateId="AIRDROP_KNOB" />}
+              />
+            }
+          />
+          <Route
+            path="feed/:uid"
+            element={
+              <AppContainerDetector
+                inApp={<AirdropKnobApp templateId="AIRDROP_KNOB" isFeed={true} />}
+                notInApp={<AirdropKnob templateId="AIRDROP_KNOB" />}
+              />
+            }
+          />
+        </Route>
         <Route
           path="/frontier/project/AIRDROP_CEX_HOT_WALLET_DEPOSIT/:taskId"
           element={<AirdropCexHotWalletDeposit templateId="AIRDROP_CEX_HOT_WALLET_DEPOSIT" />}
@@ -339,15 +372,26 @@ export default function Router() {
           path="/frontier/project/CRYPTO_AND_STOCK_INFO_COLLECTION/:taskId"
           element={<CryptoAndStockInfoCollection templateId="CRYPTO_AND_STOCK_INFO_COLLECTION" />}
         ></Route>
-        <Route
-          path="/frontier/project/REAL_WORLD_PHOTO_COLLECTION/:taskId"
-          element={
-            <AppContainerDetector
-              inApp={<RealWorldPhotoCollectionApp templateId="REAL_WORLD_PHOTO_COLLECTION" />}
-              notInApp={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
-            />
-          }
-        ></Route>
+        <Route path="/frontier/project/REAL_WORLD_PHOTO_COLLECTION/:taskId">
+          <Route
+            index
+            element={
+              <AppContainerDetector
+                inApp={<RealWorldPhotoCollectionApp templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+                notInApp={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+              />
+            }
+          />
+          <Route
+            path="feed/:uid"
+            element={
+              <AppContainerDetector
+                inApp={<RealWorldPhotoCollectionApp templateId="REAL_WORLD_PHOTO_COLLECTION" isFeed={true} />}
+                notInApp={<RealWorldPhotoCollection templateId="REAL_WORLD_PHOTO_COLLECTION" />}
+              />
+            }
+          />
+        </Route>
         <Route path="/frontier/project/X_BIND/:taskId" element={<FrontierSocialTwitterBind templateId="X_BIND" />} />
         <Route
           path="/frontier/project/X_FOLLOW/:taskId"
