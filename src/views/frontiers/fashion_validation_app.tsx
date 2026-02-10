@@ -6,7 +6,7 @@ import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
-import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
+import HelpDrawer from '@/components/mobile-app/help-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
@@ -95,6 +95,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
+  const [showInfoModal, setShowInfoModal] = useState(false)
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [answers, setAnswers] = useState<FashionAnswerDraft[]>([])
@@ -272,8 +273,11 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       <Spin spinning={loading}>
         <div className="flex h-screen flex-col gap-8 bg-[#F5F5F5]">
           <div className="z-10 flex-none bg-[#F7F8FA]">
-            <MobileAppFrontierHeader title={<span className="font-bold">Fashion</span>} onBack={onBack} />
-            <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} />
+            <MobileAppFrontierHeader
+              title={<span className="font-bold">Fashion</span>}
+              onBack={onBack}
+              onHelp={() => setShowInfoModal(true)}
+            />
 
             {/* Image preview */}
             <div className="px-4">
@@ -399,6 +403,24 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
             buttonText="Got it"
           />
         </div>
+
+        <HelpDrawer
+          open={showInfoModal}
+          onClose={() => setShowInfoModal(false)}
+          title="More About Frontier"
+          cards={[
+            {
+              preset: 'about',
+              title: 'Fashion',
+              content: [
+                {
+                  type: 'p',
+                  text: 'Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
+                }
+              ]
+            }
+          ]}
+        />
       </Spin>
     </AuthChecker>
   )
