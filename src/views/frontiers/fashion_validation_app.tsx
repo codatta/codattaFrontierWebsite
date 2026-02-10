@@ -93,7 +93,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   const totalImages = questions.length
 
   const [loading, setLoading] = useState(false)
-  const [modalShow, setModalShow] = useState(false)
+  const [modalShow, setModalShow] = useState(true)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
   const [showInfoModal, setShowInfoModal] = useState(false)
 
@@ -392,14 +392,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
             </div>
           </div>
 
-          <SuccessModal
-            open={modalShow}
-            onClose={onBack}
-            points={rewardPoints}
-            title="Successful"
-            message="To receive your reward, please verify the task on the Binance Wallet campaign page."
-            buttonText="Got it"
-          />
+          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
         </div>
 
         <HelpDrawer

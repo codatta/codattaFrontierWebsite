@@ -537,13 +537,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
           </div>
         )}
 
-        <SuccessModal
-          open={showSuccessModal}
-          onClose={() => window.history.back()}
-          points={rewardPoints}
-          title="Submitted!"
-          message="Your knob annotation has been submitted for review."
-        />
+        <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
       </Spin>
     </AuthChecker>
   )
