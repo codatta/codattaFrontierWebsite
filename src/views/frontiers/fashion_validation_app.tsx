@@ -93,7 +93,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   const totalImages = questions.length
 
   const [loading, setLoading] = useState(false)
-  const [modalShow, setModalShow] = useState(true)
+  const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
   const [showInfoModal, setShowInfoModal] = useState(false)
 
