@@ -233,7 +233,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
         return
       }
 
-      if (res.data.user_submit_flag === 1) {
+      if (res.data.user_submit_flag === 0) {
         setShowCompletedModal(true)
         return
       }

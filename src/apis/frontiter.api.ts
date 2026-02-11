@@ -91,8 +91,8 @@ export interface TaskDetail {
   reputation: number
   reward_points: null | number
 
-  user_reputation_flag: 0 | 1 | 2
-  user_submit_flag: 0 | 1
+  user_reputation_flag: 0 | 1 | 2 // 0: not qualified, 1: qualified, 2: qualified but not enough reputation
+  user_submit_flag: 0 | 1 // 1: can submit, 0: cannot submit
   tags: string[]
   audit_reason?: string
 }

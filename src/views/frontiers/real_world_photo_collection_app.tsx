@@ -83,7 +83,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
         throw new Error('Template not match!')
       }
 
-      if (res.data.user_submit_flag === 1) {
+      if (res.data.user_submit_flag === 0) {
         setShowCompletedModal(true)
         return
       }
