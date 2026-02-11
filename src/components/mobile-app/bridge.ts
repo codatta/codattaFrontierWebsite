@@ -183,9 +183,10 @@ const bridge = {
   },
 
   /** Go back in H5 history; if no history, exits webview to native */
-  goBack(): Promise<NativeResponse> | void {
+  goBack(): Promise<NativeResponse> {
     if (!isBridgeAvailable()) {
-      Promise.resolve(() => window?.history?.back())
+      window?.history?.back()
+      return Promise.resolve({ id: '', result: { success: true }, error: false })
     }
     return sendMessage('goBack')
   },

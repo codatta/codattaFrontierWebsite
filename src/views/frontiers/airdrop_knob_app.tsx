@@ -8,6 +8,8 @@ import AuthChecker from '@/components/app/auth-checker'
 import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import CompletedModal from '@/components/mobile-app/completed-modal'
+import bridge from '@/components/mobile-app/bridge'
 import Upload from '@/components/mobile-app/image-upload'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas-app'
@@ -35,6 +37,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
   const [exampleType, setExampleType] = useState<'original' | 'annotated'>('original')
   const [showAnnotationModal, setShowAnnotationModal] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
+  const [showCompletedModal, setShowCompletedModal] = useState(false)
 
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [image, setImage] = useState<HTMLImageElement | null>(null)
@@ -55,6 +58,11 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
 
       if (templateId && !templateId.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
+      }
+
+      if (res.data.user_submit_flag === 1) {
+        setShowCompletedModal(true)
+        return
       }
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to load task detail.'
@@ -537,7 +545,8 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
           </div>
         )}
 
-        <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
+        <SuccessModal open={showSuccessModal} onClose={() => bridge.goBack()} points={rewardPoints} />
+        <CompletedModal open={showCompletedModal} />
       </Spin>
     </AuthChecker>
   )

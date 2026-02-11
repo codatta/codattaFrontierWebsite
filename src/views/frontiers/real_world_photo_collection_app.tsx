@@ -10,6 +10,8 @@ import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import CompletedModal from '@/components/mobile-app/completed-modal'
+import bridge from '@/components/mobile-app/bridge'
 import Checkbox from '@/components/mobile-app/checkbox'
 import Upload from '@/components/mobile-app/image-upload'
 
@@ -40,6 +42,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showThemeDrawer, setShowThemeDrawer] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
+  const [showCompletedModal, setShowCompletedModal] = useState(false)
 
   const [formData, setFormData] = useState<PhotoCollectionFormData>({
     themeCategory: '',
@@ -78,6 +81,11 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
 
       if (templateId && !templateId.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
+      }
+
+      if (res.data.user_submit_flag === 1) {
+        setShowCompletedModal(true)
+        return
       }
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to load task detail.'
@@ -340,7 +348,8 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
           ]}
         />
 
-        <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
+        <SuccessModal open={showSuccessModal} onClose={() => bridge.goBack()} points={rewardPoints} />
+        <CompletedModal open={showCompletedModal} />
       </Spin>
     </AuthChecker>
   )
