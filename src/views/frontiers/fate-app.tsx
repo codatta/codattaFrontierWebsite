@@ -6,6 +6,7 @@ import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 import AuthChecker from '@/components/app/auth-checker'
 import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import CompletedModal from '@/components/mobile-app/completed-modal'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import MobileDatePicker from '@/components/mobile-app/date-picker'
 import ScrollTimePicker from '@/components/mobile-app/scroll-time-picker'
@@ -212,6 +213,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
   const [showChildModal, setShowChildModal] = useState(false)
   const [editingChild, setEditingChild] = useState<ChildInfo | null>(null)
   const [swipedChildId, setSwipedChildId] = useState<string | null>(null)
+  const [showCompletedModal, setShowCompletedModal] = useState(false)
 
   const allFieldsFilled = useMemo(() => {
     const checks = {
@@ -418,6 +420,12 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
         message.error('Template not match!')
         return
       }
+
+      if (taskDetail.data.user_submit_flag === 1) {
+        setShowCompletedModal(true)
+        return
+      }
+
       const totalRewards = taskDetail.data.reward_info
         .filter((item) => item.reward_mode === 'REGULAR')
         .reduce((acc, cur) => acc + cur.reward_value, 0)
@@ -734,6 +742,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
           </div>
 
           <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
+          <CompletedModal open={showCompletedModal} />
 
           {/* Child Information Drawer */}
           {showChildModal && editingChild && (

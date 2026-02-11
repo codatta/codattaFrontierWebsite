@@ -6,6 +6,7 @@ import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
 import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
+import CompletedModal from '@/components/mobile-app/completed-modal'
 
 interface StepCardProps {
   stepNumber: number
@@ -56,6 +57,7 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
   const [, setFrontierId] = useState<string>()
   const [loading, setLoading] = useState(false)
   const [showInfoModal, setShowInfoModal] = useState(false)
+  const [showCompletedModal, setShowCompletedModal] = useState(false)
 
   const fetchTaskDetail = useCallback(async () => {
     if (!taskId && !uid) return
@@ -65,6 +67,11 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
 
       if (templateId && !templateId.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
+      }
+
+      if (res.data.user_submit_flag === 1) {
+        setShowCompletedModal(true)
+        return
       }
 
       setFrontierId(res.data.frontier_id)
@@ -179,6 +186,8 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
             }
           ]}
         />
+
+        <CompletedModal open={showCompletedModal} />
       </Spin>
     </AuthChecker>
   )

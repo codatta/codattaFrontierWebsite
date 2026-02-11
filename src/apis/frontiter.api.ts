@@ -92,6 +92,7 @@ export interface TaskDetail {
   reward_points: null | number
 
   user_reputation_flag: 0 | 1 | 2
+  user_submit_flag: 0 | 1
   tags: string[]
   audit_reason?: string
 }
