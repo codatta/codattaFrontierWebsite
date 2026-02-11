@@ -733,14 +733,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
             </button>
           </div>
 
-          <SuccessModal
-            open={modalShow}
-            onClose={onBack}
-            title="Successful"
-            message="Other rewards will issue automatically after answer verification."
-            points={rewardPoints}
-            buttonText="Got it"
-          />
+          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
 
           {/* Child Information Drawer */}
           {showChildModal && editingChild && (

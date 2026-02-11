@@ -23,8 +23,8 @@ interface UploadedImage {
   hash: string
 }
 
-export default function AirdropKnobApp({ templateId }: { templateId?: string }) {
-  const { taskId } = useParams()
+export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: string; isFeed?: boolean }) {
+  const { taskId, uid } = useParams()
   const { message } = App.useApp()
   const [loading, setLoading] = useState(false)
   const [imageLoading, setImageLoading] = useState(false)
@@ -48,10 +48,10 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
   const annotationCanvasRef = useRef<KnobAnnotationCanvasRef>(null)
 
   const fetchTaskDetail = useCallback(async () => {
-    if (!taskId) return
+    if (!taskId && !uid) return
     setLoading(true)
     try {
-      const res = await frontiterApi.getTaskDetail(taskId)
+      const res = isFeed && uid ? await frontiterApi.getFeedTaskDetail(uid) : await frontiterApi.getTaskDetail(taskId!)
 
       if (templateId && !templateId.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
@@ -62,7 +62,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
     } finally {
       setLoading(false)
     }
-  }, [message, taskId, templateId])
+  }, [message, taskId, uid, isFeed, templateId])
 
   useEffect(() => {
     fetchTaskDetail()
@@ -537,13 +537,7 @@ export default function AirdropKnobApp({ templateId }: { templateId?: string }) 
           </div>
         )}
 
-        <SuccessModal
-          open={showSuccessModal}
-          onClose={() => window.history.back()}
-          points={rewardPoints}
-          title="Submitted!"
-          message="Your knob annotation has been submitted for review."
-        />
+        <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
       </Spin>
     </AuthChecker>
   )

@@ -89,11 +89,11 @@ const ICON_MAP: Record<string, React.ElementType> = {
 const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> = ({ templateId, isFeed }) => {
   const { taskId, uid } = useParams()
   const [questions, setQuestions] = useState<FashionQuestion[]>([])
-  const [frontierId, setFrontierId] = useState<string>()
+  // const [frontierId, setFrontierId] = useState<string>()
   const totalImages = questions.length
 
   const [loading, setLoading] = useState(false)
-  const [modalShow, setModalShow] = useState(false)
+  const [modalShow, setModalShow] = useState(true)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
   const [showInfoModal, setShowInfoModal] = useState(false)
 
@@ -182,8 +182,6 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       return
     }
 
-    // TODO
-
     const serializedAnswers = answers.map((item, index) => ({
       image_url: item?.image_url || questions[index]?.image_url,
       is_valid: item!.is_valid as 'valid' | 'invalid',
@@ -247,7 +245,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       }
 
       console.log('frontieId', res.data.frontier_id)
-      setFrontierId(res.data.frontier_id)
+      // setFrontierId(res.data.frontier_id)
       setQuestions(fetchedQuestions)
       setAnswers(fetchedQuestions.map((q) => ({ image_url: q.image_url, uid: q.uid })))
     } catch (error) {
@@ -271,7 +269,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   return (
     <AuthChecker>
       <Spin spinning={loading}>
-        <div className="flex h-screen flex-col gap-8 bg-[#F5F5F5]">
+        <div className="min-h-screen bg-[#F5F5F5]">
           <div className="z-10 flex-none bg-[#F7F8FA]">
             <MobileAppFrontierHeader
               title={<span className="font-bold">Fashion</span>}
@@ -319,7 +317,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 pb-8">
+          <div className="mt-8 px-4 pb-8">
             <div className="space-y-8">
               <QuestionSection title="Is this image valid?">
                 <div className="grid grid-cols-2 gap-3">
@@ -394,14 +392,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
             </div>
           </div>
 
-          <SuccessModal
-            open={modalShow}
-            onClose={onBack}
-            points={rewardPoints}
-            title="Successful"
-            message="To receive your reward, please verify the task on the Binance Wallet campaign page."
-            buttonText="Got it"
-          />
+          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
         </div>
 
         <HelpDrawer

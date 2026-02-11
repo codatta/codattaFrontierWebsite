@@ -14,7 +14,7 @@ import HelpDrawer from '@/components/mobile-app/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
 import ExampleRuler from '@/assets/frontier/food-annotation-app/example-1.png'
 // import MobileAppFrontierBanner from '@/components/mobile-app/frontier-banner'
-import bridge from '@/components/app/bridge'
+import bridge from '@/components/mobile-app/bridge'
 
 interface FoodAnnotationFormData {
   foodImage: UploadedImage[]
@@ -64,11 +64,11 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
   })
 
   const [errors, setErrors] = useState<Partial<Record<keyof FoodAnnotationFormData, string>>>({})
-  const { taskId } = useParams()
+  const { taskId, uid } = useParams()
   const [loading, setLoading] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
-  const [frontierId, setFrontierId] = useState<string>()
+  // const [frontierId, setFrontierId] = useState<string>()
   const [showMeasurementToolPhotoDrawer, setShowMeasurementToolPhotoDrawer] = useState(false)
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
   const [showRequirementsModal, setShowRequirementsModal] = useState(true)
@@ -217,7 +217,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
   }
 
   const checkTaskStatus = useCallback(async () => {
-    if (!taskId || !templateId) {
+    if (!taskId && !uid) {
       message.error('Task ID or template ID is required!')
       return
     }
@@ -225,18 +225,18 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     setLoading(true)
 
     try {
-      const taskDetail = await frontiterApi.getTaskDetail(taskId!)
-      if (taskDetail.data.data_display.template_id !== templateId) {
+      const res = isFeed && uid ? await frontiterApi.getFeedTaskDetail(uid) : await frontiterApi.getTaskDetail(taskId!)
+      if (res.data.data_display.template_id !== templateId) {
         message.error('Template not match!')
         return
       }
-      setFrontierId(taskDetail.data.frontier_id)
+      // setFrontierId(res.data.frontier_id)
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to get task detail!')
     } finally {
       setLoading(false)
     }
-  }, [taskId, templateId])
+  }, [taskId, templateId, uid, isFeed])
 
   const onBack = () => bridge.goBack()
 
@@ -474,14 +474,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
             </button>
           </div>
 
-          <SuccessModal
-            open={modalShow}
-            onClose={onBack}
-            title="Successful"
-            message="Other rewards will issue automatically after answer verification."
-            points={rewardPoints}
-            buttonText="Got it"
-          />
+          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
         </div>
       </Spin>
 
