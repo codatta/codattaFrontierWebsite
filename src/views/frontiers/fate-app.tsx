@@ -421,7 +421,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
         return
       }
 
-      if (taskDetail.data.user_submit_flag === 1) {
+      if (taskDetail.data.user_submit_flag === 0) {
         setShowCompletedModal(true)
         return
       }

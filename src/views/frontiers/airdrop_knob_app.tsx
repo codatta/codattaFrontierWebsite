@@ -60,7 +60,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
         throw new Error('Template not match!')
       }
 
-      if (res.data.user_submit_flag === 1) {
+      if (res.data.user_submit_flag === 0) {
         setShowCompletedModal(true)
         return
       }
