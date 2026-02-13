@@ -10,7 +10,7 @@ const FashionDataSet = lazy(() => import('@/views/dataset/fashion'))
 const LLMFailureCasesDataSet = lazy(() => import('@/views/dataset/llm-failure-cases'))
 
 export const datasetRoutes = (
-  <Route path="datasets">
+  <Route path="dataset">
     <Route path="food-science" element={<FoodScienceDataSet />} />
     <Route path="healthcare" element={<HealthcareDataSet />} />
     <Route path="crypto-addresses" element={<CryptoAddressesDataSet />} />
