@@ -4,7 +4,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 
 import frontiterApi, { TaskStakeInfo } from '@/apis/frontiter.api'
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 
 interface ToStakeModalProps {

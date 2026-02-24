@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { ExternalLink, Loader2 } from 'lucide-react'
 
 import userApi, { ClaimableReward, RewardClaimSignResponse } from '@/apis/user.api'
-import { shortenAddress } from '@/utils/wallet-address'
+import { shortenAddress } from '@/utils/format'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import { useContractWrite } from '@/hooks/use-contract-write'
 import LockRewardContract from '@/contracts/lockup-reward.abi'

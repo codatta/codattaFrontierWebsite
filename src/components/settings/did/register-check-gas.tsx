@@ -3,7 +3,7 @@ import { getAddress, PublicClient } from 'viem'
 import { Button, Spin } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons'
 
-import { shortenAddress } from '@/utils/wallet-address'
+import { shortenAddress } from '@/utils/format'
 import { useGasEstimation } from '@/hooks/use-gas-estimation'
 import contract from '@/contracts/did-base-registrar.abi'
 import { useCodattaConnectContext } from 'codatta-connect'

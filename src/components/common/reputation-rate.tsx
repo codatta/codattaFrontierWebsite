@@ -1,7 +1,7 @@
 // import { StarFilled } from '@ant-design/icons'
 // import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 
 // function RateItem(props: { value: number; bgColor?: string }) {
 //   const { value, bgColor } = props

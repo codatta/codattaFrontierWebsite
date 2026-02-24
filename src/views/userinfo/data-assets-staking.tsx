@@ -12,7 +12,7 @@ import TokenStakeModal from '@/components/settings/token-stake-modal'
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 import { useContractRead } from '@/hooks/use-contract-read'
 import { useCurrentWalletAddress } from '@/hooks/use-current-wallet-address'
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 
 export default function Staking() {
   const walletAddress = useCurrentWalletAddress()

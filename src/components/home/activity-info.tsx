@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 
 import { ChevronUp } from 'lucide-react'
 
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 import frontierApi, { FrontierActivityInfoItem, SubmissionItem } from '@/apis/frontiter.api'
 import XNYCoinIcon from '@/assets/home/xyn-coin-icon.svg?react'
 import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'

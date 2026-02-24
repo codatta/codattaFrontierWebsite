@@ -4,7 +4,7 @@ import { message, Spin, Modal } from 'antd'
 import { cn } from '@udecode/cn'
 
 import commonApi from '@/api-v1/common.api'
-import { calculateFileHash } from '@/utils/file-hash'
+import { calculateFileHash } from '@/utils/file'
 
 export interface UploadedImage {
   url: string

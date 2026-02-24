@@ -19,7 +19,7 @@ import { ReactNode, useEffect, useMemo, useRef, useState, useCallback } from 're
 import { useLocation, useNavigate } from 'react-router-dom'
 
 import AppUser from '@/components/app/app-user'
-import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
+import { trackEvent, TRACK_CATEGORY } from '@/utils/analytics'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 
 export interface MenuItem {

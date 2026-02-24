@@ -7,7 +7,7 @@ import USDTCoinIcon from '@/assets/home/usdt-coin-icon.svg?react'
 import StarImage from '@/assets/frontier/home/stars.png'
 
 import { frontierStoreActions, useFrontierStore } from '@/stores/frontier.store'
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 import { useUserStore } from '@/stores/user.store'
 
 const Frontiers = () => {

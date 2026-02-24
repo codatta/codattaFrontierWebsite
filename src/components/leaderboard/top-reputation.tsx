@@ -10,7 +10,7 @@ import Empty from '@/components/common/empty'
 
 import { rankStore } from '@/stores/rank.store'
 
-import { formatNumber, truncateStr } from '@/utils/str'
+import { formatNumber, truncateStr } from '@/utils/format'
 
 function UserRank(props: { rank: number; className: string }) {
   const { rank } = props

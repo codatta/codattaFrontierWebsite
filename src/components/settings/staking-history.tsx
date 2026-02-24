@@ -4,7 +4,7 @@ import { ExternalLink } from 'lucide-react'
 import dayjs from 'dayjs'
 
 import userApi, { StakeRecordItem } from '@/apis/user.api'
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
 
 interface HistoryItem {

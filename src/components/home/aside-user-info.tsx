@@ -18,8 +18,7 @@ import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 
-import { formatNumber } from '@/utils/str'
-import { shortenAddress } from '@/utils/wallet-address'
+import { formatNumber, shortenAddress } from '@/utils/format'
 
 export default function UserInfoSection() {
   const navigate = useNavigate()

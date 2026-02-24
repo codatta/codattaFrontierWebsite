@@ -1,5 +1,5 @@
 import { userStoreActions } from '@/stores/user.store'
-import { authRedirect } from '@/utils/auth-redirect'
+import { authRedirect } from '@/utils/auth'
 // import { useCodattaConnectContext } from 'codatta-connect'
 import { Navigate } from 'react-router-dom'
 

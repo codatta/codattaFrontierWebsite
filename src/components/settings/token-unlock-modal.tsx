@@ -10,8 +10,7 @@ import { useContractWrite } from '@/hooks/use-contract-write'
 
 import LockRewardContract from '@/contracts/lockup-reward.abi'
 import { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'
-import { shortenAddress } from '@/utils/wallet-address'
-import { formatNumber } from '@/utils/str'
+import { shortenAddress, formatNumber } from '@/utils/format'
 
 import SuccessIcon from '@/assets/frontier/crypto/pc-approved-icon.svg'
 

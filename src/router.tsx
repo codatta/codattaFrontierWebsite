@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
-import { trackPageView } from './utils/track'
+import { trackPageView } from '@/utils/analytics'
 import GlobalModalHost from './components/app/global-modal-host'
 
 import {

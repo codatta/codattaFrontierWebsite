@@ -2,7 +2,7 @@ import userApi, { RewardRecordHistoryItem } from '@/apis/user.api'
 import { message, Pagination, Spin, Tooltip } from 'antd'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
-import { maskAddress } from '@/utils/wallet-address'
+import { maskAddress } from '@/utils/format'
 
 const statusColorMap = new Map<string, string>([
   ['Success', '#5DDD22'],

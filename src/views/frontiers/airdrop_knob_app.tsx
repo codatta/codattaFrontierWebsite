@@ -12,7 +12,7 @@ import Upload from '@/components/mobile-app/image-upload'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas-app'
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop/knob/types'
-import { calculateFileHash } from '@/utils/file-hash'
+import { calculateFileHash } from '@/utils/file'
 import { AppToastContainer } from '@/hooks/use-app-toast'
 
 import imageExample from '@/assets/frontier/knob/raw-app.png'

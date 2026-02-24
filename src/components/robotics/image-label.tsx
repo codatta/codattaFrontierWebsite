@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import DraggableArrow from './draggable-arrow'
 import useGiftStore from '@/stores/image-label-store'
-import { Frame } from '@/utils/gif'
+import { Frame } from '@/utils/media'
 
 export default function ImageLabel() {
   const canvasRef = useRef<HTMLCanvasElement>(null)

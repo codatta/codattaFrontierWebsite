@@ -12,7 +12,7 @@ import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import PrivacyModel from '@/components/frontier/info-survey/privacy-model'
 
 import { useIsMobile } from '@/hooks/use-is-mobile'
-import { isValidEmail } from '@/utils/str'
+import { isValidEmail } from '@/utils/validation'
 
 import frontiterApi from '@/apis/frontiter.api'
 import { BasicInfoKey, ResultType } from '@/components/frontier/info-survey/types'

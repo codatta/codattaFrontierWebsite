@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Mail } from 'lucide-react'
 
 import { useUserStore, userStoreActions } from '@/stores/user.store'
-import { isValidEmail } from '@/utils/str'
+import { isValidEmail } from '@/utils/validation'
 import { cn } from '@udecode/cn'
 
 export default function Task1({

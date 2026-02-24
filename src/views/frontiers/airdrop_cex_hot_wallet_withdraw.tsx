@@ -13,7 +13,7 @@ import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step
 import { WithdrawFormData } from '@/components/frontier/airdrop/cex-hot-wallet/types'
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
-import { isValidCryptoString } from '@/utils/str'
+import { isValidCryptoString } from '@/utils/validation'
 import { ConfigProvider, DatePicker, Input, message, Modal, Select, Spin, theme } from 'antd'
 import locale from 'antd/es/date-picker/locale/en_US'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
