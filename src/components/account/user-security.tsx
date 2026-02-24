@@ -11,7 +11,7 @@ import { UserAccount } from '@/apis/user.api'
 
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 
-import { shortenAddress } from '@/utils/wallet-address'
+import { shortenAddress } from '@/utils/format'
 
 function EmailAccountItem(props: { account: UserAccount; onEmailChangeClick: () => void }) {
   const account = props.account

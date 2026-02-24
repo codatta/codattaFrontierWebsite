@@ -4,8 +4,7 @@ import { message, Modal } from 'antd'
 import userApi from '@/apis/user.api'
 import boosterApi from '@/apis/booster.api'
 import { useCountdown } from '@/hooks/use-countdown'
-import { isValidEmail } from '@/utils/str'
-import { checkQS100Email } from '@/utils/check-educational-email'
+import { isValidEmail, checkQS100Email } from '@/utils/validation'
 
 export interface UploadedImage {
   url: string

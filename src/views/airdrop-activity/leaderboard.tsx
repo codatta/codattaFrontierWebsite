@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import airdropApi, { AirdropSeasonRankItem } from '@/apis/airdrop-actvitiy'
 import { useAirdropActivityStore } from '@/stores/airdrop-activity.store'
 import TransitionEffect from '@/components/common/transition-effect'
-import { getTokenName } from '@/utils/token-name'
+import { getTokenName } from '@/utils/format'
 
 function Headerback() {
   const navigate = useNavigate()

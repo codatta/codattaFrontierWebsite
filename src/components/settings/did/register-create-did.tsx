@@ -10,7 +10,7 @@ import WaitingIcon from '@/assets/userinfo/loader-line-icon-2.svg?react'
 import PendingIcon from '@/assets/userinfo/loader-line-icon.svg?react'
 import FailIcon from '@/assets/userinfo/close-line-icon.svg?react'
 
-import { shortenAddress } from '@/utils/wallet-address'
+import { shortenAddress } from '@/utils/format'
 import contract from '@/contracts/did-base-registrar.abi'
 import registryContract from '@/contracts/did-base-registry.abi'
 import accountApi from '@/apis/account.api'

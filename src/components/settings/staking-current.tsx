@@ -5,7 +5,7 @@ import { formatEther } from 'viem'
 import dayjs from 'dayjs'
 import { cn } from '@udecode/cn'
 
-import { formatNumber } from '@/utils/str'
+import { formatNumber } from '@/utils/format'
 import userApi from '@/apis/user.api'
 
 import StakingContract, { STAKE_ASSET_TYPE } from '@/contracts/staking.abi'

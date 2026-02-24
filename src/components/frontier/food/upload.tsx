@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Plus, X } from 'lucide-react'
 import { message, Spin } from 'antd'
-import { calculateFileHash } from '@/utils/file-hash'
+import { calculateFileHash } from '@/utils/file'
 import commonApi from '@/api-v1/common.api'
 import { cn } from '@udecode/cn'
 

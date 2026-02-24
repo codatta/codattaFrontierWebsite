@@ -3,7 +3,7 @@ import { Camera, X } from 'lucide-react'
 import { cn } from '@udecode/cn'
 import { message } from 'antd'
 import commonApi from '@/api-v1/common.api'
-import { calculateFileHash } from '@/utils/file-hash'
+import { calculateFileHash } from '@/utils/file'
 
 interface UploadedImage {
   url: string

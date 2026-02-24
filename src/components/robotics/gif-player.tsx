@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Button, Slider, message } from 'antd'
-import { Frame, loadGifFrames } from '@/utils/gif'
+import { loadGifFrames, Frame } from '@/utils/media'
 import FullscreenProgressBar from './fullscreen-progress-bar'
 import playIcon from '@/assets/common/play-circle.png'
 import pauseIcon from '@/assets/robotics/pause-circle.png'

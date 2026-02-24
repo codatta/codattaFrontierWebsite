@@ -1,5 +1,5 @@
 import { appStoreActions } from '@/stores/app.store'
-import { authRedirect } from '@/utils/auth-redirect'
+import { authRedirect } from '@/utils/auth'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import cookies from 'js-cookie'
 

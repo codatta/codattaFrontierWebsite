@@ -1,7 +1,7 @@
 import { WalletItem } from 'codatta-connect'
 import { ArrowLeft, Wallet } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { shortenAddress } from '@/utils/wallet-address'
+import { shortenAddress } from '@/utils/format'
 import { Button } from 'antd'
 
 export default function WalletConfirmView(props: {

@@ -2,8 +2,8 @@ import { useUserStore } from '@/stores/user.store'
 import { Avatar, Tooltip } from 'antd'
 import { LogOut } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { authRedirect } from '@/utils/auth-redirect'
-import { TRACK_CATEGORY, trackEvent } from '@/utils/track'
+import { authRedirect } from '@/utils/auth'
+import { TRACK_CATEGORY, trackEvent } from '@/utils/analytics'
 
 export default function AppUser() {
   const { info, username } = useUserStore()

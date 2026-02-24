@@ -1,3 +1,7 @@
+/**
+ * String and number formatting utilities
+ */
+
 export function capitalizeFirstLetter(str: string = ''): string {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
@@ -46,21 +50,21 @@ export function timeToUTC(time: string): string {
   return new Date(time).toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
 }
 
-export function isValidEmail(email: string = ''): boolean {
-  if (!email) return false
-  const emailRegex =
-    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  return emailRegex.test(String(email).toLowerCase())
+export function shortenAddress(address: string, len = 16) {
+  if (!address) return ''
+  if (address.length <= len) return address
+  return `${address.slice(0, len / 2)}...${address.slice(-(len / 2))}`
 }
 
-export function isValidGoogleEmail(email: string = ''): boolean {
-  if (!isValidEmail(email)) return false
-  const domain = email.split('@')[1]
-  return domain === 'gmail.com' || domain === 'google.com'
+export function maskAddress(address: string, size = 4) {
+  if (!address) return ''
+  if (!address.startsWith('0x')) return address
+  const body = address.slice(2)
+  if (body.length <= 8) return address
+  return `0x${body.slice(0, size)}…${body.slice(-size)}`
 }
 
-export function isValidCryptoString(val: string, minLength: number = 20): boolean {
-  if (!val) return false
-  // Check length and allowed characters (alphanumeric, plus : for prefixes, - and _ for safety)
-  return val.length >= minLength && /^[a-zA-Z0-9:\-_]+$/.test(val)
+export const getTokenName = (token: string) => {
+  if (token === 'XnYCoin') return 'XNY'
+  return token
 }

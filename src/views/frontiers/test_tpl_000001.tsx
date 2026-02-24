@@ -7,7 +7,7 @@ import AuthChecker from '@/components/app/auth-checker'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import commonApi from '@/api-v1/common.api'
-import { calculateFileHash } from '@/utils/file-hash'
+import { calculateFileHash } from '@/utils/file'
 
 interface UploadedImage {
   url: string

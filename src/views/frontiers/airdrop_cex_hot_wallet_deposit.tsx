@@ -15,7 +15,7 @@ import { DepositFormData } from '@/components/frontier/airdrop/cex-hot-wallet/ty
 import { ExpertRedline } from '@/components/frontier/airdrop/knob/guideline'
 import SubmitSuccessModal from '@/components/robotics/submit-success-modal'
 import { UploadedImage } from '@/components/frontier/airdrop/UploadImg'
-import { isValidCryptoString } from '@/utils/str'
+import { isValidCryptoString } from '@/utils/validation'
 
 import { ConfigProvider, DatePicker, Input, message, Modal, Radio, Select, Spin, theme } from 'antd'
 import type { RadioChangeEvent } from 'antd'

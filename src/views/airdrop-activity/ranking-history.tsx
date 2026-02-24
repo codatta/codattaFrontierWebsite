@@ -5,7 +5,7 @@ import airdropApi, { AirdropRankHistoryItem } from '@/apis/airdrop-actvitiy'
 import { Empty, message, Spin } from 'antd'
 import { Pagination } from 'antd'
 import dayjs from 'dayjs'
-import { getTokenName } from '@/utils/token-name'
+import { getTokenName } from '@/utils/format'
 
 function Headerback() {
   const navigate = useNavigate()

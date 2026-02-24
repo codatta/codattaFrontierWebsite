@@ -5,7 +5,7 @@ import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from '
 import { base, mainnet, bsc, arbitrum, optimism, polygon, sepolia } from 'viem/chains'
 import { getAddress } from 'viem'
 
-import { shortenAddress } from '@/utils/wallet-address'
+import { shortenAddress } from '@/utils/format'
 
 import contract from '@/contracts/did-base-registrar.abi'
 import { userStoreActions, useUserStore } from '@/stores/user.store'

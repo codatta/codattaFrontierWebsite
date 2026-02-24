@@ -1,4 +1,4 @@
-import { authRedirect } from '@/utils/auth-redirect'
+import { authRedirect } from '@/utils/auth'
 import { AxiosHeaders, type AxiosResponse, type InternalAxiosRequestConfig } from 'axios'
 import CryptoJS from 'crypto-js'
 

@@ -1,3 +1,7 @@
+/**
+ * Authentication utilities
+ */
+
 export function authRedirect() {
   localStorage.removeItem('token')
   localStorage.removeItem('uid')

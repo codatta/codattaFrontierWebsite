@@ -1,4 +1,4 @@
-import { Frame } from '@/utils/gif'
+import { Frame } from '@/utils/media'
 import { proxy, useSnapshot } from 'valtio'
 
 interface ImageLabelStore {
