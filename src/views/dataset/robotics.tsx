@@ -32,7 +32,7 @@ export default function Robotics() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/RoboManip-Traj-Demo'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('robotics')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }

@@ -28,7 +28,7 @@ export default function LLMFailureCases() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/LLM-Failure-Cases'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('llm-failure-cases')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }
