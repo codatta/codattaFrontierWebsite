@@ -36,6 +36,7 @@ const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 const FateApp = lazy(() => import('@/views/frontiers/fate-app'))
 const VivolightValidation = lazy(() => import('@/views/frontiers/vivolight/vivolight_validation'))
+const TestTpl000001 = lazy(() => import('@/views/frontiers/test_tpl_000001'))
 
 // --- Social task templates ---
 const FrontierSocialDiscordBind = lazy(() => import('@/views/frontiers/social-tasks/discord-bind'))
@@ -157,6 +158,9 @@ export const frontierProjectRoutes = (
 
     {/* Vivolight */}
     {simpleTemplateRoute('VIVOLIGHT_VALIDATION', VivolightValidation)}
+
+    {/* Test templates */}
+    {simpleTemplateRoute('TEST_TPL_000001', TestTpl000001)}
 
     {/* App-adaptive templates (web + app with feed sub-route) */}
     {appDetectorRoute('FASHION_VALIDATION', FashionValidation, FashionValidationApp)}

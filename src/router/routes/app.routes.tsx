@@ -51,6 +51,7 @@ const FrontierHistory = lazy(() => import('@/views/frontiers/history'))
 
 // --- Mobile ---
 const UserInfoReputationApp = lazy(() => import('@/views/userinfo/reputation-app'))
+const ReferralApp = lazy(() => import('@/views/referral-app'))
 
 export const appRoutes = (
   <>
@@ -59,6 +60,7 @@ export const appRoutes = (
     {/* Mobile routes */}
     <Route path="/m">
       <Route path="settings/reputation" element={<UserInfoReputationApp />} />
+      <Route path="referral" element={<ReferralApp />} />
     </Route>
 
     {/* Main app routes (with AppLayout) */}

@@ -6,8 +6,8 @@ import Input from './input'
 import Upload from './upload'
 import Tips from './tips'
 
-import image1 from '@/assets/frontier/kitchen/image_1.png'
-import image2 from '@/assets/frontier/kitchen/image_2.png'
+import image1 from '@/assets/frontier/kitchen/example-1.png'
+import image2 from '@/assets/frontier/kitchen/example-2.png'
 import type { FormData } from './types'
 import { message } from 'antd'
 

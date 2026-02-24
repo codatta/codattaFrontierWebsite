@@ -15,8 +15,8 @@ import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop/knob/ty
 import { calculateFileHash } from '@/utils/file-hash'
 import { AppToastContainer } from '@/hooks/use-app-toast'
 
-import imageExample from '@/assets/frontier/knob/raw_app.png'
-import labelExample from '@/assets/frontier/knob/label_app.png'
+import imageExample from '@/assets/frontier/knob/raw-app.png'
+import labelExample from '@/assets/frontier/knob/label-app.png'
 
 interface UploadedImage {
   url: string
