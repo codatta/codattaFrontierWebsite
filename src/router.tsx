@@ -13,7 +13,8 @@ import {
   frontierLayoutRoutes,
   frontierProjectRoutes,
   devRoutes,
-  notFoundRoute
+  notFoundRoute,
+  templateRuntimeRoutes
 } from './router/routes'
 
 export default function Router() {
@@ -31,7 +32,7 @@ export default function Router() {
         {frontierProjectRoutes}
 
         {devRoutes}
-
+        {templateRuntimeRoutes}
         {notFoundRoute}
       </Routes>
       <GlobalModalHost />

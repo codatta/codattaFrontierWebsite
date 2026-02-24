@@ -31,6 +31,7 @@
     "@ant-design/icons": "^5.5.2",
     "@commitlint/config-conventional": "^19.6.0",
     "@commitlint/cz-commitlint": "^19.5.0",
+    "@module-federation/runtime": "^2.0.1",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slider": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",

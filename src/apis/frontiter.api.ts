@@ -65,6 +65,7 @@ export interface TaskDetail {
   submission_id: string
   task_type: string
   task_type_name: string
+  template_id: string
   data_display: {
     gif_resource: string
     template_id: string
@@ -73,6 +74,8 @@ export interface TaskDetail {
     link?: string
     bot_id?: string
     data_source?: string
+    web_template_url?: string
+    app_template_url?: string
   }
   questions?: CMUDataRequirements[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }
