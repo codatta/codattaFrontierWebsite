@@ -15,12 +15,15 @@ dist-ssr
 # Editor directories and files
 !.vscode/extensions.json
 .vscode/settings.json
+.windsurf
+scripts
 # .windsurf - keep rules/skills/workflows in git for team sharing
 .idea
 .windsurf/*
 !.windsurf/rules/
 !.windsurf/skills/
 !.windsurf/workflows/
+!.windsurf/mcp.json
 .DS_Store
 *.suo
 *.ntvs*

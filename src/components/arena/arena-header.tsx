@@ -1,7 +1,7 @@
 import { cn } from '@udecode/cn'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import logo from '@/assets/chatbot/logo-notext-svg.svg'
+import logo from '@/assets/common/logo-white-notext.svg'
 import { useUserStore } from '@/stores/user.store'
 import { useArenaStore } from '@/stores/arena.store'
 

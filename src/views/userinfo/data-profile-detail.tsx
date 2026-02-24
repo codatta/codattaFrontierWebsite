@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 import { ArrowLeft, Check, ChevronDown, Database, ExternalLink, Fingerprint, X } from 'lucide-react'
 import { type ReactNode, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import LogoLightSvg from '@/assets/common/logo-light.svg?react'
+import LogoLightSvg from '@/assets/common/logo-white-notext.svg?react'
 
 function DataProfileDetailPageHeader() {
   const navigate = useNavigate()

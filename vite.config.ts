@@ -2,13 +2,10 @@ import { HttpProxy, ProxyOptions, defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 import { ClientRequest, IncomingMessage, ServerResponse } from 'http'
-import mockDevServerPlugin from 'vite-plugin-mock-dev-server'
 import svgr from 'vite-plugin-svgr'
 import dotenv from 'dotenv'
 
 dotenv.config()
-
-const isDebugMode = process.env.NODE_ENV === 'debug' || false
 
 function proxyDebug(proxy: HttpProxy.Server, _options: ProxyOptions) {
   proxy.on(
@@ -35,20 +32,7 @@ function proxyDebug(proxy: HttpProxy.Server, _options: ProxyOptions) {
 export default defineConfig({
   base: process.env.CDN_ASSETS_PATH ? `https://s.codatta.io/${process.env.CDN_ASSETS_PATH}` : undefined,
   assetsInclude: ['**/*.md'],
-  plugins: [
-    react(),
-    svgr(),
-    ...[
-      isDebugMode
-        ? [
-            mockDevServerPlugin({
-              prefix: '/api',
-              include: ['src/mock/**/*.mock.ts']
-            })
-          ]
-        : []
-    ]
-  ],
+  plugins: [react(), svgr()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src')

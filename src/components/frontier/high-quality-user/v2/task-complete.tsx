@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import Header from '@/components/booster/header'
 
 import completeBg from '@/assets/booster/task-complete-bg.png'
-import QuizIcon from '@/assets/booster/quiz-success.svg?react'
+import QuizIcon from '@/assets/frontier/high-quality-user/granted-icon.svg?react'
 
 export default function Result({ title = 'Introduction and Quiz' }: { title?: string }) {
   const containerVariants = {
