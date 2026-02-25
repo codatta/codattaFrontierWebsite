@@ -28,7 +28,8 @@ const UserInfoReward = lazy(() => import('@/views/userinfo/reward'))
 const UserInfoReputation = lazy(() => import('@/views/userinfo/reputation'))
 const UserInfoNFT = lazy(() => import('@/views/userinfo/nft'))
 const UserInfoPersonal = lazy(() => import('@/views/userinfo/personal'))
-const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
+// const UserInfoOnchain = lazy(() => import('@/views/userinfo/onchain'))
+const UserinfoUserProfile = lazy(() => import('@/views/userinfo/user-profile'))
 const UserInfoDataProfile = lazy(() => import('@/views/userinfo/data-profile'))
 const UserInfoDataAssets = lazy(() => import('@/views/userinfo/data-assets'))
 const UserInfoDataAssetsLockupDetails = lazy(() => import('@/views/userinfo/data-assets-lockup-details'))
@@ -82,7 +83,7 @@ export const appRoutes = (
         <Route path="reputation" element={<UserInfoReputation />} />
         <Route path="nft" element={<UserInfoNFT />} />
         <Route path="personal" element={<UserInfoPersonal />} />
-        <Route path="onchain" element={<UserInfoOnchain />} />
+        <Route path="user-profile" element={<UserinfoUserProfile />} />
         <Route path="data-profile" element={<UserInfoDataProfile />} />
         <Route path="data-assets" element={<UserInfoDataAssets />} />
         <Route path="data-assets/lockup-details" element={<UserInfoDataAssetsLockupDetails />} />
