@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Select, Input, Button, Radio, Modal, Cascader, message } from 'antd'
+import { Select, Input, Button, Radio, Modal, Cascader, message, Tooltip } from 'antd'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import { cn } from '@udecode/cn'
 
@@ -30,7 +30,13 @@ function FieldLabel({ label, locked }: { label: string; locked?: boolean }) {
   return (
     <div className="flex items-center gap-1">
       <span className="text-sm font-semibold text-white">{label}</span>
-      {locked && <LockIcon />}
+      {locked && (
+        <Tooltip title="It cannot be modified after submission">
+          <span className="flex cursor-pointer items-center">
+            <LockIcon />
+          </span>
+        </Tooltip>
+      )}
     </div>
   )
 }
@@ -66,8 +72,8 @@ function SelectField({
       showSearch
       optionFilterProp="label"
       className={cn('h-[48px] w-full', className)}
-      placeholder={locked ? 'It cannot be modified after submission' : placeholder}
-      value={value}
+      placeholder={placeholder}
+      value={value || undefined}
       onChange={onChange}
       options={options}
       suffixIcon={suffixIcon || <DownOutlined className="text-white" />}
@@ -464,7 +470,7 @@ export default function UserProfile() {
                   value={birthPlace}
                   onChange={(val) => setBirthPlace((val as string[]) || [])}
                   changeOnSelect
-                  placeholder="It cannot be modified after submission"
+                  placeholder="Select Place of Birth"
                   suffixIcon={<DownOutlined className="text-white" />}
                 />
               )}
@@ -489,7 +495,7 @@ export default function UserProfile() {
                   value={residencePlace}
                   onChange={(val) => setResidencePlace((val as string[]) || [])}
                   changeOnSelect
-                  placeholder="Select Residence"
+                  placeholder="Select Current Residence"
                   suffixIcon={<DownOutlined className="text-white" />}
                 />
               )}
@@ -505,7 +511,7 @@ export default function UserProfile() {
                   value={birthYear}
                   onChange={setBirthYear}
                   options={yearOptions}
-                  placeholder="It cannot be modified after submission"
+                  placeholder="Select Birth Year"
                   suffixIcon={<CalendarIcon />}
                 />
               )}
@@ -514,6 +520,7 @@ export default function UserProfile() {
               <FieldLabel label="Gender" locked />
               <SelectField
                 locked
+                placeholder="Select Gender"
                 isHistorical={!!historicalProfile?.basic_info?.gender}
                 options={baseData.gender?.map((g) => ({ label: g.name, value: g.code }))}
                 value={gender}
@@ -529,7 +536,7 @@ export default function UserProfile() {
           <div className="flex flex-col gap-4">
             {/* Native Language */}
             <div className="flex flex-col gap-2">
-              <FieldLabel label="Native Language" locked={nativeLocked} />
+              <FieldLabel label="Native Language" locked />
               {nativeLocked ? (
                 historicalProfile?.language_skills?.native_language?.map((lang, i) => {
                   const label = baseData.language?.find((l) => l.code === lang)?.name || lang
@@ -580,7 +587,7 @@ export default function UserProfile() {
                   </div>
                   <div className="flex-1">
                     <SelectField
-                      placeholder="Level"
+                      placeholder="Select Level"
                       options={baseData.language_level?.map((l) => ({ label: l.name, value: l.code }))}
                       value={row.level}
                       onChange={(val) => {
@@ -796,7 +803,7 @@ export default function UserProfile() {
         <div className="flex flex-col gap-4">
           <SectionHeader title="Professional Role" />
           <div className="flex flex-col gap-2">
-            <FieldLabel label="Occupation Area" locked={occupationLocked} />
+            <FieldLabel label="Occupation Area" locked />
             {occupationLocked ? (
               historicalProfile?.professional_role?.occupation_area?.map((area, i) => {
                 const label = baseData.occupation_area?.find((o) => o.code === area)?.name || area
