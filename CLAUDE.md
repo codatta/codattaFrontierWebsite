@@ -130,12 +130,18 @@ const Page = lazy(() => import('@/views/path/to/page'))
 
 ## Git Commit
 
+Preferred: use the interactive commitizen prompt (runs lint + commitlint):
+
 ```bash
 git add <files>
-git commit -m "feat: short description in English"
+npm run commit
 ```
 
-Types: `feat` `fix` `refactor` `chore` `docs` `style` `perf` `test`
+Follow the prompts: select type → enter short description (English) → skip the rest.
+
+Allowed types: `feat` `fix` `refactor` `docs` `test` `build` `other`
+
+> Note: Claude Code cannot drive interactive CLI prompts, so when committing on your behalf it uses `git commit -m` directly with a conforming message.
 
 ## Available Commands
 
