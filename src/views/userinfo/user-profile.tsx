@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Select, Button, Radio, Modal, Cascader, message, Tooltip } from 'antd'
+import { Select, Button, Radio, Modal, Cascader, message, Tooltip, Input } from 'antd'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import { cn } from '@udecode/cn'
 
@@ -139,7 +139,9 @@ export default function UserProfile() {
 
   // Language Skills
   const [nativeLangRows, setNativeLangRows] = useState<MultiSelectRow[]>([{ ...EMPTY_ROW }])
-  const [otherLangRows, setOtherLangRows] = useState<{ id: number; lang: string; level: string }[]>([])
+  const [otherLangRows, setOtherLangRows] = useState<
+    { id: number; lang: string; level: string; isOther: boolean; customLang: string; error?: string }[]
+  >([])
 
   // Education Background
   const [highestDegree, setHighestDegree] = useState<string>()
@@ -206,7 +208,9 @@ export default function UserProfile() {
               d.language_skills.other_language.map((lang, i) => ({
                 id: i,
                 lang,
-                level: d.language_skills.level[i] || ''
+                level: d.language_skills.level[i] || '',
+                isOther: false,
+                customLang: ''
               }))
             )
           }
@@ -394,8 +398,8 @@ export default function UserProfile() {
       gender !== historicalProfile?.basic_info?.gender
 
     const nativeLangs = nativeLangRows.map((r) => r.value).filter(Boolean)
-    const validOtherLangRows = otherLangRows.filter((r) => r.lang)
-    const otherLangs = validOtherLangRows.map((r) => r.lang)
+    const validOtherLangRows = otherLangRows.filter((r) => !r.error && (r.lang || r.customLang))
+    const otherLangs = validOtherLangRows.map((r) => (r.isOther ? r.customLang : r.lang))
     const levels = validOtherLangRows.map((r) => r.level)
 
     // When Pre-Bachelor's, clear education sub-fields
@@ -596,47 +600,138 @@ export default function UserProfile() {
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <span className="text-sm font-semibold text-white">Other Languages</span>
-                <span className="text-xs text-[#8D8D93]">{otherLangRows.filter((r) => r.lang).length}/3</span>
+                <span className="text-xs text-[#8D8D93]">
+                  {otherLangRows.filter((r) => r.lang || r.customLang).length}/3
+                </span>
               </div>
-              {otherLangRows.map((row, i) => (
-                <div key={row.id} className="flex items-center gap-2">
-                  <div className="w-[240px]">
-                    <SelectField
-                      placeholder="Select a language"
-                      options={baseData.language?.map((l) => ({ label: l.name, value: l.code }))}
-                      value={row.lang}
-                      onChange={(val) => {
-                        const newRows = [...otherLangRows]
-                        newRows[i].lang = val
-                        setOtherLangRows(newRows)
-                      }}
-                    />
+              {otherLangRows.map((row, i) => {
+                const selectedLangs = otherLangRows
+                  .filter((_, idx) => idx !== i)
+                  .map((r) => r.lang)
+                  .filter(Boolean)
+                const customLangs = otherLangRows
+                  .filter((r, idx) => idx !== i && r.isOther && r.customLang)
+                  .map((r) => r.customLang.replace(/\s+/g, '').toLowerCase())
+                const allOptionNames = baseData.language?.map((l) => l.name.replace(/\s+/g, '').toLowerCase()) || []
+                const allSelectedLangNames = otherLangRows
+                  .filter((r, idx) => idx !== i)
+                  .map((r) => {
+                    if (r.isOther && r.customLang) return r.customLang.replace(/\s+/g, '').toLowerCase()
+                    return r.lang
+                      ? baseData.language
+                          ?.find((l) => l.code === r.lang)
+                          ?.name.replace(/\s+/g, '')
+                          .toLowerCase() || ''
+                      : ''
+                  })
+                  .filter(Boolean)
+
+                const validateCustomLang = (value: string): string | undefined => {
+                  const trimmed = value.trim()
+                  if (!trimmed) return 'This field cannot be empty'
+                  const normalized = trimmed.replace(/\s+/g, '').toLowerCase()
+
+                  // Check if matches any option name
+                  const matchedOption = baseData.language?.find(
+                    (l) => l.name.replace(/\s+/g, '').toLowerCase() === normalized
+                  )
+                  if (matchedOption)
+                    return `Please select "${matchedOption.name}" from the dropdown instead of entering it manually`
+
+                  if (customLangs.includes(normalized)) return 'This value is already used'
+                  if (allSelectedLangNames.includes(normalized)) return 'This value is already used'
+                  return undefined
+                }
+
+                const languageOptions = [
+                  ...(baseData.language
+                    ?.filter((l) => !selectedLangs.includes(l.code))
+                    .map((l) => ({ label: l.name, value: l.code })) || []),
+                  { label: 'Other', value: 'other' }
+                ]
+
+                return (
+                  <div key={row.id} className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-[240px] shrink-0">
+                        <SelectField
+                          placeholder="Select a language"
+                          options={languageOptions}
+                          value={row.isOther ? 'other' : row.lang}
+                          onChange={(val) => {
+                            const newRows = [...otherLangRows]
+                            if (val === 'other') {
+                              newRows[i] = { ...newRows[i], lang: '', isOther: true, customLang: '', error: undefined }
+                            } else {
+                              newRows[i] = {
+                                ...newRows[i],
+                                lang: val,
+                                isOther: false,
+                                customLang: '',
+                                error: undefined
+                              }
+                            }
+                            setOtherLangRows(newRows)
+                          }}
+                        />
+                      </div>
+                      {row.isOther && (
+                        <div className="min-w-0 flex-1">
+                          <div
+                            className={cn(
+                              'flex h-[48px] items-center rounded-lg border px-4',
+                              row.error ? 'border-red-500' : 'border-[rgba(255,255,255,0.12)]'
+                            )}
+                          >
+                            <Input
+                              placeholder="Enter language"
+                              variant="borderless"
+                              className="!bg-transparent !p-0 !text-white placeholder:!text-[#606067]"
+                              value={row.customLang}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                const newRows = [...otherLangRows]
+                                const value = e.target.value
+                                const error = validateCustomLang(value)
+                                newRows[i] = { ...newRows[i], customLang: value, error }
+                                setOtherLangRows(newRows)
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      <div className={cn('min-w-0 flex-1', row.isOther && 'shrink-0')}>
+                        <SelectField
+                          placeholder="Select Level"
+                          options={baseData.language_level?.map((l) => ({ label: l.name, value: l.code }))}
+                          value={row.level}
+                          onChange={(val) => {
+                            const newRows = [...otherLangRows]
+                            newRows[i].level = val
+                            setOtherLangRows(newRows)
+                          }}
+                        />
+                      </div>
+                      <button
+                        className="flex h-[48px] shrink-0 items-center justify-center text-[#606067] hover:text-white"
+                        onClick={() => setOtherLangRows((prev) => prev.filter((_, idx) => idx !== i))}
+                      >
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M6 2a1 1 0 0 0-1 1v1H3a1 1 0 0 0 0 2h.09l.81 10.55A2 2 0 0 0 5.9 18h8.2a2 2 0 0 0 1.99-1.45L16.91 6H17a1 1 0 0 0 0-2h-2V3a1 1 0 0 0-1-1H6zm1 2h6v1H7V4zm-2.09 2h10.18l-.79 10.32a.01.01 0 0 1-.01.01H5.9L5.09 6z" />
+                        </svg>
+                      </button>
+                    </div>
+                    {row.error && <p className="ml-[252px] text-xs text-red-500">{row.error}</p>}
                   </div>
-                  <div className="flex-1">
-                    <SelectField
-                      placeholder="Select Level"
-                      options={baseData.language_level?.map((l) => ({ label: l.name, value: l.code }))}
-                      value={row.level}
-                      onChange={(val) => {
-                        const newRows = [...otherLangRows]
-                        newRows[i].level = val
-                        setOtherLangRows(newRows)
-                      }}
-                    />
-                  </div>
-                  <button
-                    className="flex shrink-0 items-center justify-center text-[#606067] hover:text-white"
-                    onClick={() => setOtherLangRows((prev) => prev.filter((_, idx) => idx !== i))}
-                  >
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M6 2a1 1 0 0 0-1 1v1H3a1 1 0 0 0 0 2h.09l.81 10.55A2 2 0 0 0 5.9 18h8.2a2 2 0 0 0 1.99-1.45L16.91 6H17a1 1 0 0 0 0-2h-2V3a1 1 0 0 0-1-1H6zm1 2h6v1H7V4zm-2.09 2h10.18l-.79 10.32a.01.01 0 0 1-.01.01H5.9L5.09 6z" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
+                )
+              })}
               {otherLangRows.length < 3 && (
                 <button
-                  onClick={() => setOtherLangRows((prev) => [...prev, { id: Date.now(), lang: '', level: '' }])}
+                  onClick={() =>
+                    setOtherLangRows((prev) => [
+                      ...prev,
+                      { id: Date.now(), lang: '', level: '', isOther: false, customLang: '' }
+                    ])
+                  }
                   className="flex items-center gap-2 text-sm text-white"
                 >
                   <PlusOutlined className="text-xs" />

@@ -84,10 +84,10 @@ export function MultiSelectList({
 
     const normalized = trimmed.replace(/\s+/g, '').toLowerCase()
 
-    // Check if matches any option
-    const optionValues = getAllOptionValues()
-    if (optionValues.includes(normalized)) {
-      return 'This value matches an existing option'
+    // Check if matches any option name
+    const matchedOption = options.find((o) => o.label.replace(/\s+/g, '').toLowerCase() === normalized)
+    if (matchedOption) {
+      return `Please select "${matchedOption.label}" from the dropdown instead of entering it manually`
     }
 
     // Check if duplicates with other "Other" inputs
