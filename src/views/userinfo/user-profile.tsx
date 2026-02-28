@@ -1,12 +1,14 @@
 import { useEffect, useState, useMemo } from 'react'
-import { Select, Input, Button, Radio, Modal, Cascader, message, Tooltip } from 'antd'
+import { Select, Button, Radio, Modal, Cascader, message, Tooltip } from 'antd'
 import { PlusOutlined, DownOutlined } from '@ant-design/icons'
 import { cn } from '@udecode/cn'
 
 import userApi, { BaseDataResponse, UserQualification } from '@/apis/user.api'
+import { MultiSelectList, MultiSelectRow } from '@/components/user-profile/multi-select-list'
+import { SchoolEmailVerify } from '@/components/user-profile/school-email-verify'
+import { CertificateUpload } from '@/components/user-profile/certificate-upload'
 import LightEmergencyIcon from '@/assets/userinfo/light-emergency-icon.svg?react'
 import LockIcon from '@/assets/userinfo/lock-icon.svg?react'
-import TrashIcon from '@/assets/userinfo/trash-icon.svg?react'
 import CalendarIcon from '@/assets/userinfo/calendar-icon.svg?react'
 
 function SectionHeader({ title }: { title: string }) {
@@ -17,7 +19,6 @@ function SectionHeader({ title }: { title: string }) {
   )
 }
 
-// Shown when a locked field has a submitted value and cannot be edited
 function LockedField({ value }: { value: string }) {
   return (
     <div className="flex h-[48px] items-center rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.12)] px-4">
@@ -41,7 +42,6 @@ function FieldLabel({ label, locked }: { label: string; locked?: boolean }) {
   )
 }
 
-// locked=true: show warning placeholder when empty, LockedField when has value
 function SelectField({
   placeholder,
   value,
@@ -82,29 +82,14 @@ function SelectField({
   )
 }
 
-function AddBtn({ onClick }: { onClick?: () => void }) {
-  return (
-    <button onClick={onClick} className="flex items-center gap-2 text-sm text-white">
-      <PlusOutlined className="text-xs" />
-      <span>Add</span>
-    </button>
-  )
-}
-
-function DeleteBtn({ onClick }: { onClick?: () => void }) {
-  return (
-    <button onClick={onClick} className="flex shrink-0 items-center justify-center text-[#606067] hover:text-white">
-      <TrashIcon />
-    </button>
-  )
-}
-
 interface HistoricalProfile {
   basic_info?: UserQualification['basic_info']
   language_skills?: UserQualification['language_skills']
   education_background?: UserQualification['education_background']
   professional_role?: UserQualification['professional_role']
 }
+
+const EMPTY_ROW: MultiSelectRow = { id: 0, isOther: false, value: '', isHistorical: false }
 
 export default function UserProfile() {
   const [historicalProfile, setHistoricalProfile] = useState<HistoricalProfile | null>(null)
@@ -139,29 +124,31 @@ export default function UserProfile() {
   )
 
   const [reviewMethod, setReviewMethod] = useState<'email' | 'photo'>('email')
-  const [schoolEmail, setSchoolEmail] = useState('')
-  const [verifyCode, setVerifyCode] = useState('')
 
   // Basic Info
   const [birthYear, setBirthYear] = useState<string>()
   const [gender, setGender] = useState<string>()
 
   // Language Skills
-  const [nativeLangRows, setNativeLangRows] = useState<{ id: number; value: string }[]>([{ id: 0, value: '' }])
-  const [otherLangRows, setOtherLangRows] = useState<{ id: number; lang: string; level: string }[]>([
-    { id: 0, lang: '', level: '' }
-  ])
+  const [nativeLangRows, setNativeLangRows] = useState<MultiSelectRow[]>([{ ...EMPTY_ROW }])
+  const [otherLangRows, setOtherLangRows] = useState<{ id: number; lang: string; level: string }[]>([])
 
   // Education Background
   const [highestDegree, setHighestDegree] = useState<string>()
   const [university, setUniversity] = useState<string>()
-  const [majorRows, setMajorRows] = useState<{ id: number; isOther: boolean; value: string }[]>([
-    { id: 0, isOther: false, value: '' }
-  ])
+  const [majorRows, setMajorRows] = useState<MultiSelectRow[]>([{ ...EMPTY_ROW }])
   const [eduStatus, setEduStatus] = useState<string>()
 
   // Professional Role
-  const [occupationRows, setOccupationRows] = useState<{ id: number; value: string }[]>([{ id: 0, value: '' }])
+  const [occupationRows, setOccupationRows] = useState<MultiSelectRow[]>([{ ...EMPTY_ROW }])
+
+  // Whether the selected highest degree is Pre-Bachelor's (hides sub-fields)
+  const isPreBachelor = useMemo(() => {
+    if (!highestDegree || !baseData.highest_degree) return false
+    const selected = baseData.highest_degree.find((d) => d.code === highestDegree)
+    const name = selected?.name?.toLowerCase().replace(/[-'\s]/g, '') ?? ''
+    return name.includes('prebachelor')
+  }, [highestDegree, baseData.highest_degree])
 
   // Fetch base data and qualification
   useEffect(() => {
@@ -197,7 +184,14 @@ export default function UserProfile() {
 
           // Populate Language Skills
           if (d.language_skills.native_language?.length) {
-            setNativeLangRows(d.language_skills.native_language.map((v, i) => ({ id: i, value: v })))
+            setNativeLangRows(
+              d.language_skills.native_language.map((v, i) => ({
+                id: i,
+                isOther: false,
+                value: v,
+                isHistorical: false
+              }))
+            )
           }
           if (d.language_skills.other_language?.length) {
             setOtherLangRows(
@@ -214,12 +208,21 @@ export default function UserProfile() {
           setUniversity(d.education_background.university)
           setEduStatus(d.education_background.status)
           if (d.education_background.major?.length) {
-            setMajorRows(d.education_background.major.map((v, i) => ({ id: i, isOther: false, value: v })))
+            setMajorRows(
+              d.education_background.major.map((v, i) => ({ id: i, isOther: false, value: v, isHistorical: true }))
+            )
           }
 
           // Populate Occupation
           if (d.professional_role.occupation_area?.length) {
-            setOccupationRows(d.professional_role.occupation_area.map((v, i) => ({ id: i, value: v })))
+            setOccupationRows(
+              d.professional_role.occupation_area.map((v, i) => ({
+                id: i,
+                isOther: false,
+                value: v,
+                isHistorical: false
+              }))
+            )
           }
         }
       } catch (err) {
@@ -319,12 +322,15 @@ export default function UserProfile() {
       fields.push({ label: 'Occupation Area', value: labels })
     }
 
-    const filledMajors = majorRows.filter((r) => r.value)
-    if (filledMajors.length > 0) {
-      const labels = filledMajors
-        .map((r) => (r.isOther ? r.value : baseData.major?.find((m) => m.code === r.value)?.name || r.value))
-        .join(', ')
-      fields.push({ label: 'Major', value: labels })
+    // Only newly added (non-historical) majors appear in the confirmation modal
+    if (!isPreBachelor) {
+      const newMajors = majorRows.filter((r) => r.value && !r.isHistorical)
+      if (newMajors.length > 0) {
+        const labels = newMajors
+          .map((r) => (r.isOther ? r.value : baseData.major?.find((m) => m.code === r.value)?.name || r.value))
+          .join(', ')
+        fields.push({ label: 'Major', value: labels })
+      }
     }
 
     return fields
@@ -338,10 +344,27 @@ export default function UserProfile() {
     historicalProfile,
     nativeLocked,
     occupationLocked,
+    isPreBachelor,
     baseData
   ])
 
   async function handleSave() {
+    // Validate required education fields when not Pre-Bachelor's
+    if (highestDegree && !isPreBachelor) {
+      if (!university) {
+        message.error('University is required')
+        return
+      }
+      if (!majorRows.some((r) => r.value)) {
+        message.error('At least one major is required')
+        return
+      }
+      if (!eduStatus) {
+        message.error('Graduation status is required')
+        return
+      }
+    }
+
     if (lockedFieldsWithValues.length > 0) {
       setShowConfirmModal(true)
     } else {
@@ -364,7 +387,12 @@ export default function UserProfile() {
     const validOtherLangRows = otherLangRows.filter((r) => r.lang)
     const otherLangs = validOtherLangRows.map((r) => r.lang)
     const levels = validOtherLangRows.map((r) => r.level)
-    const majors = majorRows.map((r) => r.value).filter(Boolean)
+
+    // When Pre-Bachelor's, clear education sub-fields
+    const submittedUniversity = isPreBachelor ? '' : university || ''
+    const submittedMajors = isPreBachelor ? [] : majorRows.map((r) => r.value).filter(Boolean)
+    const submittedEduStatus = isPreBachelor ? '' : eduStatus || ''
+
     const occupations = occupationRows.map((r) => r.value).filter(Boolean)
 
     const isLangChanged =
@@ -374,9 +402,9 @@ export default function UserProfile() {
 
     const isEduChanged =
       highestDegree !== historicalProfile?.education_background?.highest_degree ||
-      university !== historicalProfile?.education_background?.university ||
-      eduStatus !== historicalProfile?.education_background?.status ||
-      JSON.stringify(majors) !== JSON.stringify(historicalProfile?.education_background?.major || [])
+      submittedUniversity !== historicalProfile?.education_background?.university ||
+      submittedEduStatus !== historicalProfile?.education_background?.status ||
+      JSON.stringify(submittedMajors) !== JSON.stringify(historicalProfile?.education_background?.major || [])
 
     const isProfChanged =
       JSON.stringify(occupations) !== JSON.stringify(historicalProfile?.professional_role?.occupation_area || [])
@@ -401,9 +429,9 @@ export default function UserProfile() {
       },
       education_background: {
         highest_degree: highestDegree || '',
-        university: university || '',
-        major: majors,
-        status: eduStatus || '',
+        university: submittedUniversity,
+        major: submittedMajors,
+        status: submittedEduStatus,
         audit_status: hasChanged ? 'PENDING' : null
       },
       professional_role: {
@@ -416,7 +444,6 @@ export default function UserProfile() {
       const res = await userApi.submitUserQualification(params)
       if (res.success) {
         message.success('Profile updated successfully')
-        // Refresh qualification data
         const qualRes = await userApi.getUserQualification()
         if (qualRes.success) {
           setHistoricalProfile(qualRes.data)
@@ -536,41 +563,29 @@ export default function UserProfile() {
           <div className="flex flex-col gap-4">
             {/* Native Language */}
             <div className="flex flex-col gap-2">
-              <FieldLabel label="Native Language" locked />
-              {nativeLocked ? (
-                historicalProfile?.language_skills?.native_language?.map((lang, i) => {
-                  const label = baseData.language?.find((l) => l.code === lang)?.name || lang
-                  return <LockedField key={i} value={label} />
-                })
-              ) : (
-                <>
-                  {nativeLangRows.map((row, i) => (
-                    <div key={row.id} className="flex items-center gap-2">
-                      <SelectField
-                        locked
-                        placeholder="Select Native Language"
-                        className="flex-1"
-                        options={baseData.language?.map((l) => ({ label: l.name, value: l.code }))}
-                        value={row.value}
-                        onChange={(val) => {
-                          const newRows = [...nativeLangRows]
-                          newRows[i].value = val
-                          setNativeLangRows(newRows)
-                        }}
-                      />
-                      {nativeLangRows.length > 1 && (
-                        <DeleteBtn onClick={() => setNativeLangRows((prev) => prev.filter((_, idx) => idx !== i))} />
-                      )}
-                    </div>
-                  ))}
-                  <AddBtn onClick={() => setNativeLangRows((prev) => [...prev, { id: Date.now(), value: '' }])} />
-                </>
-              )}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1">
+                  <FieldLabel label="Native Language" locked />
+                  <span className="text-sm text-red-400">*</span>
+                </div>
+                <span className="text-xs text-[#8D8D93]">{nativeLangRows.length}/2</span>
+              </div>
+              <MultiSelectList
+                rows={nativeLangRows}
+                onChange={setNativeLangRows}
+                options={baseData.language?.map((l) => ({ label: l.name, value: l.code })) ?? []}
+                placeholder="Select Native Language"
+                max={2}
+                allLocked={nativeLocked}
+              />
             </div>
 
             {/* Other Languages */}
             <div className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-white">Other Languages</span>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-white">Other Languages</span>
+                <span className="text-xs text-[#8D8D93]">{otherLangRows.filter((r) => r.lang).length}/3</span>
+              </div>
               {otherLangRows.map((row, i) => (
                 <div key={row.id} className="flex items-center gap-2">
                   <div className="w-[240px]">
@@ -597,12 +612,25 @@ export default function UserProfile() {
                       }}
                     />
                   </div>
-                  {otherLangRows.length > 1 && (
-                    <DeleteBtn onClick={() => setOtherLangRows((prev) => prev.filter((_, idx) => idx !== i))} />
-                  )}
+                  <button
+                    className="flex shrink-0 items-center justify-center text-[#606067] hover:text-white"
+                    onClick={() => setOtherLangRows((prev) => prev.filter((_, idx) => idx !== i))}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M6 2a1 1 0 0 0-1 1v1H3a1 1 0 0 0 0 2h.09l.81 10.55A2 2 0 0 0 5.9 18h8.2a2 2 0 0 0 1.99-1.45L16.91 6H17a1 1 0 0 0 0-2h-2V3a1 1 0 0 0-1-1H6zm1 2h6v1H7V4zm-2.09 2h10.18l-.79 10.32a.01.01 0 0 1-.01.01H5.9L5.09 6z" />
+                    </svg>
+                  </button>
                 </div>
               ))}
-              <AddBtn onClick={() => setOtherLangRows((prev) => [...prev, { id: Date.now(), lang: '', level: '' }])} />
+              {otherLangRows.length < 3 && (
+                <button
+                  onClick={() => setOtherLangRows((prev) => [...prev, { id: Date.now(), lang: '', level: '' }])}
+                  className="flex items-center gap-2 text-sm text-white"
+                >
+                  <PlusOutlined className="text-xs" />
+                  <span>Add</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -643,8 +671,8 @@ export default function UserProfile() {
               />
             </div>
 
-            {/* Fields below only shown after degree is selected */}
-            {highestDegree && (
+            {/* Sub-fields hidden when Pre-Bachelor's is selected */}
+            {highestDegree && !isPreBachelor && (
               <>
                 {/* Review method */}
                 <div className="flex flex-col gap-2">
@@ -662,56 +690,17 @@ export default function UserProfile() {
                     </Radio>
                   </Radio.Group>
 
-                  {reviewMethod === 'email' && (
-                    <div className="flex flex-col gap-4 rounded-2xl bg-[#252532] p-4">
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm font-semibold text-white">
-                          School Email<span className="text-[#8D8D93]">*</span>
-                        </p>
-                        <div className="flex h-[48px] items-center justify-between rounded-lg border border-[rgba(255,255,255,0.12)] px-4">
-                          <Input
-                            value={schoolEmail}
-                            onChange={(e) => setSchoolEmail(e.target.value)}
-                            placeholder="Provide your Email"
-                            variant="borderless"
-                            className="flex-1 !bg-transparent !p-0 !text-white placeholder:!text-[#8D8D93]"
-                          />
-                          <button className="shrink-0 text-sm font-semibold text-[#875DFF]">Send Code</button>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2">
-                        <p className="text-sm font-semibold text-white">
-                          Verification Code<span className="text-[#8D8D93]">*</span>
-                        </p>
-                        <div className="flex gap-4">
-                          <Input
-                            value={verifyCode}
-                            onChange={(e) => setVerifyCode(e.target.value)}
-                            placeholder="Enter Code"
-                            className="h-[48px] flex-1 !rounded-lg !bg-transparent !text-white placeholder:!text-[#8D8D93]"
-                          />
-                          <Button className="h-[48px] !rounded-lg !border-none !bg-[#875DFF] !px-8 !text-white">
-                            Verify
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  {reviewMethod === 'email' && <SchoolEmailVerify />}
 
-                  {reviewMethod === 'photo' && (
-                    <div className="flex h-[130px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-[rgba(255,255,255,0.12)] px-4 py-6 hover:border-[#875DFF]">
-                      <PlusOutlined className="text-xl text-white" />
-                      <div className="flex flex-col items-center text-sm text-[#606067]">
-                        <span>Click to upload file or drag and drop</span>
-                        <span>Supports Image upload</span>
-                      </div>
-                    </div>
-                  )}
+                  {reviewMethod === 'photo' && <CertificateUpload />}
                 </div>
 
                 {/* University */}
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm font-semibold text-white">University</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-semibold text-white">University</span>
+                    <span className="text-sm text-red-400">*</span>
+                  </div>
                   <SelectField
                     placeholder="Select University"
                     value={university}
@@ -722,71 +711,30 @@ export default function UserProfile() {
 
                 {/* Major */}
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm font-semibold text-white">Major</span>
-                  {majorRows.map((major, i) => (
-                    <div key={major.id} className="flex items-center gap-2">
-                      {major.isOther ? (
-                        <>
-                          <div className="w-[240px]">
-                            <SelectField
-                              value="other"
-                              options={[{ label: 'Other', value: 'other' }]}
-                              onChange={() => {
-                                const newRows = [...majorRows]
-                                newRows[i].isOther = false
-                                setMajorRows(newRows)
-                              }}
-                            />
-                          </div>
-                          <div className="flex h-[48px] flex-1 items-center rounded-lg border border-[rgba(255,255,255,0.12)] px-4">
-                            <Input
-                              placeholder="Enter Major"
-                              variant="borderless"
-                              className="!bg-transparent !p-0 !text-white placeholder:!text-[#606067]"
-                              value={major.value}
-                              onChange={(e) => {
-                                const newRows = [...majorRows]
-                                newRows[i].value = e.target.value
-                                setMajorRows(newRows)
-                              }}
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex-1">
-                          <SelectField
-                            placeholder="Select Major"
-                            value={major.value}
-                            options={[
-                              ...(baseData.major?.map((m) => ({ label: m.name, value: m.code })) || []),
-                              { label: 'Other', value: 'other' }
-                            ]}
-                            onChange={(val) => {
-                              const newRows = [...majorRows]
-                              if (val === 'other') {
-                                newRows[i].isOther = true
-                                newRows[i].value = ''
-                              } else {
-                                newRows[i].value = val
-                              }
-                              setMajorRows(newRows)
-                            }}
-                          />
-                        </div>
-                      )}
-                      {majorRows.length > 1 && (
-                        <DeleteBtn onClick={() => setMajorRows((prev) => prev.filter((_, idx) => idx !== i))} />
-                      )}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm font-semibold text-white">Major</span>
+                      <span className="text-sm text-red-400">*</span>
                     </div>
-                  ))}
-                  <AddBtn
-                    onClick={() => setMajorRows((prev) => [...prev, { id: Date.now(), isOther: false, value: '' }])}
+                    <span className="text-xs text-[#8D8D93]">{majorRows.length}/3</span>
+                  </div>
+                  <MultiSelectList
+                    rows={majorRows}
+                    onChange={setMajorRows}
+                    options={baseData.major?.map((m) => ({ label: m.name, value: m.code })) ?? []}
+                    placeholder="Select Major"
+                    otherInputPlaceholder="Enter Major"
+                    showOther
+                    max={3}
                   />
                 </div>
 
                 {/* Status */}
                 <div className="flex flex-col gap-2">
-                  <span className="text-sm font-semibold text-white">Status</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-semibold text-white">Status</span>
+                    <span className="text-sm text-red-400">*</span>
+                  </div>
                   <SelectField
                     placeholder="Select Status"
                     value={eduStatus}
@@ -803,37 +751,18 @@ export default function UserProfile() {
         <div className="flex flex-col gap-4">
           <SectionHeader title="Professional Role" />
           <div className="flex flex-col gap-2">
-            <FieldLabel label="Occupation Area" locked />
-            {occupationLocked ? (
-              historicalProfile?.professional_role?.occupation_area?.map((area, i) => {
-                const label = baseData.occupation_area?.find((o) => o.code === area)?.name || area
-                return <LockedField key={i} value={label} />
-              })
-            ) : (
-              <>
-                {occupationRows.map((row, i) => (
-                  <div key={row.id} className="flex items-center gap-2">
-                    <div className="flex-1">
-                      <SelectField
-                        locked
-                        placeholder="Select occupation area"
-                        value={row.value}
-                        options={baseData.occupation_area?.map((o) => ({ label: o.name, value: o.code }))}
-                        onChange={(val) => {
-                          const newRows = [...occupationRows]
-                          newRows[i].value = val
-                          setOccupationRows(newRows)
-                        }}
-                      />
-                    </div>
-                    {occupationRows.length > 1 && (
-                      <DeleteBtn onClick={() => setOccupationRows((prev) => prev.filter((_, idx) => idx !== i))} />
-                    )}
-                  </div>
-                ))}
-                <AddBtn onClick={() => setOccupationRows((prev) => [...prev, { id: Date.now(), value: '' }])} />
-              </>
-            )}
+            <div className="flex items-center justify-between">
+              <FieldLabel label="Occupation Area" locked />
+              <span className="text-xs text-[#8D8D93]">{occupationRows.length}/3</span>
+            </div>
+            <MultiSelectList
+              rows={occupationRows}
+              onChange={setOccupationRows}
+              options={baseData.occupation_area?.map((o) => ({ label: o.name, value: o.code })) ?? []}
+              placeholder="Select occupation area"
+              max={3}
+              allLocked={occupationLocked}
+            />
           </div>
         </div>
 
