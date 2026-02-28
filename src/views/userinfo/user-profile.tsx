@@ -123,6 +123,14 @@ export default function UserProfile() {
     [currentYear]
   )
 
+  // Helper function to filter out "other" option from API response
+  const filterOtherOption = (options: { name: string; code: string }[] | undefined) => {
+    if (!options) return []
+    return options
+      .filter((opt) => opt.code.toLowerCase() !== 'other')
+      .map((opt) => ({ label: opt.name, value: opt.code }))
+  }
+
   const [reviewMethod, setReviewMethod] = useState<'email' | 'photo'>('email')
 
   // Basic Info
@@ -135,7 +143,7 @@ export default function UserProfile() {
 
   // Education Background
   const [highestDegree, setHighestDegree] = useState<string>()
-  const [university, setUniversity] = useState<string>()
+  const [universityRows, setUniversityRows] = useState<MultiSelectRow[]>([{ ...EMPTY_ROW }])
   const [majorRows, setMajorRows] = useState<MultiSelectRow[]>([{ ...EMPTY_ROW }])
   const [eduStatus, setEduStatus] = useState<string>()
 
@@ -205,7 +213,9 @@ export default function UserProfile() {
 
           // Populate Education
           setHighestDegree(d.education_background.highest_degree)
-          setUniversity(d.education_background.university)
+          if (d.education_background.university) {
+            setUniversityRows([{ id: 0, isOther: false, value: d.education_background.university, isHistorical: true }])
+          }
           setEduStatus(d.education_background.status)
           if (d.education_background.major?.length) {
             setMajorRows(
@@ -351,12 +361,12 @@ export default function UserProfile() {
   async function handleSave() {
     // Validate required education fields when not Pre-Bachelor's
     if (highestDegree && !isPreBachelor) {
-      if (!university) {
+      if (!universityRows.some((r) => r.value)) {
         message.error('University is required')
         return
       }
       if (!majorRows.some((r) => r.value)) {
-        message.error('At least one major is required')
+        message.error('Major is required')
         return
       }
       if (!eduStatus) {
@@ -389,7 +399,7 @@ export default function UserProfile() {
     const levels = validOtherLangRows.map((r) => r.level)
 
     // When Pre-Bachelor's, clear education sub-fields
-    const submittedUniversity = isPreBachelor ? '' : university || ''
+    const submittedUniversity = isPreBachelor ? '' : universityRows.map((r) => r.value).filter(Boolean)[0] || ''
     const submittedMajors = isPreBachelor ? [] : majorRows.map((r) => r.value).filter(Boolean)
     const submittedEduStatus = isPreBachelor ? '' : eduStatus || ''
 
@@ -573,8 +583,10 @@ export default function UserProfile() {
               <MultiSelectList
                 rows={nativeLangRows}
                 onChange={setNativeLangRows}
-                options={baseData.language?.map((l) => ({ label: l.name, value: l.code })) ?? []}
+                options={filterOtherOption(baseData.language)}
                 placeholder="Select Native Language"
+                otherInputPlaceholder="Enter Native Language"
+                showOther
                 max={2}
                 allLocked={nativeLocked}
               />
@@ -701,11 +713,14 @@ export default function UserProfile() {
                     <span className="text-sm font-semibold text-white">University</span>
                     <span className="text-sm text-red-400">*</span>
                   </div>
-                  <SelectField
+                  <MultiSelectList
+                    rows={universityRows}
+                    onChange={setUniversityRows}
+                    options={filterOtherOption(baseData.university)}
                     placeholder="Select University"
-                    value={university}
-                    onChange={setUniversity}
-                    options={baseData.university?.map((u) => ({ label: u.name, value: u.code }))}
+                    otherInputPlaceholder="Enter University"
+                    showOther
+                    max={1}
                   />
                 </div>
 
@@ -721,7 +736,7 @@ export default function UserProfile() {
                   <MultiSelectList
                     rows={majorRows}
                     onChange={setMajorRows}
-                    options={baseData.major?.map((m) => ({ label: m.name, value: m.code })) ?? []}
+                    options={filterOtherOption(baseData.major)}
                     placeholder="Select Major"
                     otherInputPlaceholder="Enter Major"
                     showOther
@@ -758,8 +773,10 @@ export default function UserProfile() {
             <MultiSelectList
               rows={occupationRows}
               onChange={setOccupationRows}
-              options={baseData.occupation_area?.map((o) => ({ label: o.name, value: o.code })) ?? []}
+              options={filterOtherOption(baseData.occupation_area)}
               placeholder="Select occupation area"
+              otherInputPlaceholder="Enter occupation area"
+              showOther
               max={3}
               allLocked={occupationLocked}
             />
