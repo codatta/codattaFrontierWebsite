@@ -32,7 +32,7 @@ export default function KitchenApplicants() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Appliance-Knobs'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('kitchen-applicants')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }
