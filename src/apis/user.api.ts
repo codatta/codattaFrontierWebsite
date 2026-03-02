@@ -234,6 +234,67 @@ export interface StakeRecordItem {
   status_name: string
 }
 
+export interface LocationDataItem {
+  data_type: string
+  code: string
+  name: string
+}
+
+export interface GetLocationParams {
+  data_type: 'country' | 'state' | 'city'
+  parent_code?: string
+  page_size?: number
+  page_num?: number
+}
+
+export interface BaseDataItem {
+  data_type?: string
+  code: string
+  name: string
+}
+
+export interface BaseDataResponse {
+  country?: BaseDataItem[]
+  language?: BaseDataItem[]
+  university?: BaseDataItem[]
+  major?: BaseDataItem[]
+  gender?: BaseDataItem[]
+  language_level?: BaseDataItem[]
+  highest_degree?: BaseDataItem[]
+  education_background_status?: BaseDataItem[]
+  occupation_area?: BaseDataItem[]
+}
+
+export interface UserQualification {
+  basic_info: {
+    birth_place_country: string
+    birth_place_state: string
+    birth_place_city: string
+    current_residence_country: string
+    current_residence_state: string
+    current_residence_city: string
+    birth_year: string
+    gender: string
+  }
+  language_skills: {
+    native_language: Array<{ code: string; source?: 'other' }>
+    other_language: Array<{ code: string; level: string; source?: 'other' }>
+  }
+  education_background: {
+    audit_status?: 'PENDING' | 'REFUSED' | 'AUDIT' | null
+    highest_degree: string
+    university: string
+    major: string[]
+    status: string
+    review_method?: 'email' | 'photo'
+    school_email?: string
+    certificate_photo?: string
+  }
+  professional_role: {
+    occupation_area: string[]
+  }
+}
+
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -519,6 +580,28 @@ class UserApi {
         page_size: page_size
       }
     )
+    return data
+  }
+
+  async getLocationDatas(params: GetLocationParams) {
+    const { data } = await this.request.post<Response<LocationDataItem[]>>('/v2/user/location/datas', params)
+    return data
+  }
+
+  async getBaseDatas(dataTypes: string) {
+    const { data } = await this.request.post<Response<BaseDataResponse>>('/v2/user/base/datas', {
+      data_types: dataTypes
+    })
+    return data
+  }
+
+  async getUserQualification() {
+    const { data } = await this.request.get<Response<UserQualification>>('/v2/user/qualification/get')
+    return data
+  }
+
+  async submitUserQualification(params: UserQualification) {
+    const { data } = await this.request.post<Response<{ status: 1 | 0 }>>('/v2/user/qualification/submit', params)
     return data
   }
 }

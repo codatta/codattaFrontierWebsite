@@ -4,7 +4,7 @@ import UserSecurity from '@/components/account/user-security'
 export default function UserInfoPersonal() {
   return (
     <div>
-      <h3 className="mb-6 text-[32px] font-bold leading-[48px]">Personal</h3>
+      <h3 className="mb-6 text-[32px] font-bold leading-[48px]">Account</h3>
       <div className="flex gap-12">
         <PersonalInfo />
         <ConnectAccount />
