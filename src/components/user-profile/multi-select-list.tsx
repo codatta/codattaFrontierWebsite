@@ -28,8 +28,9 @@ interface MultiSelectListProps {
 
 function LockedRow({ value }: { value: string }) {
   return (
-    <div className="flex h-[48px] flex-1 items-center rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.12)] px-4">
+    <div className="flex h-[48px] w-full cursor-not-allowed items-center justify-between rounded-lg border border-[rgba(255,255,255,0.12)] bg-[rgba(255,255,255,0.12)] px-4">
       <span className="text-sm text-white">{value}</span>
+      <DownOutlined className="text-white opacity-50" />
     </div>
   )
 }
@@ -68,11 +69,6 @@ export function MultiSelectList({
     return rows
       .filter((r, i) => i !== excludeIndex && r.isOther && r.value)
       .map((r) => r.value.replace(/\s+/g, '').toLowerCase())
-  }
-
-  // Get all option values (for checking if "Other" input matches an option)
-  function getAllOptionValues(): string[] {
-    return options.map((o) => o.value.replace(/\s+/g, '').toLowerCase())
   }
 
   // Validate "Other" input

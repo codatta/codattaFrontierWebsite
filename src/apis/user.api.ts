@@ -273,21 +273,22 @@ export interface UserQualification {
     current_residence_country: string
     current_residence_state: string
     current_residence_city: string
-    birth_year: number
+    birth_year: string
     gender: string
   }
   language_skills: {
-    native_language: string[]
-    other_language: string[]
-    level: string[]
+    native_language: Array<{ code: string; source?: 'other' }>
+    other_language: Array<{ code: string; level: string; source?: 'other' }>
   }
   education_background: {
     audit_status?: 'PENDING' | 'REFUSED' | 'AUDIT' | null
-    audit_reason?: string
     highest_degree: string
     university: string
     major: string[]
     status: string
+    review_method?: 'email' | 'photo'
+    school_email?: string
+    certificate_photo?: string
   }
   professional_role: {
     occupation_area: string[]

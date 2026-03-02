@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Input, Button, message } from 'antd'
 import { cn } from '@udecode/cn'
 
@@ -8,11 +8,20 @@ import { useCountdown } from '@/hooks/use-countdown'
 interface SchoolEmailVerifyProps {
   /** Frontier task ID required by the verify endpoint; pass empty string if not applicable */
   taskId?: string
+  /** Initial email value to display */
+  initialEmail?: string
   onVerified?: (email: string) => void
+  /** Callback when verification status changes */
+  onVerificationStatusChange?: (verified: boolean) => void
 }
 
-export function SchoolEmailVerify({ taskId = '', onVerified }: SchoolEmailVerifyProps) {
-  const [email, setEmail] = useState('')
+export function SchoolEmailVerify({
+  taskId = '',
+  initialEmail = '',
+  onVerified,
+  onVerificationStatusChange
+}: SchoolEmailVerifyProps) {
+  const [email, setEmail] = useState(initialEmail)
   const [code, setCode] = useState('')
   const [sending, setSending] = useState(false)
   const [verifying, setVerifying] = useState(false)
@@ -21,12 +30,23 @@ export function SchoolEmailVerify({ taskId = '', onVerified }: SchoolEmailVerify
 
   const [countdown, countdownEnded, restartCountdown] = useCountdown(60, null, false)
 
+  // Sync initialEmail changes to internal state
+  useEffect(() => {
+    if (initialEmail && initialEmail !== email) {
+      setEmail(initialEmail)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialEmail])
+
   const canSendCode = !sending && countdownEnded && email.trim().length > 0
   const canVerify = !verified && codeSent && code.trim().length > 0
 
   function handleEmailChange(val: string) {
     setEmail(val)
-    if (verified) setVerified(false)
+    if (verified) {
+      setVerified(false)
+      onVerificationStatusChange?.(false)
+    }
     if (codeSent) {
       setCodeSent(false)
       setCode('')
@@ -60,6 +80,7 @@ export function SchoolEmailVerify({ taskId = '', onVerified }: SchoolEmailVerify
         message.success('Email verified successfully')
         setVerified(true)
         onVerified?.(email.trim())
+        onVerificationStatusChange?.(true)
       } else {
         message.error(result.info || 'Verification failed')
       }
