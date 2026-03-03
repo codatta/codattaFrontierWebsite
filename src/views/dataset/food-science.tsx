@@ -95,7 +95,7 @@ export default function FoodScience() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/MM-Food-100K'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('food-science')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }

@@ -77,7 +77,7 @@ export default function Healthcare() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Refined-TCGA-PRAD-Prostate-Cancer-Pathology-Dataset'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('healthcare')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }
