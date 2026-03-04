@@ -1,7 +1,6 @@
 import { message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
@@ -16,7 +15,6 @@ import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
 export default function UserInfoReputationApp() {
   const { info } = useUserStore()
-  const navigate = useNavigate()
   const [detail, setDetail] = useState<ReputationDetail>()
   const [loading, setLoading] = useState(false)
   const toast = useAppToast()
