@@ -1,5 +1,6 @@
 import { Modal } from 'antd'
-import { X } from 'lucide-react'
+
+import CloseBtn from '@/components/mobile-app/close-btn'
 
 interface InfoModalAppProps {
   open: boolean
@@ -33,20 +34,8 @@ export default function InfoModalApp({ open, onClose, title, description }: Info
             {description && <div className="text-sm font-medium leading-[18px] text-[#1C1C26]">{description}</div>}
           </div>
         </div>
-        <div className="-mt-3 flex items-center justify-center">
-          <CloseIcon onClick={onClose} />
-        </div>
+        <CloseBtn onClick={onClose} className="mx-auto mt-3" />
       </>
     </Modal>
-  )
-}
-
-function CloseIcon({ onClick }: { onClick: () => void }) {
-  return (
-    <div className="flex size-[96px] cursor-pointer items-center justify-center" onClick={onClick}>
-      <div className="flex size-[44px] items-center justify-center rounded-full bg-white backdrop-blur-[20px]">
-        <X className="size-5 text-[#404040]" strokeWidth={2.5} />
-      </div>
-    </div>
   )
 }
