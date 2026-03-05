@@ -8,6 +8,7 @@ import AuthChecker from '@/components/app/auth-checker'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import SubmittedModal from '@/components/mobile-app/submitted-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
 import {
@@ -96,6 +97,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
   const [showInfoModal, setShowInfoModal] = useState(false)
+  const [showSubmittedModal, setShowSubmittedModal] = useState(false)
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [answers, setAnswers] = useState<FashionAnswerDraft[]>([])
@@ -235,6 +237,12 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       if (!templateId?.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
       }
+
+      // Check if task is already submitted (validation type)
+      if (res.data.user_submit_flag === 1 && res.data.task_type === 'validation') {
+        setShowSubmittedModal(true)
+        return
+      }
       // const totalRewards = res.data.reward_info
       //   .filter((item) => item.reward_mode === 'REGULAR' && item.reward_type === 'POINTS')
       //   .reduce((acc, cur) => acc + cur.reward_value, 0)
@@ -246,6 +254,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
 
       console.log('frontieId', res.data.frontier_id)
       // setFrontierId(res.data.frontier_id)
+
       setQuestions(fetchedQuestions)
       setAnswers(fetchedQuestions.map((q) => ({ image_url: q.image_url, uid: q.uid })))
     } catch (error) {
@@ -393,6 +402,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
           </div>
 
           <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
+          <SubmittedModal open={showSubmittedModal} onClose={onBack} />
         </div>
 
         <HelpDrawer

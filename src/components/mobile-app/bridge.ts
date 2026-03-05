@@ -64,6 +64,7 @@ function isInApp(): boolean {
 function isBridgeAvailable(): boolean {
   if (typeof window === 'undefined') return false
   if (!window.webkit?.messageHandlers?.bridge) return false
+
   return isInApp() || !!window.__bridgeMockEnabled
 }
 
