@@ -8,6 +8,7 @@ interface MobileAppFrontierHeaderProps {
   transparent?: boolean
   canSubmit?: boolean
   showSubmitButton?: boolean
+  isFixed?: boolean
 
   onBack?: () => void
   onSubmit?: () => void
@@ -29,7 +30,8 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
     rightIcon,
     onRightIconClick,
     rightIconBackground,
-    onHelp
+    onHelp,
+    isFixed = true
   } = props
   const handleBack = onBack || bridge.goBack
   const finalRightIcon = onHelp ? (
@@ -46,12 +48,14 @@ export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderPr
   const handleRightIconClick = onHelp || onRightIconClick
 
   return (
-    <div className="text-black">
-      <div className="h-[76px]"></div>
+    <div className={cn('text-black', isFixed ? 'h-[76px]' : '')}>
       <div
-        className={`fixed top-0 z-10 grid w-full grid-cols-[44px_1fr_44px] p-4 text-[17px] ${
-          transparent ? '' : 'bg-gradient-to-b from-[#F8F8F8] via-[#F8F8F8BB] to-[#F8F8F800]'
-        }`}
+        className={cn(
+          `fixed top-0 z-10 grid w-full grid-cols-[44px_1fr_44px] p-4 text-[17px] ${
+            transparent ? '' : 'bg-gradient-to-b from-[#F8F8F8] via-[#F8F8F8BB] to-[#F8F8F800]'
+          }`,
+          isFixed ? 'fixed' : 'relative'
+        )}
       >
         <button
           onClick={handleBack}
