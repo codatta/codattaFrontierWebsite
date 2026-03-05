@@ -307,6 +307,10 @@ class frontier {
     page_num: number
     page_size: number
     task_types?: string
+    reputation_min?: number // 0 ~100
+
+    reputation_max?: number // 0 ~100
+    qualification_check?: 0 | 1 // 1-check, 0-no check
   }): Promise<PaginationResponse<TaskDetail[]>> {
     const res = await this.request.post('/v2/frontier/task/list', params)
     return res.data
