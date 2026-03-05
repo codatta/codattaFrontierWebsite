@@ -234,7 +234,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
       }
 
       // Check if task is already submitted (validation type)
-      if (res.data.user_submit_flag === 1 && res.data.task_type === 'validation') {
+      if (res.data.user_submit_flag === 0 && res.data.task_type === 'validation') {
         setShowSubmittedModal(true)
         return
       }
