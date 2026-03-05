@@ -8,6 +8,7 @@ import FoodAnnotationUpload from '@/components/frontier/food-annotation/upload'
 import type { UploadedImage } from '@/components/frontier/food-annotation/upload'
 import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import SubmittedModal from '@/components/mobile-app/submitted-modal'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
@@ -73,6 +74,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
   const [showRulerPhotoDrawer, setShowRulerPhotoDrawer] = useState(false)
   const [showRequirementsModal, setShowRequirementsModal] = useState(true)
   const [showHelpModal, setShowHelpModal] = useState(false)
+  const [showSubmittedModal, setShowSubmittedModal] = useState(false)
   const allFieldsFilled = useMemo(() => {
     // Basic fields validation
     const basicFieldsValid =
@@ -230,6 +232,13 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
         message.error('Template not match!')
         return
       }
+
+      // Check if task is already submitted (validation type)
+      if (res.data.user_submit_flag === 1 && res.data.task_type === 'validation') {
+        setShowSubmittedModal(true)
+        return
+      }
+
       // setFrontierId(res.data.frontier_id)
     } catch (error) {
       message.error(error.message ? error.message : 'Failed to get task detail!')
@@ -475,6 +484,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
           </div>
 
           <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
+          <SubmittedModal open={showSubmittedModal} />
         </div>
       </Spin>
 

@@ -10,6 +10,7 @@ import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import SubmittedModal from '@/components/mobile-app/submitted-modal'
 import Checkbox from '@/components/mobile-app/checkbox'
 import Upload from '@/components/mobile-app/image-upload'
 
@@ -39,6 +40,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
   const [showInfoModal, setShowInfoModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [showThemeDrawer, setShowThemeDrawer] = useState(false)
+  const [showSubmittedModal, setShowSubmittedModal] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
 
   const [formData, setFormData] = useState<PhotoCollectionFormData>({
@@ -78,6 +80,12 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
 
       if (templateId && !templateId.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
+      }
+
+      // Check if task is already submitted (validation type)
+      if (res.data.user_submit_flag === 1 && res.data.task_type === 'validation') {
+        setShowSubmittedModal(true)
+        return
       }
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to load task detail.'
@@ -341,6 +349,7 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
         />
 
         <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
+        <SubmittedModal open={showSubmittedModal} />
       </Spin>
     </AuthChecker>
   )
