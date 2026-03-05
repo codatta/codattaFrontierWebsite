@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Modal } from 'antd'
+import { Button, Modal, Slider } from 'antd'
 
 import { cn } from '@udecode/cn'
 
@@ -7,10 +7,14 @@ import { TaskType } from '@/apis/frontiter.api'
 
 export type FilterState = {
   task_types: TaskType[]
+  qualification_check?: 0 | 1
+  min_reputation?: number
 }
 
 const DEFAULT_FILTER_STATE: FilterState = {
-  task_types: ['submission', 'validation']
+  task_types: ['submission', 'validation'],
+  qualification_check: undefined,
+  min_reputation: 0
 }
 
 interface RoboticsTaskFilterModalProps {
@@ -54,76 +58,142 @@ const RoboticsTaskFilterModal: React.FC<RoboticsTaskFilterModalProps> = ({ open,
         <div className="mb-6 text-xl font-bold">Filter</div>
 
         <div className="flex flex-col gap-6">
-          <div>
-            <div className="mb-3 text-[#D2D2D4]">Task Type</div>
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() =>
-                  setDraftFilter((prev) => {
-                    const isSubmissionSelected = prev.task_types.includes('submission')
-                    const isValidationSelected = prev.task_types.includes('validation')
+          <div className="flex items-center gap-6">
+            <div>
+              <div className="mb-3 text-[#D2D2D4]">Task Type</div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDraftFilter((prev) => {
+                      const isSubmissionSelected = prev.task_types.includes('submission')
+                      const isValidationSelected = prev.task_types.includes('validation')
 
-                    if (isSubmissionSelected) {
-                      // Attempting to uncheck Submission
-                      // Only allow if Validation is also selected (so we don't end up with empty)
-                      if (!isValidationSelected) return prev
-                      return {
-                        ...prev,
-                        task_types: prev.task_types.filter((t) => t !== 'submission')
+                      if (isSubmissionSelected) {
+                        // Attempting to uncheck Submission
+                        // Only allow if Validation is also selected (so we don't end up with empty)
+                        if (!isValidationSelected) return prev
+                        return {
+                          ...prev,
+                          task_types: prev.task_types.filter((t) => t !== 'submission')
+                        }
+                      } else {
+                        // Checking Submission
+                        return {
+                          ...prev,
+                          task_types: [...prev.task_types, 'submission']
+                        }
                       }
-                    } else {
-                      // Checking Submission
-                      return {
-                        ...prev,
-                        task_types: [...prev.task_types, 'submission']
-                      }
-                    }
-                  })
-                }
-                className={cn(
-                  'min-w-[110px] rounded-full border px-4 py-1.5 text-center text-sm transition-colors',
-                  draftFilter.task_types.includes('submission')
-                    ? 'border-transparent bg-white text-black'
-                    : 'border-white/20 bg-transparent text-white/80'
-                )}
-              >
-                Contribute
-              </button>
-              <button
-                type="button"
-                onClick={() =>
-                  setDraftFilter((prev) => {
-                    const isValidationSelected = prev.task_types.includes('validation')
-                    const isSubmissionSelected = prev.task_types.includes('submission')
+                    })
+                  }
+                  className={cn(
+                    'min-w-[110px] rounded-full border px-4 py-1.5 text-center text-sm transition-colors',
+                    draftFilter.task_types.includes('submission')
+                      ? 'border-transparent bg-white text-black'
+                      : 'border-white/20 bg-transparent text-white/80'
+                  )}
+                >
+                  Contribute
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDraftFilter((prev) => {
+                      const isValidationSelected = prev.task_types.includes('validation')
+                      const isSubmissionSelected = prev.task_types.includes('submission')
 
-                    if (isValidationSelected) {
-                      // Attempting to uncheck Validation
-                      // Only allow if Submission is also selected
-                      if (!isSubmissionSelected) return prev
-                      return {
-                        ...prev,
-                        task_types: prev.task_types.filter((t) => t !== 'validation')
+                      if (isValidationSelected) {
+                        // Attempting to uncheck Validation
+                        // Only allow if Submission is also selected
+                        if (!isSubmissionSelected) return prev
+                        return {
+                          ...prev,
+                          task_types: prev.task_types.filter((t) => t !== 'validation')
+                        }
+                      } else {
+                        // Checking Validation
+                        return {
+                          ...prev,
+                          task_types: [...prev.task_types, 'validation']
+                        }
                       }
-                    } else {
-                      // Checking Validation
-                      return {
-                        ...prev,
-                        task_types: [...prev.task_types, 'validation']
-                      }
-                    }
-                  })
-                }
-                className={cn(
-                  'min-w-[110px] rounded-full border px-4 py-1.5 text-center transition-colors',
-                  draftFilter.task_types.includes('validation')
-                    ? 'border-transparent bg-white text-black'
-                    : 'border-white/20 bg-transparent text-white/80'
-                )}
-              >
-                Review
-              </button>
+                    })
+                  }
+                  className={cn(
+                    'min-w-[110px] rounded-full border px-4 py-1.5 text-center transition-colors',
+                    draftFilter.task_types.includes('validation')
+                      ? 'border-transparent bg-white text-black'
+                      : 'border-white/20 bg-transparent text-white/80'
+                  )}
+                >
+                  Review
+                </button>
+              </div>
             </div>
+
+            <div>
+              <div className="mb-3 text-[#D2D2D4]">Qualification</div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDraftFilter((prev) => ({
+                      ...prev,
+                      qualification_check: prev.qualification_check === 1 ? undefined : 1
+                    }))
+                  }
+                  className={cn(
+                    'min-w-[110px] rounded-full border px-4 py-1.5 text-center text-sm transition-colors',
+                    draftFilter.qualification_check === 1
+                      ? 'border-transparent bg-white text-black'
+                      : 'border-white/20 bg-transparent text-white/80'
+                  )}
+                >
+                  Yes
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setDraftFilter((prev) => ({
+                      ...prev,
+                      qualification_check: prev.qualification_check === 0 ? undefined : 0
+                    }))
+                  }
+                  className={cn(
+                    'min-w-[110px] rounded-full border px-4 py-1.5 text-center text-sm transition-colors',
+                    draftFilter.qualification_check === 0
+                      ? 'border-transparent bg-white text-black'
+                      : 'border-white/20 bg-transparent text-white/80'
+                  )}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="mb-3 flex items-center justify-between text-[#D2D2D4]">
+              <span>Min Reputation</span>
+              <span className="text-white">{draftFilter.min_reputation || 0}</span>
+            </div>
+            <Slider
+              min={0}
+              max={100}
+              step={1}
+              value={draftFilter.min_reputation || 0}
+              onChange={(value) =>
+                setDraftFilter((prev) => ({
+                  ...prev,
+                  min_reputation: value
+                }))
+              }
+              tooltip={{ open: false }}
+              styles={{
+                track: { backgroundColor: '#875DFF' },
+                rail: { backgroundColor: 'rgba(255, 255, 255, 0.2)' }
+              }}
+            />
           </div>
         </div>
 

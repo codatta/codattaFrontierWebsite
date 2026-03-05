@@ -22,7 +22,7 @@ const TaskList: React.FC = () => {
   const { frontier_id = 'ROBSTIC001' } = useParams()
 
   const {
-    pageData: { page, page_size, total, list, listLoading, task_types }
+    pageData: { page, page_size, total, list, listLoading, task_types, qualification_check, min_reputation }
   } = useSnapshot(frontiersStore)
 
   const [filterModalOpen, setFilterModalOpen] = useState(false)
@@ -37,11 +37,22 @@ const TaskList: React.FC = () => {
   }, [list])
 
   const handlePageChange = (page: number, _pageSize: number) => {
-    frontierStoreActions.changeFrontiersFilter({ page: page, frontier_id: frontier_id })
+    frontierStoreActions.changeFrontiersFilter({
+      page: page,
+      frontier_id: frontier_id,
+      task_types: [...task_types],
+      qualification_check,
+      min_reputation
+    })
   }
 
-  const handleFilterApply = ({ task_types }: FilterState) => {
-    frontierStoreActions.changeFrontiersFilter({ task_types: task_types, frontier_id: frontier_id })
+  const handleFilterApply = ({ task_types, qualification_check, min_reputation }: FilterState) => {
+    frontierStoreActions.changeFrontiersFilter({
+      task_types,
+      qualification_check,
+      min_reputation,
+      frontier_id: frontier_id
+    })
   }
 
   const handleTaskClick = (data: TaskDetail) => {
@@ -207,7 +218,7 @@ const TaskList: React.FC = () => {
       </Spin>
       <TaskFilterModal
         open={filterModalOpen}
-        value={{ task_types: [...task_types] }}
+        value={{ task_types: [...task_types], qualification_check, min_reputation }}
         onChange={handleFilterApply}
         onClose={() => setFilterModalOpen(false)}
       />
