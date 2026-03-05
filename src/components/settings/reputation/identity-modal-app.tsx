@@ -15,6 +15,9 @@ export default function IdentityModalApp({ open, onClose }: IdentityModalAppProp
       closeIcon={null}
       centered
       width={300}
+      transitionName=""
+      maskTransitionName=""
+      zIndex={9999}
       styles={{
         content: {
           padding: 0,
