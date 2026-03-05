@@ -444,7 +444,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
           cards={[
             {
               preset: 'about',
-              title: 'Real-world Photo',
+              title: 'Appliance Knob',
               content: [
                 {
                   type: 'p',
