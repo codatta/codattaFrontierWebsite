@@ -55,6 +55,15 @@ const TaskList: React.FC = () => {
     })
   }
 
+  const handleTagClick = (e: React.MouseEvent, type: 'qualification' | 'reputation', status?: number) => {
+    e.stopPropagation()
+    if (type === 'qualification' && status === 0) {
+      navigate('/app/settings/user-profile')
+    } else if (type === 'reputation') {
+      navigate('/app/settings/reputation')
+    }
+  }
+
   const handleTaskClick = (data: TaskDetail) => {
     console.log('Task clicked:', data)
 
@@ -178,16 +187,37 @@ const TaskList: React.FC = () => {
                   </div>
                 </div>
                 <div
-                  className="flex rounded-b-2xl bg-[#252532] px-5 py-3"
-                  style={{ display: !item.reputation ? 'none' : 'flex' }}
+                  className="flex flex-wrap gap-2.5 rounded-b-2xl bg-[#252532] px-5 py-3"
+                  style={{ display: !item.qualification_results?.length && !item.reputation ? 'none' : 'flex' }}
                 >
-                  {item.user_reputation_flag === 0 ? (
+                  {item.qualification_results
+                    ?.slice()
+                    .sort((a, b) => a.status - b.status)
+                    .map((qual, idx) => (
+                      <div
+                        key={idx}
+                        className={cn(
+                          'flex shrink-0 items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-sm leading-5',
+                          qual.status === 1
+                            ? 'bg-[#875DFF14] text-[#875DFF]'
+                            : 'cursor-pointer bg-[#FFA8001F] text-[#FFA800] hover:opacity-80'
+                        )}
+                        onClick={(e) => handleTagClick(e, 'qualification', qual.status)}
+                      >
+                        {qual.name}: {qual.value}
+                      </div>
+                    ))}
+                  {item.user_reputation_flag === 0 && item.reputation !== undefined && (
                     <div className="flex h-[26px] items-center rounded-lg bg-[#D92B2B1F] px-2 text-sm text-[#D92B2B]">
                       Reputation: Too low
                     </div>
-                  ) : (
-                    <div className="flex h-[26px] items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF]">
-                      Reputation: {item.reputation ?? 0}
+                  )}
+                  {item.user_reputation_flag === 1 && !!item.reputation && (
+                    <div
+                      className="flex cursor-pointer items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF] hover:opacity-80"
+                      onClick={(e) => handleTagClick(e, 'reputation')}
+                    >
+                      Reputation: {item.reputation}
                     </div>
                   )}
                 </div>
