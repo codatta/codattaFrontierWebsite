@@ -59,6 +59,8 @@ const AirdropKnobApp = lazy(() => import('@/views/frontiers/airdrop_knob_app'))
 const RealWorldPhotoCollection = lazy(() => import('@/views/frontiers/real_world_photo_collection'))
 const RealWorldPhotoCollectionApp = lazy(() => import('@/views/frontiers/real_world_photo_collection_app'))
 
+const TemplateRuntime = lazy(() => import('@/views/template/template-runtime'))
+
 // ============================================================
 // Helper: generates routes for templates that use AppContainerDetector
 // with an optional /feed/:uid sub-route
@@ -179,5 +181,6 @@ export const frontierProjectRoutes = (
       <Route index element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />} />
       <Route path="feed/:uid" element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" isFeed={true} />} />
     </Route>
+    <Route path="/frontier/project/:templateId/:taskId" element={<TemplateRuntime />} />
   </>
 )
