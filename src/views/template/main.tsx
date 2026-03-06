@@ -15,12 +15,12 @@ import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import isToday from 'dayjs/plugin/isToday'
 import { defineChain } from 'viem'
-<<<<<<< HEAD
-
-import { initGA } from '@/utils/analytics'
-=======
+import { init } from '@module-federation/runtime'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import * as ReactDOMClient from 'react-dom/client'
+import * as ReactJsxRuntime from 'react/jsx-runtime'
 import { initGA } from './utils/track'
->>>>>>> ee1f9f0 (feat: template runtime)
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -54,6 +54,49 @@ const BSC_CHAIN = defineChain({
 })
 
 initGA()
+
+init({
+  name: 'codatta-frontier-website',
+  remotes: [],
+  shared: {
+    react: {
+      version: '18.0.0',
+      scope: 'default',
+      lib: () => React,
+      shareConfig: {
+        singleton: true,
+        requiredVersion: '^18.0.0'
+      }
+    },
+    'react-dom': {
+      version: '18.0.0',
+      scope: 'default',
+      lib: () => ReactDOM,
+      shareConfig: {
+        singleton: true,
+        requiredVersion: '^18.0.0'
+      }
+    },
+    'react-dom/client': {
+      version: '18.0.0',
+      scope: 'default',
+      lib: () => ReactDOMClient,
+      shareConfig: {
+        singleton: true,
+        requiredVersion: '^18.0.0'
+      }
+    },
+    'react/jsx-runtime': {
+      version: '18.0.0',
+      scope: 'default',
+      lib: () => ReactJsxRuntime,
+      shareConfig: {
+        singleton: true,
+        requiredVersion: '^18.0.0'
+      }
+    }
+  }
+})
 
 const userAgent = navigator.userAgent.toLowerCase()
 const isInCodattaApp = userAgent.includes('codatta')

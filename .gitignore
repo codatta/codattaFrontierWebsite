@@ -33,3 +33,4 @@ scripts/*.json
 
 # env file
 .env
+.__mf__temp

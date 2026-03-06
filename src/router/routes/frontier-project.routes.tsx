@@ -179,5 +179,6 @@ export const frontierProjectRoutes = (
       <Route index element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" />} />
       <Route path="feed/:uid" element={<AirdropFoodApp templateId="AIRDROP_FOOD_APP" isFeed={true} />} />
     </Route>
+    <Route path="/frontier/project/:templateId/:taskId" element={}></Route>
   </>
 )
