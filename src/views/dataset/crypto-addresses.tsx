@@ -132,7 +132,7 @@ export default function CryptoAddresses() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Crypto-Address-Annotation-10K'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('crypto-addresses')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }

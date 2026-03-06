@@ -60,7 +60,6 @@ export const appRoutes = (
 
     {/* Mobile routes */}
     <Route path="/m">
-      <Route path="settings/reputation" element={<UserInfoReputationApp />} />
       <Route path="referral" element={<ReferralApp />} />
     </Route>
 
@@ -117,5 +116,6 @@ export const appRoutes = (
     <Route path="/app/settings/data-profile/app" element={<UserInfoDataProfileApp />} />
     <Route path="/app/settings/data-profile/app/detail" element={<UserInfoDataProfileAppDetail />} />
     <Route path="/app/settings/data-profile/onchain-data-verify" element={<OnChainDataVerify />} />
+    <Route path="/app/settings/reputation/app" element={<UserInfoReputationApp />} />
   </>
 )

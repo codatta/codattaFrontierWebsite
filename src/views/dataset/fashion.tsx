@@ -32,7 +32,7 @@ export default function Fashion() {
   function handleDownload() {
     const url = 'https://huggingface.co/datasets/Codatta/Fashion-1K'
     if (bridge.isInApp()) {
-      bridge.downloadDataset('fashion')
+      bridge.openBrowser(url)
     } else {
       window.open(url, '_blank')
     }

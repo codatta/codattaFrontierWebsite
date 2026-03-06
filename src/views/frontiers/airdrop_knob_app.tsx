@@ -8,6 +8,7 @@ import AuthChecker from '@/components/app/auth-checker'
 import FrontierHeader from '@/components/mobile-app/frontier-header'
 import HelpDrawer from '@/components/mobile-app/help-drawer'
 import SuccessModal from '@/components/mobile-app/success-modal'
+import SubmittedModal from '@/components/mobile-app/submitted-modal'
 import Upload from '@/components/mobile-app/image-upload'
 import BottomDrawer from '@/components/mobile-app/bottom-drawer'
 import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/frontier/airdrop/knob/annotation-canvas-app'
@@ -34,6 +35,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
   const [showExampleModal, setShowExampleModal] = useState(false)
   const [exampleType, setExampleType] = useState<'original' | 'annotated'>('original')
   const [showAnnotationModal, setShowAnnotationModal] = useState(false)
+  const [showSubmittedModal, setShowSubmittedModal] = useState(false)
   const [rewardPoints, setRewardPoints] = useState<number | undefined>(undefined)
 
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
@@ -55,6 +57,12 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
 
       if (templateId && !templateId.includes(res.data.data_display.template_id)) {
         throw new Error('Template not match!')
+      }
+
+      // Check if task is already submitted (validation type)
+      if (res.data.user_submit_flag === 0 && res.data.task_type === 'validation') {
+        setShowSubmittedModal(true)
+        return
       }
     } catch (error) {
       const errMsg = error instanceof Error ? error.message : 'Failed to load task detail.'
@@ -444,7 +452,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
           cards={[
             {
               preset: 'about',
-              title: 'Real-world Photo',
+              title: 'Appliance Knob',
               content: [
                 {
                   type: 'p',
@@ -538,6 +546,7 @@ export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: st
         )}
 
         <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
+        <SubmittedModal open={showSubmittedModal} />
       </Spin>
     </AuthChecker>
   )

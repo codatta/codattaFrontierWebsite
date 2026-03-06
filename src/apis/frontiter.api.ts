@@ -94,7 +94,9 @@ export interface TaskDetail {
   result: 'S' | 'A' | 'B' | 'C' | 'D'
   chain_status: 0 | 1 | 2 | 3 | 4
   qualification?: string
-  qualification_flag: 0 | 1 // 1-passed 0-not passed
+  qualification_flag: 0 | 1
+  qualification_config?: Record<string, unknown>
+  user_submit_flag?: 0 | 1 // 1 can submit, 0 cannot submit
 
   reputation: number
   reward_points: null | number

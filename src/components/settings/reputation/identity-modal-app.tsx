@@ -1,5 +1,5 @@
 import { Modal } from 'antd'
-import { X } from 'lucide-react'
+import XIcon from '@/assets/icons/app-close-icon.svg?react'
 
 interface IdentityModalAppProps {
   open: boolean
@@ -15,6 +15,9 @@ export default function IdentityModalApp({ open, onClose }: IdentityModalAppProp
       closeIcon={null}
       centered
       width={300}
+      transitionName=""
+      maskTransitionName=""
+      zIndex={9999}
       styles={{
         content: {
           padding: 0,
@@ -36,7 +39,8 @@ export default function IdentityModalApp({ open, onClose }: IdentityModalAppProp
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-2 rounded-full bg-[#F2F2F7] px-3 py-1.5">
             <button onClick={onClose} className="rounded-full bg-[#1C1C26] p-1">
-              <X className="size-3 text-white" />
+              <XIcon />
+              {/* <X className="size-3 text-white" /> */}
             </button>
           </div>
           <div className="flex items-center gap-2 font-bold text-[#58E6F3]">+7.5</div>

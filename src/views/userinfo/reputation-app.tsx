@@ -1,7 +1,6 @@
 import { message, Spin } from 'antd'
 import { useEffect, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
@@ -11,12 +10,11 @@ import CalculationModalApp from '@/components/settings/reputation/calculation-mo
 import InfoModalApp from '@/components/settings/reputation/info-modal-app'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card-app'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
-import { jumpInApp } from '@/utils/bridge'
+import bridge from '@/components/mobile-app/bridge'
 import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
 export default function UserInfoReputationApp() {
   const { info } = useUserStore()
-  const navigate = useNavigate()
   const [detail, setDetail] = useState<ReputationDetail>()
   const [loading, setLoading] = useState(false)
   const toast = useAppToast()
@@ -63,7 +61,7 @@ export default function UserInfoReputationApp() {
     <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[13px] leading-[17px] text-[#666666]">
       <AppToastContainer />
       <Spin spinning={loading}>
-        <MobileAppFrontierHeader title="Reputation" onBack={() => navigate(-1)} transparent />
+        <MobileAppFrontierHeader title="Reputation" transparent isFixed={false} />
 
         {/* Score Section */}
         <div className="flex flex-col items-center justify-center pb-8 pt-2" onClick={() => setCalculationOpen(true)}>
@@ -171,7 +169,7 @@ export default function UserInfoReputationApp() {
               }}
               progressVariant="contrast"
               buttonText="Go"
-              onButtonClick={() => jumpInApp('app', 'home')}
+              onButtonClick={() => bridge.openHome()}
               onInfoClick={() =>
                 openInfoModal('Contribution', 'Submit high-quality data to improve your acceptance rate.')
               }
