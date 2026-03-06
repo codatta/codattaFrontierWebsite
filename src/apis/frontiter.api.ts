@@ -57,6 +57,13 @@ export interface FrontierActivityInfoItem {
   description?: string
 }
 
+export interface FashionQuestion {
+  content: object
+  image_url: string
+  source_type: string
+  uid: string
+}
+
 export interface TaskDetail {
   frontier_id: string
   task_id: string
@@ -74,10 +81,10 @@ export interface TaskDetail {
     link?: string
     bot_id?: string
     data_source?: string
-    web_template_url?: string
-    app_template_url?: string
+    template_url?: string
+    template_tag?: string
   }
-  questions?: CMUDataRequirements[]
+  questions?: CMUDataRequirements[] | FashionQuestion[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown

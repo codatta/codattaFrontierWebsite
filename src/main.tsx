@@ -15,12 +15,8 @@ import timezone from 'dayjs/plugin/timezone'
 import utc from 'dayjs/plugin/utc'
 import isToday from 'dayjs/plugin/isToday'
 import { defineChain } from 'viem'
-<<<<<<< HEAD
 
 import { initGA } from '@/utils/analytics'
-=======
-import { initGA } from './utils/track'
->>>>>>> ee1f9f0 (feat: template runtime)
 
 dayjs.extend(duration)
 dayjs.extend(utc)

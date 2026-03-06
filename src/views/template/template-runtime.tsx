@@ -1,34 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { message } from 'antd'
-
-type TemplateScriptConfig = {
-  version: string
-  jsUrl: string
-  tagName: string
-}
-
-const TEMPLATE_SCRIPT_MAP: Record<string, TemplateScriptConfig> = {
-  'example-001': {
-    version: '20260228.095732',
-    jsUrl: 'https://static.codatta.io/templates/example-001/version/20260302.095805/index.js',
-    tagName: 'codatta-template'
-  }
-}
+import frontiterApi from '@/apis/frontiter.api'
 
 const scriptLoadingCache = new Map<string, Promise<void>>()
 
-function normalizeTagPart(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
-function getTemplateTagName(templateId: string, version: string) {
-  const id = normalizeTagPart(templateId)
-  const ver = normalizeTagPart(version)
-  return `codatta-template-${id}-v-${ver}`
+type TemplateRuntimeRouteState = {
+  template_url?: string
+  template_tag?: string
+  template_id?: string
 }
 
 function loadScriptOnce(jsUrl: string) {
@@ -87,20 +67,45 @@ async function waitForCustomElement(tagName: string, timeout = 15000) {
 }
 
 export default function TemplateRuntime() {
-  const { taskId, templateId } = useParams()
+  const { taskId, templateId: routeTemplateId } = useParams()
+  const location = useLocation()
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const mountRef = useRef<HTMLDivElement>(null)
+  const routeState = (location.state as TemplateRuntimeRouteState | null) ?? null
 
-  async function initTemplate(currentTemplateId: string, currentTaskId: string) {
+  async function initTemplate(currentTaskId: string) {
     setLoading(true)
-    const config = TEMPLATE_SCRIPT_MAP[currentTemplateId]
-    if (!config) {
-      message.error('Template not found! or not supported in this platform!')
+    setError(null)
+
+    let jsUrl = routeState?.template_url
+    let tagName = routeState?.template_tag
+    let templateId = routeState?.template_id || routeTemplateId
+
+    if (!jsUrl || !tagName) {
+      try {
+        const res = await frontiterApi.getTaskDetail(currentTaskId)
+        const taskDetail = res.data
+        jsUrl = taskDetail.data_display.template_url
+        tagName = taskDetail.data_display.template_tag
+        templateId = taskDetail.data_display.template_id || taskDetail.template_id || routeTemplateId
+      } catch (err) {
+        const msg = (err as Error)?.message || 'Failed to load task detail'
+        setError(msg)
+        message.error(msg)
+        setLoading(false)
+        return
+      }
+    }
+
+    if (!jsUrl || !tagName) {
+      const msg = 'Template configuration is missing (template_url or template_tag)'
+      setError(msg)
+      message.error(msg)
       setLoading(false)
       return
     }
 
-    const tagName = config.tagName || getTemplateTagName(currentTemplateId, config.version)
     const mountNode = mountRef.current
     if (!mountNode) {
       setLoading(false)
@@ -113,30 +118,33 @@ export default function TemplateRuntime() {
     }
     const onError = (event: Event) => {
       const customEvent = event as CustomEvent<{ message?: string }>
-      message.error(customEvent.detail?.message || 'Template render failed')
+      const msg = customEvent.detail?.message || 'Template render failed'
+      message.error(msg)
       setLoading(false)
     }
 
     try {
-      await loadScriptOnce(config.jsUrl)
+      await loadScriptOnce(jsUrl)
       await waitForCustomElement(tagName)
 
       element = document.createElement(tagName)
-      element.setAttribute('task-id', currentTaskId)
-      element.setAttribute('template-id', currentTemplateId)
-      element.setAttribute('template-version', config.version)
-      ;(element as HTMLElement & { taskId?: string; templateId?: string }).taskId = currentTaskId
-      ;(element as HTMLElement & { taskId?: string; templateId?: string }).templateId = currentTemplateId
+      const el = element
+      el.setAttribute('task-id', currentTaskId)
+      if (templateId) {
+        el.setAttribute('template-id', templateId)
+      }
+      ;(el as HTMLElement & { taskId?: string }).taskId = currentTaskId
 
-      element.addEventListener('template:ready', onReady)
-      element.addEventListener('template:error', onError)
+      el.addEventListener('template:ready', onReady)
+      el.addEventListener('template:error', onError)
 
       mountNode.innerHTML = ''
-      mountNode.appendChild(element)
+      mountNode.appendChild(el)
       setLoading(false)
     } catch (err) {
-      const error = err as Error
-      message.error(error.message || 'Template init failed')
+      const msg = (err as Error)?.message || 'Template init failed'
+      message.error(msg)
+      setError(msg)
       setLoading(false)
     }
 
@@ -152,26 +160,26 @@ export default function TemplateRuntime() {
   }
 
   useEffect(() => {
-    if (!taskId || !templateId) {
+    if (!taskId) {
+      setError('Missing taskId')
       setLoading(false)
       return
     }
 
-    const runtimeTemplateId = templateId in TEMPLATE_SCRIPT_MAP ? templateId : 'example-001'
-
     let dispose: (() => void) | undefined
-    initTemplate(runtimeTemplateId, taskId).then((cleanup) => {
+    initTemplate(taskId).then((cleanup) => {
       dispose = cleanup
     })
 
     return () => {
       dispose?.()
     }
-  }, [taskId, templateId])
+  }, [routeState?.template_id, routeState?.template_tag, routeState?.template_url, routeTemplateId, taskId])
 
   return (
     <>
       {loading ? <div>Loading...</div> : null}
+      {error && !loading ? <div>{error}</div> : null}
       <div ref={mountRef} />
     </>
   )

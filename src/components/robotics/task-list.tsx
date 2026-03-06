@@ -17,6 +17,12 @@ import TaskFilterModal, { FilterState } from './task-filter-modal'
 import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
 import ToStakeModal from '@/components/settings/to-stake-modal'
 
+type TemplateRuntimeRouteState = {
+  template_url?: string
+  template_tag?: string
+  template_id?: string
+}
+
 const TaskList: React.FC = () => {
   const navigate = useNavigate()
   const { frontier_id = 'ROBSTIC001' } = useParams()
@@ -30,6 +36,7 @@ const TaskList: React.FC = () => {
   const [toStakeModalOpen, setToStakeModalOpen] = useState(false)
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
   const [taskUrl, setTaskUrl] = useState('')
+  const [taskRouteState, setTaskRouteState] = useState<TemplateRuntimeRouteState>()
   const [taskStakeConfig, setTaskStakeConfig] = useState<TaskStakeConfig>()
 
   const displayList = useMemo(() => {
@@ -44,11 +51,20 @@ const TaskList: React.FC = () => {
     frontierStoreActions.changeFrontiersFilter({ task_types: task_types, frontier_id: frontier_id })
   }
 
+  const getTemplateRouteState = (data: TaskDetail): TemplateRuntimeRouteState => ({
+    template_id: data.data_display.template_id || data.template_id,
+    template_tag: data.data_display.template_tag,
+    template_url: data.data_display.template_url
+  })
+
   const handleTaskClick = (data: TaskDetail) => {
     console.log('Task clicked:', data)
+    const nextTaskUrl = `/frontier/project/${data.data_display.template_id}/${data.task_id}`
+    const nextTaskRouteState = getTemplateRouteState(data)
 
     if (data.user_reputation_flag === 0) {
-      setTaskUrl(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+      setTaskUrl(nextTaskUrl)
+      setTaskRouteState(nextTaskRouteState)
       setStakeTaskId(data.task_id)
       setToStakeModalOpen(true)
       return
@@ -58,7 +74,7 @@ const TaskList: React.FC = () => {
       message.error('Reputation not met!')
       return
     }
-    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+    navigate(nextTaskUrl, { state: nextTaskRouteState })
   }
 
   const handleStake = (stakeInfo: TaskStakeInfo) => {
@@ -66,7 +82,8 @@ const TaskList: React.FC = () => {
     setStakeModalOpen(true)
     setTaskStakeConfig({
       ...stakeInfo,
-      taskUrl
+      taskUrl,
+      taskRouteState
     })
   }
 
