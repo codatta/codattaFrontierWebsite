@@ -17,6 +17,13 @@ export interface TaskRewardInfo {
   reward_value: number
 }
 
+export interface TaskQualificationResult {
+  code: string
+  name: string
+  value: string
+  status: 0 | 1 // 1-passed 0-not passed
+}
+
 export type ActiveStatus = 'ACTIVE' | 'INACTIVE' | 'COMPLETED'
 export type RankingGrade = 'S' | 'A' | 'B' | 'C' | 'D'
 export type TaskType = 'submission' | 'validation'
@@ -80,13 +87,14 @@ export interface TaskDetail {
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
   qualification_datas: TaskInfo[]
+  qualification_results?: TaskQualificationResult[]
 
   status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
   result: 'S' | 'A' | 'B' | 'C' | 'D'
   chain_status: 0 | 1 | 2 | 3 | 4
   qualification?: string
-  qualification_flag: 0 | 1
+  qualification_flag: 0 | 1 // 1-passed 0-not passed
 
   reputation: number
   reward_points: null | number
