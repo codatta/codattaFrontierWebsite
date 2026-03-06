@@ -16,7 +16,7 @@ export const useCMUStore = () => useSnapshot(cmuStore)
 
 async function getTaskList(taskId: string) {
   const res = await frontiterApi.getTaskDetail(taskId)
-  cmuStore.taskList = res.data.questions || []
+  cmuStore.taskList = (res.data.questions || []) as CMUDataRequirements[]
   cmuStore.taskStatus = res.data.question_status
 
   return res.data.questions || []
