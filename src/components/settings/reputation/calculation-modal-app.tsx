@@ -1,6 +1,7 @@
 import { Modal } from 'antd'
+
+import CloseBtn from '@/components/mobile-app/close-btn'
 import { ReputationDetail } from '@/apis/reputation.api'
-import { X } from 'lucide-react'
 
 interface CalculationModalAppProps {
   open: boolean
@@ -49,9 +50,8 @@ export default function CalculationModalApp({ open, onClose, data }: Calculation
             </div>
           </div>
         </div>
-        <div className="-mt-3 flex items-center justify-center">
-          <CloseIcon onClick={onClose} />
-        </div>
+
+        <CloseBtn onClick={onClose} className="mx-auto mt-3" />
       </>
     </Modal>
   )
@@ -63,16 +63,6 @@ function PlusSign() {
 
 function MinusSign() {
   return <div className="flex h-[26px] items-center justify-center text-lg font-bold text-[#1C1C26]">-</div>
-}
-
-function CloseIcon({ onClick }: { onClick: () => void }) {
-  return (
-    <div className="flex size-[96px] cursor-pointer items-center justify-center" onClick={onClick}>
-      <div className="flex size-[44px] items-center justify-center rounded-full bg-white backdrop-blur-[20px]">
-        <X className="size-5 text-[#404040]" strokeWidth={2.5} />
-      </div>
-    </div>
-  )
 }
 
 interface CalculationRowProps {

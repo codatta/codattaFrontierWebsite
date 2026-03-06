@@ -10,7 +10,7 @@ import CalculationModalApp from '@/components/settings/reputation/calculation-mo
 import InfoModalApp from '@/components/settings/reputation/info-modal-app'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card-app'
 import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
-import { jumpInApp } from '@/utils/bridge'
+import bridge from '@/components/mobile-app/bridge'
 import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
 export default function UserInfoReputationApp() {
@@ -169,7 +169,7 @@ export default function UserInfoReputationApp() {
               }}
               progressVariant="contrast"
               buttonText="Go"
-              onButtonClick={() => jumpInApp('app', 'home')}
+              onButtonClick={() => bridge.openHome()}
               onInfoClick={() =>
                 openInfoModal('Contribution', 'Submit high-quality data to improve your acceptance rate.')
               }
