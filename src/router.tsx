@@ -9,7 +9,6 @@ import {
   accountRoutes,
   referralRoutes,
   datasetRoutes,
-  frontierLayoutRoutes,
   frontierProjectRoutes,
   devRoutes,
   notFoundRoute
@@ -25,7 +24,6 @@ export default function Router() {
         {referralRoutes}
         {datasetRoutes}
 
-        {frontierLayoutRoutes}
         {frontierProjectRoutes}
 
         {devRoutes}
