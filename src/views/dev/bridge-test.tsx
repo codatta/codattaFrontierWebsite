@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import bridge from '@/components/mobile-app/bridge'
+import bridge from '@/components/common/bridge'
 
 // ---- Types -----------------------------------------------------------------
 

@@ -5,12 +5,12 @@ import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 
 import AuthChecker from '@/components/app/auth-checker'
 import frontiterApi from '@/apis/frontiter.api'
-import SuccessModal from '@/components/mobile-app/success-modal'
-import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
-import MobileDatePicker from '@/components/mobile-app/date-picker'
-import ScrollTimePicker from '@/components/mobile-app/scroll-time-picker'
-import LocationPicker from '@/components/mobile-app/location-picker'
-import bridge from '@/components/mobile-app/bridge'
+import SuccessModal from '@/components/common/success-modal'
+import MobileAppFrontierHeader from '@/components/common/frontier-header'
+import MobileDatePicker from '@/components/common/date-picker'
+import ScrollTimePicker from '@/components/common/scroll-time-picker'
+import LocationPicker from '@/components/common/location-picker'
+import bridge from '@/components/common/bridge'
 
 interface ChildInfo {
   id: string

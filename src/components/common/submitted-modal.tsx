@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
-import bridge from '@/components/mobile-app/bridge'
+import bridge from '@/components/common/bridge'
 
 interface SubmittedModalProps {
   open: boolean

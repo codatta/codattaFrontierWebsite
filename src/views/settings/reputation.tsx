@@ -9,8 +9,8 @@ import CategoryCardApp from '@/components/settings/reputation/category-card-app'
 import CalculationModalApp from '@/components/settings/reputation/calculation-modal-app'
 import InfoModalApp from '@/components/settings/reputation/info-modal-app'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card-app'
-import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
-import bridge from '@/components/mobile-app/bridge'
+import MobileAppFrontierHeader from '@/components/common/frontier-header'
+import bridge from '@/components/common/bridge'
 import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
 export default function UserInfoReputationApp() {

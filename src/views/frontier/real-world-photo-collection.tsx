@@ -6,13 +6,13 @@ import { cn } from '@udecode/cn'
 
 import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
-import FrontierHeader from '@/components/mobile-app/frontier-header'
-import HelpDrawer from '@/components/mobile-app/help-drawer'
-import BottomDrawer from '@/components/mobile-app/bottom-drawer'
-import SuccessModal from '@/components/mobile-app/success-modal'
-import SubmittedModal from '@/components/mobile-app/submitted-modal'
-import Checkbox from '@/components/mobile-app/checkbox'
-import Upload from '@/components/mobile-app/image-upload'
+import FrontierHeader from '@/components/common/frontier-header'
+import HelpDrawer from '@/components/common/help-drawer'
+import BottomDrawer from '@/components/common/bottom-drawer'
+import SuccessModal from '@/components/common/success-modal'
+import SubmittedModal from '@/components/common/submitted-modal'
+import Checkbox from '@/components/common/checkbox'
+import Upload from '@/components/common/image-upload'
 
 interface PhotoCollectionFormData {
   themeCategory: string

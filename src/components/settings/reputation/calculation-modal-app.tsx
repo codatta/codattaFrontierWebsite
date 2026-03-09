@@ -1,6 +1,6 @@
 import { Modal } from 'antd'
 
-import CloseBtn from '@/components/mobile-app/close-btn'
+import CloseBtn from '@/components/common/close-btn'
 import { ReputationDetail } from '@/apis/reputation.api'
 
 interface CalculationModalAppProps {

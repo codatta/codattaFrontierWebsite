@@ -4,8 +4,8 @@ import { Spin, message } from 'antd'
 
 import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
-import FrontierHeader from '@/components/mobile-app/frontier-header'
-import HelpDrawer from '@/components/mobile-app/help-drawer'
+import FrontierHeader from '@/components/common/frontier-header'
+import HelpDrawer from '@/components/common/help-drawer'
 
 interface StepCardProps {
   stepNumber: number

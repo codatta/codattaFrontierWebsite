@@ -5,10 +5,10 @@ import { CarouselRef } from 'antd/es/carousel'
 import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/app/auth-checker'
-import MobileAppFrontierHeader from '@/components/mobile-app/frontier-header'
-import HelpDrawer from '@/components/mobile-app/help-drawer'
-import SuccessModal from '@/components/mobile-app/success-modal'
-import SubmittedModal from '@/components/mobile-app/submitted-modal'
+import MobileAppFrontierHeader from '@/components/common/frontier-header'
+import HelpDrawer from '@/components/common/help-drawer'
+import SuccessModal from '@/components/common/success-modal'
+import SubmittedModal from '@/components/common/submitted-modal'
 import frontiterApi from '@/apis/frontiter.api'
 import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
 import {
@@ -27,7 +27,7 @@ import {
   SideIcon,
   CheckIcon
 } from '@/components/frontier/fashion/icons'
-import bridge from '@/components/mobile-app/bridge'
+import bridge from '@/components/common/bridge'
 
 type FashionAnswerDraft = Partial<FashionAnswer> & { image_url: string }
 
