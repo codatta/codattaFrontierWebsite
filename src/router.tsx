@@ -6,7 +6,6 @@ import GlobalModalHost from './components/app/global-modal-host'
 
 import {
   appRoutes,
-  arenaRoutes,
   accountRoutes,
   referralRoutes,
   datasetRoutes,
@@ -24,7 +23,6 @@ export default function Router() {
         {appRoutes}
         {accountRoutes}
         {referralRoutes}
-        {arenaRoutes}
         {datasetRoutes}
 
         {frontierLayoutRoutes}

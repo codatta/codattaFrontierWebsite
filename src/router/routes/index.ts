@@ -1,5 +1,4 @@
 export { appRoutes } from './app.routes'
-export { arenaRoutes } from './arena.routes'
 export { accountRoutes, referralRoutes } from './account.routes'
 export { datasetRoutes } from './dataset.routes'
 export { frontierLayoutRoutes, frontierProjectRoutes } from './frontier-project.routes'
