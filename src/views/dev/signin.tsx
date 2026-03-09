@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
-import ExtensionChecker from '@/components/account/extension-checker'
 import { Spin } from 'antd'
 import { LoaderCircle } from 'lucide-react'
 import { CodattaSignin } from 'codatta-connect'
@@ -50,14 +49,14 @@ export default function AccountSignin() {
   }
 
   const config: CodattaSigninConfig = {
-    channel: channelInfo.channel,
+    channel: 'codatta-platform-website',
     device: source,
     app: 'codatta-platform-website',
     inviterCode: channelInfo.inviterCode
   }
 
   return (
-    <ExtensionChecker check={from === 'extension'}>
+    <>
       <Spin
         spinning={loading}
         fullscreen={true}
@@ -72,6 +71,6 @@ export default function AccountSignin() {
           header={<CodattaSigninHead />}
         ></CodattaSignin>
       </div>
-    </ExtensionChecker>
+    </>
   )
 }
