@@ -9,6 +9,6 @@ export function authRedirect() {
 
   const url = new URL(window.location.href)
   const from = url.pathname + url.search
-  const redirect = `/account/signin?from=${encodeURIComponent(from)}`
+  const redirect = `/dev/signin?from=${encodeURIComponent(from)}`
   return redirect
 }

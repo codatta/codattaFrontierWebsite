@@ -23,9 +23,9 @@ function formatCompact(num: number): string {
 
 // Bottom tab navigation
 const tabs = [
-  { key: 'discover', label: 'Discover', icon: Compass, path: '/app' },
-  { key: 'frontier', label: 'Frontier', icon: ArrowRightLeft, path: '/app/frontier' },
-  { key: 'dataset', label: 'Dataset', icon: Database, path: '/dataset' },
+  { key: 'discover', label: 'Discover', icon: Compass, path: '/m' },
+  { key: 'frontier', label: 'Frontier', icon: ArrowRightLeft, path: '/m/frontier' },
+  { key: 'dataset', label: 'Dataset', icon: Database, path: '/m/dataset' },
   { key: 'referral', label: 'Referral Test', icon: Users, path: '/m/referral' }
 ]
 
@@ -118,7 +118,7 @@ export default function ReferralApp() {
 
   const shareLink = useMemo(() => {
     const shareCode = info?.user_data.referee_code || ''
-    return `${window.location.origin}/referral/${shareCode}`
+    return `${window.location.origin}/m/share/${shareCode}`
   }, [info])
 
   // Fetch referral info

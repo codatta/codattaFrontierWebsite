@@ -311,7 +311,7 @@ function AnchorDetailsDrawer(props: { open: boolean; onClose: () => void; submis
         <div className="mb-5">
           <div className="mb-3 text-[15px] font-semibold text-black">Verify fingerprint</div>
           <Link
-            to="/app/settings/data-profile/onchain-data-verify"
+            to="/m/settings/data-profile/onchain-data-verify"
             className="flex h-11 w-full items-center justify-center rounded-full border border-black/10 bg-white text-[15px] font-semibold text-black"
           >
             Start verification

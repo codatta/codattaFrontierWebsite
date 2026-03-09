@@ -148,7 +148,7 @@ const ToStakeModal: React.FC<ToStakeModalProps> = ({ open, onClose, taskId, onSt
             <Button
               className="h-10 flex-1 rounded-full border-none bg-white text-sm font-semibold text-black hover:!bg-gray-200 hover:!text-white"
               onClick={() => {
-                navigate('/app/settings/reputation')
+                navigate('/m/settings/reputation')
                 onClose()
               }}
             >

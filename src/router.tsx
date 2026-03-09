@@ -5,11 +5,10 @@ import { trackPageView } from '@/utils/analytics'
 import GlobalModalHost from './components/app/global-modal-host'
 
 import {
-  appRoutes,
-  accountRoutes,
-  referralRoutes,
   datasetRoutes,
   frontierProjectRoutes,
+  settingsRoutes,
+  referralRoutes,
   devRoutes,
   notFoundRoute
 } from './router/routes'
@@ -19,16 +18,12 @@ export default function Router() {
     <BrowserRouter>
       <RouteTracker />
       <Routes>
-        {appRoutes}
-        {accountRoutes}
-        {referralRoutes}
-        {datasetRoutes}
-
         {frontierProjectRoutes}
-
-        {devRoutes}
-
+        {referralRoutes}
+        {settingsRoutes}
+        {datasetRoutes}
         {notFoundRoute}
+        {devRoutes}
       </Routes>
       <GlobalModalHost />
     </BrowserRouter>
@@ -46,4 +41,4 @@ function RouteTracker() {
   return null
 }
 
-// http://localhost:5175/app/frontier/project/PHYSICAL_TPL_QUESTION/8995881856000103187
+// http://localhost:5175/m/frontier/project/PHYSICAL_TPL_QUESTION/8995881856000103187

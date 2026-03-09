@@ -185,7 +185,7 @@ export default function AppDataProfile() {
             <SubmissionCard
               key={s.submission_id}
               submission={s}
-              onClick={() => navigate('/app/settings/data-profile/app/detail', { state: { submission: s } })}
+              onClick={() => navigate('/m/settings/data-profile/detail', { state: { submission: s } })}
             />
           ))}
         </div>

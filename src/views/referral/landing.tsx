@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import CodattaLogoIcon from '@/assets/home/logo-gray.svg'
 import ReferralCube from '@/assets/referral/gift-box.png'
 import { channelStoreActions } from '@/stores/channel.store'
 
 const ReferralLandingApp: React.FC = () => {
   const { code } = useParams()
-  const navigate = useNavigate()
   const [username, setUsername] = useState('')
 
   const referralCode = code ?? ''
@@ -24,14 +23,11 @@ const ReferralLandingApp: React.FC = () => {
   }
 
   useEffect(() => {
-    if (!code) {
-      navigate('/app')
-      return
-    }
+    if (!code) return
     getUsername(code)
     channelStoreActions.setChannelCode('referral-landing-app')
     channelStoreActions.setInviterCode(code)
-  }, [code, navigate])
+  }, [code])
 
   const handleDownloadApp = () => {
     const userAgent = navigator.userAgent.toLowerCase()
