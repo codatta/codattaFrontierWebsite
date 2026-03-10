@@ -1,4 +1,4 @@
-import { appStoreActions } from '@/stores/app.store'
+import { modalStoreActions } from '@/stores/modal.store'
 import { authRedirect } from '@/utils/auth'
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import cookies from 'js-cookie'
@@ -38,7 +38,7 @@ function baseResponseInterceptor(res: AxiosResponse) {
 
   if (isResTypeB && res.data?.success !== true) {
     if (res.data.errorCode === 6019) {
-      appStoreActions.openModal({
+      modalStoreActions.openModal({
         type: 'error',
         title: 'Submission Restricted',
         content:

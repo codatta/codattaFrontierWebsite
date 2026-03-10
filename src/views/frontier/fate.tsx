@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { message, Spin } from 'antd'
 import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 
-import AuthChecker from '@/components/common/auth-checker'
 import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
@@ -439,409 +438,407 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
   }, [checkTaskStatus])
 
   return (
-    <AuthChecker>
-      <Spin spinning={loading}>
-        <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <FrontierHeader title="Your Life Journey" />
+    <Spin spinning={loading}>
+      <div className="min-h-screen bg-[#F8F8F8] pb-20">
+        <FrontierHeader title="Your Life Journey" />
 
-          {/* Form Content */}
-          <div className="px-5">
-            <div className="mb-8 space-y-6">
-              {/* Personal Data Section */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Personal Data</label>
+        {/* Form Content */}
+        <div className="px-5">
+          <div className="mb-8 space-y-6">
+            {/* Personal Data Section */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Personal Data</label>
 
-                {/* Date and Time of Birth */}
-                <div className="space-y-2 rounded-[26px] bg-white px-4 py-1 [&>div:last-child]:border-b-0">
-                  {/* Date of Birth */}
-                  <div className="flex items-center justify-between border-b border-black/5 py-3">
-                    <span className="text-[17px] text-black">Date of Birth</span>
-                    <MobileDatePicker
-                      value={formData.birthDate}
-                      onChange={(date) => updateFormData('birthDate', date)}
-                      placeholder="Jun 5, 2023"
-                    />
-                  </div>
-
-                  {/* Time of Birth */}
-                  <div className="flex items-center justify-between border-b border-black/5 py-3">
-                    <span className="text-[17px] text-black">Time of Birth</span>
-                    <ScrollTimePicker
-                      value={formData.birthTime}
-                      onChange={(time) => updateFormData('birthTime', time)}
-                      placeholder="09:41"
-                      showSeconds={false}
-                    />
-                  </div>
-
-                  {/* Place of Birth */}
-                  <div className="flex items-center justify-between border-b border-black/5 py-3">
-                    <span className="text-[17px] text-black">Place of Birth</span>
-                    <LocationPicker
-                      value={formData.placeOfBirth}
-                      onChange={(location) => updateFormData('placeOfBirth', location)}
-                      placeholder="Select"
-                    />
-                  </div>
-
-                  {/* Gender */}
-                  <div className="relative flex items-center justify-between border-b border-black/5">
-                    <span className="py-3 text-[17px] text-black">Gender</span>
-                    <select
-                      value={formData.gender}
-                      onChange={(e) => updateFormData('gender', e.target.value)}
-                      className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.gender ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
-                    >
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      {genderOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                  </div>
+              {/* Date and Time of Birth */}
+              <div className="space-y-2 rounded-[26px] bg-white px-4 py-1 [&>div:last-child]:border-b-0">
+                {/* Date of Birth */}
+                <div className="flex items-center justify-between border-b border-black/5 py-3">
+                  <span className="text-[17px] text-black">Date of Birth</span>
+                  <MobileDatePicker
+                    value={formData.birthDate}
+                    onChange={(date) => updateFormData('birthDate', date)}
+                    placeholder="Jun 5, 2023"
+                  />
                 </div>
-              </div>
 
-              {/* Family Background Section */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Family Background</label>
-                <div className="space-y-2 rounded-[26px] bg-white px-4 py-1 [&>div:last-child]:border-b-0">
-                  {/* Father's Occupation */}
-                  <div className="relative flex items-center justify-between border-b border-black/5">
-                    <span className="py-3 text-[17px] text-black">Father's Occupation</span>
-                    <select
-                      value={formData.fatherOccupation}
-                      onChange={(e) => updateFormData('fatherOccupation', e.target.value)}
-                      className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.fatherOccupation ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
-                    >
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      {occupationOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                  </div>
-
-                  {/* Relationship with Father */}
-                  <div className="relative flex items-center justify-between border-b border-black/5">
-                    <span className="py-3 text-[17px] text-black">
-                      Relationship <br /> with Father
-                    </span>
-                    <select
-                      value={formData.relationshipWithFather}
-                      onChange={(e) => updateFormData('relationshipWithFather', e.target.value)}
-                      className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.relationshipWithFather ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
-                    >
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      {relationshipOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                  </div>
-
-                  {/* Mother's Occupation */}
-                  <div className="relative flex items-center justify-between border-b border-black/5">
-                    <span className="py-3 text-[17px] text-black">Mother's Occupation</span>
-                    <select
-                      value={formData.motherOccupation}
-                      onChange={(e) => updateFormData('motherOccupation', e.target.value)}
-                      className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.motherOccupation ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
-                    >
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      {occupationOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                  </div>
-
-                  {/* Relationship with Mother */}
-                  <div className="relative flex items-center justify-between border-b border-black/5">
-                    <span className="py-3 text-[17px] text-black">
-                      Relationship
-                      <br />
-                      with Mother
-                    </span>
-                    <select
-                      value={formData.relationshipWithMother}
-                      onChange={(e) => updateFormData('relationshipWithMother', e.target.value)}
-                      className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
-                      style={{ color: formData.relationshipWithMother ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
-                    >
-                      <option value="" disabled>
-                        Select
-                      </option>
-                      {relationshipOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                  </div>
+                {/* Time of Birth */}
+                <div className="flex items-center justify-between border-b border-black/5 py-3">
+                  <span className="text-[17px] text-black">Time of Birth</span>
+                  <ScrollTimePicker
+                    value={formData.birthTime}
+                    onChange={(time) => updateFormData('birthTime', time)}
+                    placeholder="09:41"
+                    showSeconds={false}
+                  />
                 </div>
-              </div>
 
-              {/* Child Information Section */}
-              <div>
-                <label className="mb-2 block px-4 text-[17px] font-normal text-[#999]">
-                  Child Information<span className="text-[#999]">(Optional)</span>
-                </label>
+                {/* Place of Birth */}
+                <div className="flex items-center justify-between border-b border-black/5 py-3">
+                  <span className="text-[17px] text-black">Place of Birth</span>
+                  <LocationPicker
+                    value={formData.placeOfBirth}
+                    onChange={(location) => updateFormData('placeOfBirth', location)}
+                    placeholder="Select"
+                  />
+                </div>
 
-                <div className="overflow-hidden rounded-[26px] bg-white">
-                  {formData.children.map((child, index) => (
-                    <>
-                      <SwipeableChildCard
-                        key={child.id}
-                        child={child}
-                        index={index}
-                        onEdit={() => editChildInfo(child)}
-                        onDelete={() => removeChildInfo(child.id)}
-                        isSwiped={swipedChildId === child.id}
-                        onSwipeChange={(swiped) => handleChildSwipe(child.id, swiped)}
-                      />
-                      <hr className="mx-4 border-black/5" />
-                    </>
-                  ))}
-                  <button
-                    onClick={addChildInfo}
-                    className="flex w-full items-center justify-center gap-2 bg-white py-3 text-[17px] font-normal text-[#40E1EF]"
+                {/* Gender */}
+                <div className="relative flex items-center justify-between border-b border-black/5">
+                  <span className="py-3 text-[17px] text-black">Gender</span>
+                  <select
+                    value={formData.gender}
+                    onChange={(e) => updateFormData('gender', e.target.value)}
+                    className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
+                    style={{ color: formData.gender ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                   >
-                    <Plus size={20} />
-                    Add Child Information
-                  </button>
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {genderOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
                 </div>
-              </div>
-
-              {/* Educational Background */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Educational Background</label>
-                <textarea
-                  value={formData.educationalBackground}
-                  onChange={(e) => updateFormData('educationalBackground', e.target.value)}
-                  placeholder="e.g., degrees, schools, key achievements..."
-                  className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
-                  rows={4}
-                  maxLength={1000}
-                />
-                {errors.educationalBackground && (
-                  <p className="px-4 text-xs text-red-400">{errors.educationalBackground}</p>
-                )}
-              </div>
-
-              {/* Career Development */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Career Development</label>
-                <textarea
-                  value={formData.careerDevelopment}
-                  onChange={(e) => updateFormData('careerDevelopment', e.target.value)}
-                  placeholder="e.g., jobs held, companies, promotions, key projects..."
-                  className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
-                  rows={4}
-                  maxLength={1000}
-                />
-                {errors.careerDevelopment && <p className="px-4 text-xs text-red-400">{errors.careerDevelopment}</p>}
-              </div>
-
-              {/* Health Status */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Health Status</label>
-                <textarea
-                  value={formData.healthStatus}
-                  onChange={(e) => updateFormData('healthStatus', e.target.value)}
-                  placeholder="e.g., major illnesses, general well-being, fitness habits..."
-                  className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
-                  rows={4}
-                  maxLength={1000}
-                />
-                {errors.healthStatus && <p className="px-4 text-xs text-red-400">{errors.healthStatus}</p>}
-              </div>
-
-              {/* Emotional Relationships */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Emotional Relationships</label>
-                <textarea
-                  value={formData.emotionalRelationships}
-                  onChange={(e) => updateFormData('emotionalRelationships', e.target.value)}
-                  placeholder="e.g., marriage, partnerships, significant friendships..."
-                  className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
-                  rows={4}
-                  maxLength={1000}
-                />
-                {errors.emotionalRelationships && (
-                  <p className="px-4 text-xs text-red-400">{errors.emotionalRelationships}</p>
-                )}
-              </div>
-
-              {/* Financial Status */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Financial Status</label>
-                <textarea
-                  value={formData.financialStatus}
-                  onChange={(e) => updateFormData('financialStatus', e.target.value)}
-                  placeholder="e.g., key financial milestones, investments, significant changes..."
-                  className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
-                  rows={4}
-                  maxLength={1000}
-                />
-                {errors.financialStatus && <p className="px-4 text-xs text-red-400">{errors.financialStatus}</p>}
-              </div>
-
-              {/* Other Notable Events */}
-              <div className="space-y-2">
-                <label className="block px-4 text-[17px] font-normal text-[#999]">Other Notable Events</label>
-                <textarea
-                  value={formData.otherNotableEvents}
-                  onChange={(e) => updateFormData('otherNotableEvents', e.target.value)}
-                  placeholder="e.g., relocations, major life changes, personal achievements..."
-                  className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
-                  rows={4}
-                  maxLength={1000}
-                />
-                {errors.otherNotableEvents && <p className="px-4 text-xs text-red-400">{errors.otherNotableEvents}</p>}
               </div>
             </div>
-            <button
-              onClick={handleSubmit}
-              disabled={!allFieldsFilled || loading}
-              className={`h-[56px] w-full rounded-full text-base font-semibold transition-all ${
-                allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
-              }`}
-            >
-              {loading ? 'Submitting...' : 'Submit'}
-            </button>
-          </div>
 
-          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
-
-          {/* Child Information Drawer */}
-          {showChildModal && editingChild && (
-            <>
-              {/* Backdrop */}
-              <div
-                className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 ${showChildModal ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
-                onClick={cancelChildEdit}
-              />
-
-              {/* Drawer */}
-              <div className="fixed inset-x-0 bottom-0 z-50 animate-slide-up rounded-t-3xl bg-white/80 p-5 pb-8 backdrop-blur-md">
-                {/* Header with Close and Confirm buttons */}
-                <div className="relative mb-5 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={cancelChildEdit}
-                    className="flex size-10 items-center justify-center rounded-full bg-white/75 shadow-app-btn transition-all"
+            {/* Family Background Section */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Family Background</label>
+              <div className="space-y-2 rounded-[26px] bg-white px-4 py-1 [&>div:last-child]:border-b-0">
+                {/* Father's Occupation */}
+                <div className="relative flex items-center justify-between border-b border-black/5">
+                  <span className="py-3 text-[17px] text-black">Father's Occupation</span>
+                  <select
+                    value={formData.fatherOccupation}
+                    onChange={(e) => updateFormData('fatherOccupation', e.target.value)}
+                    className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
+                    style={{ color: formData.fatherOccupation ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
                   >
-                    <Plus size={24} className="rotate-45 text-gray-600" />
-                  </button>
-                  <div className="text-[18px] font-bold text-black">Add Child Information</div>
-                  <button
-                    type="button"
-                    onClick={saveChildInfo}
-                    className="flex size-10 items-center justify-center rounded-full bg-[#40E1EF] shadow-app-btn backdrop-blur-sm transition-all"
-                  >
-                    <Check size={20} className="text-white" />
-                  </button>
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {occupationOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
                 </div>
 
-                {/* Form Content */}
-                <div className="mb-5 space-y-8">
-                  {/* Occupation */}
-                  <div className="rounded-full bg-white px-4 py-3">
-                    <div className="relative flex items-center justify-between">
-                      <span className="text-[16px] text-black">Occupation</span>
-                      <select
-                        value={editingChild.occupation}
-                        onChange={(e) => updateEditingChild('occupation', e.target.value)}
-                        className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
-                        style={{ textAlignLast: 'right' }}
-                      >
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        {childOccupationOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                    </div>
-                  </div>
+                {/* Relationship with Father */}
+                <div className="relative flex items-center justify-between border-b border-black/5">
+                  <span className="py-3 text-[17px] text-black">
+                    Relationship <br /> with Father
+                  </span>
+                  <select
+                    value={formData.relationshipWithFather}
+                    onChange={(e) => updateFormData('relationshipWithFather', e.target.value)}
+                    className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
+                    style={{ color: formData.relationshipWithFather ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {relationshipOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
+                </div>
 
-                  {/* Health Status */}
-                  <div className="rounded-full bg-white px-4 py-3">
-                    <div className="relative flex items-center justify-between">
-                      <span className="text-[16px] text-black">Health Status</span>
-                      <select
-                        value={editingChild.healthStatus}
-                        onChange={(e) => updateEditingChild('healthStatus', e.target.value)}
-                        className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
-                        style={{ textAlignLast: 'right' }}
-                      >
-                        <option value="" disabled>
-                          Select
-                        </option>
-                        {healthStatusOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                    </div>
-                  </div>
+                {/* Mother's Occupation */}
+                <div className="relative flex items-center justify-between border-b border-black/5">
+                  <span className="py-3 text-[17px] text-black">Mother's Occupation</span>
+                  <select
+                    value={formData.motherOccupation}
+                    onChange={(e) => updateFormData('motherOccupation', e.target.value)}
+                    className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
+                    style={{ color: formData.motherOccupation ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {occupationOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
+                </div>
 
-                  {/* Relationship */}
-                  <div className="rounded-full bg-white px-4 py-3">
-                    <div className="relative flex items-center justify-between">
-                      <span className="text-[16px] text-black">Relationship</span>
-                      <select
-                        value={editingChild.relationship}
-                        onChange={(e) => updateEditingChild('relationship', e.target.value)}
-                        className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
-                        style={{ textAlignLast: 'right' }}
-                      >
-                        <option value="" disabled>
-                          Select
+                {/* Relationship with Mother */}
+                <div className="relative flex items-center justify-between border-b border-black/5">
+                  <span className="py-3 text-[17px] text-black">
+                    Relationship
+                    <br />
+                    with Mother
+                  </span>
+                  <select
+                    value={formData.relationshipWithMother}
+                    onChange={(e) => updateFormData('relationshipWithMother', e.target.value)}
+                    className="appearance-none bg-white py-3 pr-6 text-right text-[17px] outline-none"
+                    style={{ color: formData.relationshipWithMother ? '#999' : '#3C3C434D', textAlignLast: 'right' }}
+                  >
+                    <option value="" disabled>
+                      Select
+                    </option>
+                    {relationshipOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
+                </div>
+              </div>
+            </div>
+
+            {/* Child Information Section */}
+            <div>
+              <label className="mb-2 block px-4 text-[17px] font-normal text-[#999]">
+                Child Information<span className="text-[#999]">(Optional)</span>
+              </label>
+
+              <div className="overflow-hidden rounded-[26px] bg-white">
+                {formData.children.map((child, index) => (
+                  <>
+                    <SwipeableChildCard
+                      key={child.id}
+                      child={child}
+                      index={index}
+                      onEdit={() => editChildInfo(child)}
+                      onDelete={() => removeChildInfo(child.id)}
+                      isSwiped={swipedChildId === child.id}
+                      onSwipeChange={(swiped) => handleChildSwipe(child.id, swiped)}
+                    />
+                    <hr className="mx-4 border-black/5" />
+                  </>
+                ))}
+                <button
+                  onClick={addChildInfo}
+                  className="flex w-full items-center justify-center gap-2 bg-white py-3 text-[17px] font-normal text-[#40E1EF]"
+                >
+                  <Plus size={20} />
+                  Add Child Information
+                </button>
+              </div>
+            </div>
+
+            {/* Educational Background */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Educational Background</label>
+              <textarea
+                value={formData.educationalBackground}
+                onChange={(e) => updateFormData('educationalBackground', e.target.value)}
+                placeholder="e.g., degrees, schools, key achievements..."
+                className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
+                rows={4}
+                maxLength={1000}
+              />
+              {errors.educationalBackground && (
+                <p className="px-4 text-xs text-red-400">{errors.educationalBackground}</p>
+              )}
+            </div>
+
+            {/* Career Development */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Career Development</label>
+              <textarea
+                value={formData.careerDevelopment}
+                onChange={(e) => updateFormData('careerDevelopment', e.target.value)}
+                placeholder="e.g., jobs held, companies, promotions, key projects..."
+                className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
+                rows={4}
+                maxLength={1000}
+              />
+              {errors.careerDevelopment && <p className="px-4 text-xs text-red-400">{errors.careerDevelopment}</p>}
+            </div>
+
+            {/* Health Status */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Health Status</label>
+              <textarea
+                value={formData.healthStatus}
+                onChange={(e) => updateFormData('healthStatus', e.target.value)}
+                placeholder="e.g., major illnesses, general well-being, fitness habits..."
+                className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
+                rows={4}
+                maxLength={1000}
+              />
+              {errors.healthStatus && <p className="px-4 text-xs text-red-400">{errors.healthStatus}</p>}
+            </div>
+
+            {/* Emotional Relationships */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Emotional Relationships</label>
+              <textarea
+                value={formData.emotionalRelationships}
+                onChange={(e) => updateFormData('emotionalRelationships', e.target.value)}
+                placeholder="e.g., marriage, partnerships, significant friendships..."
+                className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
+                rows={4}
+                maxLength={1000}
+              />
+              {errors.emotionalRelationships && (
+                <p className="px-4 text-xs text-red-400">{errors.emotionalRelationships}</p>
+              )}
+            </div>
+
+            {/* Financial Status */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Financial Status</label>
+              <textarea
+                value={formData.financialStatus}
+                onChange={(e) => updateFormData('financialStatus', e.target.value)}
+                placeholder="e.g., key financial milestones, investments, significant changes..."
+                className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
+                rows={4}
+                maxLength={1000}
+              />
+              {errors.financialStatus && <p className="px-4 text-xs text-red-400">{errors.financialStatus}</p>}
+            </div>
+
+            {/* Other Notable Events */}
+            <div className="space-y-2">
+              <label className="block px-4 text-[17px] font-normal text-[#999]">Other Notable Events</label>
+              <textarea
+                value={formData.otherNotableEvents}
+                onChange={(e) => updateFormData('otherNotableEvents', e.target.value)}
+                placeholder="e.g., relocations, major life changes, personal achievements..."
+                className="w-full rounded-[26px] bg-white p-4 text-[17px] text-black placeholder:text-[#3C3C434D]"
+                rows={4}
+                maxLength={1000}
+              />
+              {errors.otherNotableEvents && <p className="px-4 text-xs text-red-400">{errors.otherNotableEvents}</p>}
+            </div>
+          </div>
+          <button
+            onClick={handleSubmit}
+            disabled={!allFieldsFilled || loading}
+            className={`h-[56px] w-full rounded-full text-base font-semibold transition-all ${
+              allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
+            }`}
+          >
+            {loading ? 'Submitting...' : 'Submit'}
+          </button>
+        </div>
+
+        <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
+
+        {/* Child Information Drawer */}
+        {showChildModal && editingChild && (
+          <>
+            {/* Backdrop */}
+            <div
+              className={`fixed inset-0 z-50 bg-black/30 transition-opacity duration-300 ${showChildModal ? 'opacity-100' : 'pointer-events-none opacity-0'}`}
+              onClick={cancelChildEdit}
+            />
+
+            {/* Drawer */}
+            <div className="fixed inset-x-0 bottom-0 z-50 animate-slide-up rounded-t-3xl bg-white/80 p-5 pb-8 backdrop-blur-md">
+              {/* Header with Close and Confirm buttons */}
+              <div className="relative mb-5 flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={cancelChildEdit}
+                  className="flex size-10 items-center justify-center rounded-full bg-white/75 shadow-app-btn transition-all"
+                >
+                  <Plus size={24} className="rotate-45 text-gray-600" />
+                </button>
+                <div className="text-[18px] font-bold text-black">Add Child Information</div>
+                <button
+                  type="button"
+                  onClick={saveChildInfo}
+                  className="flex size-10 items-center justify-center rounded-full bg-[#40E1EF] shadow-app-btn backdrop-blur-sm transition-all"
+                >
+                  <Check size={20} className="text-white" />
+                </button>
+              </div>
+
+              {/* Form Content */}
+              <div className="mb-5 space-y-8">
+                {/* Occupation */}
+                <div className="rounded-full bg-white px-4 py-3">
+                  <div className="relative flex items-center justify-between">
+                    <span className="text-[16px] text-black">Occupation</span>
+                    <select
+                      value={editingChild.occupation}
+                      onChange={(e) => updateEditingChild('occupation', e.target.value)}
+                      className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                      style={{ textAlignLast: 'right' }}
+                    >
+                      <option value="" disabled>
+                        Select
+                      </option>
+                      {childOccupationOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
                         </option>
-                        {relationshipOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
-                    </div>
+                      ))}
+                    </select>
+                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
+                  </div>
+                </div>
+
+                {/* Health Status */}
+                <div className="rounded-full bg-white px-4 py-3">
+                  <div className="relative flex items-center justify-between">
+                    <span className="text-[16px] text-black">Health Status</span>
+                    <select
+                      value={editingChild.healthStatus}
+                      onChange={(e) => updateEditingChild('healthStatus', e.target.value)}
+                      className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                      style={{ textAlignLast: 'right' }}
+                    >
+                      <option value="" disabled>
+                        Select
+                      </option>
+                      {healthStatusOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
+                  </div>
+                </div>
+
+                {/* Relationship */}
+                <div className="rounded-full bg-white px-4 py-3">
+                  <div className="relative flex items-center justify-between">
+                    <span className="text-[16px] text-black">Relationship</span>
+                    <select
+                      value={editingChild.relationship}
+                      onChange={(e) => updateEditingChild('relationship', e.target.value)}
+                      className="flex-1 appearance-none bg-white pr-6 text-right text-[16px] text-[#999] outline-none"
+                      style={{ textAlignLast: 'right' }}
+                    >
+                      <option value="" disabled>
+                        Select
+                      </option>
+                      {relationshipOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronsUpDown className="pointer-events-none absolute right-0 size-4 text-gray-400" />
                   </div>
                 </div>
               </div>
-            </>
-          )}
-        </div>
-      </Spin>
-    </AuthChecker>
+            </div>
+          </>
+        )}
+      </div>
+    </Spin>
   )
 }
 

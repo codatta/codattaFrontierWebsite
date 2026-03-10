@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { Stage, Layer, Image as KonvaImage, Line, Rect as KonvaRect, Circle } from 'react-konva'
 import Konva from 'konva'
-// import { useAppToast } from '@/hooks/use-app-toast'
+
 import { Rect, Point } from './types'
 
 export interface KnobAnnotationCanvasRef {
@@ -22,7 +22,6 @@ interface KnobAnnotationCanvasProps {
 
 const KnobAnnotationCanvas = forwardRef<KnobAnnotationCanvasRef, KnobAnnotationCanvasProps>(
   ({ image, rect, pointer, rectModified, pointerModified, onRectChange, onPointerChange, onConfirm }, ref) => {
-    // const toast = useAppToast()
     const containerRef = useRef<HTMLDivElement>(null)
     const stageRef = useRef<Konva.Stage>(null)
     const isCenterManuallyAdjustedRef = useRef(false)

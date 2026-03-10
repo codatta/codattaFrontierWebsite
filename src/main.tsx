@@ -16,6 +16,8 @@ import isToday from 'dayjs/plugin/isToday'
 import { defineChain } from 'viem'
 
 import { initGA } from '@/utils/analytics'
+import GlobalInfoModal from '@/components/common/global-info-modal'
+import GlobalToast from '@/components/common/global-toast'
 
 dayjs.extend(duration)
 dayjs.extend(utc)
@@ -64,6 +66,8 @@ root.render(
     <App message={{ top: 200, duration: 2.5, maxCount: 3 }}>
       <CodattaConnectContextProvider chains={[BSC_CHAIN]}>
         <Router></Router>
+        <GlobalInfoModal />
+        <GlobalToast />
       </CodattaConnectContextProvider>
     </App>
   </ConfigProvider>

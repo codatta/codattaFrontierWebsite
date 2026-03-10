@@ -11,13 +11,13 @@ import InfoModal from '@/components/settings/reputation/info-modal'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import bridge from '@/utils/bridge'
-import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
+import { useGlobalToast } from '@/hooks/use-global-toast'
 
 export default function UserInfoReputationApp() {
   const { info } = useUserStore()
   const [detail, setDetail] = useState<ReputationDetail>()
   const [loading, setLoading] = useState(false)
-  const toast = useAppToast()
+  const toast = useGlobalToast()
 
   // Modal states
   const [calculationOpen, setCalculationOpen] = useState(false)
@@ -51,6 +51,9 @@ export default function UserInfoReputationApp() {
 
   useEffect(() => {
     fetchReputationDetail()
+
+    toast.show('Connect on web', 2000)
+    console.log('res')
   }, [])
 
   const openInfoModal = (title: string, description: string) => {
@@ -59,7 +62,6 @@ export default function UserInfoReputationApp() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[13px] leading-[17px] text-[#666666]">
-      <AppToastContainer />
       <Spin spinning={loading}>
         <FrontierHeader title="Reputation" transparent isFixed={false} />
 

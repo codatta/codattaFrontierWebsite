@@ -1,6 +1,7 @@
 import { Route } from 'react-router-dom'
 import { lazy } from 'react'
 
+import AuthLayout from '@/components/common/auth-layout'
 import SubmissionDetail from '@/views/frontier/submission-detail'
 // --- Frontier task templates ---
 const FashionValidationApp = lazy(() => import('@/views/frontier/fashion-validation'))
@@ -27,18 +28,22 @@ function appRoute(templateId: string, Component: LazyComponent) {
 // ============================================================
 
 /** Standalone frontier project routes (App only) */
-export const frontierRoutes = (
-  <>
-    <Route path="/m/submission/:submission_id/detail" element={<SubmissionDetail />} />
-    {appRoute('FASHION_VALIDATION', FashionValidationApp)}
-    {appRoute('FASHION_GUIDE_TO_DOWNLOAD', FashionGuideToDownloadApp)}
-    {appRoute('AIRDROP_FOOD', AirdropFoodApp)}
-    {appRoute('AIRDROP_KNOB', AirdropKnobApp)}
-    {appRoute('REAL_WORLD_PHOTO_COLLECTION', RealWorldPhotoCollectionApp)}
-
-    {appRoute('AIRDROP_FOOD_APP', AirdropFoodApp)}
-    {appRoute('FATE_APP', FateApp)}
-  </>
-)
+export function FrontierRoutes() {
+  return (
+    <>
+      {/* Routes with auth check */}
+      <Route element={<AuthLayout />}>
+        <Route path="/m/submission/:submission_id/detail" element={<SubmissionDetail />} />
+        {appRoute('FASHION_VALIDATION', FashionValidationApp)}
+        {appRoute('FASHION_GUIDE_TO_DOWNLOAD', FashionGuideToDownloadApp)}
+        {appRoute('AIRDROP_FOOD', AirdropFoodApp)}
+        {appRoute('AIRDROP_KNOB', AirdropKnobApp)}
+        {appRoute('REAL_WORLD_PHOTO_COLLECTION', RealWorldPhotoCollectionApp)}
+        {appRoute('AIRDROP_FOOD_APP', AirdropFoodApp)}
+        {appRoute('FATE_APP', FateApp)}
+      </Route>
+    </>
+  )
+}
 
 export const frontierLayoutRoutes = null

@@ -9,14 +9,16 @@ const KitchenApplicantsDataSet = lazy(() => import('@/views/dataset/kitchen-appl
 const FashionDataSet = lazy(() => import('@/views/dataset/fashion'))
 const LLMFailureCasesDataSet = lazy(() => import('@/views/dataset/llm-failure-cases'))
 
-export const datasetRoutes = (
-  <Route path="/m/dataset">
-    <Route path="food-science" element={<FoodScienceDataSet />} />
-    <Route path="healthcare" element={<HealthcareDataSet />} />
-    <Route path="crypto-addresses" element={<CryptoAddressesDataSet />} />
-    <Route path="robotics" element={<RoboticsDataSet />} />
-    <Route path="kitchen-applicants" element={<KitchenApplicantsDataSet />} />
-    <Route path="fashion" element={<FashionDataSet />} />
-    <Route path="llm-failure-cases" element={<LLMFailureCasesDataSet />} />
-  </Route>
-)
+export function DatasetRoutes() {
+  return (
+    <Route path="/m/dataset">
+      <Route path="food-science" element={<FoodScienceDataSet />} />
+      <Route path="healthcare" element={<HealthcareDataSet />} />
+      <Route path="crypto-addresses" element={<CryptoAddressesDataSet />} />
+      <Route path="robotics" element={<RoboticsDataSet />} />
+      <Route path="kitchen-applicants" element={<KitchenApplicantsDataSet />} />
+      <Route path="fashion" element={<FashionDataSet />} />
+      <Route path="llm-failure-cases" element={<LLMFailureCasesDataSet />} />
+    </Route>
+  )
+}

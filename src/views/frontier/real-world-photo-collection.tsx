@@ -5,7 +5,6 @@ import { ChevronDown, Camera } from 'lucide-react'
 import { cn } from '@udecode/cn'
 
 import frontiterApi from '@/apis/frontiter.api'
-import AuthChecker from '@/components/common/auth-checker'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 import BottomDrawer from '@/components/frontier/common/bottom-drawer'
@@ -173,184 +172,181 @@ export default function RealWorldPhotoCollectionApp({ templateId, isFeed }: { te
   }, [formData.themeCategory])
 
   return (
-    <AuthChecker>
-      <Spin spinning={loading}>
-        <div className="min-h-screen bg-[#F5F5F5] pb-10 text-xs text-[#999999]">
-          <FrontierHeader title="Real-World Photo" onHelp={() => setShowInfoModal(true)} />
+    <Spin spinning={loading}>
+      <div className="min-h-screen bg-[#F5F5F5] pb-10 text-xs text-[#999999]">
+        <FrontierHeader title="Real-World Photo" onHelp={() => setShowInfoModal(true)} />
 
-          <div className="space-y-6 px-5 pt-4">
-            {/* Theme Category */}
-            <div className="space-y-2">
-              <label className="text-base font-medium">Theme Category</label>
-              <div
-                onClick={() => setShowThemeDrawer(true)}
-                className={cn(
-                  'flex h-[56px] items-center justify-between rounded-[28px] bg-white px-6 transition-all',
-                  errors.themeCategory && 'border border-red-500'
-                )}
-              >
-                <span className={cn('text-base', formData.themeCategory ? 'text-black' : 'text-[#CBCBCB]')}>
-                  {selectedThemeLabel}
-                </span>
-                <ChevronDown className="size-5 text-[#CBCBCB]" />
-              </div>
-            </div>
-
-            {/* Upload Original Photo */}
-            <div className="space-y-2">
-              <label className="text-base font-medium">Upload Original Photo</label>
-              <div className={cn('rounded-[28px] bg-white p-4', errors.images && 'border border-red-500')}>
-                <Upload
-                  value={formData.images}
-                  allUploadedImages={formData.images}
-                  onChange={(images) => updateFormData('images', images)}
-                  maxCount={1}
-                  itemClassName="h-[140px] w-[140px] rounded-[24px]"
-                  description={
-                    <div className="flex size-[140px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
-                      <Camera className="size-8 text-[#999999]" />
-                    </div>
-                  }
-                />
-                <p className="mt-4 text-[12px] leading-[18px]">
-                  Upload a photo of an original photo(Supports JPG, PNG. Recommended resolution 1920x1080)
-                </p>
-              </div>
-            </div>
-
-            {/* Subject Description */}
-            <div className="space-y-2">
-              <label className="text-base font-medium">Subject Description</label>
-              <textarea
-                value={formData.subjectDescription}
-                onChange={(e) => updateFormData('subjectDescription', e.target.value)}
-                placeholder="Enter subject description"
-                className={cn(
-                  'h-[140px] w-full rounded-[26px] bg-white px-6 py-4 text-base text-black outline-none transition-all placeholder:text-[#3C3C434D]',
-                  errors.subjectDescription && 'border border-red-500'
-                )}
-              />
-            </div>
-
-            {/* Camera/Device */}
-            <div className="space-y-2">
-              <label className="text-base font-medium">Camera/Device</label>
-              <input
-                type="text"
-                value={formData.cameraDevice}
-                onChange={(e) => updateFormData('cameraDevice', e.target.value)}
-                placeholder="Enter camera/device"
-                className={cn(
-                  'h-[52px] w-full rounded-[26px] bg-white px-6 text-base text-black outline-none transition-all placeholder:text-[#3C3C434D]',
-                  errors.cameraDevice && 'border border-red-500'
-                )}
-              />
-            </div>
-
-            {/* Confirmations */}
-            <div className="space-y-4 pt-2">
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  checked={formData.confirmAccuracy}
-                  onChange={(checked) => updateFormData('confirmAccuracy', checked)}
-                  className="mt-1"
-                />
-                <span className="text-[13px] leading-[18px]">
-                  I confirm: The photo matches the selected theme category, and the description is objective and
-                  accurate.
-                </span>
-              </div>
-              <div className="flex items-start gap-3">
-                <Checkbox
-                  checked={formData.confirmOriginal}
-                  onChange={(checked) => updateFormData('confirmOriginal', checked)}
-                  className="mt-1"
-                />
-                <span className="text-[13px] leading-[18px]">
-                  I confirm: This photo is my original work, contains no faces or privacy information, and I agree to
-                  grant the copyright to the platform for commercial purposes.
-                </span>
-              </div>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              disabled={!allFieldsFilled || loading}
+        <div className="space-y-6 px-5 pt-4">
+          {/* Theme Category */}
+          <div className="space-y-2">
+            <label className="text-base font-medium">Theme Category</label>
+            <div
+              onClick={() => setShowThemeDrawer(true)}
               className={cn(
-                'mt-4 h-[56px] w-full rounded-full text-base font-semibold transition-all',
-                allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
+                'flex h-[56px] items-center justify-between rounded-[28px] bg-white px-6 transition-all',
+                errors.themeCategory && 'border border-red-500'
               )}
             >
-              {loading ? 'Submitting...' : 'Submit'}
-            </button>
+              <span className={cn('text-base', formData.themeCategory ? 'text-black' : 'text-[#CBCBCB]')}>
+                {selectedThemeLabel}
+              </span>
+              <ChevronDown className="size-5 text-[#CBCBCB]" />
+            </div>
           </div>
+
+          {/* Upload Original Photo */}
+          <div className="space-y-2">
+            <label className="text-base font-medium">Upload Original Photo</label>
+            <div className={cn('rounded-[28px] bg-white p-4', errors.images && 'border border-red-500')}>
+              <Upload
+                value={formData.images}
+                allUploadedImages={formData.images}
+                onChange={(images) => updateFormData('images', images)}
+                maxCount={1}
+                itemClassName="h-[140px] w-[140px] rounded-[24px]"
+                description={
+                  <div className="flex size-[140px] items-center justify-center rounded-[24px] bg-[#F5F5F5]">
+                    <Camera className="size-8 text-[#999999]" />
+                  </div>
+                }
+              />
+              <p className="mt-4 text-[12px] leading-[18px]">
+                Upload a photo of an original photo(Supports JPG, PNG. Recommended resolution 1920x1080)
+              </p>
+            </div>
+          </div>
+
+          {/* Subject Description */}
+          <div className="space-y-2">
+            <label className="text-base font-medium">Subject Description</label>
+            <textarea
+              value={formData.subjectDescription}
+              onChange={(e) => updateFormData('subjectDescription', e.target.value)}
+              placeholder="Enter subject description"
+              className={cn(
+                'h-[140px] w-full rounded-[26px] bg-white px-6 py-4 text-base text-black outline-none transition-all placeholder:text-[#3C3C434D]',
+                errors.subjectDescription && 'border border-red-500'
+              )}
+            />
+          </div>
+
+          {/* Camera/Device */}
+          <div className="space-y-2">
+            <label className="text-base font-medium">Camera/Device</label>
+            <input
+              type="text"
+              value={formData.cameraDevice}
+              onChange={(e) => updateFormData('cameraDevice', e.target.value)}
+              placeholder="Enter camera/device"
+              className={cn(
+                'h-[52px] w-full rounded-[26px] bg-white px-6 text-base text-black outline-none transition-all placeholder:text-[#3C3C434D]',
+                errors.cameraDevice && 'border border-red-500'
+              )}
+            />
+          </div>
+
+          {/* Confirmations */}
+          <div className="space-y-4 pt-2">
+            <div className="flex items-start gap-3">
+              <Checkbox
+                checked={formData.confirmAccuracy}
+                onChange={(checked) => updateFormData('confirmAccuracy', checked)}
+                className="mt-1"
+              />
+              <span className="text-[13px] leading-[18px]">
+                I confirm: The photo matches the selected theme category, and the description is objective and accurate.
+              </span>
+            </div>
+            <div className="flex items-start gap-3">
+              <Checkbox
+                checked={formData.confirmOriginal}
+                onChange={(checked) => updateFormData('confirmOriginal', checked)}
+                className="mt-1"
+              />
+              <span className="text-[13px] leading-[18px]">
+                I confirm: This photo is my original work, contains no faces or privacy information, and I agree to
+                grant the copyright to the platform for commercial purposes.
+              </span>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleSubmit}
+            disabled={!allFieldsFilled || loading}
+            className={cn(
+              'mt-4 h-[56px] w-full rounded-full text-base font-semibold transition-all',
+              allFieldsFilled ? 'bg-black text-white shadow-app-btn' : 'bg-[#A0A0A0]/40 text-white'
+            )}
+          >
+            {loading ? 'Submitting...' : 'Submit'}
+          </button>
         </div>
+      </div>
 
-        <BottomDrawer open={showThemeDrawer} onClose={() => setShowThemeDrawer(false)} title="Select Theme Category">
-          <div className="space-y-1 pb-6">
-            {themeCategories.map((item) => (
-              <div
-                key={item.value}
-                onClick={() => {
-                  updateFormData('themeCategory', item.value)
-                  setShowThemeDrawer(false)
-                }}
-                className={cn(
-                  'flex h-[56px] items-center px-6 text-[16px] transition-colors active:bg-gray-100',
-                  formData.themeCategory === item.value ? 'font-bold text-black' : 'text-[#444]'
-                )}
-              >
-                {item.label}
-              </div>
-            ))}
-          </div>
-        </BottomDrawer>
+      <BottomDrawer open={showThemeDrawer} onClose={() => setShowThemeDrawer(false)} title="Select Theme Category">
+        <div className="space-y-1 pb-6">
+          {themeCategories.map((item) => (
+            <div
+              key={item.value}
+              onClick={() => {
+                updateFormData('themeCategory', item.value)
+                setShowThemeDrawer(false)
+              }}
+              className={cn(
+                'flex h-[56px] items-center px-6 text-[16px] transition-colors active:bg-gray-100',
+                formData.themeCategory === item.value ? 'font-bold text-black' : 'text-[#444]'
+              )}
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+      </BottomDrawer>
 
-        <HelpDrawer
-          open={showInfoModal}
-          onClose={() => setShowInfoModal(false)}
-          title="More About Frontier"
-          cards={[
-            {
-              preset: 'about',
-              title: 'Real-world Photo',
-              content: [
-                {
-                  type: 'p',
-                  text: 'This task asks you to submit authentic, diverse, high-resolution photographs from your daily life - meals, workspaces, public scenes, tools, etc. - with basic descriptions and metadata.'
-                }
-              ]
-            },
-            {
-              preset: 'guidelines',
-              content: [
-                {
-                  type: 'h3',
-                  text: 'Task Description'
-                },
-                {
-                  type: 'p',
-                  text: 'We are building a real-world photo collection for AI training and computer vision research. Your goal is to help us collect real-life photos from 8 core themes. Each photo must be your original work, and approved submissions will receive rewards.'
-                },
-                {
-                  type: 'list',
-                  title: 'Audit Standards (Must Read)',
-                  items: [
-                    "Uniqueness: Photos must be your original work. Uploading downloaded or others' photos is strictly prohibited.",
-                    'Accuracy: Theme category and subject description must exactly match the photo content.',
-                    'Quality: Photos must be clear and recognizable, without severe blur or exposure issues. Recommended resolution >= 1920x1080, format JPG or PNG.',
-                    'Safety: Photos must not contain faces, personal identification information, privacy information, or any illegal content.'
-                  ]
-                }
-              ]
-            }
-          ]}
-        />
+      <HelpDrawer
+        open={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+        title="More About Frontier"
+        cards={[
+          {
+            preset: 'about',
+            title: 'Real-world Photo',
+            content: [
+              {
+                type: 'p',
+                text: 'This task asks you to submit authentic, diverse, high-resolution photographs from your daily life - meals, workspaces, public scenes, tools, etc. - with basic descriptions and metadata.'
+              }
+            ]
+          },
+          {
+            preset: 'guidelines',
+            content: [
+              {
+                type: 'h3',
+                text: 'Task Description'
+              },
+              {
+                type: 'p',
+                text: 'We are building a real-world photo collection for AI training and computer vision research. Your goal is to help us collect real-life photos from 8 core themes. Each photo must be your original work, and approved submissions will receive rewards.'
+              },
+              {
+                type: 'list',
+                title: 'Audit Standards (Must Read)',
+                items: [
+                  "Uniqueness: Photos must be your original work. Uploading downloaded or others' photos is strictly prohibited.",
+                  'Accuracy: Theme category and subject description must exactly match the photo content.',
+                  'Quality: Photos must be clear and recognizable, without severe blur or exposure issues. Recommended resolution >= 1920x1080, format JPG or PNG.',
+                  'Safety: Photos must not contain faces, personal identification information, privacy information, or any illegal content.'
+                ]
+              }
+            ]
+          }
+        ]}
+      />
 
-        <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
-        <SubmittedModal open={showSubmittedModal} />
-      </Spin>
-    </AuthChecker>
+      <SuccessModal open={showSuccessModal} onClose={() => window.history.back()} points={rewardPoints} />
+      <SubmittedModal open={showSubmittedModal} />
+    </Spin>
   )
 }

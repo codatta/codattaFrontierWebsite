@@ -2,15 +2,14 @@ import { BrowserRouter, Routes, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
 import { trackPageView } from '@/utils/analytics'
-import GlobalModalHost from './components/common/global-modal-host'
 
 import {
-  datasetRoutes,
-  frontierRoutes,
-  settingsRoutes,
-  referralRoutes,
-  devRoutes,
-  notFoundRoute
+  DatasetRoutes,
+  FrontierRoutes,
+  SettingsRoutes,
+  ReferralRoutes,
+  DevRoutes,
+  NotFoundRoute
 } from './router/routes'
 
 export default function Router() {
@@ -18,14 +17,13 @@ export default function Router() {
     <BrowserRouter>
       <RouteTracker />
       <Routes>
-        {frontierRoutes}
-        {referralRoutes}
-        {settingsRoutes}
-        {datasetRoutes}
-        {notFoundRoute}
-        {devRoutes}
+        {FrontierRoutes()}
+        {ReferralRoutes()}
+        {SettingsRoutes()}
+        {DatasetRoutes()}
+        {NotFoundRoute()}
+        {DevRoutes()}
       </Routes>
-      <GlobalModalHost />
     </BrowserRouter>
   )
 }

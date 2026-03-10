@@ -23,8 +23,6 @@ const userStore = proxy<UserStore>({
     accounts_data: [],
     social_account_info: []
   }
-  // accounts: [],
-  // username: '-'
 })
 
 const derived = derive({
@@ -61,7 +59,6 @@ export function useUserStore() {
 async function getUserInfo() {
   const { data } = await userApi.getUserInfo()
   userStore.info = data
-  // userStore.info.user_data.did = ''
   return data
 }
 

@@ -1,12 +1,12 @@
-import userApiV2 from '@/apis/user.api'
-import { proxy, snapshot } from 'valtio'
+import userApi from '@/apis/user.api'
+import { proxy, useSnapshot } from 'valtio'
 
-const querystirng = new URLSearchParams(window.location?.search)
-const inviterCode = querystirng.get('_ic')
-const channelCode = querystirng.get('_ch')
+const queryString = new URLSearchParams(window.location?.search)
+const inviterCode = queryString.get('_ic')
+const channelCode = queryString.get('_ch')
 
 // for biz channel only
-const goplus_address = querystirng.get('goplus_address')
+const goplus_address = queryString.get('goplus_address')
 let related_info: object | undefined = undefined
 if (goplus_address) {
   related_info = {
@@ -27,7 +27,7 @@ const channelStore = proxy<ChannelStore>({
 })
 
 export function useChannelStore() {
-  return snapshot(channelStore)
+  return useSnapshot(channelStore)
 }
 
 function setChannelCode(code: string) {
@@ -43,7 +43,7 @@ function setRelatedInfo(info: object) {
 }
 
 async function updateRelatedInfo(info: object) {
-  await userApiV2.updateRelatedInfo(info)
+  await userApi.updateRelatedInfo(info)
 }
 
 export const channelStoreActions = {

@@ -1,14 +1,14 @@
 import { createPortal } from 'react-dom'
 import { useEffect } from 'react'
-import { appStoreActions, useAppStore } from '@/stores/app.store'
+import { modalStoreActions, useModalStore } from '@/stores/modal.store'
 import { Modal } from 'antd'
 
-export default function GlobalModalHost() {
-  const { modal } = useAppStore()
+export default function GlobalInfoModal() {
+  const { modal } = useModalStore()
 
   useEffect(() => {
     function handleClickAnywhere() {
-      if (modal) appStoreActions.closeModal()
+      if (modal) modalStoreActions.closeModal()
     }
     document.addEventListener('mousedown', handleClickAnywhere)
     return () => document.removeEventListener('mousedown', handleClickAnywhere)

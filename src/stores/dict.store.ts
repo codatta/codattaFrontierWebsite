@@ -1,13 +1,6 @@
 import configApi, { type TCategoryDict } from '@/api-v1/config.api'
-import { NETWORK_ICON_MAP } from '@/config/network'
 import { proxy, useSnapshot } from 'valtio'
 import { derive } from 'derive-valtio'
-
-// const categoryGroupLabel = {
-//   LOW: 'Low Risk',
-//   MEDIUM: 'Medium Risk',
-//   HIGH: 'High Risk'
-// }
 
 interface TConfigStore {
   networks: string[]
@@ -32,10 +25,6 @@ export interface CategoryOption {
 
 const categoryParentMap = new Map<string, string>()
 const categoryDesMap = new Map<string, string>()
-
-export function useConfigStore() {
-  return useSnapshot(dicts)
-}
 
 export const options = derive({
   networks: (get) => getOptionFromStringDict(sortByFirstLetter(get(dicts).networks)),
@@ -62,22 +51,6 @@ export const options = derive({
         })
       ].sort((a, b) => a.label.localeCompare(b.label))
     }))
-  }
-})
-
-export const optionsWithExtra = derive({
-  networksWithIcon: (get) => {
-    const networks = get(options).networks
-    const result = networks.map((option) => ({
-      ...option,
-      label: (
-        <span className="flex items-center gap-2 pr-4">
-          <img width={20} height={20} className="rounded-full" src={NETWORK_ICON_MAP[option.value.toLowerCase()]} />
-          {option.label}
-        </span>
-      )
-    }))
-    return result
   }
 })
 
@@ -160,11 +133,6 @@ export function useOptions() {
 export function useDicts() {
   initDicts()
   return useSnapshot(dicts)
-}
-
-export function useOptionsWithExtra() {
-  initDicts()
-  return optionsWithExtra
 }
 
 export const configStoreActions = {

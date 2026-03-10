@@ -6,11 +6,13 @@ const DataProfileDetail = lazy(() => import('@/views/settings/data-profile-detai
 const OnchainDataVerify = lazy(() => import('@/views/settings/onchain-data-verify'))
 const Reputation = lazy(() => import('@/views/settings/reputation'))
 
-export const settingsRoutes = (
-  <>
-    <Route path="/m/settings/data-profile" element={<DataProfile />} />
-    <Route path="/m/settings/data-profile/detail" element={<DataProfileDetail />} />
-    <Route path="/m/settings/data-profile/onchain-data-verify" element={<OnchainDataVerify />} />
-    <Route path="/m/settings/reputation" element={<Reputation />} />
-  </>
-)
+export function SettingsRoutes() {
+  return (
+    <>
+      <Route path="/m/settings/data-profile" element={<DataProfile />} />
+      <Route path="/m/settings/data-profile/detail" element={<DataProfileDetail />} />
+      <Route path="/m/settings/data-profile/onchain-data-verify" element={<OnchainDataVerify />} />
+      <Route path="/m/settings/reputation" element={<Reputation />} />
+    </>
+  )
+}

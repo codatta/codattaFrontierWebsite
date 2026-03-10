@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom'
 import { Spin, message } from 'antd'
 
 import frontiterApi from '@/apis/frontiter.api'
-import AuthChecker from '@/components/common/auth-checker'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 
@@ -85,102 +84,100 @@ export default function FashionGuideToDownloadApp({ templateId, isFeed }: { temp
   }
 
   return (
-    <AuthChecker>
-      <Spin spinning={loading}>
-        <div className="min-h-screen overflow-x-hidden bg-[#F5F5F5]">
-          <FrontierHeader title="Collect Fashion Data" onHelp={() => setShowInfoModal(true)} />
+    <Spin spinning={loading}>
+      <div className="min-h-screen overflow-x-hidden bg-[#F5F5F5]">
+        <FrontierHeader title="Collect Fashion Data" onHelp={() => setShowInfoModal(true)} />
 
-          <div className="space-y-12 px-5 py-8">
-            <StepCard
-              stepNumber={1}
-              icon={
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM13 12V8H11V12H8L12 16L16 12H13Z"
-                    fill="black"
-                  />
-                </svg>
-              }
-              title="Download"
-              description="Download Codatta Clip plugin."
-            >
-              <button
-                onClick={goDownload}
-                className="h-12 w-full rounded-full bg-black text-sm font-medium text-white active:scale-95"
-              >
-                GO
-              </button>
-            </StepCard>
-
-            <StepCard
-              stepNumber={2}
-              icon={
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M9.99945 11H2.04883C2.55055 5.94668 6.8141 2 11.9995 2C17.5223 2 21.9995 6.47715 21.9995 12C21.9995 17.5228 17.5223 22 11.9995 22C6.8141 22 2.55055 18.0533 2.04883 13H9.99945V16L14.9995 12L9.99945 8V11Z"
-                    fill="black"
-                  />
-                </svg>
-              }
-              title="Start"
-              description={
-                <>
-                  Open Codatta Clip, select Fashion tab and hit <span className="text-[#00D9D9]">Start</span>.
-                </>
-              }
-            >
-              <Step1Img />
-            </StepCard>
-
-            <StepCard
-              stepNumber={3}
-              icon={
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M20.0049 13.0019V20.0019C20.0049 20.5542 19.5572 21.0019 19.0049 21.0019H5.00488C4.4526 21.0019 4.00488 20.5542 4.00488 20.0019V13.0019H20.0049ZM14.5049 2.00195C16.4379 2.00195 18.0049 3.56895 18.0049 5.50195C18.0049 6.03915 17.8839 6.54809 17.6676 7.00299L21.0049 7.00195C21.5572 7.00195 22.0049 7.44966 22.0049 8.00195V11.0019C22.0049 11.5542 21.5572 12.0019 21.0049 12.0019H3.00488C2.4526 12.0019 2.00488 11.5542 2.00488 11.0019V8.00195C2.00488 7.44966 2.4526 7.00195 3.00488 7.00195L6.34219 7.00299C6.12591 6.54809 6.00488 6.03915 6.00488 5.50195C6.00488 3.56895 7.57189 2.00195 9.50488 2.00195C10.4849 2.00195 11.3708 2.40471 12.0061 3.05373C12.639 2.40471 13.5249 2.00195 14.5049 2.00195ZM9.50488 4.00195C8.67646 4.00195 8.00488 4.67352 8.00488 5.50195C8.00488 6.28164 8.59977 6.9224 9.36042 6.99508L9.50488 7.00195H11.0049V5.50195C11.0049 4.72225 10.41 4.0815 9.64934 4.00881L9.50488 4.00195ZM14.5049 4.00195L14.3604 4.00881C13.6473 4.07696 13.0799 4.64438 13.0117 5.35749L13.0049 5.50195V7.00195H14.5049L14.6493 6.99508C15.41 6.9224 16.0049 6.28164 16.0049 5.50195C16.0049 4.72225 15.41 4.0815 14.6493 4.00881L14.5049 4.00195Z"
-                    fill="black"
-                  />
-                </svg>
-              }
-              title="Reward"
-              description={
-                <>
-                  <span className="text-[#00D9D9]">Stop</span> collecting--manually or at the daily limit. Rewards
-                  auto-distributed.
-                </>
-              }
-            >
-              <Step2Img />
-            </StepCard>
-
-            <InfoCard title="Data Sync Active">
-              <p>
-                Web History updates daily at <span className="text-[#00D9D9]">00:00 UTC</span> with your collection
-                totals. See plugin for details.
-              </p>
-            </InfoCard>
-          </div>
-        </div>
-
-        <HelpDrawer
-          open={showInfoModal}
-          onClose={() => setShowInfoModal(false)}
-          title="More About Frontier"
-          cards={[
-            {
-              preset: 'about',
-              title: 'Fashion',
-              content: [
-                {
-                  type: 'p',
-                  text: 'Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
-                }
-              ]
+        <div className="space-y-12 px-5 py-8">
+          <StepCard
+            stepNumber={1}
+            icon={
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 2C17.52 2 22 6.48 22 12C22 17.52 17.52 22 12 22C6.48 22 2 17.52 2 12C2 6.48 6.48 2 12 2ZM13 12V8H11V12H8L12 16L16 12H13Z"
+                  fill="black"
+                />
+              </svg>
             }
-          ]}
-        />
-      </Spin>
-    </AuthChecker>
+            title="Download"
+            description="Download Codatta Clip plugin."
+          >
+            <button
+              onClick={goDownload}
+              className="h-12 w-full rounded-full bg-black text-sm font-medium text-white active:scale-95"
+            >
+              GO
+            </button>
+          </StepCard>
+
+          <StepCard
+            stepNumber={2}
+            icon={
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9.99945 11H2.04883C2.55055 5.94668 6.8141 2 11.9995 2C17.5223 2 21.9995 6.47715 21.9995 12C21.9995 17.5228 17.5223 22 11.9995 22C6.8141 22 2.55055 18.0533 2.04883 13H9.99945V16L14.9995 12L9.99945 8V11Z"
+                  fill="black"
+                />
+              </svg>
+            }
+            title="Start"
+            description={
+              <>
+                Open Codatta Clip, select Fashion tab and hit <span className="text-[#00D9D9]">Start</span>.
+              </>
+            }
+          >
+            <Step1Img />
+          </StepCard>
+
+          <StepCard
+            stepNumber={3}
+            icon={
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M20.0049 13.0019V20.0019C20.0049 20.5542 19.5572 21.0019 19.0049 21.0019H5.00488C4.4526 21.0019 4.00488 20.5542 4.00488 20.0019V13.0019H20.0049ZM14.5049 2.00195C16.4379 2.00195 18.0049 3.56895 18.0049 5.50195C18.0049 6.03915 17.8839 6.54809 17.6676 7.00299L21.0049 7.00195C21.5572 7.00195 22.0049 7.44966 22.0049 8.00195V11.0019C22.0049 11.5542 21.5572 12.0019 21.0049 12.0019H3.00488C2.4526 12.0019 2.00488 11.5542 2.00488 11.0019V8.00195C2.00488 7.44966 2.4526 7.00195 3.00488 7.00195L6.34219 7.00299C6.12591 6.54809 6.00488 6.03915 6.00488 5.50195C6.00488 3.56895 7.57189 2.00195 9.50488 2.00195C10.4849 2.00195 11.3708 2.40471 12.0061 3.05373C12.639 2.40471 13.5249 2.00195 14.5049 2.00195ZM9.50488 4.00195C8.67646 4.00195 8.00488 4.67352 8.00488 5.50195C8.00488 6.28164 8.59977 6.9224 9.36042 6.99508L9.50488 7.00195H11.0049V5.50195C11.0049 4.72225 10.41 4.0815 9.64934 4.00881L9.50488 4.00195ZM14.5049 4.00195L14.3604 4.00881C13.6473 4.07696 13.0799 4.64438 13.0117 5.35749L13.0049 5.50195V7.00195H14.5049L14.6493 6.99508C15.41 6.9224 16.0049 6.28164 16.0049 5.50195C16.0049 4.72225 15.41 4.0815 14.6493 4.00881L14.5049 4.00195Z"
+                  fill="black"
+                />
+              </svg>
+            }
+            title="Reward"
+            description={
+              <>
+                <span className="text-[#00D9D9]">Stop</span> collecting--manually or at the daily limit. Rewards
+                auto-distributed.
+              </>
+            }
+          >
+            <Step2Img />
+          </StepCard>
+
+          <InfoCard title="Data Sync Active">
+            <p>
+              Web History updates daily at <span className="text-[#00D9D9]">00:00 UTC</span> with your collection
+              totals. See plugin for details.
+            </p>
+          </InfoCard>
+        </div>
+      </div>
+
+      <HelpDrawer
+        open={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+        title="More About Frontier"
+        cards={[
+          {
+            preset: 'about',
+            title: 'Fashion',
+            content: [
+              {
+                type: 'p',
+                text: 'Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
+              }
+            ]
+          }
+        ]}
+      />
+    </Spin>
   )
 }
 

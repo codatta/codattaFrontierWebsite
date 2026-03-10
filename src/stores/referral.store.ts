@@ -1,5 +1,4 @@
-import { proxy } from 'valtio'
-import { useSnapshot } from 'valtio'
+import { proxy, useSnapshot } from 'valtio'
 import userApi, { InviteDetail, InviteRecord } from '@/apis/user.api'
 
 type TReferralStore = {

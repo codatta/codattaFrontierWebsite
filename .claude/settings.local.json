@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.figma.com)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\({k:v for k,v in d.items\\(\\) if ''mcp'' in k.lower\\(\\) or ''figma'' in k.lower\\(\\)}, indent=2\\)\\)\")"
+    ]
+  }
+}

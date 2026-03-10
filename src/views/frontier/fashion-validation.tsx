@@ -4,13 +4,13 @@ import { Spin, message, Carousel } from 'antd'
 import { CarouselRef } from 'antd/es/carousel'
 import { cn } from '@udecode/cn'
 
-import AuthChecker from '@/components/common/auth-checker'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import SubmittedModal from '@/components/frontier/common/submitted-modal'
+
 import frontiterApi from '@/apis/frontiter.api'
-import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/utils/fashion-constants'
+import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/config/fashion'
 import {
   ValidIcon,
   InvalidIcon,
@@ -276,154 +276,148 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
   const showViewpointQuestion = showCategoryQuestion && currentAnswer?.image_type === 'model'
 
   return (
-    <AuthChecker>
-      <Spin spinning={loading}>
-        <div className="min-h-screen bg-[#F5F5F5]">
-          <div className="z-10 flex-none bg-[#F7F8FA]">
-            <FrontierHeader
-              title={<span className="font-bold">Fashion</span>}
-              onBack={onBack}
-              onHelp={() => setShowInfoModal(true)}
-            />
+    <Spin spinning={loading}>
+      <div className="min-h-screen bg-[#F5F5F5]">
+        <div className="z-10 flex-none bg-[#F7F8FA]">
+          <FrontierHeader
+            title={<span className="font-bold">Fashion</span>}
+            onBack={onBack}
+            onHelp={() => setShowInfoModal(true)}
+          />
 
-            {/* Image preview */}
-            <div className="px-4">
-              <div className="relative overflow-hidden rounded-[26px] bg-[#FAFAFA]">
-                {questions.length > 1 ? (
-                  <div className="relative aspect-[370/200] size-full">
-                    <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="size-full">
-                      {questions.map((question, idx) => (
-                        <div key={idx} className="flex aspect-[370/200] w-full items-center justify-center">
-                          <img
-                            src={question.image_url}
-                            alt={`fashion-${idx + 1}`}
-                            className="size-full object-contain"
-                          />
-                        </div>
-                      ))}
-                    </Carousel>
-                  </div>
-                ) : (
-                  <div className={cn('bg-[#FAFAFA]', questions.length === 0 ? 'aspect-[370/200]' : '')}>
-                    <img
-                      src={questions[0]?.image_url}
-                      alt={`fashion-1`}
-                      className={cn(
-                        'mx-auto h-full max-w-full object-contain',
-                        questions.length === 0 ? 'invisible' : ''
-                      )}
-                    />
-                  </div>
-                )}
+          {/* Image preview */}
+          <div className="px-4">
+            <div className="relative overflow-hidden rounded-[26px] bg-[#FAFAFA]">
+              {questions.length > 1 ? (
+                <div className="relative aspect-[370/200] size-full">
+                  <Carousel ref={carouselRef} afterChange={setCurrentImageIndex} dots={false} className="size-full">
+                    {questions.map((question, idx) => (
+                      <div key={idx} className="flex aspect-[370/200] w-full items-center justify-center">
+                        <img src={question.image_url} alt={`fashion-${idx + 1}`} className="size-full object-contain" />
+                      </div>
+                    ))}
+                  </Carousel>
+                </div>
+              ) : (
+                <div className={cn('bg-[#FAFAFA]', questions.length === 0 ? 'aspect-[370/200]' : '')}>
+                  <img
+                    src={questions[0]?.image_url}
+                    alt={`fashion-1`}
+                    className={cn(
+                      'mx-auto h-full max-w-full object-contain',
+                      questions.length === 0 ? 'invisible' : ''
+                    )}
+                  />
+                </div>
+              )}
 
-                {totalImages > 1 && (
-                  <div className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-[#0000001A] bg-white/40 px-2 py-1 text-sm font-semibold backdrop-blur-sm">
-                    <span className="text-[17px] font-bold text-[#40E1EF]">{currentImageIndex + 1}</span>
-                    <span className="text-[13px] text-[#666666]">/{totalImages}</span>
-                  </div>
-                )}
-              </div>
+              {totalImages > 1 && (
+                <div className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-[#0000001A] bg-white/40 px-2 py-1 text-sm font-semibold backdrop-blur-sm">
+                  <span className="text-[17px] font-bold text-[#40E1EF]">{currentImageIndex + 1}</span>
+                  <span className="text-[13px] text-[#666666]">/{totalImages}</span>
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
-          <div className="mt-8 px-4 pb-8">
-            <div className="space-y-8">
-              <QuestionSection title="Is this image valid?">
+        <div className="mt-8 px-4 pb-8">
+          <div className="space-y-8">
+            <QuestionSection title="Is this image valid?">
+              <div className="grid grid-cols-2 gap-3">
+                {QUESTION_OPTIONS.q1.map((option) => (
+                  <OptionButton
+                    key={option.value}
+                    label={option.label}
+                    description={option.description}
+                    selected={currentAnswer?.is_valid === option.value}
+                    onClick={() => handleValiditySelect(option.value as 'valid' | 'invalid')}
+                    icon={ICON_MAP[option.value]}
+                  />
+                ))}
+              </div>
+            </QuestionSection>
+
+            {showTypeQuestion && (
+              <QuestionSection title="What is the image type?">
                 <div className="grid grid-cols-2 gap-3">
-                  {QUESTION_OPTIONS.q1.map((option) => (
+                  {QUESTION_OPTIONS.q2.map((option) => (
                     <OptionButton
                       key={option.value}
                       label={option.label}
-                      description={option.description}
-                      selected={currentAnswer?.is_valid === option.value}
-                      onClick={() => handleValiditySelect(option.value as 'valid' | 'invalid')}
+                      selected={currentAnswer?.image_type === option.value}
+                      onClick={() => handleImageTypeSelect(option.value as 'flat' | 'model' | 'collage' | 'poster')}
                       icon={ICON_MAP[option.value]}
                     />
                   ))}
                 </div>
               </QuestionSection>
+            )}
 
-              {showTypeQuestion && (
-                <QuestionSection title="What is the image type?">
-                  <div className="grid grid-cols-2 gap-3">
-                    {QUESTION_OPTIONS.q2.map((option) => (
-                      <OptionButton
-                        key={option.value}
-                        label={option.label}
-                        selected={currentAnswer?.image_type === option.value}
-                        onClick={() => handleImageTypeSelect(option.value as 'flat' | 'model' | 'collage' | 'poster')}
-                        icon={ICON_MAP[option.value]}
-                      />
-                    ))}
-                  </div>
-                </QuestionSection>
-              )}
+            {showCategoryQuestion && (
+              <QuestionSection title="Main category?">
+                <div className="grid grid-cols-2 gap-3">
+                  {QUESTION_OPTIONS.q3.map((option) => (
+                    <OptionButton
+                      key={option.value}
+                      label={option.label}
+                      selected={currentAnswer?.category === option.value}
+                      onClick={() => handleCategorySelect(option.value as 'top' | 'bottom' | 'full' | 'accessory')}
+                      icon={ICON_MAP[option.value]}
+                    />
+                  ))}
+                </div>
+              </QuestionSection>
+            )}
 
-              {showCategoryQuestion && (
-                <QuestionSection title="Main category?">
-                  <div className="grid grid-cols-2 gap-3">
-                    {QUESTION_OPTIONS.q3.map((option) => (
-                      <OptionButton
-                        key={option.value}
-                        label={option.label}
-                        selected={currentAnswer?.category === option.value}
-                        onClick={() => handleCategorySelect(option.value as 'top' | 'bottom' | 'full' | 'accessory')}
-                        icon={ICON_MAP[option.value]}
-                      />
-                    ))}
-                  </div>
-                </QuestionSection>
-              )}
+            {showViewpointQuestion && (
+              <QuestionSection title="Model viewpoint?">
+                <div className="grid grid-cols-2 gap-3">
+                  {QUESTION_OPTIONS.q4.map((option) => (
+                    <OptionButton
+                      key={option.value}
+                      label={option.label}
+                      selected={currentAnswer?.viewpoint === option.value}
+                      onClick={() => handleViewpointSelect(option.value as 'front' | 'back' | 'side')}
+                      icon={ICON_MAP[option.value]}
+                    />
+                  ))}
+                </div>
+              </QuestionSection>
+            )}
 
-              {showViewpointQuestion && (
-                <QuestionSection title="Model viewpoint?">
-                  <div className="grid grid-cols-2 gap-3">
-                    {QUESTION_OPTIONS.q4.map((option) => (
-                      <OptionButton
-                        key={option.value}
-                        label={option.label}
-                        selected={currentAnswer?.viewpoint === option.value}
-                        onClick={() => handleViewpointSelect(option.value as 'front' | 'back' | 'side')}
-                        icon={ICON_MAP[option.value]}
-                      />
-                    ))}
-                  </div>
-                </QuestionSection>
-              )}
-
-              <button
-                onClick={handleNextOrSubmit}
-                disabled={!canContinue}
-                className="h-[56px] w-full rounded-full bg-black text-[17px] font-semibold leading-[56px] text-white transition-all disabled:bg-black/20 disabled:text-white/60"
-              >
-                {isLastImage ? 'Submit' : 'Continue'}
-              </button>
-            </div>
+            <button
+              onClick={handleNextOrSubmit}
+              disabled={!canContinue}
+              className="h-[56px] w-full rounded-full bg-black text-[17px] font-semibold leading-[56px] text-white transition-all disabled:bg-black/20 disabled:text-white/60"
+            >
+              {isLastImage ? 'Submit' : 'Continue'}
+            </button>
           </div>
-
-          <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
-          <SubmittedModal open={showSubmittedModal} onClose={onBack} />
         </div>
 
-        <HelpDrawer
-          open={showInfoModal}
-          onClose={() => setShowInfoModal(false)}
-          title="More About Frontier"
-          cards={[
-            {
-              preset: 'about',
-              title: 'Fashion',
-              content: [
-                {
-                  type: 'p',
-                  text: 'Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
-                }
-              ]
-            }
-          ]}
-        />
-      </Spin>
-    </AuthChecker>
+        <SuccessModal open={modalShow} onClose={onBack} points={rewardPoints} />
+        <SubmittedModal open={showSubmittedModal} onClose={onBack} />
+      </div>
+
+      <HelpDrawer
+        open={showInfoModal}
+        onClose={() => setShowInfoModal(false)}
+        title="More About Frontier"
+        cards={[
+          {
+            preset: 'about',
+            title: 'Fashion',
+            content: [
+              {
+                type: 'p',
+                text: 'Codatta Fashion is more than just a data collection platform - it is an open, collaborative network that connects data providers, AI developers, and brands in the e-commerce and fashion industries. By aggregating data from diverse sources, such as social media trends, consumer feedback, and e-commerce sales, Codatta offers high-quality, easily accessible data.'
+              }
+            ]
+          }
+        ]}
+      />
+    </Spin>
   )
 }
 
