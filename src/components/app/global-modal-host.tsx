@@ -36,14 +36,6 @@ export default function GlobalModalHost() {
         <div className="text-center text-2xl font-bold">{modal.title}</div>
         <div className="mb-6 whitespace-pre-wrap text-center">{modal.content}</div>
         <button className="w-[240px] rounded-full bg-white py-2 text-black">OK</button>
-
-        {/* <div className="fixed inset-0 z-[1000] flex items-center justify-center">
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-[1001] min-w-[280px] max-w-[90vw] rounded-lg bg-[#1C1C26] p-4 text-white shadow-xl">
-        {modal.title ? <div className="mb-2 font-semibold">{modal.title}</div> : null}
-        {modal.content}
-        </div>
-        </div> */}
       </div>
     </Modal>,
     document.body

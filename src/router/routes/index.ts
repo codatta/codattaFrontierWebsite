@@ -1,5 +1,5 @@
 export { referralRoutes } from './referral.routes'
 export { datasetRoutes } from './dataset.routes'
-export { frontierProjectRoutes } from './frontier-project.routes'
+export { frontierRoutes } from './frontier.routes'
 export { settingsRoutes } from './settings.routes'
-export { devRoutes, notFoundRoute } from './misc.routes'
+export { devRoutes, notFoundRoute } from './dev.routes'

@@ -27,7 +27,7 @@ function appRoute(templateId: string, Component: LazyComponent) {
 // ============================================================
 
 /** Standalone frontier project routes (App only) */
-export const frontierProjectRoutes = (
+export const frontierRoutes = (
   <>
     <Route path="/m/submission/:submission_id/detail" element={<SubmissionDetail />} />
     {appRoute('FASHION_VALIDATION', FashionValidationApp)}

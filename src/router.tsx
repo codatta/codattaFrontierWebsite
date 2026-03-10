@@ -6,7 +6,7 @@ import GlobalModalHost from './components/app/global-modal-host'
 
 import {
   datasetRoutes,
-  frontierProjectRoutes,
+  frontierRoutes,
   settingsRoutes,
   referralRoutes,
   devRoutes,
@@ -18,7 +18,7 @@ export default function Router() {
     <BrowserRouter>
       <RouteTracker />
       <Routes>
-        {frontierProjectRoutes}
+        {frontierRoutes}
         {referralRoutes}
         {settingsRoutes}
         {datasetRoutes}
