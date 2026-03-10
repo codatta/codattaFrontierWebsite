@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { message, Spin } from 'antd'
 import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 
-import frontiterApi from '@/apis/frontiter.api'
+import frontiterApi from '@/apis/frontier.api'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import MobileDatePicker from '@/components/frontier/fate/date-picker'

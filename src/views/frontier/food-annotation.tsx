@@ -5,7 +5,7 @@ import { ChevronsUpDown, X } from 'lucide-react'
 
 import FoodAnnotationUpload from '@/components/frontier/food-annotation/upload'
 import type { UploadedImage } from '@/components/frontier/food-annotation/upload'
-import frontiterApi from '@/apis/frontiter.api'
+import frontiterApi from '@/apis/frontier.api'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import SubmittedModal from '@/components/frontier/common/submitted-modal'
 import FrontierHeader from '@/components/frontier/common/frontier-header'

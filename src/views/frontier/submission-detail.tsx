@@ -1,4 +1,4 @@
-import frontiterApi, { SubmissionRecord } from '@/apis/frontiter.api'
+import frontiterApi, { SubmissionRecord } from '@/apis/frontier.api'
 import { AnimatePresence, motion } from 'framer-motion'
 import { cn } from '@udecode/cn'
 import { message, Spin } from 'antd'

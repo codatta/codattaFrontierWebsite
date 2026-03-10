@@ -3,7 +3,7 @@ import { message } from 'antd'
 import dayjs from 'dayjs'
 import { InfoCircleOutlined } from '@ant-design/icons'
 
-import frontiterApi, { DataProfileListItem, SubmissionStatics } from '@/apis/frontiter.api'
+import frontiterApi, { DataProfileListItem, SubmissionStatics } from '@/apis/frontier.api'
 import { useNavigate } from 'react-router-dom'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import { Loader2, X } from 'lucide-react'

@@ -9,7 +9,7 @@ import HelpDrawer from '@/components/frontier/common/help-drawer'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import SubmittedModal from '@/components/frontier/common/submitted-modal'
 
-import frontiterApi from '@/apis/frontiter.api'
+import frontiterApi from '@/apis/frontier.api'
 import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/config/fashion'
 import {
   ValidIcon,

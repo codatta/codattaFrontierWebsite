@@ -13,7 +13,7 @@ import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/fron
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop-knob/types'
 import { calculateFileHash } from '@/utils/file'
 
-import frontiterApi from '@/apis/frontiter.api'
+import frontiterApi from '@/apis/frontier.api'
 import commonApi from '@/api-v1/common.api'
 
 import imageExample from '@/assets/frontier/knob/raw-app.png'

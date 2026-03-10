@@ -1,5 +1,5 @@
 import { AxiosInstance } from 'axios'
-import request, { PaginationResponse, type Response } from '@/apis/request'
+import request, { type Response } from '@/apis/request'
 
 export interface UserAccount {
   id: string
@@ -8,38 +8,6 @@ export interface UserAccount {
   current_account: boolean
   chain: string
   wallet_name?: string
-}
-
-export interface AccountItem {
-  id: number
-  user_id: string
-  account_out_code: string
-  account: string
-  account_type: string
-  chain: 'eip155'
-  connector: 'dynamic' | 'ton'
-  wallet_name: string
-  public_identifier: string
-}
-
-export interface OldUserInfo {
-  avatar_url: string
-  username: string | null
-  email: string | null
-  user_id: string
-  code: string
-  roles: string | null
-  inviter_code: string | null
-  status: string
-  wallet_address: string | null
-  new_user: boolean
-  accounts: AccountItem[]
-  social_account_info: { channel: string; name: string }[]
-  current_account_info: {
-    account: string
-    account_type: 'email' | 'blockchain' | 'wallet' | null
-    connector: 'dynamic' | 'ton' | null
-  }
 }
 
 export interface SocialAccountInfoItem {
@@ -78,11 +46,6 @@ export interface UserInfo {
   social_account_info: SocialAccountInfoItem[]
 }
 
-export interface UserUpdateParams {
-  update_key: 'AVATAR' | 'USER_NAME'
-  update_value: string
-}
-
 export interface InviteRecord {
   user_id: string
   user_name: string
@@ -107,133 +70,6 @@ export interface InviteDetail {
   chest_available_count: number
 }
 
-export interface InviteProgressItem {
-  num: number
-  invite_id: string
-  reward: string
-  reward_value: string
-  reward_type: 'score' | 'nft'
-  claim_status: number
-  soul_id?: number
-}
-
-export interface InvitePointClaimParams {
-  invite_id: string
-  soul_id?: number
-  tx_hash?: string
-  block_number?: string
-  address?: string
-}
-
-export interface InviteNFTClaimParams {
-  invite_id: string
-  soul_id?: number
-  tx_hash?: string
-  block_number?: string
-  address?: string
-}
-
-export interface JourneyLevelItem {
-  levelId: number
-  reward_type: 'score' | 'reputation' | 'nft'
-  reward_value: number | string
-  soul_id?: number
-  status: number
-}
-
-export interface RewardClaimSignParams {
-  reward_type: 'USDT' | 'XnYCoin'
-  chain_id: string
-  amount: string
-  address: string
-  token: string
-  claim_type?: 'lock' | 'normal' // default is normal claim
-  batch_ids?: string // optional batch ID for lock claims
-}
-
-export interface RewardClaimSignResponse {
-  signature: string
-  token: string
-  amount: number | string
-  expired_at: string
-  uid: string
-  release_time?: string // release time for locked rewards
-}
-
-export interface RewardRecordHistoryParams {
-  page_num: number
-  page_size: number
-}
-
-export interface RewardRecordHistoryItem {
-  uid: string
-  gmt_create: string
-  claim_time: string
-  tx_hash: string
-  from_address: string
-  to_address: string
-  asset_type: string
-  balance: number
-  status: number
-  status_name: string
-}
-
-export interface FrontierTokenRewardTokenItem {
-  frontier_id: string
-  reward_type: string
-  reward_amount: number
-  reward_locked_amount: number
-  reward_unlock_time: string
-}
-
-export interface FrontierTokenRewardItem {
-  frontier_id: string
-  frontier_name: string
-  total_submission: number
-  average_rating_name: string
-  average_result: number
-  tokens: FrontierTokenRewardTokenItem[]
-}
-
-export interface LockupTokenRewardItem {
-  transaction_id: string
-  code: string
-  stage: string
-  name: string
-  total_submission: number
-  average_rating_name: string | null
-  average_result: number | null
-  reward_type: string
-  reward_amount: number
-  gmt_create: string
-}
-
-export interface TokenClaimItem {
-  id: number
-  uid: number
-  status_name: string
-}
-
-export interface ClaimableReward {
-  claim_type: 'normal' | 'lock'
-  asset_type: 'XnYCoin' | 'USDT'
-  name: string
-  amount: number
-  batch_ids: string
-}
-
-export type StakeStatus = 0 | 1 | 2 | 3 | 4
-export interface StakeRecordItem {
-  uid: null
-  stake_time: string
-  claim_time: string
-  tx_hash: string
-  asset_type: string
-  balance: number
-  status: StakeStatus
-  status_name: string
-}
-
 class UserApi {
   constructor(private request: AxiosInstance) {}
 
@@ -245,29 +81,6 @@ class UserApi {
 
   async updateRelatedInfo(info: object) {
     return this.request.post('/v2/user/update/related_info', info)
-  }
-
-  async updateUserInfo(info: UserUpdateParams) {
-    const { data } = await this.request.post('/v2/user/update/info', info)
-    return data
-  }
-
-  async getSocialAccountLinkUrl(type: string) {
-    const { data } = await request.post('/v2/user/sm/connect', { type })
-    return data
-  }
-
-  async unlinkSocialAccount(type: string) {
-    const { data } = await request.post('/v2/user/sm/unbind', { type })
-    return data
-  }
-
-  async linkSocialAccount(type: string, param: unknown) {
-    const { data } = await request.post('/v2/user/sm/bind', {
-      type,
-      value: param
-    })
-    return data
   }
 
   async getInviteInfo() {
@@ -283,12 +96,6 @@ class UserApi {
     return data
   }
 
-  async claimInviteReward(params: InvitePointClaimParams | InviteNFTClaimParams) {
-    const { data } = await request.post<Response<{ status: number; info: string }>>('/v2/invite/reward/claim', params)
-    if (data.data.status !== 1) throw new Error(data.data.info)
-    return data
-  }
-
   async getInviteRecords(params: { page_num: number; page_size: number; start_time?: Date; end_time?: Date }) {
     const { page_num, page_size, start_time, end_time } = params
     const start_time_unix = start_time ? start_time.getTime() / 1000 : undefined
@@ -299,226 +106,6 @@ class UserApi {
       start_time: start_time_unix,
       end_time: end_time_unix
     })
-    return data
-  }
-
-  async getReferralNftSign(invite_id: string, address: string) {
-    const { data } = await request.post<
-      Response<{
-        expired_at: number
-        signature: string
-        soul_id: number
-      }>
-    >('/v2/invite/chain/sign', {
-      invite_id,
-      address
-    })
-    return data
-  }
-
-  async getTokenClaimRecords(page: number, pageSize: number) {
-    const { data } = await request.post<
-      Response<{
-        page_num: number
-        page_size: number
-        count: number
-        list: TokenClaimItem[]
-      }>
-    >('/api/v2/user/reward/record/list', {
-      page_num: page,
-      page_size: pageSize
-    })
-    return data
-  }
-
-  async getRewardClaimSign(params: RewardClaimSignParams) {
-    const { data } = await request.post<Response<RewardClaimSignResponse>>('/v2/user/reward/signature', params)
-    return data.data
-  }
-
-  async createRewardRecord(uid: string, gas: string) {
-    const { data } = await request.post('/v2/user/reward/record/create', {
-      uid,
-      gas
-    })
-    return data
-  }
-
-  async getFrontierTokenReward(page: number, pageSize: number) {
-    const { data } = await request.post<
-      Response<{
-        page_num: number
-        page_size: number
-        count: number
-        list: FrontierTokenRewardItem[]
-      }>
-    >('/v2/submission/user/token/rewards', {
-      page_num: page,
-      page_size: pageSize
-    })
-
-    return data
-  }
-
-  async getLockupTokenReward(page: number, pageSize: number) {
-    const { data } = await request.post<
-      Response<{
-        page_num: number
-        page_size: number
-        count: number
-        list: LockupTokenRewardItem[]
-      }>
-    >('/v2/airdrop/user/asset/lock/rewards', {
-      page_num: page,
-      page_size: pageSize
-    })
-
-    return data
-  }
-
-  async updateRewardRecord(uid: string, tx_hash: string) {
-    const { data } = await request.post<Response<{ flag: number; message: string }>>('/v2/user/reward/record/update', {
-      uid,
-      tx_hash
-    })
-    return data.data
-  }
-
-  async finishRewardRecord(uid: string, status: 2 | 3 | 4) {
-    // 2 - success
-    // 3 - finish
-    // 4 - cancel
-    const { data } = await request.post<Response<{ flag: number; message: string }>>('/v2/user/reward/record/finish', {
-      uid,
-      status
-    })
-    return data.data
-  }
-
-  async getRewardRecordHistory(page: number, pageSize: number) {
-    const { data } = await request.post<
-      Response<{
-        page_num: number
-        page_size: number
-        count: number
-        list: RewardRecordHistoryItem[]
-      }>
-    >('/v2/user/reward/record/list', { page_num: page, page_size: pageSize })
-
-    return data.data
-  }
-
-  async getClaimableRewards(claim_types = 'normal') {
-    // normal | lock
-    const { data } = await this.request.get<Response<ClaimableReward[]>>('/v2/user/asset/claim/list', {
-      params: {
-        claim_types
-      }
-    })
-    return data.data?.filter((item) => parseFloat(String(item.amount)) > 0)
-  }
-
-  async isHighQualityUser(): Promise<boolean> {
-    const { data } = await request.get<Response<{ quality_type: number }>>('/v2/h5/quest/user/quality')
-    return data.data.quality_type === 1
-  }
-
-  async getTgGroupInviteLink(group_type: string = '') {
-    // codatta | ''
-    const { data } = await request.get<Response<{ link: string; chat_id: string }>>('/v2/h5/tg/group/link', {
-      params: { group_type }
-    })
-    return data.data
-  }
-
-  async isJoinedTgGroup(group_type: string = ''): Promise<boolean> {
-    const { data } = await request.get<Response<{ flag: number }>>('/v2/h5/tg/group/status', { params: { group_type } })
-    return data.data.flag === 1
-  }
-  async getVerificationCode({ account_type, email, opt }: { account_type?: string; email?: string; opt?: string }) {
-    const { data } = await request.post<Response<string>>('/v2/user/get_code', {
-      account_type: account_type ?? 'email',
-      email: email ?? '',
-      opt: opt ?? 'verify'
-    })
-    return data.data
-  }
-
-  async checkEmail({ email, code, task_id }: { email: string; code: string; task_id: string }) {
-    const { data } = await request.post<Response<{ flag: boolean; info: string }>>('/v2/frontier/email/check', {
-      email,
-      code,
-      task_id
-    })
-    return data.data
-  }
-
-  async getStakeUid({ asset_type, amount, address }: { asset_type: string; amount: string; address: string }) {
-    const { data } = await request.post<Response<{ uid: string }>>('/v2/user/stake/record/gen', {
-      asset_type,
-      amount,
-      address
-    })
-    return data.data
-  }
-
-  async recordStakeTransaction({
-    uid,
-    asset_type,
-    amount,
-    address,
-    tx_hash,
-    gas_fee
-  }: {
-    uid: string
-    asset_type: string
-    amount: string
-    address: string
-    tx_hash?: string
-    gas_fee?: string
-  }) {
-    const { data } = await request.post<Response<{ uid: string; status: 0 | 1 }>>('/v2/user/stake/record/create', {
-      uid,
-      asset_type,
-      amount,
-      address,
-      tx_hash,
-      gas_fee
-    })
-    return data.data
-  }
-
-  async recordUnstakeTransaction({ uid, tx_hash }: { uid: string; tx_hash?: string }) {
-    const { data } = await request.post<Response<{ uid: string; status: 0 | 1 }>>('/v2/user/stake/record/unlock', {
-      uid,
-      tx_hash
-    })
-    return data.data
-  }
-
-  async recordStakeClaimTransaction({ uids = [] }: { uids: string[] }) {
-    const { data } = await request.post<Response<{ uids: string[]; status: 0 | 1 }>>('/v2/user/stake/record/claim', {
-      uids: uids.join(',')
-    })
-    return data.data
-  }
-
-  // async getStakeRecords({ page = 1, page_size = 10 }: { page?: number; page_size?: number }) {
-  //   const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>('/v2/user/stake/record/list', {
-  //     page_num: page,
-  //     page_size
-  //   })
-  //   return data.data
-  // }
-
-  async getStakeHistory({ page = 1, page_size = 100 }: { page?: number; page_size?: number }) {
-    const { data } = await request.post<PaginationResponse<{ list: StakeRecordItem[] }>>(
-      '/v2/user/stake/history/list',
-      {
-        page_num: page,
-        page_size: page_size
-      }
-    )
     return data
   }
 }

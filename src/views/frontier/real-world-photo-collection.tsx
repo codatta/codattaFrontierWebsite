@@ -4,7 +4,7 @@ import { Spin, message } from 'antd'
 import { ChevronDown, Camera } from 'lucide-react'
 import { cn } from '@udecode/cn'
 
-import frontiterApi from '@/apis/frontiter.api'
+import frontiterApi from '@/apis/frontier.api'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 import BottomDrawer from '@/components/frontier/common/bottom-drawer'

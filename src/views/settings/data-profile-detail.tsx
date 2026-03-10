@@ -10,7 +10,7 @@ import CopyAction from '@/components/common/copy'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 import defaultAvatar from '@/assets/home/default-avatar.png'
 import LogoLightSvg from '@/assets/common/logo-white-notext.svg?react'
-import { DataProfileListItem } from '@/apis/frontiter.api'
+import { DataProfileListItem } from '@/apis/frontier.api'
 
 function shortenMiddle(value: string, start = 18, end = 8) {
   if (!value) return '-'
