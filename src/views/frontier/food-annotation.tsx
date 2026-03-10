@@ -9,7 +9,7 @@ import type { UploadedImage } from '@/components/frontier/food-annotation/upload
 import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import SubmittedModal from '@/components/frontier/common/submitted-modal'
-import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
 import BottomDrawer from '@/components/frontier/common/bottom-drawer'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 import ExampleMeasurement from '@/assets/frontier/food-annotation-app/example-2.png'
@@ -257,7 +257,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader title="Food Data Annotation" onBack={onBack} onHelp={() => setShowHelpModal(true)} />
+          <FrontierHeader title="Food Data Annotation" onBack={onBack} onHelp={() => setShowHelpModal(true)} />
           {/* <MobileAppFrontierBanner frontieId={frontierId} isFeed={isFeed} /> */}
 
           {/* Form Content */}
@@ -272,6 +272,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
                     onChange={(images) => updateFormData('foodImage', images)}
                     error={errors.foodImage}
                     maxCount={4}
+                    layout="grid"
                   />
                   <div className="text-[13px] text-[#999]">
                     Upload a clear photo of a single food item(e.g.:,an apple,a bowl of rice)
@@ -318,6 +319,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
                     onChange={(images) => updateFormData('measurementToolPhotos', images)}
                     error={errors.measurementToolPhotos}
                     maxCount={5}
+                    layout="grid"
                   />
                   <div className="text-[13px] text-[#999]">
                     Upload photos of the measuring tool(Ensure reading is clear){' '}
@@ -438,6 +440,7 @@ const FoodDataAnnotation: React.FC<{ templateId: string; isFeed?: boolean }> = (
                     onChange={(images) => updateFormData('rulerPhoto', images)}
                     error={errors.rulerPhoto}
                     maxCount={5}
+                    layout="grid"
                   />
                   <div className="text-[13px] text-[#999]">
                     Upload photos of container with ruler(Ensure markings are clear){' '}

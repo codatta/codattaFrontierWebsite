@@ -9,7 +9,7 @@ import FrontierHeader from '@/components/frontier/common/frontier-header'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import SubmittedModal from '@/components/frontier/common/submitted-modal'
-import Upload from '@/components/frontier/common/image-upload'
+import Upload, { UploadedImage } from '@/components/frontier/common/image-upload'
 import BottomDrawer from '@/components/frontier/common/bottom-drawer'
 import KnobAnnotationCanvas, { KnobAnnotationCanvasRef } from '@/components/frontier/airdrop-knob/annotation-canvas'
 import { KnobFormData, Point, Rect } from '@/components/frontier/airdrop-knob/types'
@@ -18,11 +18,6 @@ import { AppToastContainer } from '@/hooks/use-app-toast'
 
 import imageExample from '@/assets/frontier/knob/raw-app.png'
 import labelExample from '@/assets/frontier/knob/label-app.png'
-
-interface UploadedImage {
-  url: string
-  hash: string
-}
 
 export default function AirdropKnobApp({ templateId, isFeed }: { templateId?: string; isFeed?: boolean }) {
   const { taskId, uid } = useParams()

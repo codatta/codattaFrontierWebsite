@@ -5,7 +5,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 
 import frontiterApi, { DataProfileListItem, SubmissionStatics } from '@/apis/frontiter.api'
 import { useNavigate } from 'react-router-dom'
-import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
 import { Loader2, X } from 'lucide-react'
 import EmptyImg from '@/assets/dataprofile/data-profile-empty.png'
 
@@ -170,7 +170,7 @@ export default function AppDataProfile() {
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] text-black">
-      <MobileAppFrontierHeader title="Data Profile" canSubmit={false} showSubmitButton={false} />
+      <FrontierHeader title="Data Profile" canSubmit={false} showSubmitButton={false} />
 
       <div className="px-5 pb-10">
         <StatsCards stats={stats} />

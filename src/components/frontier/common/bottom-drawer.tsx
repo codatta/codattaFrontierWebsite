@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { cn } from '@udecode/cn'
+import { useDrawerAnimation } from '@/hooks/use-drawer-animation'
 
 interface BottomDrawerProps {
   open: boolean
@@ -11,39 +12,7 @@ interface BottomDrawerProps {
 }
 
 export default function BottomDrawer({ open, onClose, children, className }: BottomDrawerProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
-
-  // Handle drawer visibility and animations
-  useEffect(() => {
-    if (open) {
-      // Show the drawer
-      setIsVisible(true)
-      // Trigger animation after mounting
-      setTimeout(() => {
-        setIsAnimating(true)
-      }, 10)
-      // Prevent body scroll
-      document.body.style.overflow = 'hidden'
-    } else {
-      // Start closing animation
-      setIsAnimating(false)
-      // Wait for animation to complete before hiding
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-      }, 300)
-      // Restore body scroll
-      document.body.style.overflow = ''
-
-      return () => {
-        clearTimeout(timer)
-      }
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
+  const { isVisible, isAnimating } = useDrawerAnimation(open)
 
   if (!isVisible) return null
 

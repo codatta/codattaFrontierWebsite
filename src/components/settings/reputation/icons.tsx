@@ -4,7 +4,7 @@ const IconBox = ({ children }: { children: React.ReactNode }) => (
   </div>
 )
 
-export const Icon1 = () => (
+export const IdentityIcon = () => (
   <IconBox>
     <svg width={96} height={96} viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="48" cy="48" r="22" fill="#F7F7F7" />
@@ -30,7 +30,7 @@ export const Icon1 = () => (
   </IconBox>
 )
 
-export const Icon2 = () => (
+export const ActivityIcon = () => (
   <IconBox>
     <svg width={96} height={96} viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="48" cy="48" r="22" fill="#F7F7F7" />
@@ -56,7 +56,7 @@ export const Icon2 = () => (
   </IconBox>
 )
 
-export const Icon3 = () => (
+export const StakingIcon = () => (
   <IconBox>
     <svg width={96} height={96} viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="48" cy="48" r="22" fill="#F7F7F7" />
@@ -82,7 +82,7 @@ export const Icon3 = () => (
   </IconBox>
 )
 
-export const Icon4 = () => (
+export const ContributionIcon = () => (
   <IconBox>
     <svg width={96} height={96} viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="48" cy="48" r="22" fill="#F7F7F7" />
@@ -110,7 +110,7 @@ export const Icon4 = () => (
   </IconBox>
 )
 
-export const Icon5 = () => (
+export const MaliciousIcon = () => (
   <IconBox>
     <svg width={96} height={96} viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="48" cy="48" r="22" fill="#F7F7F7" />

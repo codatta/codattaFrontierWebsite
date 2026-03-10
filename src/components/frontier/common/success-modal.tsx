@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
 import CoinStarImage from '@/assets/common/coin-stars.png'
+import { useDrawerAnimation } from '@/hooks/use-drawer-animation'
 
 interface SuccessModalProps {
   open: boolean
@@ -21,39 +21,7 @@ export default function SuccessModal({
   buttonText = 'Got it',
   className
 }: SuccessModalProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
-
-  // Handle modal visibility and animations
-  useEffect(() => {
-    if (open) {
-      // Show the modal
-      setIsVisible(true)
-      // Trigger animation after mounting
-      setTimeout(() => {
-        setIsAnimating(true)
-      }, 10)
-      // Prevent body scroll
-      document.body.style.overflow = 'hidden'
-    } else {
-      // Start closing animation
-      setIsAnimating(false)
-      // Wait for animation to complete before hiding
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-      }, 300)
-      // Restore body scroll
-      document.body.style.overflow = ''
-
-      return () => {
-        clearTimeout(timer)
-      }
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
+  const { isVisible, isAnimating } = useDrawerAnimation(open)
 
   if (!isVisible) return null
 

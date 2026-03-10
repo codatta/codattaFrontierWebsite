@@ -1,6 +1,7 @@
 import { X, Mail, Copy } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { cn } from '@udecode/cn'
+import { useDrawerAnimation } from '@/hooks/use-drawer-animation'
 
 interface CommercialAccessDrawerProps {
   open: boolean
@@ -8,36 +9,10 @@ interface CommercialAccessDrawerProps {
 }
 
 export default function CommercialAccessDrawer({ open, onClose }: CommercialAccessDrawerProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const { isVisible, isAnimating } = useDrawerAnimation(open)
   const [copied, setCopied] = useState(false)
 
   const email = 'support@codatta.io'
-
-  // Handle drawer visibility and animations
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true)
-      setTimeout(() => {
-        setIsAnimating(true)
-      }, 10)
-      document.body.style.overflow = 'hidden'
-    } else {
-      setIsAnimating(false)
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-      }, 300)
-      document.body.style.overflow = ''
-
-      return () => {
-        clearTimeout(timer)
-      }
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
 
   const handleCopy = async () => {
     try {

@@ -4,12 +4,12 @@ import { ChevronRight } from 'lucide-react'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
-import { Icon1, Icon2, Icon3, Icon4 } from '@/components/settings/reputation/icons'
+import { IdentityIcon, ActivityIcon, StakingIcon, ContributionIcon } from '@/components/settings/reputation/icons'
 import CategoryCard from '@/components/settings/reputation/category-card'
 import CalculationModal from '@/components/settings/reputation/calculation-modal'
 import InfoModal from '@/components/settings/reputation/info-modal'
 import MaliciousCardApp from '@/components/settings/reputation/malicious-card'
-import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
 import bridge from '@/utils/bridge'
 import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
@@ -61,7 +61,7 @@ export default function UserInfoReputationApp() {
     <div className="min-h-screen bg-gradient-to-br from-[#d3f8fc] to-[#ffe4dd] text-[13px] leading-[17px] text-[#666666]">
       <AppToastContainer />
       <Spin spinning={loading}>
-        <MobileAppFrontierHeader title="Reputation" transparent isFixed={false} />
+        <FrontierHeader title="Reputation" transparent isFixed={false} />
 
         {/* Score Section */}
         <div className="flex flex-col items-center justify-center pb-8 pt-2" onClick={() => setCalculationOpen(true)}>
@@ -82,7 +82,7 @@ export default function UserInfoReputationApp() {
 
           <div className="space-y-6">
             <CategoryCard
-              icon={<Icon1 />}
+              icon={<IdentityIcon />}
               title="Verified Identity"
               score={detail?.identify?.score}
               metrics={{
@@ -105,7 +105,7 @@ export default function UserInfoReputationApp() {
             />
 
             <CategoryCard
-              icon={<Icon2 />}
+              icon={<ActivityIcon />}
               title="Login Activity"
               score={detail?.login?.score}
               metrics={{
@@ -126,7 +126,7 @@ export default function UserInfoReputationApp() {
             />
 
             <CategoryCard
-              icon={<Icon3 />}
+              icon={<StakingIcon />}
               title="Staking Commitment"
               score={detail?.staking?.score}
               metrics={{
@@ -153,7 +153,7 @@ export default function UserInfoReputationApp() {
             />
 
             <CategoryCard
-              icon={<Icon4 />}
+              icon={<ContributionIcon />}
               title="Valuable Contributions"
               score={detail?.contribution?.score}
               metrics={{

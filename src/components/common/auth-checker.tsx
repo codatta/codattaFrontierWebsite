@@ -3,7 +3,7 @@ import { authRedirect } from '@/utils/auth'
 // import { useCodattaConnectContext } from 'codatta-connect'
 import { Navigate } from 'react-router-dom'
 
-export default function ExtensionChecker(props: { children: React.ReactNode }) {
+export default function AuthChecker(props: { children: React.ReactNode }) {
   const isLogin = userStoreActions.checkLogin()
   // const { lastUsedWallet } = useCodattaConnectContext()
 

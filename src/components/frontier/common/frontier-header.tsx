@@ -3,7 +3,7 @@ import { cn } from '@udecode/cn'
 import { ReactNode } from 'react'
 import bridge from '@/utils/bridge'
 
-interface MobileAppFrontierHeaderProps {
+interface FrontierHeaderProps {
   title: string | React.ReactNode
   transparent?: boolean
   canSubmit?: boolean
@@ -19,7 +19,7 @@ interface MobileAppFrontierHeaderProps {
   onRightIconClick?: () => void
 }
 
-export default function MobileAppFrontierHeader(props: MobileAppFrontierHeaderProps) {
+export default function FrontierHeader(props: FrontierHeaderProps) {
   const {
     title,
     onBack,

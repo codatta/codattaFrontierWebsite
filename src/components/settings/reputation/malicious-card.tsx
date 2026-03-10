@@ -1,7 +1,7 @@
 import { cn } from '@udecode/cn'
 import { Info } from 'lucide-react'
 
-import { Icon5 } from './icons'
+import { MaliciousIcon } from './icons'
 
 export interface MaliciousCardProps {
   score?: number
@@ -23,7 +23,7 @@ export default function MaliciousCard({ score = 0, className, onInfoClick }: Mal
       }}
     >
       <div className="flex items-center gap-3">
-        <Icon5 />
+        <MaliciousIcon />
         <span className="font-bold text-[#1C1C26]">Malicious Behavior</span>
         <Info
           className="size-4 text-[#BBBBBE]"

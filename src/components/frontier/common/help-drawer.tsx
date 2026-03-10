@@ -1,6 +1,7 @@
-import { useEffect, useState, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { cn } from '@udecode/cn'
 import { X } from 'lucide-react'
+import { useDrawerAnimation } from '@/hooks/use-drawer-animation'
 
 export type ContentBlock =
   | { type: 'h3'; text: string }
@@ -32,32 +33,7 @@ export default function HelpDrawer({
   cards,
   className
 }: HelpDrawerProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
-
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true)
-      setTimeout(() => {
-        setIsAnimating(true)
-      }, 10)
-      document.body.style.overflow = 'hidden'
-    } else {
-      setIsAnimating(false)
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-      }, 300)
-      document.body.style.overflow = ''
-
-      return () => {
-        clearTimeout(timer)
-      }
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
+  const { isVisible, isAnimating } = useDrawerAnimation(open)
 
   if (!isVisible) return null
 

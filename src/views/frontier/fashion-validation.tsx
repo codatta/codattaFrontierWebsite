@@ -5,7 +5,7 @@ import { CarouselRef } from 'antd/es/carousel'
 import { cn } from '@udecode/cn'
 
 import AuthChecker from '@/components/common/auth-checker'
-import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
 import HelpDrawer from '@/components/frontier/common/help-drawer'
 import SuccessModal from '@/components/frontier/common/success-modal'
 import SubmittedModal from '@/components/frontier/common/submitted-modal'
@@ -280,7 +280,7 @@ const FashionValidationApp: React.FC<{ templateId: string; isFeed?: boolean }> =
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F5F5F5]">
           <div className="z-10 flex-none bg-[#F7F8FA]">
-            <MobileAppFrontierHeader
+            <FrontierHeader
               title={<span className="font-bold">Fashion</span>}
               onBack={onBack}
               onHelp={() => setShowInfoModal(true)}

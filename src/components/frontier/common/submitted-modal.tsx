@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
 import { cn } from '@udecode/cn'
 import bridge from '@/utils/bridge'
+import { useDrawerAnimation } from '@/hooks/use-drawer-animation'
 
 interface SubmittedModalProps {
   open: boolean
@@ -9,32 +9,7 @@ interface SubmittedModalProps {
 }
 
 export default function SubmittedModal({ open, onClose = () => bridge.goBack(), className }: SubmittedModalProps) {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
-
-  useEffect(() => {
-    if (open) {
-      setIsVisible(true)
-      setTimeout(() => {
-        setIsAnimating(true)
-      }, 10)
-      document.body.style.overflow = 'hidden'
-    } else {
-      setIsAnimating(false)
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-      }, 300)
-      document.body.style.overflow = ''
-
-      return () => {
-        clearTimeout(timer)
-      }
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [open])
+  const { isVisible, isAnimating } = useDrawerAnimation(open)
 
   if (!isVisible) return null
 

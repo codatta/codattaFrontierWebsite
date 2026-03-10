@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import { InfoCircleOutlined } from '@ant-design/icons'
 import { ExternalLink, MoreVertical, X } from 'lucide-react'
 
-import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
 import BottomDrawer from '@/components/frontier/common/bottom-drawer'
 import CopyAction from '@/components/common/copy'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
@@ -383,7 +383,7 @@ export default function AppDataProfileDetail() {
   if (!submission) {
     return (
       <div className="min-h-screen bg-[#F5F5F5] text-black">
-        <MobileAppFrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} />
+        <FrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} />
         <div className="px-5 pt-6 text-[15px] text-black/60">No submission found.</div>
       </div>
     )
@@ -396,7 +396,7 @@ export default function AppDataProfileDetail() {
 
   return (
     <div className="min-h-screen bg-white text-black">
-      <MobileAppFrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} />
+      <FrontierHeader title="Submission Detail" canSubmit={false} showSubmitButton={false} />
 
       <div className="px-5 pb-10">
         <div className="h-2" />

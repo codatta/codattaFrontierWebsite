@@ -6,7 +6,7 @@ import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 import AuthChecker from '@/components/common/auth-checker'
 import frontiterApi from '@/apis/frontiter.api'
 import SuccessModal from '@/components/frontier/common/success-modal'
-import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
 import MobileDatePicker from '@/components/frontier/fate/date-picker'
 import ScrollTimePicker from '@/components/frontier/fate/scroll-time-picker'
 import LocationPicker from '@/components/frontier/fate/location-picker'
@@ -442,7 +442,7 @@ const YourLifeJourney: React.FC<{ templateId: string }> = ({ templateId }) => {
     <AuthChecker>
       <Spin spinning={loading}>
         <div className="min-h-screen bg-[#F8F8F8] pb-20">
-          <MobileAppFrontierHeader title="Your Life Journey" />
+          <FrontierHeader title="Your Life Journey" />
 
           {/* Form Content */}
           <div className="px-5">
