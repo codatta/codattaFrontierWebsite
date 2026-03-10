@@ -9,7 +9,7 @@ import { referralStoreActions, useReferralStore } from '@/stores/referral.store'
 import userApi, { InviteRecord } from '@/apis/user.api'
 import { formatNumber } from '@/utils/format'
 
-import CodattaLogoIcon from '@/assets/home/logo-gray.svg'
+import CodattaLogoIcon from '@/assets/common/logo-gray.svg'
 import GiftBoxImage from '@/assets/referral/gift-box.png'
 import ReferralGiftBoxImage from '@/assets/referral/referral-gift-box.png'
 

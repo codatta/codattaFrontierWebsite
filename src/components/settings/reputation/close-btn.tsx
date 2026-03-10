@@ -1,4 +1,4 @@
-import XIcon from '@/assets/icons/app-close-icon.svg?react'
+import XIcon from '@/assets/common/close-icon.svg?react'
 import { cn } from '@udecode/cn'
 
 export default function CloseIcon({ onClick, className }: { onClick: () => void; className?: string }) {

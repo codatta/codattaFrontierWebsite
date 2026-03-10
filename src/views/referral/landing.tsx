@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import CodattaLogoIcon from '@/assets/home/logo-gray.svg'
+import CodattaLogoIcon from '@/assets/common/logo-gray.svg'
 import ReferralCube from '@/assets/referral/gift-box.png'
 import { channelStoreActions } from '@/stores/channel.store'
 

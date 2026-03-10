@@ -7,7 +7,7 @@ import frontiterApi, { DataProfileListItem, SubmissionStatics } from '@/apis/fro
 import { useNavigate } from 'react-router-dom'
 import FrontierHeader from '@/components/frontier/common/frontier-header'
 import { Loader2, X } from 'lucide-react'
-import EmptyImg from '@/assets/dataprofile/data-profile-empty.png'
+import EmptyImg from '@/assets/data-profile/data-profile-empty.png'
 
 function RequirementsModal(props: { onClose: () => void }) {
   const { onClose } = props

@@ -8,7 +8,7 @@ import FrontierHeader from '@/components/frontier/common/frontier-header'
 import BottomDrawer from '@/components/frontier/common/bottom-drawer'
 import CopyAction from '@/components/common/copy'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
-import defaultAvatar from '@/assets/home/default-avatar.png'
+import defaultAvatar from '@/assets/common/default-avatar.png'
 import LogoLightSvg from '@/assets/common/logo-white-notext.svg?react'
 import { DataProfileListItem } from '@/apis/frontier.api'
 
