@@ -2,7 +2,6 @@ import { createRoot } from 'react-dom/client'
 import Router from '@/router'
 import { ConfigProvider, App } from 'antd'
 import { CodattaConnectContextProvider } from 'codatta-connect'
-import '@/lab/telegram.sdk.js'
 
 import AntdTheme from '@/styles/antd.theme'
 import '@/styles/tailwind.css'
