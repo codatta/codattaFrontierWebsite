@@ -1,15 +1,15 @@
 import { Modal } from 'antd'
 
-import CloseBtn from '@/components/common/close-btn'
+import CloseBtn from './close-btn'
 
-interface InfoModalAppProps {
+interface InfoModalProps {
   open: boolean
   onClose: () => void
   title: string
   description?: React.ReactNode
 }
 
-export default function InfoModalApp({ open, onClose, title, description }: InfoModalAppProps) {
+export default function InfoModal({ open, onClose, title, description }: InfoModalProps) {
   return (
     <Modal
       open={open}

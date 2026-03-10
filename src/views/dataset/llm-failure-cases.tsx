@@ -1,7 +1,7 @@
 import { Shield, Languages, Target, ChevronLeft } from 'lucide-react'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
-import bridge from '@/components/common/bridge'
+import bridge from '@/utils/bridge'
 
 export default function LLMFailureCases() {
   const [showCommercialDrawer, setShowCommercialDrawer] = useState(false)

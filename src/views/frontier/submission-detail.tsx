@@ -1,5 +1,5 @@
 import frontiterApi, { SubmissionRecord } from '@/apis/frontiter.api'
-import TransitionEffect from '@/components/common/transition-effect'
+import { AnimatePresence, motion } from 'framer-motion'
 import { cn } from '@udecode/cn'
 import { message, Spin } from 'antd'
 import dayjs from 'dayjs'
@@ -139,5 +139,21 @@ export default function SubmissionDetail() {
         </Spin>
       </div>
     </TransitionEffect>
+  )
+}
+
+function TransitionEffect(props: { children: React.ReactNode; className?: string }) {
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ x: -30, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 30, opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className={props.className}
+      >
+        {props.children}
+      </motion.div>
+    </AnimatePresence>
   )
 }

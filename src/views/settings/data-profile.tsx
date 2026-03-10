@@ -5,7 +5,7 @@ import { InfoCircleOutlined } from '@ant-design/icons'
 
 import frontiterApi, { DataProfileListItem, SubmissionStatics } from '@/apis/frontiter.api'
 import { useNavigate } from 'react-router-dom'
-import MobileAppFrontierHeader from '@/components/common/frontier-header'
+import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
 import { Loader2, X } from 'lucide-react'
 import EmptyImg from '@/assets/dataprofile/data-profile-empty.png'
 

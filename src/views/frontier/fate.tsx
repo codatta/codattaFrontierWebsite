@@ -3,14 +3,14 @@ import { useParams } from 'react-router-dom'
 import { message, Spin } from 'antd'
 import { Plus, ChevronsUpDown, Trash2, Check } from 'lucide-react'
 
-import AuthChecker from '@/components/app/auth-checker'
+import AuthChecker from '@/components/common/auth-checker'
 import frontiterApi from '@/apis/frontiter.api'
-import SuccessModal from '@/components/common/success-modal'
-import MobileAppFrontierHeader from '@/components/common/frontier-header'
-import MobileDatePicker from '@/components/common/date-picker'
-import ScrollTimePicker from '@/components/common/scroll-time-picker'
-import LocationPicker from '@/components/common/location-picker'
-import bridge from '@/components/common/bridge'
+import SuccessModal from '@/components/frontier/common/success-modal'
+import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import MobileDatePicker from '@/components/frontier/fate/date-picker'
+import ScrollTimePicker from '@/components/frontier/fate/scroll-time-picker'
+import LocationPicker from '@/components/frontier/fate/location-picker'
+import bridge from '@/utils/bridge'
 
 interface ChildInfo {
   id: string

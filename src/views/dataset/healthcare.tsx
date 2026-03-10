@@ -2,7 +2,7 @@ import { Microscope, Brain, ChevronLeft } from 'lucide-react'
 import { Pie, PieChart } from 'recharts'
 import { useState } from 'react'
 import CommercialAccessDrawer from '@/components/dataset/commercial-access-drawer'
-import bridge from '@/components/common/bridge'
+import bridge from '@/utils/bridge'
 
 // Chart data
 const chartData = [

@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom'
 import { Spin, message } from 'antd'
 
 import frontiterApi from '@/apis/frontiter.api'
-import AuthChecker from '@/components/app/auth-checker'
-import FrontierHeader from '@/components/common/frontier-header'
-import HelpDrawer from '@/components/common/help-drawer'
+import AuthChecker from '@/components/common/auth-checker'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
+import HelpDrawer from '@/components/frontier/common/help-drawer'
 
 interface StepCardProps {
   stepNumber: number

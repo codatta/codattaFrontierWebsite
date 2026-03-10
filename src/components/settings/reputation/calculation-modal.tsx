@@ -1,15 +1,15 @@
 import { Modal } from 'antd'
 
-import CloseBtn from '@/components/common/close-btn'
+import CloseBtn from './close-btn'
 import { ReputationDetail } from '@/apis/reputation.api'
 
-interface CalculationModalAppProps {
+interface CalculationModalProps {
   open: boolean
   onClose: () => void
   data?: ReputationDetail
 }
 
-export default function CalculationModalApp({ open, onClose, data }: CalculationModalAppProps) {
+export default function CalculationModal({ open, onClose, data }: CalculationModalProps) {
   return (
     <Modal
       open={open}

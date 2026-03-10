@@ -1,7 +1,7 @@
 import { ChevronLeft, ArrowUp } from 'lucide-react'
 import { cn } from '@udecode/cn'
 import { ReactNode } from 'react'
-import bridge from '@/components/common/bridge'
+import bridge from '@/utils/bridge'
 
 interface MobileAppFrontierHeaderProps {
   title: string | React.ReactNode

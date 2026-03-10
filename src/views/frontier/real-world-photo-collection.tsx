@@ -5,14 +5,14 @@ import { ChevronDown, Camera } from 'lucide-react'
 import { cn } from '@udecode/cn'
 
 import frontiterApi from '@/apis/frontiter.api'
-import AuthChecker from '@/components/app/auth-checker'
-import FrontierHeader from '@/components/common/frontier-header'
-import HelpDrawer from '@/components/common/help-drawer'
-import BottomDrawer from '@/components/common/bottom-drawer'
-import SuccessModal from '@/components/common/success-modal'
-import SubmittedModal from '@/components/common/submitted-modal'
-import Checkbox from '@/components/common/checkbox'
-import Upload from '@/components/common/image-upload'
+import AuthChecker from '@/components/common/auth-checker'
+import FrontierHeader from '@/components/frontier/common/frontier-header'
+import HelpDrawer from '@/components/frontier/common/help-drawer'
+import BottomDrawer from '@/components/frontier/common/bottom-drawer'
+import SuccessModal from '@/components/frontier/common/success-modal'
+import SubmittedModal from '@/components/frontier/common/submitted-modal'
+import Checkbox from '@/components/frontier/common/checkbox'
+import Upload from '@/components/frontier/common/image-upload'
 
 interface PhotoCollectionFormData {
   themeCategory: string

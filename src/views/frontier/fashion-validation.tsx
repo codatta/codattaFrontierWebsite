@@ -4,13 +4,13 @@ import { Spin, message, Carousel } from 'antd'
 import { CarouselRef } from 'antd/es/carousel'
 import { cn } from '@udecode/cn'
 
-import AuthChecker from '@/components/app/auth-checker'
-import MobileAppFrontierHeader from '@/components/common/frontier-header'
-import HelpDrawer from '@/components/common/help-drawer'
-import SuccessModal from '@/components/common/success-modal'
-import SubmittedModal from '@/components/common/submitted-modal'
+import AuthChecker from '@/components/common/auth-checker'
+import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import HelpDrawer from '@/components/frontier/common/help-drawer'
+import SuccessModal from '@/components/frontier/common/success-modal'
+import SubmittedModal from '@/components/frontier/common/submitted-modal'
 import frontiterApi from '@/apis/frontiter.api'
-import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/components/frontier/fashion/constants'
+import { FashionAnswer, FashionQuestion, QUESTION_OPTIONS } from '@/utils/fashion-constants'
 import {
   ValidIcon,
   InvalidIcon,
@@ -27,7 +27,7 @@ import {
   SideIcon,
   CheckIcon
 } from '@/components/frontier/fashion/icons'
-import bridge from '@/components/common/bridge'
+import bridge from '@/utils/bridge'
 
 type FashionAnswerDraft = Partial<FashionAnswer> & { image_url: string }
 

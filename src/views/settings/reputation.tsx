@@ -4,13 +4,13 @@ import { ChevronRight } from 'lucide-react'
 
 import { useUserStore } from '@/stores/user.store'
 import reputationApi, { ReputationDetail } from '@/apis/reputation.api'
-import { Icon1App, Icon2App, Icon3App, Icon4App } from '@/components/settings/reputation/icons-app'
-import CategoryCardApp from '@/components/settings/reputation/category-card-app'
-import CalculationModalApp from '@/components/settings/reputation/calculation-modal-app'
-import InfoModalApp from '@/components/settings/reputation/info-modal-app'
-import MaliciousCardApp from '@/components/settings/reputation/malicious-card-app'
-import MobileAppFrontierHeader from '@/components/common/frontier-header'
-import bridge from '@/components/common/bridge'
+import { Icon1, Icon2, Icon3, Icon4 } from '@/components/settings/reputation/icons'
+import CategoryCard from '@/components/settings/reputation/category-card'
+import CalculationModal from '@/components/settings/reputation/calculation-modal'
+import InfoModal from '@/components/settings/reputation/info-modal'
+import MaliciousCardApp from '@/components/settings/reputation/malicious-card'
+import MobileAppFrontierHeader from '@/components/frontier/common/frontier-header'
+import bridge from '@/utils/bridge'
 import { useAppToast, AppToastContainer } from '@/hooks/use-app-toast'
 
 export default function UserInfoReputationApp() {
@@ -81,8 +81,8 @@ export default function UserInfoReputationApp() {
           <div className="mb-4 text-center">Improve reputation through the following methods</div>
 
           <div className="space-y-6">
-            <CategoryCardApp
-              icon={<Icon1App />}
+            <CategoryCard
+              icon={<Icon1 />}
               title="Verified Identity"
               score={detail?.identify?.score}
               metrics={{
@@ -104,8 +104,8 @@ export default function UserInfoReputationApp() {
               buttonDisabled={true}
             />
 
-            <CategoryCardApp
-              icon={<Icon2App />}
+            <CategoryCard
+              icon={<Icon2 />}
               title="Login Activity"
               score={detail?.login?.score}
               metrics={{
@@ -125,8 +125,8 @@ export default function UserInfoReputationApp() {
               }
             />
 
-            <CategoryCardApp
-              icon={<Icon3App />}
+            <CategoryCard
+              icon={<Icon3 />}
               title="Staking Commitment"
               score={detail?.staking?.score}
               metrics={{
@@ -152,8 +152,8 @@ export default function UserInfoReputationApp() {
               }
             />
 
-            <CategoryCardApp
-              icon={<Icon4App />}
+            <CategoryCard
+              icon={<Icon4 />}
               title="Valuable Contributions"
               score={detail?.contribution?.score}
               metrics={{
@@ -190,10 +190,10 @@ export default function UserInfoReputationApp() {
       </Spin>
 
       {/* About Calculation Modal */}
-      <CalculationModalApp open={calculationOpen} onClose={() => setCalculationOpen(false)} data={detail} />
+      <CalculationModal open={calculationOpen} onClose={() => setCalculationOpen(false)} data={detail} />
 
       {/* Info Modal */}
-      <InfoModalApp
+      <InfoModal
         open={infoModal.open}
         onClose={() => setInfoModal({ ...infoModal, open: false })}
         title={infoModal.title}

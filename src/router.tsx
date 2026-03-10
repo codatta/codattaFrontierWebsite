@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 
 import { trackPageView } from '@/utils/analytics'
-import GlobalModalHost from './components/app/global-modal-host'
+import GlobalModalHost from './components/common/global-modal-host'
 
 import {
   datasetRoutes,
