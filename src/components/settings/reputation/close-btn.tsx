@@ -2,6 +2,7 @@ import XIcon from '@/assets/common/close-icon.svg?react'
 import { cn } from '@udecode/cn'
 
 export default function CloseIcon({ onClick, className }: { onClick: () => void; className?: string }) {
+  console.log('yes')
   return (
     <div
       className={cn(

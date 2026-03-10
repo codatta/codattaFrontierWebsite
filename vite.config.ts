@@ -38,6 +38,56 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src')
     }
   },
+  build: {
+    target: 'esnext',
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // codatta-connect: ~1MB, standalone SDK, rarely changes
+            if (id.includes('codatta-connect')) return 'vendor-codatta'
+
+            // Web3 stack: viem/wagmi/tonconnect/ox/secp256k1 etc.
+            if (
+              id.includes('viem') ||
+              id.includes('wagmi') ||
+              id.includes('@wagmi') ||
+              id.includes('@tonconnect') ||
+              id.includes('/ox/') ||
+              id.includes('ox/_esm') ||
+              id.includes('secp256k1') ||
+              id.includes('@noble') ||
+              id.includes('@scure')
+            )
+              return 'vendor-web3'
+
+            // React ecosystem: note lucide-react / react-konva BEFORE generic 'react'
+            if (id.includes('lucide-react')) return 'vendor-react'
+            if (id.includes('react-konva') || id.includes('/konva/')) return 'page-frontier'
+            if (
+              id.includes('react-router') ||
+              id.includes('react-dom') ||
+              id.includes('framer-motion') ||
+              id.includes('react')
+            )
+              return 'vendor-react'
+
+            // Everything else (antd, recharts, dayjs, axios, valtio, etc.) → one stable chunk
+            return 'vendor-libs'
+          }
+
+          // Page-level chunking
+          if (id.includes('/src/views/')) {
+            // if (id.includes('/frontier/')) return 'page-frontier'
+            if (id.includes('/settings/')) return 'page-settings'
+            if (id.includes('/referral/')) return 'page-referral'
+            if (id.includes('/dataset/')) return 'page-dataset'
+          }
+        }
+      }
+    }
+  },
   server: {
     port: 5175,
     host: '0.0.0.0',
