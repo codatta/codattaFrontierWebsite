@@ -91,7 +91,7 @@ const CardItem = ({ item }: { item: TaskDetail }) => {
         )}
         {item.reward_points && item.reward_points > 0 ? (
           <div className="text-primary">
-            + <strong>{item.reward_points}</strong> Points
+            + <strong>{item.reward_show_name}</strong> Points
           </div>
         ) : null}
       </div>
