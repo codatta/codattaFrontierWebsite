@@ -114,6 +114,7 @@ export interface TaskDetail {
   user_reputation_flag: 0 | 1 | 2
   tags: string[]
   audit_reason?: string
+  reward_show_name?: string
 }
 
 export interface StakeReputationInfo {
