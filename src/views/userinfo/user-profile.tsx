@@ -164,6 +164,7 @@ export default function UserProfile() {
     major?: string
     status?: string
     languageLevel?: string
+    occupation?: string
   }>({})
 
   // Whether the selected highest degree is Pre-Bachelor's (hides sub-fields)
@@ -376,8 +377,16 @@ export default function UserProfile() {
       fields.push({ label: 'Occupation Area', value: labels })
     }
 
-    // Only newly added (non-historical) majors appear in the confirmation modal
+    // Only newly added (non-historical) university and majors appear in the confirmation modal
     if (!isPreBachelor) {
+      const newUniversity = universityRows.filter((r) => r.value && !r.isHistorical)
+      if (newUniversity.length > 0) {
+        const labels = newUniversity
+          .map((r) => (r.isOther ? r.value : baseData.university?.find((u) => u.code === r.value)?.name || r.value))
+          .join(', ')
+        fields.push({ label: 'University', value: labels })
+      }
+
       const newMajors = majorRows.filter((r) => r.value && !r.isHistorical)
       if (newMajors.length > 0) {
         const labels = newMajors
@@ -394,6 +403,7 @@ export default function UserProfile() {
     gender,
     nativeLangRows,
     occupationRows,
+    universityRows,
     majorRows,
     historicalProfile,
     nativeLocked,
@@ -438,6 +448,19 @@ export default function UserProfile() {
       }
     }
 
+    // Validate occupation: if 'other' is selected, value must be filled
+    for (const row of occupationRows) {
+      if (row.isOther && !row.value.trim()) {
+        errors.occupation = 'Please enter the occupation area or remove the empty row'
+        break
+      }
+      // Check for validation errors
+      if (row.error) {
+        errors.occupation = row.error
+        break
+      }
+    }
+
     // If there are validation errors, set them and return
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors)
@@ -454,20 +477,25 @@ export default function UserProfile() {
   }
 
   async function performSubmit() {
-    // Validate review method requirements
-    if (reviewMethod === 'email') {
-      if (!schoolEmail.trim()) {
-        message.error('Please provide your school email')
-        return
-      }
-      if (!schoolEmailVerified) {
-        message.error('Please verify your school email before submitting')
-        return
-      }
-    } else if (reviewMethod === 'photo') {
-      if (!certificatePhoto.trim()) {
-        message.error('Please upload your certificate photo before submitting')
-        return
+    // Validate review method requirements (only when highest degree is selected and not Pre-Bachelor's)
+    // Skip validation if audit is pending or refused and user is not retrying
+    const skipReviewValidation = (isAuditPending || isAuditRefused) && !isRetryingAudit
+
+    if (highestDegree && !isPreBachelor && !skipReviewValidation) {
+      if (reviewMethod === 'email') {
+        if (!schoolEmail.trim()) {
+          message.error('Please provide your school email')
+          return
+        }
+        if (!schoolEmailVerified) {
+          message.error('Please verify your school email before submitting')
+          return
+        }
+      } else if (reviewMethod === 'photo') {
+        if (!certificatePhoto.trim()) {
+          message.error('Please upload your certificate photo before submitting')
+          return
+        }
       }
     }
 
@@ -533,11 +561,14 @@ export default function UserProfile() {
         university: submittedUniversity,
         major: submittedMajors,
         status: submittedEduStatus,
-        review_method: reviewMethod,
-        school_email: reviewMethod === 'email' ? schoolEmail : undefined,
-        certificate_photo: reviewMethod === 'photo' ? certificatePhoto : undefined,
-        // Set audit_status to PENDING when education background changes
-        audit_status: isEduChanged ? 'PENDING' : null
+        ...(highestDegree && !isPreBachelor
+          ? {
+              review_method: reviewMethod,
+              school_email: reviewMethod === 'email' ? schoolEmail : undefined,
+              certificate_photo: reviewMethod === 'photo' ? certificatePhoto : undefined,
+              audit_status: isEduChanged ? 'PENDING' : null
+            }
+          : {})
       },
       professional_role: {
         occupation_area: occupations
@@ -614,28 +645,16 @@ export default function UserProfile() {
               </div>
               <div className="flex flex-1 flex-col gap-2">
                 <FieldLabel label="Current Residence" />
-                {historicalProfile?.basic_info?.current_residence_country ? (
-                  <LockedField
-                    value={[
-                      historicalProfile.basic_info.current_residence_country,
-                      historicalProfile.basic_info.current_residence_state,
-                      historicalProfile.basic_info.current_residence_city
-                    ]
-                      .filter(Boolean)
-                      .join(', ')}
-                  />
-                ) : (
-                  <Cascader
-                    className="h-[48px] w-full"
-                    options={residenceOptions}
-                    loadData={(opts) => loadLocationChildren(opts as CascaderOption[], setResidenceOptions)}
-                    value={residencePlace}
-                    onChange={(val) => setResidencePlace((val as string[]) || [])}
-                    changeOnSelect
-                    placeholder="Select Current Residence"
-                    suffixIcon={<DownOutlined className="text-white" />}
-                  />
-                )}
+                <Cascader
+                  className="h-[48px] w-full"
+                  options={residenceOptions}
+                  loadData={(opts) => loadLocationChildren(opts as CascaderOption[], setResidenceOptions)}
+                  value={residencePlace}
+                  onChange={(val) => setResidencePlace((val as string[]) || [])}
+                  changeOnSelect
+                  placeholder="Select Current Residence"
+                  suffixIcon={<DownOutlined className="text-white" />}
+                />
               </div>
             </div>
             <div className="flex gap-4">
@@ -797,7 +816,9 @@ export default function UserProfile() {
                         <div className={cn('min-w-0 flex-1', row.isOther && 'shrink-0')}>
                           <SelectField
                             placeholder="Select Level"
-                            options={baseData.language_level?.map((l) => ({ label: l.name, value: l.code }))}
+                            options={baseData.language_level
+                              ?.filter((l) => l.code.toLowerCase() !== 'native')
+                              .map((l) => ({ label: l.name, value: l.code }))}
                             value={row.level}
                             onChange={(val) => {
                               const newRows = [...otherLangRows]
@@ -1002,7 +1023,12 @@ export default function UserProfile() {
               </div>
               <MultiSelectList
                 rows={occupationRows}
-                onChange={setOccupationRows}
+                onChange={(rows) => {
+                  setOccupationRows(rows)
+                  if (formErrors.occupation) {
+                    setFormErrors((prev) => ({ ...prev, occupation: undefined }))
+                  }
+                }}
                 options={filterOtherOption(baseData.occupation_area)}
                 placeholder="Select occupation area"
                 otherInputPlaceholder="Enter occupation area"
