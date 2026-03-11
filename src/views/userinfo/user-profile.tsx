@@ -182,6 +182,92 @@ export default function UserProfile() {
   // const isAuditPending = false
   // const isAuditRefused = true
 
+  // Load user profile data and populate form fields
+  const loadUserProfile = async (qualRes: Awaited<ReturnType<typeof userApi.getUserQualification>>) => {
+    if (qualRes.success && qualRes.data) {
+      const d = qualRes.data
+      setHistoricalProfile(d)
+
+      // Populate Basic Info
+      const { birth_place_country, birth_place_state, birth_place_city } = d.basic_info
+      const { current_residence_country, current_residence_state, current_residence_city } = d.basic_info
+      if (birth_place_country) {
+        setBirthPlace([birth_place_country, birth_place_state, birth_place_city].filter(Boolean))
+      }
+      if (current_residence_country) {
+        setResidencePlace([current_residence_country, current_residence_state, current_residence_city].filter(Boolean))
+      }
+      setBirthYear(d.basic_info.birth_year?.toString())
+      setGender(d.basic_info.gender)
+
+      // Populate Language Skills
+      if (d.language_skills.native_language?.length) {
+        setNativeLangRows(
+          d.language_skills.native_language.map((langObj, i) => ({
+            id: i,
+            isOther: false,
+            value: typeof langObj === 'string' ? langObj : langObj.code,
+            isHistorical: true
+          }))
+        )
+      }
+      if (d.language_skills.other_language?.length) {
+        setOtherLangRows(
+          d.language_skills.other_language.map((langObj, i) => {
+            const isOther = typeof langObj === 'object' && langObj.source === 'other'
+            const code = typeof langObj === 'string' ? langObj : langObj.code
+            const level = typeof langObj === 'object' ? langObj.level : ''
+            return {
+              id: i,
+              lang: isOther ? '' : code,
+              level,
+              isOther,
+              customLang: isOther ? code : ''
+            }
+          })
+        )
+      }
+
+      // Populate Education
+      setHighestDegree(d.education_background.highest_degree)
+      if (d.education_background.review_method) {
+        setReviewMethod(d.education_background.review_method)
+      }
+      if (d.education_background.school_email) {
+        setSchoolEmail(d.education_background.school_email)
+        // If email exists in historical data and audit is not refused, mark as verified
+        // If audit is refused, user needs to re-verify when trying again
+        if (d.education_background.audit_status !== 'REFUSED') {
+          setSchoolEmailVerified(true)
+        }
+      }
+      if (d.education_background.certificate_photo) {
+        setCertificatePhoto(d.education_background.certificate_photo)
+      }
+      if (d.education_background.university) {
+        setUniversityRows([{ id: 0, isOther: false, value: d.education_background.university, isHistorical: true }])
+      }
+      setEduStatus(d.education_background.status)
+      if (d.education_background.major?.length) {
+        setMajorRows(
+          d.education_background.major.map((v, i) => ({ id: i, isOther: false, value: v, isHistorical: true }))
+        )
+      }
+
+      // Populate Occupation
+      if (d.professional_role.occupation_area?.length) {
+        setOccupationRows(
+          d.professional_role.occupation_area.map((v, i) => ({
+            id: i,
+            isOther: false,
+            value: v,
+            isHistorical: true
+          }))
+        )
+      }
+    }
+  }
+
   // Fetch base data and qualification
   useEffect(() => {
     const fetchData = async () => {
@@ -198,88 +284,7 @@ export default function UserProfile() {
           setBaseData(baseDataRes.data)
         }
 
-        if (qualRes.success && qualRes.data) {
-          const d = qualRes.data
-          setHistoricalProfile(d)
-
-          // Populate Basic Info
-          const { birth_place_country, birth_place_state, birth_place_city } = d.basic_info
-          const { current_residence_country, current_residence_state, current_residence_city } = d.basic_info
-          if (birth_place_country)
-            setBirthPlace([birth_place_country, birth_place_state, birth_place_city].filter(Boolean))
-          if (current_residence_country)
-            setResidencePlace(
-              [current_residence_country, current_residence_state, current_residence_city].filter(Boolean)
-            )
-          setBirthYear(d.basic_info.birth_year?.toString())
-          setGender(d.basic_info.gender)
-
-          // Populate Language Skills
-          if (d.language_skills.native_language?.length) {
-            setNativeLangRows(
-              d.language_skills.native_language.map((langObj, i) => ({
-                id: i,
-                isOther: false,
-                value: typeof langObj === 'string' ? langObj : langObj.code,
-                isHistorical: true
-              }))
-            )
-          }
-          if (d.language_skills.other_language?.length) {
-            setOtherLangRows(
-              d.language_skills.other_language.map((langObj, i) => {
-                const isOther = typeof langObj === 'object' && langObj.source === 'other'
-                const code = typeof langObj === 'string' ? langObj : langObj.code
-                const level = typeof langObj === 'object' ? langObj.level : ''
-                return {
-                  id: i,
-                  lang: isOther ? '' : code,
-                  level,
-                  isOther,
-                  customLang: isOther ? code : ''
-                }
-              })
-            )
-          }
-
-          // Populate Education
-          setHighestDegree(d.education_background.highest_degree)
-          if (d.education_background.review_method) {
-            setReviewMethod(d.education_background.review_method)
-          }
-          if (d.education_background.school_email) {
-            setSchoolEmail(d.education_background.school_email)
-            // If email exists in historical data and audit is not refused, mark as verified
-            // If audit is refused, user needs to re-verify when trying again
-            if (d.education_background.audit_status !== 'REFUSED') {
-              setSchoolEmailVerified(true)
-            }
-          }
-          if (d.education_background.certificate_photo) {
-            setCertificatePhoto(d.education_background.certificate_photo)
-          }
-          if (d.education_background.university) {
-            setUniversityRows([{ id: 0, isOther: false, value: d.education_background.university, isHistorical: true }])
-          }
-          setEduStatus(d.education_background.status)
-          if (d.education_background.major?.length) {
-            setMajorRows(
-              d.education_background.major.map((v, i) => ({ id: i, isOther: false, value: v, isHistorical: true }))
-            )
-          }
-
-          // Populate Occupation
-          if (d.professional_role.occupation_area?.length) {
-            setOccupationRows(
-              d.professional_role.occupation_area.map((v, i) => ({
-                id: i,
-                isOther: false,
-                value: v,
-                isHistorical: true
-              }))
-            )
-          }
-        }
+        await loadUserProfile(qualRes)
       } catch (err) {
         console.error('Failed to fetch profile data:', err)
         message.error('Failed to load profile data')
@@ -580,10 +585,11 @@ export default function UserProfile() {
       const res = await userApi.submitUserQualification(params)
       if (res.success) {
         message.success('Profile updated successfully')
+
+        // Reload user profile data to refresh all form fields with historical status
         const qualRes = await userApi.getUserQualification()
-        if (qualRes.success) {
-          setHistoricalProfile(qualRes.data)
-        }
+        await loadUserProfile(qualRes)
+
         // Show review modal if education background was changed
         if (isEduChanged) {
           setShowReviewModal(true)
