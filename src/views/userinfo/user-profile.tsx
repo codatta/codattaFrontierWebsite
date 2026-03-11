@@ -377,8 +377,16 @@ export default function UserProfile() {
       fields.push({ label: 'Occupation Area', value: labels })
     }
 
-    // Only newly added (non-historical) majors appear in the confirmation modal
+    // Only newly added (non-historical) university and majors appear in the confirmation modal
     if (!isPreBachelor) {
+      const newUniversity = universityRows.filter((r) => r.value && !r.isHistorical)
+      if (newUniversity.length > 0) {
+        const labels = newUniversity
+          .map((r) => (r.isOther ? r.value : baseData.university?.find((u) => u.code === r.value)?.name || r.value))
+          .join(', ')
+        fields.push({ label: 'University', value: labels })
+      }
+
       const newMajors = majorRows.filter((r) => r.value && !r.isHistorical)
       if (newMajors.length > 0) {
         const labels = newMajors
@@ -395,6 +403,7 @@ export default function UserProfile() {
     gender,
     nativeLangRows,
     occupationRows,
+    universityRows,
     majorRows,
     historicalProfile,
     nativeLocked,
@@ -469,7 +478,10 @@ export default function UserProfile() {
 
   async function performSubmit() {
     // Validate review method requirements (only when highest degree is selected and not Pre-Bachelor's)
-    if (highestDegree && !isPreBachelor) {
+    // Skip validation if audit is pending or refused and user is not retrying
+    const skipReviewValidation = (isAuditPending || isAuditRefused) && !isRetryingAudit
+
+    if (highestDegree && !isPreBachelor && !skipReviewValidation) {
       if (reviewMethod === 'email') {
         if (!schoolEmail.trim()) {
           message.error('Please provide your school email')
@@ -633,28 +645,16 @@ export default function UserProfile() {
               </div>
               <div className="flex flex-1 flex-col gap-2">
                 <FieldLabel label="Current Residence" />
-                {historicalProfile?.basic_info?.current_residence_country ? (
-                  <LockedField
-                    value={[
-                      historicalProfile.basic_info.current_residence_country,
-                      historicalProfile.basic_info.current_residence_state,
-                      historicalProfile.basic_info.current_residence_city
-                    ]
-                      .filter(Boolean)
-                      .join(', ')}
-                  />
-                ) : (
-                  <Cascader
-                    className="h-[48px] w-full"
-                    options={residenceOptions}
-                    loadData={(opts) => loadLocationChildren(opts as CascaderOption[], setResidenceOptions)}
-                    value={residencePlace}
-                    onChange={(val) => setResidencePlace((val as string[]) || [])}
-                    changeOnSelect
-                    placeholder="Select Current Residence"
-                    suffixIcon={<DownOutlined className="text-white" />}
-                  />
-                )}
+                <Cascader
+                  className="h-[48px] w-full"
+                  options={residenceOptions}
+                  loadData={(opts) => loadLocationChildren(opts as CascaderOption[], setResidenceOptions)}
+                  value={residencePlace}
+                  onChange={(val) => setResidencePlace((val as string[]) || [])}
+                  changeOnSelect
+                  placeholder="Select Current Residence"
+                  suffixIcon={<DownOutlined className="text-white" />}
+                />
               </div>
             </div>
             <div className="flex gap-4">
