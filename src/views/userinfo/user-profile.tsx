@@ -164,6 +164,7 @@ export default function UserProfile() {
     major?: string
     status?: string
     languageLevel?: string
+    occupation?: string
   }>({})
 
   // Whether the selected highest degree is Pre-Bachelor's (hides sub-fields)
@@ -438,6 +439,19 @@ export default function UserProfile() {
       }
     }
 
+    // Validate occupation: if 'other' is selected, value must be filled
+    for (const row of occupationRows) {
+      if (row.isOther && !row.value.trim()) {
+        errors.occupation = 'Please enter the occupation area or remove the empty row'
+        break
+      }
+      // Check for validation errors
+      if (row.error) {
+        errors.occupation = row.error
+        break
+      }
+    }
+
     // If there are validation errors, set them and return
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors)
@@ -454,20 +468,22 @@ export default function UserProfile() {
   }
 
   async function performSubmit() {
-    // Validate review method requirements
-    if (reviewMethod === 'email') {
-      if (!schoolEmail.trim()) {
-        message.error('Please provide your school email')
-        return
-      }
-      if (!schoolEmailVerified) {
-        message.error('Please verify your school email before submitting')
-        return
-      }
-    } else if (reviewMethod === 'photo') {
-      if (!certificatePhoto.trim()) {
-        message.error('Please upload your certificate photo before submitting')
-        return
+    // Validate review method requirements (only when highest degree is selected and not Pre-Bachelor's)
+    if (highestDegree && !isPreBachelor) {
+      if (reviewMethod === 'email') {
+        if (!schoolEmail.trim()) {
+          message.error('Please provide your school email')
+          return
+        }
+        if (!schoolEmailVerified) {
+          message.error('Please verify your school email before submitting')
+          return
+        }
+      } else if (reviewMethod === 'photo') {
+        if (!certificatePhoto.trim()) {
+          message.error('Please upload your certificate photo before submitting')
+          return
+        }
       }
     }
 
@@ -533,11 +549,14 @@ export default function UserProfile() {
         university: submittedUniversity,
         major: submittedMajors,
         status: submittedEduStatus,
-        review_method: reviewMethod,
-        school_email: reviewMethod === 'email' ? schoolEmail : undefined,
-        certificate_photo: reviewMethod === 'photo' ? certificatePhoto : undefined,
-        // Set audit_status to PENDING when education background changes
-        audit_status: isEduChanged ? 'PENDING' : null
+        ...(highestDegree && !isPreBachelor
+          ? {
+              review_method: reviewMethod,
+              school_email: reviewMethod === 'email' ? schoolEmail : undefined,
+              certificate_photo: reviewMethod === 'photo' ? certificatePhoto : undefined,
+              audit_status: isEduChanged ? 'PENDING' : null
+            }
+          : {})
       },
       professional_role: {
         occupation_area: occupations
@@ -797,7 +816,9 @@ export default function UserProfile() {
                         <div className={cn('min-w-0 flex-1', row.isOther && 'shrink-0')}>
                           <SelectField
                             placeholder="Select Level"
-                            options={baseData.language_level?.map((l) => ({ label: l.name, value: l.code }))}
+                            options={baseData.language_level
+                              ?.filter((l) => l.code.toLowerCase() !== 'native')
+                              .map((l) => ({ label: l.name, value: l.code }))}
                             value={row.level}
                             onChange={(val) => {
                               const newRows = [...otherLangRows]
@@ -1002,7 +1023,12 @@ export default function UserProfile() {
               </div>
               <MultiSelectList
                 rows={occupationRows}
-                onChange={setOccupationRows}
+                onChange={(rows) => {
+                  setOccupationRows(rows)
+                  if (formErrors.occupation) {
+                    setFormErrors((prev) => ({ ...prev, occupation: undefined }))
+                  }
+                }}
                 options={filterOtherOption(baseData.occupation_area)}
                 placeholder="Select occupation area"
                 otherInputPlaceholder="Enter occupation area"

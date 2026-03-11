@@ -145,7 +145,7 @@ export function SchoolEmailVerify({
             disabled={!canVerify}
             className={cn(
               'h-[48px] !rounded-lg !border-none !px-8 !font-semibold !text-white',
-              verified ? '!bg-green-600' : '!bg-[#875DFF] disabled:!opacity-40'
+              verified ? '!bg-[#606067]' : '!bg-[#875DFF] disabled:!opacity-40'
             )}
           >
             {verified ? 'Verified' : 'Verify'}
