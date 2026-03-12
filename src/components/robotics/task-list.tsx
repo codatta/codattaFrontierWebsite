@@ -52,14 +52,14 @@ const TaskList: React.FC = () => {
   }
 
   const getTemplateRouteState = (data: TaskDetail): TemplateRuntimeRouteState => ({
-    template_id: data.data_display.template_id || data.template_id,
-    template_tag: data.data_display.template_tag,
+    template_id: data.template_id,
+    template_tag: data.data_display.template_tag || data.data_display.template_id,
     template_url: data.data_display.template_url
   })
 
   const handleTaskClick = (data: TaskDetail) => {
     console.log('Task clicked:', data)
-    const nextTaskUrl = `/frontier/project/${data.data_display.template_id}/${data.task_id}`
+    const nextTaskUrl = `/frontier/project/${data.data_display.template_tag}/${data.task_id}`
     const nextTaskRouteState = getTemplateRouteState(data)
 
     if (data.user_reputation_flag === 0) {

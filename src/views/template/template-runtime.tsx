@@ -79,7 +79,7 @@ export default function TemplateRuntime() {
     setError(null)
 
     let jsUrl = routeState?.template_url
-    let tagName = routeState?.template_id
+    let tagName = routeState?.template_tag
     let templateId = routeState?.template_id || routeTemplateId
 
     if (!jsUrl || !tagName) {
@@ -87,8 +87,8 @@ export default function TemplateRuntime() {
         const res = await frontiterApi.getTaskDetail(currentTaskId)
         const taskDetail = res.data
         jsUrl = taskDetail.data_display.template_url
-        tagName = taskDetail.data_display.template_id
-        templateId = taskDetail.data_display.template_id
+        tagName = taskDetail.data_display.template_tag
+        templateId = taskDetail.template_id || taskDetail.data_display.template_id
       } catch (err) {
         const msg = (err as Error)?.message || 'Failed to load task detail'
         setError(msg)
