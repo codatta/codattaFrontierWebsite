@@ -16,6 +16,7 @@ import CustomEmpty from '@/components/common/empty'
 import TaskFilterModal, { FilterState } from './task-filter-modal'
 import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
 import ToStakeModal from '@/components/settings/to-stake-modal'
+import IneligibleModal from './ineligible-modal'
 
 type TemplateRuntimeRouteState = {
   template_url?: string
@@ -38,6 +39,7 @@ const TaskList: React.FC = () => {
   const [taskUrl, setTaskUrl] = useState('')
   const [taskRouteState, setTaskRouteState] = useState<TemplateRuntimeRouteState>()
   const [taskStakeConfig, setTaskStakeConfig] = useState<TaskStakeConfig>()
+  const [ineligibleModalOpen, setIneligibleModalOpen] = useState(false)
 
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
@@ -81,6 +83,11 @@ const TaskList: React.FC = () => {
     console.log('Task clicked:', data)
     const nextTaskUrl = `/frontier/project/${data.data_display.template_id}/${data.task_id}`
     const nextTaskRouteState = getTemplateRouteState(data)
+
+    if (data.qualification_flag === 0) {
+      setIneligibleModalOpen(true)
+      return
+    }
 
     if (data.user_reputation_flag === 0) {
       setTaskUrl(nextTaskUrl)
@@ -283,6 +290,7 @@ const TaskList: React.FC = () => {
           taskStakeConfig={taskStakeConfig}
         />
       )}
+      <IneligibleModal open={ineligibleModalOpen} onClose={() => setIneligibleModalOpen(false)} />
     </div>
   )
 }
