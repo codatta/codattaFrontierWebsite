@@ -245,7 +245,7 @@ export default function UserProfile() {
         setCertificatePhoto(d.education_background.certificate_photo)
       }
       if (d.education_background.university) {
-        setUniversityRows([{ id: 0, isOther: false, value: d.education_background.university, isHistorical: true }])
+        setUniversityRows([{ id: 0, isOther: false, value: d.education_background.university, isHistorical: false }])
       }
       setEduStatus(d.education_background.status)
       if (d.education_background.major?.length) {
@@ -896,9 +896,10 @@ export default function UserProfile() {
                     {isAuditPending && !isRetryingAudit ? (
                       <div className="flex items-center rounded-2xl bg-[#252532] px-4 py-[6px]">
                         <span className="text-sm text-[#FFA800]">
-                          {reviewMethod === 'email'
-                            ? 'Email information is under review'
-                            : 'Certificate photo is under review'}
+                          {historicalProfile?.education_background?.audit_reason ||
+                            (reviewMethod === 'email'
+                              ? 'Email information is under review'
+                              : 'Certificate photo is under review')}
                         </span>
                       </div>
                     ) : isAuditRefused && !isRetryingAudit ? (
