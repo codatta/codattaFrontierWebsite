@@ -896,16 +896,18 @@ export default function UserProfile() {
                     {isAuditPending && !isRetryingAudit ? (
                       <div className="flex items-center rounded-2xl bg-[#252532] px-4 py-[6px]">
                         <span className="text-sm text-[#FFA800]">
-                          {historicalProfile?.education_background?.audit_reason ||
-                            (reviewMethod === 'email'
-                              ? 'Email information is under review'
-                              : 'Certificate photo is under review')}
+                          {reviewMethod === 'email'
+                            ? 'Email information is under review'
+                            : 'Certificate photo is under review'}
                         </span>
                       </div>
                     ) : isAuditRefused && !isRetryingAudit ? (
                       <div className="flex items-center gap-2 rounded-2xl bg-[#252532] px-4 py-[6px]">
                         <span className="text-sm text-[#D92B2B]">
-                          {reviewMethod === 'email' ? 'Email verification failed' : 'Certificate verification failed'}
+                          {historicalProfile?.education_background?.audit_reason ||
+                            (reviewMethod === 'email'
+                              ? 'Email verification failed'
+                              : 'Certificate verification failed')}
                         </span>
                         <button
                           onClick={() => setIsRetryingAudit(true)}
