@@ -282,6 +282,7 @@ export interface UserQualification {
   }
   education_background: {
     audit_status?: 'PENDING' | 'REFUSED' | 'AUDIT' | null
+    audit_reason?: string
     highest_degree: string
     university: string
     major: string[]
