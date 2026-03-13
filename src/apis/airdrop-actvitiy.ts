@@ -60,6 +60,13 @@ export interface AirdropFrontierItem {
   tasks: readonly AirdropFrontierTaskItem[]
 }
 
+export interface TaskQualificationResult {
+  code: string
+  name: string
+  value: string
+  status: 0 | 1 // 1-passed 0-not passed
+}
+
 export interface AirdropFrontierTaskItem {
   task_id: string
   name: string
@@ -70,6 +77,8 @@ export interface AirdropFrontierTaskItem {
   task_type_name?: string
   reputation?: number
   user_reputation_flag?: 0 | 1 | 2
+  qualification_flag?: 0 | 1 // 1-qualified 0-not qualified
+  qualification_results?: readonly TaskQualificationResult[]
 }
 
 export interface AirdropSeasonRankItem {
