@@ -32,6 +32,8 @@ const AirdropExpertAnswerProvision = lazy(() => import('@/views/frontiers/airdro
 const AirdropBadCaseAnalysis = lazy(() => import('@/views/frontiers/airdrop_bad_case_analysis'))
 const AirdropCexHotWalletDeposit = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_deposit'))
 const AirdropCexHotWalletWithdraw = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_withdraw'))
+const AirdropCexHotWalletDeposit002 = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_deposit_002'))
+const AirdropCexHotWalletWithdraw002 = lazy(() => import('@/views/frontiers/airdrop_cex_hot_wallet_withdraw_002'))
 const CryptoAndStockInfoCollection = lazy(() => import('@/views/frontiers/crypto_and_stock_info_collection'))
 const FateTpl000001 = lazy(() => import('@/views/frontiers/fate_tpl_000001'))
 const FateApp = lazy(() => import('@/views/frontiers/fate-app'))
@@ -128,6 +130,8 @@ export const frontierProjectRoutes = (
     {simpleTemplateRoute('CRYPTO_TPL_DEPOSIT', CryptoTpl000001)}
     {simpleTemplateRoute('AIRDROP_CEX_HOT_WALLET_DEPOSIT', AirdropCexHotWalletDeposit)}
     {simpleTemplateRoute('AIRDROP_CEX_HOT_WALLET_WITHDRAW', AirdropCexHotWalletWithdraw)}
+    {simpleTemplateRoute('CEX_DEPOSIT_002', AirdropCexHotWalletDeposit002)}
+    {simpleTemplateRoute('CEX_WITHDRAW_002', AirdropCexHotWalletWithdraw002)}
     {simpleTemplateRoute('CRYPTO_AND_STOCK_INFO_COLLECTION', CryptoAndStockInfoCollection)}
 
     {/* Annotator surveys */}
