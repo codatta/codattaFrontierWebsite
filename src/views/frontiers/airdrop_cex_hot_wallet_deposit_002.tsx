@@ -1,13 +1,8 @@
 import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
 import { Button } from '@/components/booster/button'
-import {
-  getExchanges,
-  getExplorerUrl,
-  getExplorerAddressUrl,
-  NETWORKS,
-  ExchangeItem
-} from '@/components/frontier/airdrop/cex-hot-wallet/constants'
+import { getExplorerUrl, getExplorerAddressUrl, NETWORKS } from '@/components/frontier/airdrop/cex-hot-wallet/constants'
+import { ExchangeItemV2, getExchangesV2 } from '@/components/frontier/airdrop/cex-hot-wallet/constants-002'
 import { DepositGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
 import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step-container'
@@ -69,8 +64,8 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
   const [modalImageSrc, setModalImageSrc] = useState('')
 
   // Derived State for Links
-  const [exchanges, setExchanges] = useState<ExchangeItem[]>([])
-  const [exchange, setExchange] = useState<ExchangeItem | null>(null)
+  const [exchanges, setExchanges] = useState<ExchangeItemV2[]>([])
+  const [exchange, setExchange] = useState<ExchangeItemV2 | null>(null)
   const [explorerUrl, setExplorerUrl] = useState('')
   const [toAddressUrl, setToAddressUrl] = useState('')
   const [outgoingTxUrl, setOutgoingTxUrl] = useState('')
@@ -91,7 +86,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
       )
       console.log('exchange_group', exchangeGroup)
       setRewardPoints(totalRewards)
-      setExchanges(getExchanges(exchangeGroup, 10))
+      setExchanges(getExchangesV2(exchangeGroup))
     } catch (error: unknown) {
       console.error(error)
     } finally {
@@ -680,7 +675,7 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                     )}
                   </div>
                   <div>
-                    <label className={`mb-2 block ${labelClass}`}>Deposit history URL</label>
+                    <label className={`mb-2 block ${labelClass}`}>Deposit history</label>
                     {exchange?.deposit_history_url ? (
                       <a
                         href={exchange.deposit_history_url}
@@ -690,6 +685,10 @@ const AirdropCexDeposit: React.FC<{ templateId?: string }> = ({ templateId: prop
                       >
                         <ExternalLink size={14} /> {exchange.deposit_history_url.replace('https://', '')}
                       </a>
+                    ) : exchange?.deposit_history_text ? (
+                      <div className="flex min-h-12 items-center rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 py-3 text-xs text-white">
+                        {exchange.deposit_history_text}
+                      </div>
                     ) : (
                       <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
                         Select an exchange to view

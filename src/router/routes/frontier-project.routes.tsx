@@ -128,7 +128,7 @@ export const frontierProjectRoutes = (
     {simpleTemplateRoute('CRYPTO_TPL_DEPOSIT', CryptoTpl000001)}
     {simpleTemplateRoute('AIRDROP_CEX_HOT_WALLET_DEPOSIT', AirdropCexHotWalletDeposit)}
     {simpleTemplateRoute('AIRDROP_CEX_HOT_WALLET_WITHDRAW', AirdropCexHotWalletWithdraw)}
-    {simpleTemplateRoute('CEX_AIRDROP_002', AirdropCexHotWalletDeposit002)}
+    {simpleTemplateRoute('CEX_DEPOSIT_002', AirdropCexHotWalletDeposit002)}
     {simpleTemplateRoute('CEX_WITHDRAW_002', AirdropCexHotWalletWithdraw002)}
     {simpleTemplateRoute('CRYPTO_AND_STOCK_INFO_COLLECTION', CryptoAndStockInfoCollection)}
 

@@ -1,12 +1,8 @@
 import frontiterApi from '@/apis/frontiter.api'
 import AuthChecker from '@/components/app/auth-checker'
 import { Button } from '@/components/booster/button'
-import {
-  getExchanges,
-  getExplorerUrl,
-  NETWORKS,
-  ExchangeItem
-} from '@/components/frontier/airdrop/cex-hot-wallet/constants'
+import { getExplorerUrl, NETWORKS } from '@/components/frontier/airdrop/cex-hot-wallet/constants'
+import { ExchangeItemV2, getExchangesV2 } from '@/components/frontier/airdrop/cex-hot-wallet/constants-002'
 import { WithdrawGuideline } from '@/components/frontier/airdrop/cex-hot-wallet/guideline'
 import { ScreenshotUpload } from '@/components/frontier/airdrop/cex-hot-wallet/screenshot-upload'
 import { StepContainer } from '@/components/frontier/airdrop/cex-hot-wallet/step-container'
@@ -62,8 +58,8 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   // Derived State
   const [explorerUrl, setExplorerUrl] = useState('')
   const [coinOptions, setCoinOptions] = useState<string[]>([])
-  const [exchanges, setExchanges] = useState<ExchangeItem[]>([])
-  const [exchange, setExchange] = useState<ExchangeItem | null>(null)
+  const [exchanges, setExchanges] = useState<ExchangeItemV2[]>([])
+  const [exchange, setExchange] = useState<ExchangeItemV2 | null>(null)
 
   const checkTaskStatus = useCallback(async () => {
     if (!taskId || !templateId) return
@@ -76,9 +72,9 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
       const exchangeGroup = Number(
         (taskDetail.data.data_requirements as unknown as { exchange_group: number }).exchange_group ?? 1
       )
-      console.log('exchangeGroup', exchangeGroup, 'exchanges', getExchanges(exchangeGroup, 10))
+      console.log('exchangeGroup', exchangeGroup, 'exchanges', getExchangesV2(exchangeGroup))
       setRewardPoints(totalRewards)
-      setExchanges(getExchanges(exchangeGroup, 10))
+      setExchanges(getExchangesV2(exchangeGroup))
     } catch (error: unknown) {
       console.error(error)
     } finally {
@@ -510,7 +506,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                     )}
                   </div>
                   <div>
-                    <label className={`mb-2 block ${labelClass}`}>Withdrawal history URL</label>
+                    <label className={`mb-2 block ${labelClass}`}>Withdrawal history</label>
                     {exchange?.withdrawal_history_url ? (
                       <a
                         href={exchange.withdrawal_history_url}
@@ -520,6 +516,10 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                       >
                         <ExternalLink size={14} /> {exchange.withdrawal_history_url.replace('https://', '')}
                       </a>
+                    ) : exchange?.withdrawal_history_text ? (
+                      <div className="flex min-h-12 items-center rounded-lg border border-[#FFFFFF1F] bg-[#FFFFFF1F] px-4 py-3 text-xs text-white">
+                        {exchange.withdrawal_history_text}
+                      </div>
                     ) : (
                       <div className="h-12 rounded-lg border border-[#FFFFFF1F] px-4 leading-[46px] text-[#606067]">
                         Select an exchange to view
