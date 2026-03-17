@@ -52,6 +52,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
   const [submitting, setSubmitting] = useState(false)
   const [modalShow, setModalShow] = useState(false)
   const [rewardPoints, setRewardPoints] = useState(0)
+  const [exchangeGroup, setExchangeGroup] = useState(1)
   const [imageModalVisible, setImageModalVisible] = useState(false)
   const [modalImageSrc, setModalImageSrc] = useState('')
 
@@ -73,6 +74,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
         (taskDetail.data.data_requirements as unknown as { exchange_group: number }).exchange_group ?? 1
       )
       console.log('exchangeGroup', exchangeGroup, 'exchanges', getExchangesV2(exchangeGroup))
+      setExchangeGroup(exchangeGroup)
       setRewardPoints(totalRewards)
       setExchanges(getExchangesV2(exchangeGroup))
     } catch (error: unknown) {
@@ -449,7 +451,7 @@ const AirdropCexWithdraw: React.FC<{ templateId?: string }> = ({ templateId: pro
                 >
                   <ArrowLeft size={18} /> Back
                 </div>
-                CEX Withdrawal Hot Wallet Collection
+                {exchangeGroup === 1 ? 'Thailand' : 'Cambodia'} CEX Withdrawal Hot Wallet Collection
                 <span className="w-[60px]"></span>
               </h1>
             </div>
