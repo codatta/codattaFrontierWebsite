@@ -17,6 +17,13 @@ export interface TaskRewardInfo {
   reward_value: number
 }
 
+export interface TaskQualificationResult {
+  code: string
+  name: string
+  value: string
+  status: 0 | 1 // 1-passed 0-not passed
+}
+
 export type ActiveStatus = 'ACTIVE' | 'INACTIVE' | 'COMPLETED'
 export type RankingGrade = 'S' | 'A' | 'B' | 'C' | 'D'
 export type TaskType = 'submission' | 'validation'
@@ -57,6 +64,13 @@ export interface FrontierActivityInfoItem {
   description?: string
 }
 
+export interface FashionQuestion {
+  content: object
+  image_url: string
+  source_type: string
+  uid: string
+}
+
 export interface TaskDetail {
   frontier_id: string
   task_id: string
@@ -65,6 +79,7 @@ export interface TaskDetail {
   submission_id: string
   task_type: string
   task_type_name: string
+  template_id: string
   data_display: {
     gif_resource: string
     template_id: string
@@ -73,13 +88,16 @@ export interface TaskDetail {
     link?: string
     bot_id?: string
     data_source?: string
+    template_url?: string
+    template_tag?: string
   }
-  questions?: CMUDataRequirements[]
+  questions?: CMUDataRequirements[] | FashionQuestion[]
   data_submission?: { [key: string]: unknown; lifelog_report?: string }
   question_status?: number // 1: available, 2: no more questions, 3. need to change question group
   data_requirements: unknown
   reward_info: readonly TaskRewardInfo[]
   qualification_datas: TaskInfo[]
+  qualification_results?: TaskQualificationResult[]
 
   status: 'PENDING' | 'SUBMITTED' | 'REFUSED' | 'ADOPT'
   txHashUrl: string
@@ -96,6 +114,7 @@ export interface TaskDetail {
   user_reputation_flag: 0 | 1 | 2
   tags: string[]
   audit_reason?: string
+  reward_show_name?: string
 }
 
 export interface StakeReputationInfo {
@@ -309,6 +328,10 @@ class frontier {
     page_num: number
     page_size: number
     task_types?: string
+    reputation_min?: number // 0 ~100
+
+    reputation_max?: number // 0 ~100
+    qualification_check?: 0 | 1 // 1-check, 0-no check
   }): Promise<PaginationResponse<TaskDetail[]>> {
     const res = await this.request.post('/v2/frontier/task/list', params)
     return res.data

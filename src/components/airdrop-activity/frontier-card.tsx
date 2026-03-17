@@ -18,6 +18,7 @@ import React from 'react'
 
 import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
 import ToStakeModal from '@/components/settings/to-stake-modal'
+import IneligibleModal from '@/components/robotics/ineligible-modal'
 import { TaskStakeInfo } from '@/apis/frontiter.api'
 
 const RewardTag = ({ reward }: { reward: { score: number; icon: string } }) => (
@@ -45,6 +46,7 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
   const [taskUrl, setTaskUrl] = useState('')
   const [taskStakeConfig, setTaskStakeConfig] = useState<TaskStakeConfig>()
+  const [ineligibleModalOpen, setIneligibleModalOpen] = useState(false)
 
   const isFinished = useMemo(() => {
     if (!currentAirdropInfo) return false
@@ -67,7 +69,21 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
     }
   }, [currentAirdropInfo])
 
+  const handleTagClick = (e: React.MouseEvent, type: 'qualification' | 'reputation', status?: number) => {
+    e.stopPropagation()
+    if (type === 'qualification' && status === 0) {
+      navigate('/app/settings/user-profile')
+    } else if (type === 'reputation') {
+      navigate('/app/settings/reputation')
+    }
+  }
+
   const handleTaskClick = (task: AirdropFrontierTaskItem) => {
+    if (task.qualification_flag === 0) {
+      setIneligibleModalOpen(true)
+      return
+    }
+
     const url = `/frontier/project/${task.template_id}/${task.task_id}`
     if (task.user_reputation_flag === 0) {
       setTaskUrl(url)
@@ -197,14 +213,38 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
                 </button>
               )}
             </div>
-            <div className="flex rounded-b-2xl bg-[#252532] px-5 py-3">
-              {task.user_reputation_flag === 0 ? (
+            <div
+              className="flex flex-wrap gap-2.5 rounded-b-2xl bg-[#252532] px-5 py-3"
+              style={{ display: !task.qualification_results?.length && !task.reputation ? 'none' : 'flex' }}
+            >
+              {task.qualification_results
+                ?.slice()
+                .sort((a, b) => a.status - b.status)
+                .map((qual, idx) => (
+                  <div
+                    key={idx}
+                    className={cn(
+                      'flex shrink-0 items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-sm leading-5',
+                      qual.status === 1
+                        ? 'bg-[#875DFF14] text-[#875DFF]'
+                        : 'cursor-pointer bg-[#FFA8001F] text-[#FFA800] hover:opacity-80'
+                    )}
+                    onClick={(e) => handleTagClick(e, 'qualification', qual.status)}
+                  >
+                    {qual.name}: {qual.value}
+                  </div>
+                ))}
+              {task.user_reputation_flag === 0 && task.reputation !== undefined && (
                 <div className="flex h-[26px] items-center rounded-lg bg-[#D92B2B1F] px-2 text-sm text-[#D92B2B]">
                   Reputation: Too low
                 </div>
-              ) : (
-                <div className="flex h-[26px] items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF]">
-                  Reputation: {task.reputation ?? 0}
+              )}
+              {task.user_reputation_flag === 1 && !!task.reputation && (
+                <div
+                  className="flex cursor-pointer items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF] hover:opacity-80"
+                  onClick={(e) => handleTagClick(e, 'reputation')}
+                >
+                  Reputation: {task.reputation}
                 </div>
               )}
             </div>
@@ -225,6 +265,7 @@ export default function AirdropActivityFrontierCard({ frontier }: { readonly fro
           taskStakeConfig={taskStakeConfig}
         />
       )}
+      <IneligibleModal open={ineligibleModalOpen} onClose={() => setIneligibleModalOpen(false)} />
     </div>
   )
 }

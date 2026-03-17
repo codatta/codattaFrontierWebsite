@@ -19,6 +19,7 @@ import ArrowRightIcon from '@/assets/icons/arrow-right.svg?react'
 import { userStoreActions, useUserStore } from '@/stores/user.store'
 
 import { formatNumber, shortenAddress } from '@/utils/format'
+import { Button } from 'antd'
 
 export default function UserInfoSection() {
   const navigate = useNavigate()
@@ -83,8 +84,22 @@ export default function UserInfoSection() {
           <img className="block size-20 rounded-full" src={info?.user_data?.avatar ?? defaultAvatar} alt="" />
         </div>
         <div className="text-[16px] font-bold">{username}</div>
-        <DidItem did={info?.user_data?.did} className="mt-7" />
-        <CheckinBtn className="my-4" />
+        <div className="mx-4 mt-7 flex items-center gap-1">
+          <DidItem did={info?.user_data?.did} className="flex-1" />
+          <CheckinBtn />
+        </div>
+
+        {/* <CheckinBtn /> */}
+        <div className="mt-4 px-4">
+          <Button
+            className="h-[44px] w-full gap-0 rounded-full px-0 text-sm font-medium leading-[44px]"
+            type="primary"
+            onClick={() => navigate('/app/settings/user-profile')}
+          >
+            User Profile
+          </Button>
+        </div>
+
         <ul className="text-left text-sm leading-[22px] text-white">
           {assets.map((asset) => (
             <AssetItem
@@ -175,7 +190,7 @@ function DidItem({ className, did }: { className?: string; did?: string }) {
   return did ? (
     <div
       className={cn(
-        'mx-4 flex items-center justify-between rounded-full border border-[#FFFFFF1F] bg-[#1C1C26] px-4 text-sm font-semibold leading-[44px] text-white',
+        'flex items-center justify-between rounded-full border border-[#FFFFFF1F] px-4 text-sm font-semibold leading-[44px] text-white',
         className
       )}
     >

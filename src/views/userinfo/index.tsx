@@ -16,7 +16,7 @@ import ReputationIcon from '@/assets/userinfo/reputation-icon.svg?react'
 import PersonalIcon from '@/assets/userinfo/personal-icon.svg?react'
 import NftIcon from '@/assets/userinfo/nft-icon.svg?react'
 import DataIcon from '@/assets/userinfo/data-icon.svg?react'
-import ChainIcon from '@/assets/userinfo/chain-icon.svg?react'
+import UserProfileIcon from '@/assets/userinfo/user-profile-icon.svg?react'
 import ArrowRightIcon from '@/assets/userinfo/arrow-right.svg?react'
 
 import { useUserStore } from '@/stores/user.store'
@@ -146,7 +146,7 @@ function InfoList() {
 
   const infoList = [
     {
-      title: 'Personal',
+      title: 'Account',
       icon: <PersonalIcon />,
       link: '/app/settings/personal'
     },
@@ -161,9 +161,9 @@ function InfoList() {
       link: '/app/settings/data-profile'
     },
     {
-      title: 'Data on Chain',
-      icon: <ChainIcon />,
-      link: '/app/settings/onchain'
+      title: 'User Profile',
+      icon: <UserProfileIcon />,
+      link: '/app/settings/user-profile'
     }
   ]
 

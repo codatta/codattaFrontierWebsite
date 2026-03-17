@@ -16,13 +16,20 @@ import CustomEmpty from '@/components/common/empty'
 import TaskFilterModal, { FilterState } from './task-filter-modal'
 import StakeModel, { TaskStakeConfig } from '@/components/settings/token-stake-modal'
 import ToStakeModal from '@/components/settings/to-stake-modal'
+import IneligibleModal from './ineligible-modal'
+
+type TemplateRuntimeRouteState = {
+  template_url?: string
+  template_tag?: string
+  template_id?: string
+}
 
 const TaskList: React.FC = () => {
   const navigate = useNavigate()
   const { frontier_id = 'ROBSTIC001' } = useParams()
 
   const {
-    pageData: { page, page_size, total, list, listLoading, task_types }
+    pageData: { page, page_size, total, list, listLoading, task_types, qualification_check, min_reputation }
   } = useSnapshot(frontiersStore)
 
   const [filterModalOpen, setFilterModalOpen] = useState(false)
@@ -30,25 +37,61 @@ const TaskList: React.FC = () => {
   const [toStakeModalOpen, setToStakeModalOpen] = useState(false)
   const [stakeModalOpen, setStakeModalOpen] = useState(false)
   const [taskUrl, setTaskUrl] = useState('')
+  const [taskRouteState, setTaskRouteState] = useState<TemplateRuntimeRouteState>()
   const [taskStakeConfig, setTaskStakeConfig] = useState<TaskStakeConfig>()
+  const [ineligibleModalOpen, setIneligibleModalOpen] = useState(false)
 
   const displayList = useMemo(() => {
     return list?.filter((item) => !item.data_display?.hide)
   }, [list])
 
   const handlePageChange = (page: number, _pageSize: number) => {
-    frontierStoreActions.changeFrontiersFilter({ page: page, frontier_id: frontier_id })
+    frontierStoreActions.changeFrontiersFilter({
+      page: page,
+      frontier_id: frontier_id,
+      task_types: [...task_types],
+      qualification_check,
+      min_reputation
+    })
   }
 
-  const handleFilterApply = ({ task_types }: FilterState) => {
-    frontierStoreActions.changeFrontiersFilter({ task_types: task_types, frontier_id: frontier_id })
+  const handleFilterApply = ({ task_types, qualification_check, min_reputation }: FilterState) => {
+    frontierStoreActions.changeFrontiersFilter({
+      task_types,
+      qualification_check,
+      min_reputation,
+      frontier_id: frontier_id
+    })
   }
+
+  const handleTagClick = (e: React.MouseEvent, type: 'qualification' | 'reputation', status?: number) => {
+    e.stopPropagation()
+    if (type === 'qualification' && status === 0) {
+      navigate('/app/settings/user-profile')
+    } else if (type === 'reputation') {
+      navigate('/app/settings/reputation')
+    }
+  }
+
+  const getTemplateRouteState = (data: TaskDetail): TemplateRuntimeRouteState => ({
+    template_id: data.template_id,
+    template_tag: data.data_display.template_tag,
+    template_url: data.data_display.template_url
+  })
 
   const handleTaskClick = (data: TaskDetail) => {
     console.log('Task clicked:', data)
+    const nextTaskUrl = `/frontier/project/${data.template_id}/${data.task_id}`
+    const nextTaskRouteState = getTemplateRouteState(data)
+
+    if (data.qualification_flag === 0) {
+      setIneligibleModalOpen(true)
+      return
+    }
 
     if (data.user_reputation_flag === 0) {
-      setTaskUrl(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+      setTaskUrl(nextTaskUrl)
+      setTaskRouteState(nextTaskRouteState)
       setStakeTaskId(data.task_id)
       setToStakeModalOpen(true)
       return
@@ -58,7 +101,7 @@ const TaskList: React.FC = () => {
       message.error('Reputation not met!')
       return
     }
-    navigate(`/frontier/project/${data.data_display.template_id}/${data.task_id}`)
+    navigate(nextTaskUrl, { state: nextTaskRouteState })
   }
 
   const handleStake = (stakeInfo: TaskStakeInfo) => {
@@ -66,7 +109,8 @@ const TaskList: React.FC = () => {
     setStakeModalOpen(true)
     setTaskStakeConfig({
       ...stakeInfo,
-      taskUrl
+      taskUrl,
+      taskRouteState
     })
   }
 
@@ -167,16 +211,37 @@ const TaskList: React.FC = () => {
                   </div>
                 </div>
                 <div
-                  className="flex rounded-b-2xl bg-[#252532] px-5 py-3"
-                  style={{ display: !item.reputation ? 'none' : 'flex' }}
+                  className="flex flex-wrap gap-2.5 rounded-b-2xl bg-[#252532] px-5 py-3"
+                  style={{ display: !item.qualification_results?.length && !item.reputation ? 'none' : 'flex' }}
                 >
-                  {item.user_reputation_flag === 0 ? (
+                  {item.qualification_results
+                    ?.slice()
+                    .sort((a, b) => a.status - b.status)
+                    .map((qual, idx) => (
+                      <div
+                        key={idx}
+                        className={cn(
+                          'flex shrink-0 items-center whitespace-nowrap rounded-lg px-2 py-0.5 text-sm leading-5',
+                          qual.status === 1
+                            ? 'bg-[#875DFF14] text-[#875DFF]'
+                            : 'cursor-pointer bg-[#FFA8001F] text-[#FFA800] hover:opacity-80'
+                        )}
+                        onClick={(e) => handleTagClick(e, 'qualification', qual.status)}
+                      >
+                        {qual.name}: {qual.value}
+                      </div>
+                    ))}
+                  {item.user_reputation_flag === 0 && item.reputation !== undefined && (
                     <div className="flex h-[26px] items-center rounded-lg bg-[#D92B2B1F] px-2 text-sm text-[#D92B2B]">
                       Reputation: Too low
                     </div>
-                  ) : (
-                    <div className="flex h-[26px] items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF]">
-                      Reputation: {item.reputation ?? 0}
+                  )}
+                  {item.user_reputation_flag === 1 && !!item.reputation && (
+                    <div
+                      className="flex cursor-pointer items-center rounded-lg bg-[#875DFF1F] px-2 text-sm text-[#875DFF] hover:opacity-80"
+                      onClick={(e) => handleTagClick(e, 'reputation')}
+                    >
+                      Reputation: {item.reputation}
                     </div>
                   )}
                 </div>
@@ -207,7 +272,7 @@ const TaskList: React.FC = () => {
       </Spin>
       <TaskFilterModal
         open={filterModalOpen}
-        value={{ task_types: [...task_types] }}
+        value={{ task_types: [...task_types], qualification_check, min_reputation }}
         onChange={handleFilterApply}
         onClose={() => setFilterModalOpen(false)}
       />
@@ -225,6 +290,7 @@ const TaskList: React.FC = () => {
           taskStakeConfig={taskStakeConfig}
         />
       )}
+      <IneligibleModal open={ineligibleModalOpen} onClose={() => setIneligibleModalOpen(false)} />
     </div>
   )
 }

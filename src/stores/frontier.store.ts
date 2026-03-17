@@ -21,6 +21,8 @@ type FrontierStore = {
     page_size: number
     page: number
     task_types: TaskType[]
+    qualification_check?: 0 | 1
+    min_reputation?: number
   }
   historyPageData: {
     list: TaskDetail[]
@@ -47,7 +49,9 @@ export const frontiersStore = proxy<FrontierStore>({
     listLoading: false,
     page_size: 8,
     page: 1,
-    task_types: ['submission', 'validation']
+    task_types: ['submission', 'validation'],
+    qualification_check: undefined,
+    min_reputation: 0
   },
   historyPageData: {
     list: [],
@@ -66,15 +70,31 @@ export const frontiersStore = proxy<FrontierStore>({
 })
 
 const getFrontiersTaskList = debounce(
-  async (params: { page: number; page_size: number; frontier_id: string; task_types?: string }) => {
+  async (params: {
+    page: number
+    page_size: number
+    frontier_id: string
+    task_types?: string
+    qualification_check?: 0 | 1
+    reputation_min?: number
+  }) => {
     try {
       frontiersStore.pageData.listLoading = true
-      const { page_size, page, frontier_id, task_types = 'submission,validation' } = params
+      const {
+        page_size,
+        page,
+        frontier_id,
+        task_types = 'submission,validation',
+        qualification_check,
+        reputation_min
+      } = params
       const res = await frontierApi.getTaskList({
         frontier_id,
         page_size,
         page_num: page,
-        task_types
+        task_types,
+        qualification_check,
+        reputation_min
       })
       frontiersStore.pageData.list = res.data ?? []
       frontiersStore.pageData.total = res.total_count
@@ -94,6 +114,8 @@ function changeFrontiersFilter(
   data: Partial<FrontierStore['pageData']> & {
     frontier_id: string
     task_types?: string[]
+    qualification_check?: 0 | 1
+    min_reputation?: number
   }
 ) {
   const pageData = {
@@ -107,7 +129,9 @@ function changeFrontiersFilter(
     frontier_id: pageData.frontier_id,
     page_size: pageData.page_size,
     page: pageData.page,
-    task_types: pageData.task_types?.join(',')
+    task_types: pageData.task_types?.join(','),
+    qualification_check: pageData.qualification_check,
+    reputation_min: pageData.min_reputation
   })
 }
 

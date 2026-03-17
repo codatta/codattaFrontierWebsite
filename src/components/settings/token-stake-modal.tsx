@@ -21,6 +21,7 @@ import { useContractWrite } from '@/hooks/use-contract-write'
 export interface TaskStakeConfig extends TaskStakeInfo {
   frontierUrl?: string
   taskUrl?: string
+  taskRouteState?: unknown
 }
 
 interface TokenStakeModalProps {
@@ -666,7 +667,7 @@ const StakeSuccessView = ({ logic, onClose }: { logic: ReturnType<typeof useStak
   const handleGoToTask = () => {
     handleReset()
     if (taskStakeConfig?.taskUrl) {
-      navigate(taskStakeConfig.taskUrl)
+      navigate(taskStakeConfig.taskUrl, { state: taskStakeConfig.taskRouteState })
     }
     onClose?.()
   }
