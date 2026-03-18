@@ -2,7 +2,6 @@ import { Button, message, Modal, Spin } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
 import { parseEther, checksumAddress } from 'viem'
-import { InfoCircleOutlined } from '@ant-design/icons'
 import { Loader2 } from 'lucide-react'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
@@ -40,7 +39,7 @@ interface TokenClaimModalV2Props {
 }
 
 // Fee fixed at 0.01 for testing
-const FIXED_FEE = '0.01'
+const FIXED_FEE = '0.06'
 
 function SelectToken(props: { onSelect: (asset: Asset) => void }) {
   const [assets, setAssets] = useState<Asset[]>([])
@@ -170,18 +169,18 @@ function ClaimConfirm({
       }
       const types = {
         RecipientRelayedClaim: [
+          { name: 'uid', type: 'uint256' },
           { name: 'token', type: 'address' },
           { name: 'recipient', type: 'address' },
-          { name: 'grossAmount', type: 'uint256' },
-          { name: 'uid', type: 'uint256' },
+          { name: 'amount', type: 'uint256' },
           { name: 'expiredAt', type: 'uint256' }
         ]
       }
       const eipMessage = {
+        uid,
         token: claimSignature.token as `0x${string}`,
         recipient: address,
-        grossAmount: parseEther(claimSignature.amount.toString()),
-        uid,
+        amount: parseEther(claimSignature.amount.toString()),
         expiredAt: BigInt(claimSignature.expired_at)
       }
 
@@ -255,70 +254,74 @@ function ClaimConfirm({
 
   return (
     <Spin spinning={claimLoading || loading} tip={claimTip} wrapperClassName="text-white">
-      <div className="p-6 text-base">
-        <div className="mb-6 text-lg font-bold text-white">Claim Rewards</div>
+      <div className="flex flex-col gap-6 rounded-3xl bg-[#252532] p-6">
+        <div className="text-lg font-bold leading-7 text-white">Claim Rewards</div>
 
-        <div className="mb-6 flex flex-col gap-4">
-          <div className="flex items-center">
-            <span className="text-white/50">Receiving Wallet Address</span>
-            <span className="ml-auto text-white">{shortenAddress(address!, 12)}</span>
+        <div className="flex flex-col gap-6 pb-6">
+          <div className="flex items-center justify-between text-base leading-6">
+            <span className="text-[#8d8d93]">Network</span>
+            <span className="text-white">BNB Chain</span>
           </div>
 
-          <div className="flex items-center">
-            <span className="text-white/50">Reward</span>
-            <span className="ml-auto text-white">
+          <div className="flex items-center justify-between text-base leading-6">
+            <span className="text-[#8d8d93]">Receiving Wallet Address</span>
+            <span className="text-white">{shortenAddress(address!, 12)}</span>
+          </div>
+
+          <div className="flex items-center justify-between text-base leading-6">
+            <span className="text-[#8d8d93]">Reward</span>
+            <span className="text-white">
               <InfoItemLoading loading={loading}>
                 {claimSignature?.amount} {asset.currency}
               </InfoItemLoading>
             </span>
           </div>
 
-          <div className="flex items-center">
-            <span className="text-white/50">Fee</span>
-            <span className="ml-auto text-white">
+          <div className="flex items-center justify-between text-base leading-6">
+            <span className="text-[#8d8d93]">Gas Fee</span>
+            <span className="text-white">
               <InfoItemLoading loading={loading}>
                 {FIXED_FEE} {asset.currency}
               </InfoItemLoading>
             </span>
           </div>
 
-          <div className="flex items-center">
-            <span className="font-medium text-[#00D68F]">You Receive</span>
-            <span className="ml-auto font-bold text-[#00D68F]">
-              <InfoItemLoading loading={loading}>
-                {canCoverFee ? `${userWillReceive} ${asset.currency}` : '--'}
-              </InfoItemLoading>
-            </span>
+          <div className="flex flex-col gap-2 rounded-2xl bg-[#1c1c26] p-4">
+            <div className="flex items-center justify-between border-b border-[rgba(255,255,255,0.12)] pb-2 text-lg font-bold leading-7">
+              <span className="text-white">You Receive</span>
+              <span className="text-[#ffa800]">
+                <InfoItemLoading loading={loading}>
+                  {canCoverFee ? (
+                    <>
+                      {userWillReceive} <span className="font-normal">{asset.currency}</span>
+                    </>
+                  ) : (
+                    '--'
+                  )}
+                </InfoItemLoading>
+              </span>
+            </div>
+            <p className="text-sm leading-[22px] text-[#77777d]">
+              {canCoverFee
+                ? 'Fee will be deducted before payout.'
+                : 'The current reward is not enough to cover the fee. Claim will be available once your pending reward is enough to cover the fee.'}
+            </p>
           </div>
         </div>
 
-        {/* Fee deduction info or insufficient reward warning */}
-        {canCoverFee ? (
-          <div className="mb-4 text-sm text-[#00D68F]">Fee will be deducted before payout.</div>
-        ) : (
-          <div className="mb-4 flex flex-col gap-2">
-            <div className="flex gap-3 rounded-2xl bg-[#D92B2B14] p-3 text-sm text-[#D92B2B]">
-              <div>
-                <InfoCircleOutlined className="text-lg"></InfoCircleOutlined>
-              </div>
-              <p>The current reward is not enough to cover the fee.</p>
-            </div>
-            <p className="text-sm text-[#8D8D93]">
-              Claim will be available once your pending reward is enough to cover the fee.
-            </p>
-          </div>
-        )}
-
-        <div className="mt-6 flex items-center justify-end gap-4">
-          <Button type="link" onClick={() => onClose()} disabled={claimLoading}>
+        <div className="flex items-center justify-end gap-4">
+          <Button
+            type="text"
+            onClick={() => onClose()}
+            disabled={claimLoading}
+            className="min-w-[120px] rounded-full text-white"
+          >
             Cancel
           </Button>
           <Button
             disabled={claimLoading || !canCoverFee}
             type="primary"
-            shape="round"
-            size="large"
-            className="min-w-32"
+            className={`min-w-[120px] rounded-full bg-[#875dff] px-6 py-2.5 ${!canCoverFee ? 'opacity-25' : ''}`}
             onClick={handleOnClaim}
           >
             {claimLoading ? <Loader2 className="animate-spin" /> : 'Claim'}
