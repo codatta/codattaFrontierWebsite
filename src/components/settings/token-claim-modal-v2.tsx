@@ -226,7 +226,8 @@ function ClaimConfirm({
         amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : '0.05',
         chain_id: contract.chain.id.toString(),
         token: tokenContractAddress,
-        reward_type: asset.type as 'USDT' | 'XnYCoin'
+        reward_type: asset.type as 'USDT' | 'XnYCoin',
+        claim_type: 'no_gas'
       })
 
       setClaimSignature({

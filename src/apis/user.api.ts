@@ -147,7 +147,7 @@ export interface RewardClaimSignParams {
   amount: string
   address: string
   token: string
-  claim_type?: 'lock' | 'normal' // default is normal claim
+  claim_type?: 'lock' | 'normal' | 'no_gas' // default is normal claim
   batch_ids?: string // optional batch ID for lock claims
 }
 
