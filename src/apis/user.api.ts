@@ -457,6 +457,14 @@ class UserApi {
     return data.data
   }
 
+  async claimReward(params: { uid: string; gas?: string; recipient_signature: string }) {
+    const { data } = await request.post<Response<{ flag: number; message: string }>>(
+      '/v2/user/reward/record/claim',
+      params
+    )
+    return data.data
+  }
+
   async getRewardRecordHistory(page: number, pageSize: number) {
     const { data } = await request.post<
       Response<{
