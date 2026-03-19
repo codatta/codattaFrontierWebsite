@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react'
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
-import ClaimRewardContract from '@/contracts/claim-reward.abi'
+import ClaimRewardContract from '@/contracts/claim-reward-v2.abi'
 import userApi, { RewardClaimSignResponse } from '@/apis/user.api'
 import { shortenAddress } from '@/utils/format'
 import { userStoreActions } from '@/stores/user.store'
@@ -172,7 +172,7 @@ function ClaimConfirm({
           { name: 'uid', type: 'uint256' },
           { name: 'token', type: 'address' },
           { name: 'recipient', type: 'address' },
-          { name: 'amount', type: 'uint256' },
+          { name: 'grossAmount', type: 'uint256' },
           { name: 'expiredAt', type: 'uint256' }
         ]
       }
@@ -180,7 +180,7 @@ function ClaimConfirm({
         uid,
         token: claimSignature.token as `0x${string}`,
         recipient: address,
-        amount: parseEther(claimSignature.amount.toString()),
+        grossAmount: parseEther(claimSignature.amount.toString()),
         expiredAt: BigInt(claimSignature.expired_at)
       }
 
@@ -261,7 +261,7 @@ function ClaimConfirm({
         <div className="flex flex-col gap-6 pb-6">
           <div className="flex items-center justify-between text-base leading-6">
             <span className="text-[#8d8d93]">Network</span>
-            <span className="text-white">BNB Chain</span>
+            <span className="text-white">{contract?.chain.name || 'Unknown'}</span>
           </div>
 
           <div className="flex items-center justify-between text-base leading-6">
