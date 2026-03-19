@@ -147,7 +147,7 @@ export interface RewardClaimSignParams {
   amount: string
   address: string
   token: string
-  claim_type?: 'lock' | 'normal' // default is normal claim
+  claim_type?: 'lock' | 'normal' | 'no_gas' // default is normal claim
   batch_ids?: string // optional batch ID for lock claims
 }
 
@@ -454,6 +454,14 @@ class UserApi {
       uid,
       status
     })
+    return data.data
+  }
+
+  async claimReward(params: { uid: string; gas?: string; recipient_signature: string }) {
+    const { data } = await request.post<Response<{ flag: number; message: string }>>(
+      '/v2/user/reward/record/claim',
+      params
+    )
     return data.data
   }
 

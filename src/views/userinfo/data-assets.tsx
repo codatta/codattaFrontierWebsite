@@ -8,7 +8,7 @@ import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import LockableRewardsBg from '@/assets/settings/token-rewards-lock-bg.svg'
 
-import TokenClaimModal from '@/components/settings/token-claim-modal'
+import TokenClaimModal from '@/components/settings/token-claim-modal-v2'
 import ClaimHistory from '@/components/settings/assets-claim-history'
 import EarnedHistory from '@/components/settings/earned-history'
 import TokenLockUpClaim from '@/components/settings/token-unlock'
