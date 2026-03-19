@@ -39,7 +39,7 @@ interface TokenClaimModalV2Props {
 }
 
 // Fee fixed at 0.01 for testing
-const FIXED_FEE = '0.06'
+const FIXED_FEE = '0.02'
 
 function SelectToken(props: { onSelect: (asset: Asset) => void }) {
   const [assets, setAssets] = useState<Asset[]>([])
@@ -223,7 +223,7 @@ function ClaimConfirm({
     try {
       const signResponse = await userApi.getRewardClaimSign({
         address: address as string,
-        amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : '0.05',
+        amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : '5',
         chain_id: contract.chain.id.toString(),
         token: tokenContractAddress,
         reward_type: asset.type as 'USDT' | 'XnYCoin',
