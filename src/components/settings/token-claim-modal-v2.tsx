@@ -1,7 +1,7 @@
 import { Button, message, Modal, Spin } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
-import { parseEther, checksumAddress, pad, toHex } from 'viem'
+import { parseEther, parseUnits, checksumAddress, pad, toHex } from 'viem'
 import { Loader2 } from 'lucide-react'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
@@ -184,11 +184,20 @@ function ClaimConfirm({
           { name: 'expiredAt', type: 'uint256' }
         ]
       }
+      // Calculate grossAmount based on token type
+      // XNY: 18 decimals, USDT: 6 decimals
+      const grossAmount =
+        asset.type === 'USDT'
+          ? parseUnits(claimSignature.amount.toString(), 6)
+          : parseEther(claimSignature.amount.toString())
+
+      console.log('grossAmount', asset.type, grossAmount)
+
       const eipMessage = {
         uid: uidBytes32 as `0x${string}`,
         token: claimSignature.token as `0x${string}`,
         recipient: address,
-        grossAmount: parseEther(claimSignature.amount.toString()),
+        grossAmount,
         expiredAt: BigInt(claimSignature.expired_at)
       }
 
