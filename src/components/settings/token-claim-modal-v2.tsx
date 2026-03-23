@@ -11,7 +11,14 @@ import ClaimRewardContract from '@/contracts/claim-reward-v2.abi'
 import userApi, { RewardClaimSignResponse } from '@/apis/user.api'
 import { shortenAddress } from '@/utils/format'
 import { userStoreActions } from '@/stores/user.store'
-import { TOKEN_CONTRACT_ADDRESS } from './config'
+// import { TOKEN_CONTRACT_ADDRESS } from './config'
+
+const isProduction = import.meta.env.VITE_MODE === 'production'
+
+const TOKEN_CONTRACT_ADDRESS: Record<string, string> = {
+  USDT: isProduction ? '' : '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+  XnYCoin: isProduction ? '' : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
+}
 
 interface Asset {
   type: string
