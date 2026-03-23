@@ -168,7 +168,7 @@ function ClaimConfirm({
 
       // Build EIP-712 typed data
       const uid = BigInt(claimSignature.uid)
-      const uidBytes32 = pad(toHex(uid), { size: 32 });
+      const uidBytes32 = pad(toHex(uid), { size: 32 })
       const domain = {
         name: 'CodattaAsset',
         version: '1',
