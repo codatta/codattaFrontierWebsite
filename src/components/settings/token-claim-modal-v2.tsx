@@ -1,7 +1,7 @@
 import { Button, message, Modal, Spin } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
-import { parseEther, checksumAddress } from 'viem'
+import { parseEther, checksumAddress, pad, toHex } from 'viem'
 import { Loader2 } from 'lucide-react'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
@@ -168,6 +168,7 @@ function ClaimConfirm({
 
       // Build EIP-712 typed data
       const uid = BigInt(claimSignature.uid)
+      const uidBytes32 = pad(toHex(uid), { size: 32 });
       const domain = {
         name: 'CodattaAsset',
         version: '1',
@@ -176,7 +177,7 @@ function ClaimConfirm({
       }
       const types = {
         RecipientRelayedClaim: [
-          { name: 'uid', type: 'uint256' },
+          { name: 'uid', type: 'bytes32' },
           { name: 'token', type: 'address' },
           { name: 'recipient', type: 'address' },
           { name: 'grossAmount', type: 'uint256' },
@@ -184,7 +185,7 @@ function ClaimConfirm({
         ]
       }
       const eipMessage = {
-        uid,
+        uid: uidBytes32 as `0x${string}`,
         token: claimSignature.token as `0x${string}`,
         recipient: address,
         grossAmount: parseEther(claimSignature.amount.toString()),
