@@ -11,7 +11,7 @@ import ClaimRewardContract from '@/contracts/claim-reward-v2.abi'
 import userApi, { RewardClaimSignResponse } from '@/apis/user.api'
 import { shortenAddress } from '@/utils/format'
 import { userStoreActions } from '@/stores/user.store'
-// import { TOKEN_CONTRACT_ADDRESS } from './config'
+import { useGasFee } from '@/hooks/use-gas-fee'
 
 const isProduction = import.meta.env.VITE_MODE === 'production'
 
@@ -19,6 +19,8 @@ const TOKEN_CONTRACT_ADDRESS: Record<string, string> = {
   USDT: isProduction ? '' : '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
   XnYCoin: isProduction ? '' : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
 }
+
+const ESTIMATED_GAS_LIMIT = 150000
 
 interface Asset {
   type: string
@@ -44,9 +46,6 @@ interface TokenClaimModalV2Props {
   open: boolean
   onClose: () => void
 }
-
-// Fee fixed at 0.01 for testing
-const FIXED_FEE = '0.02'
 
 function SelectToken(props: { onSelect: (asset: Asset) => void }) {
   const [assets, setAssets] = useState<Asset[]>([])
@@ -118,29 +117,39 @@ function ClaimConfirm({
   const [claimSignature, setClaimSignature] = useState<RewardClaimSignResponse>()
   const [claimTip, setClaimTip] = useState<string>()
 
-  // Check if reward can cover fee
-  const canCoverFee = useMemo(() => {
-    if (!claimSignature?.amount) return false
-    const reward = parseFloat(String(claimSignature.amount))
-    const fee = parseFloat(FIXED_FEE)
-    return reward >= fee
-  }, [claimSignature])
-
-  // Calculate user will receive amount
-  const userWillReceive = useMemo(() => {
-    if (!claimSignature?.amount) return '0'
-    const reward = parseFloat(String(claimSignature.amount))
-    const fee = parseFloat(FIXED_FEE)
-    if (reward < fee) return '0'
-    return (reward - fee).toFixed(2)
-  }, [claimSignature])
-
   const contract = useMemo(() => {
     if (['XnYCoin', 'USDT'].includes(asset.type)) {
       return ClaimRewardContract
     }
     return null
   }, [asset.type])
+
+  const tokenAddress = TOKEN_CONTRACT_ADDRESS[asset.type] || ''
+
+  const { gasFee, isLoading: gasFeeLoading } = useGasFee({
+    gasLimit: ESTIMATED_GAS_LIMIT,
+    chainId: contract?.chain.id,
+    enabled: !!contract && !!tokenAddress,
+    tokenAddress
+  })
+
+  // Check if reward can cover fee (gas fee is calculated in the same token)
+  const canCoverFee = useMemo(() => {
+    if (!claimSignature?.amount || !gasFee) return false
+    const reward = parseFloat(String(claimSignature.amount))
+    const fee = parseFloat(gasFee)
+    return reward >= fee
+  }, [claimSignature, gasFee])
+
+  // Calculate user will receive amount (reward - gas fee)
+  const userWillReceive = useMemo(() => {
+    if (!claimSignature?.amount || !gasFee) return '0'
+    const reward = parseFloat(String(claimSignature.amount))
+    const fee = parseFloat(gasFee)
+
+    if (reward < fee) return '0'
+    return (reward - fee).toFixed(4)
+  }, [claimSignature, gasFee])
 
   const address = useMemo(() => {
     if (!lastUsedWallet) return null
@@ -303,8 +312,8 @@ function ClaimConfirm({
           <div className="flex items-center justify-between text-base leading-6">
             <span className="text-[#8d8d93]">Gas Fee</span>
             <span className="text-white">
-              <InfoItemLoading loading={loading}>
-                {FIXED_FEE} {asset.currency}
+              <InfoItemLoading loading={loading || gasFeeLoading}>
+                {gasFee ? `${gasFee} ${asset.currency}` : '--'}
               </InfoItemLoading>
             </span>
           </div>
@@ -326,7 +335,7 @@ function ClaimConfirm({
             </div>
             <p className="text-sm leading-[22px] text-[#77777d]">
               {canCoverFee
-                ? 'Fee will be deducted before payout.'
+                ? `Gas fee (in ${asset.currency}) will be deducted before payout.`
                 : 'The current reward is not enough to cover the fee. Claim will be available once your pending reward is enough to cover the fee.'}
             </p>
           </div>
