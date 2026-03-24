@@ -257,7 +257,7 @@ function ClaimConfirm({
     try {
       const signResponse = await userApi.getRewardClaimSign({
         address: address as string,
-        amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : '5',
+        amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : asset.type === 'USDT' ? '0.02' : '1',
         chain_id: contract.chain.id.toString(),
         token: tokenContractAddress,
         reward_type: asset.type as 'USDT' | 'XnYCoin',
@@ -390,6 +390,10 @@ function ClaimPending({ onClose }: { onClose: () => void }) {
     navigate(`/app/settings/data-assets?tab=claim-history-tab&t=${Date.now()}`)
   }
 
+  useEffect(() => {
+    userStoreActions.getUserInfo()
+  }, [])
+
   return (
     <div className="flex flex-col items-center p-6 text-base">
       <img src={PendingIcon} alt="Pending" className="mb-4 size-[80px]" />
@@ -473,7 +477,8 @@ export default function TokenClaimModalV2(props: TokenClaimModalV2Props) {
             asset={selectedAsset!}
             onClose={handleOnCancel}
             onLoading={handleLoading}
-            onSuccess={(flag) => setStep(flag === 1 ? 'claim-success' : 'claim-pending')}
+            // onSuccess={(flag) => setStep(flag === 1 ? 'claim-success' : 'claim-pending')}
+            onSuccess={() => setStep('claim-pending')}
           />
         )}
         {step === 'claim-success' && <ClaimSuccess onClose={handleOnCancel} />}
