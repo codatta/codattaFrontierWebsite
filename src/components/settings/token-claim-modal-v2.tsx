@@ -3,10 +3,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
 import { parseEther, parseUnits, checksumAddress, keccak256, stringToHex } from 'viem'
 import { Loader2 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import USDTIcon from '@/assets/userinfo/usdt-icon.svg?react'
 import XnyIcon from '@/assets/userinfo/xny-icon.svg?react'
 import SuccessIcon from '@/assets/frontier/food-tpl-m2/approved-icon.svg'
+import PendingIcon from '@/assets/frontier/crypto/pending-icon.svg'
+
 import ClaimRewardContract from '@/contracts/claim-reward-v2.abi'
 import userApi, { RewardClaimSignResponse } from '@/apis/user.api'
 import { shortenAddress } from '@/utils/format'
@@ -109,7 +112,7 @@ function ClaimConfirm({
   asset: Asset
   onClose: () => void
   onLoading: (loading: boolean) => void
-  onSuccess: () => void
+  onSuccess: (flag: 1 | 2) => void
 }) {
   const { lastUsedWallet } = useCodattaConnectContext()
   const [loading, setLoading] = useState(false)
@@ -232,8 +235,8 @@ function ClaimConfirm({
         recipient_signature: recipientSignature
       })
 
-      if (result.flag === 1) {
-        onSuccess()
+      if (result.flag === 1 || result.flag === 2) {
+        onSuccess(result.flag as 1 | 2)
       } else {
         message.error(result.message || 'Claim failed')
       }
@@ -373,14 +376,41 @@ function ClaimSuccess({ onClose }: { onClose: () => void }) {
       <img src={SuccessIcon} alt="" className="mb-4 size-[80px]" />
       <div className="mb-6 text-center text-lg font-bold text-white">Claim Success</div>
       <Button shape="round" size="large" type="primary" className="w-[120px]" onClick={onClose}>
-        Got
+        Got it
+      </Button>
+    </div>
+  )
+}
+
+function ClaimPending({ onClose }: { onClose: () => void }) {
+  const navigate = useNavigate()
+
+  const handleViewHistory = () => {
+    onClose()
+    navigate(`/app/settings/data-assets?tab=claim-history-tab&t=${Date.now()}`)
+  }
+
+  return (
+    <div className="flex flex-col items-center p-6 text-base">
+      <img src={PendingIcon} alt="Pending" className="mb-4 size-[80px]" />
+      <div className="mb-6 text-center text-lg font-bold text-white">Claim Submitted</div>
+      <div className="mb-8 w-full px-2 text-sm text-[#8d8d93]">
+        <div className="mb-6 flex items-start text-center">
+          Your claim has been submitted and is being processed on-chain. This may take a few minutes.You can view the
+          progress in Claim History.
+        </div>
+      </div>
+      <Button shape="round" size="large" type="primary" className="min-w-[240px]" onClick={handleViewHistory}>
+        View Claim History →
       </Button>
     </div>
   )
 }
 
 export default function TokenClaimModalV2(props: TokenClaimModalV2Props) {
-  const [step, setStep] = useState<'select-token' | 'claim-confirm' | 'claim-success' | 'connect-wallet'>()
+  const [step, setStep] = useState<
+    'select-token' | 'claim-confirm' | 'claim-success' | 'claim-pending' | 'connect-wallet'
+  >()
   const { lastUsedWallet } = useCodattaConnectContext()
   const [selectedAsset, setSelectedAsset] = useState<Asset>()
   const [loading, setLoading] = useState(false)
@@ -427,6 +457,7 @@ export default function TokenClaimModalV2(props: TokenClaimModalV2Props) {
         footer={null}
         styles={{ content: { padding: 0 } }}
         destroyOnHidden
+        centered
         maskClosable={false}
         closable={!loading}
       >
@@ -442,10 +473,11 @@ export default function TokenClaimModalV2(props: TokenClaimModalV2Props) {
             asset={selectedAsset!}
             onClose={handleOnCancel}
             onLoading={handleLoading}
-            onSuccess={() => setStep('claim-success')}
+            onSuccess={(flag) => setStep(flag === 1 ? 'claim-success' : 'claim-pending')}
           />
         )}
         {step === 'claim-success' && <ClaimSuccess onClose={handleOnCancel} />}
+        {step === 'claim-pending' && <ClaimPending onClose={handleOnCancel} />}
       </Modal>
     </>
   )
