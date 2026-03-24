@@ -16,24 +16,24 @@ export const CHAIN_CONFIGS: Record<string, ChainConfig> = {
     name: 'BSC',
     rpc: 'https://bsc-dataseed1.binance.org',
     nativeToken: 'BNB',
-    priceApi: 'https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT',
-    priceSymbol: 'BNB',
+    priceApi: 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd',
+    priceSymbol: 'binancecoin',
     feeTokenAddress: '0x55d398326f99059fF775485246999027B3197955' // BSC USDT
   },
   baseSepolia: {
     name: 'Base Sepolia',
     rpc: 'https://sepolia.base.org',
     nativeToken: 'ETH',
-    priceApi: 'https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT',
-    priceSymbol: 'ETH',
+    priceApi: 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd',
+    priceSymbol: 'ethereum',
     feeTokenAddress: '0x036CbD53842c5426634e7929541eC2318f3dCF7e' // Base Sepolia USDT (testnet)
   },
   base: {
     name: 'Base',
     rpc: 'https://mainnet.base.org',
     nativeToken: 'ETH',
-    priceApi: 'https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT',
-    priceSymbol: 'ETH',
+    priceApi: 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd',
+    priceSymbol: 'ethereum',
     feeTokenAddress: '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913' // Base USDC
   }
 }
@@ -125,12 +125,12 @@ export async function getGasPriceFromRpc(rpcUrl: string): Promise<number> {
 }
 
 /**
- * Get token price from Binance API
+ * Get token price from CoinGecko API
  */
-export async function getTokenPriceFromBinance(priceApi: string): Promise<number> {
+export async function getTokenPriceFromCoinGecko(priceApi: string, coinId: string): Promise<number> {
   const response = await fetch(priceApi)
-  const data = (await response.json()) as { price: string }
-  return parseFloat(data.price)
+  const data = (await response.json()) as Record<string, { usd: number }>
+  return data[coinId].usd
 }
 
 /**
@@ -151,7 +151,7 @@ export async function calculateGasFeeFromApi(
   try {
     // Fetch in parallel: token price, gas price, token decimals
     const [tokenUsdPrice, gasPriceGwei, decimals] = await Promise.all([
-      getTokenPriceFromBinance(config.priceApi),
+      getTokenPriceFromCoinGecko(config.priceApi, config.priceSymbol),
       getGasPriceFromRpc(config.rpc),
       getTokenDecimals(config.rpc, feeTokenAddr)
     ])
