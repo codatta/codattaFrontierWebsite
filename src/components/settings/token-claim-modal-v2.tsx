@@ -19,8 +19,8 @@ import { useGasFee } from '@/hooks/use-gas-fee'
 const isProduction = import.meta.env.VITE_MODE === 'production'
 
 const TOKEN_CONTRACT_ADDRESS: Record<string, string> = {
-  USDT: isProduction ? '' : '0xcC8cbA30ef18fc40EB6a86a0b95Fe826dF6a9DAa',
-  XnYCoin: isProduction ? '' : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
+  USDT: isProduction ? '0x55d398326f99059fF775485246999027B3197955' : '0xcC8cbA30ef18fc40EB6a86a0b95Fe826dF6a9DAa',
+  XnYCoin: isProduction ? '0xE3225e11Cab122F1a126A28997788E5230838ab9' : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
 }
 
 const ESTIMATED_GAS_LIMIT = 150000

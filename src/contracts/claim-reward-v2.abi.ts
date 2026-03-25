@@ -5,7 +5,7 @@ import { baseSepolia } from 'viem/chains'
 const MAINNET = bsc
 
 const CONTRACT_ADDRESS_TESTNET = '0xc39434B2e9fd8EDdF441b1A7A8E66745646c3999'
-const CONTRACT_ADDRESS_MAINNET = '0x822B080a3Af1686Bf3BAFA53D7aE10b3212B2F17'
+const CONTRACT_ADDRESS_MAINNET = '0x58461Df886DdD64875B660b07D6EE1b4d1A7eabb'
 
 // const isProduction = true // TODO rm online
 const isProduction = import.meta.env.VITE_MODE === 'production'
