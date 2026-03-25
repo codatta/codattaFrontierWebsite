@@ -19,7 +19,7 @@ import { useGasFee } from '@/hooks/use-gas-fee'
 const isProduction = import.meta.env.VITE_MODE === 'production'
 
 const TOKEN_CONTRACT_ADDRESS: Record<string, string> = {
-  USDT: isProduction ? '' : '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+  USDT: isProduction ? '' : '0xcC8cbA30ef18fc40EB6a86a0b95Fe826dF6a9DAa',
   XnYCoin: isProduction ? '' : '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
 }
 
@@ -203,10 +203,7 @@ function ClaimConfirm({
       }
       // Calculate grossAmount based on token type
       // XNY: 18 decimals, USDT: 6 decimals
-      const grossAmount =
-        asset.type === 'USDT'
-          ? parseUnits(claimSignature.amount.toString(), 6)
-          : parseEther(claimSignature.amount.toString())
+      const grossAmount = parseEther(claimSignature.amount.toString())
 
       console.log('grossAmount', asset.type, grossAmount)
 
