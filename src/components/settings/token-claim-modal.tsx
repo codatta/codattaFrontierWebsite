@@ -160,7 +160,13 @@ function ClaimConfirm({
   }
 
   function getContractCallParams(signResponse: RewardClaimSignResponse) {
-    const uid = keccak256(stringToHex(signResponse.uid))
+    // uid can be a plain string or a 0x-prefixed bytes32 hex string
+    // if it's 0x-prefixed and 66 chars long (0x + 64 hex chars), use it directly
+    // otherwise convert to bytes32
+    const uid =
+      signResponse.uid.startsWith('0x') && signResponse.uid.length === 66
+        ? (signResponse.uid as `0x${string}`)
+        : keccak256(stringToHex(signResponse.uid))
     const amount = parseEther(signResponse.amount.toString())
     return [uid, signResponse.token, amount, signResponse.expired_at, `0x${signResponse.signature}`]
   }

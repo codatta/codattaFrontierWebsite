@@ -3,6 +3,7 @@ import { message, Pagination, Spin, Tooltip } from 'antd'
 import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 import { maskAddress } from '@/utils/format'
+import { useSearchParams } from 'react-router-dom'
 
 const statusColorMap = new Map<string, string>([
   ['Success', '#5DDD22'],
@@ -29,18 +30,31 @@ function ClaimHistoryItem({ item }: { item: RewardRecordHistoryItem }) {
               </Tooltip>
             </div>
           )}
+          {item.to_address && (
+            <div>
+              Receiving Address:{' '}
+              <Tooltip title={item.to_address}>
+                <span className="text-white">{maskAddress(item.to_address, 6)}</span>
+              </Tooltip>
+            </div>
+          )}
           <div>
             ID: <span className="text-white">{item.uid}</span>
           </div>
         </div>
       </div>
-      <div className="flex w-full items-center gap-3 lg:ml-auto lg:w-auto">
-        <div className="flex items-center gap-2" style={{ color: statusColorMap.get(item.status_name) }}>
-          <div className="size-1.5 rounded-full" style={{ backgroundColor: statusColorMap.get(item.status_name) }} />
-          {item.status_name}
+      <div className="ml-auto text-right">
+        <div className="mb-3 text-base font-bold lg:mb-1">
+          {item.balance} {item.asset_type === 'USDT' ? 'USDT' : 'XNY'}
         </div>
-        <div className="ml-auto min-w-[160px] rounded-full bg-primary/20 px-4 py-1 text-center text-primary lg:ml-0">
-          {item.asset_type == 'XnYCoin' ? 'XNY' : item.asset_type} <strong>+{item.balance.toFixed(6)}</strong>
+        <div className="flex items-center justify-end gap-1">
+          <div
+            className="size-1.5 rounded-full"
+            style={{ backgroundColor: statusColorMap.get(item.status_name) || '#ffffff30' }}
+          ></div>
+          <div className="text-sm font-medium" style={{ color: statusColorMap.get(item.status_name) || '#ffffff30' }}>
+            {item.status_name}
+          </div>
         </div>
       </div>
     </div>
@@ -48,11 +62,13 @@ function ClaimHistoryItem({ item }: { item: RewardRecordHistoryItem }) {
 }
 
 export default function ClaimHistory() {
+  const [searchParams] = useSearchParams()
   const [rewardRecordHistory, setRewardRecordHistory] = useState<RewardRecordHistoryItem[]>([])
   const [loading, setLoading] = useState(false)
   const [page, setPage] = useState(1)
   const [pageSize] = useState(10)
   const [total, setTotal] = useState(0)
+  const refreshTime = searchParams.get('t')
 
   async function getRewardRecordHistory(page: number, pageSize: number) {
     setLoading(true)
@@ -68,7 +84,7 @@ export default function ClaimHistory() {
 
   useEffect(() => {
     getRewardRecordHistory(page, pageSize)
-  }, [page, pageSize])
+  }, [page, pageSize, refreshTime])
 
   return (
     <div className="">
@@ -77,34 +93,23 @@ export default function ClaimHistory() {
           <>
             <div className="flex flex-col gap-4">
               {rewardRecordHistory.map((item) => (
-                <ClaimHistoryItem item={item} key={item.uid} />
+                <ClaimHistoryItem key={item.uid} item={item} />
               ))}
             </div>
-
-            <Pagination
-              className="mt-6"
-              align="center"
-              hideOnSinglePage
-              defaultCurrent={1}
-              current={page}
-              pageSize={pageSize}
-              onChange={(page) => setPage(page)}
-              total={total}
-              showSizeChanger={false}
-            />
+            <div className="mt-8 flex justify-center pb-20">
+              <Pagination
+                current={page}
+                pageSize={pageSize}
+                total={total}
+                onChange={(page) => setPage(page)}
+                showSizeChanger={false}
+              />
+            </div>
           </>
         ) : (
-          <EmptyHistory />
+          <div className="py-[120px] text-center text-[#8D8D93]">No Assets Available</div>
         )}
       </Spin>
-    </div>
-  )
-}
-
-function EmptyHistory() {
-  return (
-    <div className="flex h-[calc(100vh-600px)] items-center justify-center text-sm">
-      No relevant historical records available.
     </div>
   )
 }
