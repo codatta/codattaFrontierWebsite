@@ -1,7 +1,7 @@
 import { Button, message, Modal, Spin } from 'antd'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { CodattaConnect, EmvWalletConnectInfo, useCodattaConnectContext } from 'codatta-connect'
-import { parseEther, parseUnits, checksumAddress, keccak256, stringToHex } from 'viem'
+import { parseEther, checksumAddress, keccak256, stringToHex } from 'viem'
 import { Loader2 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
