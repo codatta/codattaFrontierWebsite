@@ -46,10 +46,10 @@ const CardItem = ({ item }: { item: TaskDetail }) => {
   return (
     <div
       key={`${item.submission_id}-${item.task_type} `}
-      className="w-full cursor-pointer rounded-2xl border border-[#FFFFFF1F] p-4 transition-all hover:border-primary hover:shadow-primary md:p-6"
+      className="w-full cursor-pointer rounded-2xl border border-[#FFFFFF1F] p-4 pt-0 transition-all hover:border-primary hover:shadow-primary md:p-6 md:pt-0"
     >
-      <div className="relative flex items-center gap-4">
-        <div className="absolute left-5 top-[-12px] flex items-center gap-2">
+      <div className="relative flex items-center gap-4 pt-4 md:pt-6">
+        <div className="absolute top-[-12px] flex items-center gap-2">
           {item.tags?.map((tag: string) => (
             <React.Fragment key={tag}>
               {tag === 'airdrop' && (

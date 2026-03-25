@@ -23,6 +23,7 @@ type FrontierStore = {
     task_types: TaskType[]
     qualification_check?: 0 | 1
     min_reputation?: number
+    frontier_id?: string
   }
   historyPageData: {
     list: TaskDetail[]
@@ -118,15 +119,18 @@ function changeFrontiersFilter(
     min_reputation?: number
   }
 ) {
+  const currentFrontierId = frontiersStore.pageData.frontier_id
+  const isFrontierChanged = currentFrontierId && data.frontier_id !== currentFrontierId
+
   const pageData = {
     ...frontiersStore.pageData,
     ...data,
-    page: data.page || 1
+    page: isFrontierChanged ? 1 : data.page || 1
   }
 
   frontiersStore.pageData = pageData
   getFrontiersTaskList({
-    frontier_id: pageData.frontier_id,
+    frontier_id: data.frontier_id,
     page_size: pageData.page_size,
     page: pageData.page,
     task_types: pageData.task_types?.join(','),
