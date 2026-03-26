@@ -156,7 +156,7 @@ const XNY_PRICE_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
 /**
  * Get XNY token price in USD with caching mechanism
- * Tries CoinGecko API first, then falls back to hardcoded price
+ * Uses DexScreener API for accurate on-chain pricing based on token address
  */
 export async function getXnyTokenPrice(): Promise<number> {
   const FALLBACK_PRICE = 0.001907
@@ -167,10 +167,13 @@ export async function getXnyTokenPrice(): Promise<number> {
     return xnyPriceCache.price
   }
 
-  // Try CoinGecko API
+  // Try DexScreener API using the Base Sepolia testnet or mainnet address
   try {
-    const XNY_COIN_ID = 'xny'
-    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${XNY_COIN_ID}&vs_currencies=usd`, {
+    // Prefer production address if available, otherwise testnet
+    const targetAddress =
+      import.meta.env.VITE_MODE === 'production' ? XNY_TOKEN_ADDRESSES.production : XNY_TOKEN_ADDRESSES.testnet
+
+    const response = await fetch(`https://api.dexscreener.com/latest/dex/tokens/${targetAddress}`, {
       cache: 'no-cache'
     })
 
@@ -178,19 +181,22 @@ export async function getXnyTokenPrice(): Promise<number> {
       throw new Error(`API returned ${response.status}: ${response.statusText}`)
     }
 
-    const data = (await response.json()) as Record<string, { usd: number }>
+    const data = await response.json()
 
-    if (data[XNY_COIN_ID]?.usd) {
-      const price = data[XNY_COIN_ID].usd
-      xnyPriceCache = { price, timestamp: Date.now() }
-      console.log('Fetched XNY price from CoinGecko:', price)
-      return price
+    // DexScreener returns an array of pairs. We take the highest liquidity pair's price.
+    if (data.pairs && data.pairs.length > 0) {
+      const priceUsd = parseFloat(data.pairs[0].priceUsd)
+      if (!isNaN(priceUsd) && priceUsd > 0) {
+        xnyPriceCache = { price: priceUsd, timestamp: Date.now() }
+        console.log('Fetched XNY price from DexScreener:', priceUsd)
+        return priceUsd
+      }
     }
 
-    console.warn('XNY price not found in CoinGecko response, using fallback')
+    console.warn('XNY price not found in DexScreener response, using fallback')
     return FALLBACK_PRICE
   } catch (error) {
-    console.warn('Failed to fetch XNY price from CoinGecko, using fallback:', error)
+    console.warn('Failed to fetch XNY price from DexScreener, using fallback:', error)
     // Use cached price if available, even if expired
     if (xnyPriceCache) {
       console.log('Using expired cache due to API error:', xnyPriceCache.price)
