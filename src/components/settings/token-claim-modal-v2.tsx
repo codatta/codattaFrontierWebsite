@@ -258,7 +258,7 @@ function ClaimConfirm({
         amount:
           asset.type === 'USDT'
             ? Math.min(0.02, parseFloat(asset.amount)).toString()
-            : Math.min(1, parseFloat(asset.amount)).toString(),
+            : Math.min(5, parseFloat(asset.amount)).toString(),
         chain_id: contract.chain.id.toString(),
         token: tokenContractAddress,
         reward_type: asset.type as 'USDT' | 'XnYCoin',
