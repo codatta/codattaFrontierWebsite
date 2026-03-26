@@ -11,6 +11,23 @@ export interface ChainConfig {
   feeTokenAddress: string // ERC20 token contract address for fee calculation
 }
 
+// XNY token addresses for different environments
+const XNY_TOKEN_ADDRESSES = {
+  production: '0xE3225e11Cab122F1a126A28997788E5230838ab9',
+  testnet: '0xe9fC6F3CcD332e84054D8Afd148ecE66BF18C2bA'
+}
+
+/**
+ * Check if the token address is XNY token
+ */
+function isXnyToken(tokenAddress: string): boolean {
+  const normalizedAddress = tokenAddress.toLowerCase()
+  return (
+    normalizedAddress === XNY_TOKEN_ADDRESSES.production.toLowerCase() ||
+    normalizedAddress === XNY_TOKEN_ADDRESSES.testnet.toLowerCase()
+  )
+}
+
 export const CHAIN_CONFIGS: Record<string, ChainConfig> = {
   bsc: {
     name: 'BSC',
@@ -133,6 +150,56 @@ export async function getTokenPriceFromCoinGecko(priceApi: string, coinId: strin
   return data[coinId].usd
 }
 
+// XNY price cache to avoid rate limiting
+let xnyPriceCache: { price: number; timestamp: number } | null = null
+const XNY_PRICE_CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
+
+/**
+ * Get XNY token price in USD with caching mechanism
+ * Tries CoinGecko API first, then falls back to hardcoded price
+ */
+export async function getXnyTokenPrice(): Promise<number> {
+  const FALLBACK_PRICE = 0.001907
+
+  // Check cache first
+  if (xnyPriceCache && Date.now() - xnyPriceCache.timestamp < XNY_PRICE_CACHE_DURATION) {
+    console.log('Using cached XNY price:', xnyPriceCache.price)
+    return xnyPriceCache.price
+  }
+
+  // Try CoinGecko API
+  try {
+    const XNY_COIN_ID = 'xny'
+    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${XNY_COIN_ID}&vs_currencies=usd`, {
+      cache: 'no-cache'
+    })
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}: ${response.statusText}`)
+    }
+
+    const data = (await response.json()) as Record<string, { usd: number }>
+
+    if (data[XNY_COIN_ID]?.usd) {
+      const price = data[XNY_COIN_ID].usd
+      xnyPriceCache = { price, timestamp: Date.now() }
+      console.log('Fetched XNY price from CoinGecko:', price)
+      return price
+    }
+
+    console.warn('XNY price not found in CoinGecko response, using fallback')
+    return FALLBACK_PRICE
+  } catch (error) {
+    console.warn('Failed to fetch XNY price from CoinGecko, using fallback:', error)
+    // Use cached price if available, even if expired
+    if (xnyPriceCache) {
+      console.log('Using expired cache due to API error:', xnyPriceCache.price)
+      return xnyPriceCache.price
+    }
+    return FALLBACK_PRICE
+  }
+}
+
 /**
  * Calculate gas fee from API (gas price + token price)
  * @param gasLimit - Gas amount
@@ -149,8 +216,8 @@ export async function calculateGasFeeFromApi(
   const feeTokenAddr = tokenAddress || config.feeTokenAddress
 
   try {
-    // Fetch in parallel: token price, gas price, token decimals
-    const [tokenUsdPrice, gasPriceGwei, decimals] = await Promise.all([
+    // Fetch in parallel: native token price, gas price, token decimals
+    const [nativeTokenUsdPrice, gasPriceGwei, decimals] = await Promise.all([
       getTokenPriceFromCoinGecko(config.priceApi, config.priceSymbol),
       getGasPriceFromRpc(config.rpc),
       getTokenDecimals(config.rpc, feeTokenAddr)
@@ -158,17 +225,31 @@ export async function calculateGasFeeFromApi(
 
     console.log('=== Gas Calculation ===')
     console.log('Chain:', config.name)
-    console.log('Native Token Price:', tokenUsdPrice, 'USD')
+    console.log('Native Token Price:', nativeTokenUsdPrice, 'USD')
     console.log('Gas Price:', gasPriceGwei, 'Gwei')
     console.log('Gas Limit:', gasLimit)
     console.log('Fee Token Address:', feeTokenAddr)
     console.log('Fee Token Decimals:', decimals)
 
-    const fee = calculateGasFeeInToken(gasLimit, gasPriceGwei, tokenUsdPrice, decimals)
-    console.log('Estimated Fee:', fee.toFixed(6), 'tokens')
-    console.log('======================')
+    // Calculate gas fee in USD (based on native token price)
+    const feeInUsd = calculateGasFeeInToken(gasLimit, gasPriceGwei, nativeTokenUsdPrice, decimals)
+    console.log('Gas Fee in USD:', feeInUsd.toFixed(6), 'USD')
 
-    return fee
+    // For XNY token, convert USD value to XNY amount using dynamic price
+    if (isXnyToken(feeTokenAddr)) {
+      const xnyUsdPrice = await getXnyTokenPrice()
+      const feeInXny = feeInUsd / xnyUsdPrice
+      console.log('XNY Token Detected')
+      console.log('XNY Price:', xnyUsdPrice, 'USD')
+      console.log('Estimated Fee:', feeInXny.toFixed(6), 'XNY')
+      console.log('======================')
+      return feeInXny
+    }
+
+    // For USDT and other stablecoins, USD value ≈ token amount
+    console.log('Estimated Fee:', feeInUsd.toFixed(6), 'tokens')
+    console.log('======================')
+    return feeInUsd
   } catch (error) {
     console.error('Failed to calculate gas fee:', error)
     throw error
