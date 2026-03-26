@@ -254,7 +254,11 @@ function ClaimConfirm({
     try {
       const signResponse = await userApi.getRewardClaimSign({
         address: address as string,
-        amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : asset.type === 'USDT' ? '0.02' : '1',
+        // amount: import.meta.env.VITE_MODE === 'production' ? asset.amount : asset.type === 'USDT' ? '0.02' : '1',
+        amount:
+          asset.type === 'USDT'
+            ? Math.min(0.02, parseFloat(asset.amount)).toString()
+            : Math.min(1, parseFloat(asset.amount)).toString(),
         chain_id: contract.chain.id.toString(),
         token: tokenContractAddress,
         reward_type: asset.type as 'USDT' | 'XnYCoin',
