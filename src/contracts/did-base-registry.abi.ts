@@ -1,27 +1,28 @@
-import { Abi, Chain, defineChain } from 'viem'
-import { base } from 'viem/chains'
+import { Abi, Chain } from 'viem'
+import { base, baseSepolia } from 'viem/chains'
 
-const TESTNET = defineChain({
-  id: 2368,
-  name: 'KiteAI Testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'KITE',
-    symbol: 'KITE'
-  },
-  rpcUrls: {
-    default: { http: ['https://rpc-testnet.gokite.ai/'] }
-  },
-  blockExplorers: {
-    default: {
-      name: 'kitescan',
-      url: 'https://testnet.kitescan.ai/'
-    }
-  }
-})
+// const TESTNET = defineChain({
+//   id: 2368,
+//   name: 'KiteAI Testnet',
+//   nativeCurrency: {
+//     decimals: 18,
+//     name: 'KITE',
+//     symbol: 'KITE'
+//   },
+//   rpcUrls: {
+//     default: { http: ['https://rpc-testnet.gokite.ai/'] }
+//   },
+//   blockExplorers: {
+//     default: {
+//       name: 'kitescan',
+//       url: 'https://testnet.kitescan.ai/'
+//     }
+// })
+const TESTNET = baseSepolia
 const MAINNET = base
 
-const CONTRACT_ADDRESS_TESTNET = '0x9704E3ffFE0c18f5C46795b4fB9148e05cB88A92'
+// const CONTRACT_ADDRESS_TESTNET = '0x9704E3ffFE0c18f5C46795b4fB9148e05cB88A92'
+const CONTRACT_ADDRESS_TESTNET = '0x49bc9d93B52367b9Fc173C5bA206d0202A89643a'
 const CONTRACT_ADDRESS_MAINNET = '0x3DB4e80aE23AF99BA2a92Aa54E204c03766ce562'
 
 const contract: { abi: Abi; chain: Chain; address: string } = {
